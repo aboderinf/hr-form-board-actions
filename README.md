@@ -2,6 +2,10 @@
 
 Independent cloud-run version of the MLB home-run form tracker. It does not modify or depend on the ChatGPT Scheduled Task site at `hr-form-board.vercel.app`.
 
+## Status
+
+The repository is populated and the GitHub Actions workflow is installed. The independent dashboard is available at `hr-form-board-actions.vercel.app`.
+
 ## Locked model
 
 `0.50 × (HR-game rate L5) + 0.30 × (HR-game rate L7) + 0.20 × (HR-game rate L15)`
@@ -25,14 +29,15 @@ At each checkpoint it:
 
 Unknown sportsbook headers are labeled `unidentified`; prices are never guessed. DraftKings absence is labeled unverified.
 
-## Activation
+## GitHub settings
 
-1. Create a new repository and upload this project to its default branch.
-2. Enable GitHub Actions with read/write workflow permissions.
-3. Import that new repository as a separate Vercel project. Leave the existing `hr-form-board` project connected to its current source.
-4. Run `HR form checkpoints` manually once to verify data collection.
+The workflow needs **Read and write permissions** under **Settings → Actions → General → Workflow permissions** so it can commit updated ledgers and `index.html`.
 
-No secrets are required for the public-data workflow. A public repository has unmetered standard GitHub Actions usage; a private GitHub Free repository receives a monthly Actions allowance.
+The separate Vercel project should be connected to this repository so every Action commit triggers a deployment. The existing `hr-form-board` project must remain connected to its current source.
+
+## Manual verification
+
+Open **Actions → HR form checkpoints → Run workflow**. A manual date and checkpoint can be supplied, or left blank for the current scheduled checkpoint.
 
 ## Local checks
 
