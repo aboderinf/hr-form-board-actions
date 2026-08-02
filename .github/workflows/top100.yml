@@ -7,10 +7,16 @@ on:
     paths:
       - ".github/workflows/top100.yml"
       - "app.js"
+      - "scores-enhancements.js"
+      - "index.html"
+      - "style.css"
       - "src/model.py"
       - "src/sources.py"
+      - "src/edge_source.py"
+      - "src/top100_view.py"
       - "scripts/build_top100.py"
       - "tests/test_open_pool.py"
+      - "tests/test_top100_view.py"
   schedule:
     - cron: "25 12,15,21 * 3-11 *"
     - cron: "25 0 * 3-11 *"
@@ -52,7 +58,7 @@ jobs:
           cache: pip
       - if: steps.window.outputs.due == 'true'
         run: pip install -r requirements.txt
-      - name: Build odds-independent leaderboard
+      - name: Build Top 100 leaderboard with optional shared odds
         if: steps.window.outputs.due == 'true'
         run: python scripts/build_top100.py
       - name: Run tests
@@ -68,5 +74,6 @@ jobs:
           git config user.name "hr-form-bot"
           git config user.email "actions@users.noreply.github.com"
           git add data/top100.json
-          git commit -m "Refresh Top 100 form scores"
+          git commit -m "Refresh Top 100 form scores and odds"
+          git pull --rebase origin main
           git push
