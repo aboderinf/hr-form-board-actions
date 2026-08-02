@@ -24,7 +24,7 @@ The `asOf` cutoff ensures a delayed retry cannot use prices captured after the f
 
 ## Daily operation
 
-GitHub Actions checks at 8:17 AM, 11:17 AM, 5:17 PM and 8:17 PM America/New_York. The central odds source refreshes five minutes earlier. Because GitHub cron uses UTC, the workflow contains both DST and standard-time expressions; the Python runner gates to the correct ET checkpoint and immutable filenames prevent duplicate snapshots.
+GitHub Actions checks at 8:17 AM, 11:17 AM, 5:17 PM and 8:17 PM America/New_York. The central odds source refreshes at 8:00 AM, 11:00 AM, 5:00 PM and 8:00 PM ET, giving the single provider run up to 17 minutes to finish before each frozen form checkpoint. Because GitHub cron uses UTC, the workflow contains both DST and standard-time expressions; the Python runner gates to the correct ET checkpoint and immutable filenames prevent duplicate snapshots.
 
 At each checkpoint it:
 
