@@ -4,6 +4,7 @@ import json
 import time
 from datetime import date
 from typing import Any
+from urllib.parse import urlencode
 
 import requests
 
@@ -34,6 +35,50 @@ class HttpClient:
 
     def json(self, url: str) -> dict[str, Any]:
         return json.loads(self.text(url))
+
+
+def season_hitter_pool(client: HttpClient, season: int) -> list[dict[str, Any]]:
+    """Return every MLB player with a hitting appearance in the season.
+
+    This is intentionally independent of confirmed lineups and sportsbook
+    markets. New call-ups enter automatically as soon as MLB records a hitting
+    appearance for them.
+    """
+    params = urlencode(
+        {
+            "stats": "season",
+            "group": "hitting",
+            "season": season,
+            "playerPool": "ALL",
+            "sportIds": 1,
+            "limit": 2000,
+        }
+    )
+    payload = client.json(f"{MLB}/stats?{params}")
+    splits = (payload.get("stats") or [{}])[0].get("splits", [])
+    players: dict[int, dict[str, Any]] = {}
+    for row in splits:
+        person = row.get("player") or row.get("person") or {}
+        player_id = person.get("id")
+        name = person.get("fullName")
+        if not player_id or not name:
+            continue
+        stat = row.get("stat") or {}
+        try:
+            plate_appearances = int(stat.get("plateAppearances") or 0)
+        except (TypeError, ValueError):
+            plate_appearances = 0
+        if plate_appearances <= 0:
+            continue
+        team = row.get("team") or {}
+        players[int(player_id)] = {
+            "mlbam_id": int(player_id),
+            "player": str(name),
+            "team_id": team.get("id"),
+            "team": team.get("name"),
+            "season_plate_appearances": plate_appearances,
+        }
+    return sorted(players.values(), key=lambda row: row["player"])
 
 
 def game_log(client: HttpClient, player_id: int, season: int) -> list[dict]:
