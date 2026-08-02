@@ -3,10 +3,13 @@ from __future__ import annotations
 from datetime import date, datetime, timedelta
 from typing import Any
 from urllib.parse import urlencode
+from zoneinfo import ZoneInfo
 
 from .model import normalize_name
 
-EDGE_ODDS_URL = "https://mlb-hr-edge.feranmi.chatgpt.site/api/odds"
+EDGE_BASE_URL = "https://mlb-hr-edge.feranmi.chatgpt.site"
+EDGE_ODDS_URL = f"{EDGE_BASE_URL}/api/odds"
+EDGE_DASHBOARD_URL = f"{EDGE_BASE_URL}/api/dashboard"
 BOOK_NAMES = {
     "fanduel": "FanDuel",
     "draftkings": "DraftKings",
@@ -71,7 +74,7 @@ def parse_edge_payload(
                 "book_id": book_id,
                 "odds": offered,
                 "captured_at": str(captured_at),
-                "source": str(quote.get("source") or "sportsgameodds"),
+                "source": str(quote.get("source") or "mlb-hr-edge"),
                 "source_event_id": quote.get("sourceEventId"),
                 "source_odd_id": quote.get("sourceOddId"),
                 "verified": True,
@@ -116,11 +119,71 @@ def parse_edge_payload(
     }
 
 
+def _dashboard_payload(payload: dict[str, Any], slate_date: date) -> dict[str, Any] | None:
+    if payload.get("source") != "database":
+        return None
+    rows = []
+    for row in payload.get("rows") or []:
+        offered = {}
+        for book_id, quote in (row.get("odds") or {}).items():
+            if book_id not in BOOK_NAMES or not isinstance(quote, dict):
+                continue
+            if quote.get("americanOdds") is None or not quote.get("capturedAt"):
+                continue
+            offered[book_id] = {
+                "americanOdds": quote["americanOdds"],
+                "capturedAt": quote["capturedAt"],
+                "source": "mlb-hr-edge-dashboard",
+                "sourceEventId": None,
+                "sourceOddId": None,
+            }
+        if not offered:
+            continue
+        rows.append({
+            "predictionId": row.get("id"),
+            "gameDate": row.get("gameDate") or slate_date.isoformat(),
+            "gamePk": row.get("gamePk"),
+            "gameStartAt": row.get("gameStartAt"),
+            "batterId": row.get("batterId"),
+            "batterName": row.get("batterName"),
+            "batterTeam": row.get("batterTeam"),
+            "matchup": row.get("matchup"),
+            "lineupPosition": row.get("lineupPosition"),
+            "lineupConfirmed": True,
+            "odds": offered,
+        })
+    if not rows:
+        return None
+    return {
+        "schemaVersion": 1,
+        "date": slate_date.isoformat(),
+        "asOf": None,
+        "generatedAt": payload.get("generatedAt"),
+        "latestIngestAt": payload.get("generatedAt"),
+        "status": payload.get("feedStatus") or "live",
+        "source": "mlb-hr-edge-database",
+        "books": list(BOOK_NAMES),
+        "rowCount": len(rows),
+        "rows": rows,
+    }
+
+
 def fetch_edge_odds(client: Any, expected_date: date, as_of: datetime) -> dict[str, Any]:
     query = urlencode({"date": expected_date.isoformat(), "asOf": as_of.isoformat()})
     return parse_edge_payload(client.json(f"{EDGE_ODDS_URL}?{query}"), expected_date)
 
 
 def fetch_latest_edge_odds(client: Any) -> dict[str, Any]:
-    payload = client.json(f"{EDGE_ODDS_URL}?latest=1")
-    return parse_edge_payload(payload, None, enforce_checkpoint_age=False)
+    try:
+        payload = client.json(f"{EDGE_ODDS_URL}?latest=1")
+        return parse_edge_payload(payload, None, enforce_checkpoint_age=False)
+    except Exception:
+        today = datetime.now(ZoneInfo("America/New_York")).date()
+        for offset in range(0, 8):
+            slate_date = today - timedelta(days=offset)
+            query = urlencode({"date": slate_date.isoformat()})
+            dashboard = client.json(f"{EDGE_DASHBOARD_URL}?{query}")
+            converted = _dashboard_payload(dashboard, slate_date)
+            if converted:
+                return parse_edge_payload(converted, None, enforce_checkpoint_age=False)
+        raise ValueError("No database-backed MLB HR Edge slate with verified odds was found")
