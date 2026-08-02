@@ -16,6 +16,7 @@ BOOK_NAMES = {
     "betmgm": "BetMGM",
 }
 MAX_SHARED_SNAPSHOT_AGE = timedelta(minutes=60)
+CHECKPOINT_CAPTURE_GRACE = timedelta(minutes=15)
 
 
 def _parse_timestamp(value: Any) -> datetime:
@@ -104,7 +105,7 @@ def parse_edge_payload(
         generated = _parse_timestamp(payload.get("generatedAt"))
         age = cutoff - generated
         if age < timedelta(0):
-            raise ValueError("Shared odds snapshot was captured after the checkpoint")
+            raise ValueError("Shared odds snapshot was captured after the allowed source window")
         if age > MAX_SHARED_SNAPSHOT_AGE:
             raise ValueError(f"Shared odds snapshot is stale for this checkpoint ({age})")
 
@@ -129,18 +130,12 @@ def _dashboard_payload(
     slate_date: date,
     as_of: datetime | None = None,
 ) -> dict[str, Any] | None:
-    """Convert the live database dashboard into the odds API contract.
-
-    This is a compatibility path for deployments where /api/odds has not yet
-    reached production. Only database rows are accepted. Quotes after the
-    requested checkpoint or after game start are discarded.
-    """
+    """Convert the live database dashboard into the odds API contract."""
     if payload.get("source") != "database":
         return None
 
     rows: list[dict[str, Any]] = []
     latest_capture: datetime | None = None
-    cutoff = as_of.astimezone(as_of.tzinfo) if as_of else None
 
     for row in payload.get("rows") or []:
         offered: dict[str, dict[str, Any]] = {}
@@ -157,7 +152,7 @@ def _dashboard_payload(
                 captured = _parse_timestamp(quote.get("capturedAt"))
             except ValueError:
                 continue
-            if cutoff and captured > cutoff:
+            if as_of and captured > as_of:
                 continue
             if game_start and captured >= game_start:
                 continue
@@ -209,28 +204,42 @@ def _dashboard_payload(
 
 
 def fetch_edge_odds(client: Any, expected_date: date, as_of: datetime) -> dict[str, Any]:
-    query = urlencode({"date": expected_date.isoformat(), "asOf": as_of.isoformat()})
+    """Read the source fetch assigned to a checkpoint.
+
+    MLB HR Edge begins its source request at the labeled checkpoint, so quotes
+    can naturally be timestamped a few seconds later. A fixed 15-minute window
+    admits only that scheduled capture; game-start filtering remains enforced.
+    """
+    capture_cutoff = as_of + CHECKPOINT_CAPTURE_GRACE
+    query = urlencode(
+        {"date": expected_date.isoformat(), "asOf": capture_cutoff.isoformat()}
+    )
     primary_error: Exception | None = None
     try:
-        return parse_edge_payload(
+        market = parse_edge_payload(
             client.json(f"{EDGE_ODDS_URL}?{query}"),
             expected_date,
         )
+        market["checkpoint_at"] = as_of.isoformat()
+        market["capture_cutoff"] = capture_cutoff.isoformat()
+        return market
     except Exception as exc:
         primary_error = exc
 
     dashboard_query = urlencode({"date": expected_date.isoformat()})
     dashboard = client.json(f"{EDGE_DASHBOARD_URL}?{dashboard_query}")
-    converted = _dashboard_payload(dashboard, expected_date, as_of)
+    converted = _dashboard_payload(dashboard, expected_date, capture_cutoff)
     if not converted:
         raise ValueError(
             f"Odds API unavailable ({primary_error}); dashboard fallback had no "
-            "verified database prices at or before the checkpoint"
+            "verified database prices inside the scheduled capture window"
         )
 
     market = parse_edge_payload(converted, expected_date)
     market["source_url"] = f"{EDGE_DASHBOARD_URL}?{dashboard_query}"
     market["compatibility_fallback"] = "dashboard"
+    market["checkpoint_at"] = as_of.isoformat()
+    market["capture_cutoff"] = capture_cutoff.isoformat()
     return market
 
 
