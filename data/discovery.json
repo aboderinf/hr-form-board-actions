@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "kind": "top_100_profit_discovery",
+  "generated_at": null,
+  "generated_at_et": null,
+  "status": "collecting",
+  "methodology": {
+    "capture": "All Top 100 form-score rows are archived at each discovery checkpoint, including rows without an available price.",
+    "odds_source": "Persisted FanDuel, DraftKings, and BetMGM prices from MLB HR Edge only; this workflow never calls SportsGameOdds directly.",
+    "analysis_unit": "Best archived price per player per slate. Multiple intraday captures remain in the raw archive but count once in ROI reports.",
+    "staking": "One flat unit per priced player-game. Wins earn the archived American-odds profit; losses lose one unit; no appearances are void.",
+    "warning": "Results are exploratory and sample sizes must be considered before treating any segment as a repeatable edge."
+  },
+  "archive_started": null,
+  "capture_count": 0,
+  "raw_top100_rows": 0,
+  "raw_priced_rows": 0,
+  "unique_priced_player_games": 0,
+  "reports": {},
+  "recent_captures": [],
+  "recent_results": [],
+  "diagnostics": []
+}
