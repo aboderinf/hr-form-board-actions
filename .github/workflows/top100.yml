@@ -13,10 +13,12 @@ on:
       - "src/model.py"
       - "src/sources.py"
       - "src/edge_source.py"
+      - "src/durable_source.py"
       - "src/top100_view.py"
       - "scripts/build_top100.py"
       - "tests/test_open_pool.py"
       - "tests/test_top100_view.py"
+      - "tests/test_durable_source.py"
   schedule:
     - cron: "25 12,15,21 * 3-11 *"
     - cron: "25 0 * 3-11 *"
