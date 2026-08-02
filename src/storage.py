@@ -20,4 +20,5 @@ def rebuild(data_dir:Path,root:Path):
         picks=[]
         for s in snaps:picks.extend((((s.get('portfolios') or {}).get(key) or {}).get('picks',[])))
         agg[key]=portfolio_summary(picks)
-    d={'generated_at':datetime.now(timezone.utc).isoformat(),'method':'0.50*L5 + 0.30*L7 + 0.20*L15 cumulative HR-game rates','checkpoints_et':['08:17','11:17','17:17','20:17'],'aggregate':agg,'snapshots':snaps};write_json(data_dir/'index.json',d);render_site(d,root/'index.html')
+    latest=load_json(data_dir/'latest.json',None)
+    d={'generated_at':datetime.now(timezone.utc).isoformat(),'method':'0.50*L5 + 0.30*L7 + 0.20*L15 cumulative HR-game rates','checkpoints_et':['08:17','11:17','17:17','20:17'],'aggregate':agg,'latest':latest,'snapshots':snaps};write_json(data_dir/'index.json',d);render_site(d,root/'index.html')
