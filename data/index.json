@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-02T19:35:45.640712+00:00",
+  "generated_at": "2026-08-02T22:12:16.910390+00:00",
   "method": "0.50*L5 + 0.30*L7 + 0.20*L15 cumulative HR-game rates",
   "checkpoints_et": [
     "08:17",
@@ -126,6 +126,21 @@
         }
       },
       "diagnostics": [],
+      "portfolios": {}
+    },
+    {
+      "schema_version": 2,
+      "snapshot_id": "2026-08-02_1717",
+      "slate_date": "2026-08-02",
+      "checkpoint_et": "17:17",
+      "scheduled_at_et": "2026-08-02T17:17:00-04:00",
+      "observed_at": "2026-08-02T22:12:07.366614+00:00",
+      "observed_at_et": "2026-08-02T18:12:07.366614-04:00",
+      "status": "shared_odds_source_unavailable",
+      "sources": {},
+      "diagnostics": [
+        "GET failed https://mlb-hr-edge.feranmi.chatgpt.site/api/odds?date=2026-08-02&asOf=2026-08-02T17%3A17%3A00-04%3A00: 404 Client Error: Not Found for url: https://mlb-hr-edge.feranmi.chatgpt.site/api/odds?date=2026-08-02&asOf=2026-08-02T17%3A17%3A00-04%3A00"
+      ],
       "portfolios": {}
     }
   ]
