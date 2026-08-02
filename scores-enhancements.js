@@ -212,9 +212,17 @@ document.addEventListener("click", (event) => {
 
 document.addEventListener("input", (event) => {
   if (event.target.id !== "score-search") return;
+  const cursor = event.target.selectionStart ?? event.target.value.length;
   scoreTableState.query = event.target.value;
   const section = scoreSection();
-  if (section) renderEnhancedScores(section);
+  if (!section) return;
+  renderEnhancedScores(section);
+  requestAnimationFrame(() => {
+    const input = document.querySelector("#score-search");
+    if (!input) return;
+    input.focus();
+    input.setSelectionRange(cursor, cursor);
+  });
 });
 
 document.addEventListener("change", (event) => {
