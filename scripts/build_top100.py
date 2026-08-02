@@ -10,9 +10,11 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
+from src.edge_source import fetch_latest_edge_odds
 from src.model import ET, calculate_form_open_pool, rank_form_scores
 from src.sources import HttpClient, game_log, season_hitter_pool
 from src.storage import write_json
+from src.top100_view import attach_market_data
 
 
 def main() -> int:
@@ -25,7 +27,7 @@ def main() -> int:
     client = HttpClient()
 
     output = {
-        "schema_version": 1,
+        "schema_version": 2,
         "kind": "top_100_form_scores",
         "slate_date": slate_date.isoformat(),
         "generated_at": now.isoformat(),
@@ -34,9 +36,16 @@ def main() -> int:
         "method": "0.50*(HR games L5/5) + 0.30*(HR games L7/7) + 0.20*(HR games L15/15)",
         "eligibility": "Every MLB hitter with a current-season batting appearance and at least one prior PA-game containing a home run; no lineup or odds requirement.",
         "short_history_policy": "Fixed 5/7/15 denominators. Missing pre-debut games contribute zero. Fewer than 15 prior PA-games is labeled provisional.",
+        "odds_policy": "Odds are optional display data from MLB HR Edge and never affect form ranking or eligibility.",
         "player_pool_count": 0,
         "scored_player_count": 0,
         "players": [],
+        "odds": {
+            "source": "MLB HR Edge",
+            "status": "unavailable",
+            "priced_players": 0,
+            "coverage": None,
+        },
         "diagnostics": [],
     }
 
@@ -89,13 +98,20 @@ def main() -> int:
         )
 
     ranked = rank_form_scores(rows)
-    for rank, row in enumerate(ranked[:100], 1):
+    published = ranked[:100]
+    for rank, row in enumerate(published, 1):
         row["rank"] = rank
         row["sample_status"] = "Provisional" if row["provisional"] else "Established"
-        row.pop("recent_games", None)
 
+    edge = None
+    try:
+        edge = fetch_latest_edge_odds(client)
+    except Exception as exc:
+        output["diagnostics"].append(f"Optional MLB HR Edge odds unavailable: {exc}")
+
+    output["odds"] = attach_market_data(published, edge, slate_date)
     output["scored_player_count"] = len(ranked)
-    output["players"] = ranked[:100]
+    output["players"] = published
     output["status"] = "ready" if ranked else "no_players_in_form"
     if failures:
         output["diagnostics"].append(f"Game logs failed for {failures} players")
@@ -103,7 +119,7 @@ def main() -> int:
     write_json(ROOT / "data" / "top100.json", output)
     print(
         f"Top 100 built: pool={len(pool)} scored={len(ranked)} "
-        f"published={len(output['players'])}"
+        f"published={len(output['players'])} priced={output['odds']['priced_players']}"
     )
     return 0
 
