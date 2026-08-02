@@ -90,7 +90,7 @@ class DashboardFallbackTests(unittest.TestCase):
         }
         client = FakeClient(dashboard)
         checkpoint = datetime(2026, 8, 2, 17, 17, tzinfo=ET)
-        with self.assertRaisesRegex(ValueError, "scheduled capture window"):
+        with self.assertRaisesRegex(ValueError, "source window"):
             fetch_edge_odds(client, date(2026, 8, 2), checkpoint)
 
 
