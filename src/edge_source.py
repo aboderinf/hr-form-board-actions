@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from typing import Any
 from urllib.parse import urlencode
 
@@ -12,6 +12,16 @@ BOOK_NAMES = {
     "draftkings": "DraftKings",
     "betmgm": "BetMGM",
 }
+MAX_SHARED_SNAPSHOT_AGE = timedelta(minutes=60)
+
+
+def _parse_timestamp(value: Any) -> datetime:
+    if not value:
+        raise ValueError("Shared odds timestamp is missing")
+    parsed = datetime.fromisoformat(str(value).replace("Z", "+00:00"))
+    if parsed.tzinfo is None:
+        raise ValueError("Shared odds timestamp must be timezone-aware")
+    return parsed
 
 
 def parse_edge_payload(payload: dict[str, Any], expected_date: date) -> dict[str, Any]:
@@ -76,6 +86,17 @@ def parse_edge_payload(payload: dict[str, Any], expected_date: date) -> dict[str
                     "prediction_id": row.get("predictionId"),
                     "prices": prices,
                 }
+            )
+
+    if players:
+        cutoff = _parse_timestamp(payload.get("asOf"))
+        generated = _parse_timestamp(payload.get("generatedAt"))
+        age = cutoff - generated
+        if age < timedelta(0):
+            raise ValueError("Shared odds snapshot was captured after the checkpoint")
+        if age > MAX_SHARED_SNAPSHOT_AGE:
+            raise ValueError(
+                f"Shared odds snapshot is stale for this checkpoint ({age})"
             )
 
     return {
