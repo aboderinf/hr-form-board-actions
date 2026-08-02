@@ -1,0 +1,87 @@
+name: Archive Top 100 Discovery
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/discovery.yml"
+      - "app.js"
+      - "src/discovery.py"
+      - "scripts/build_discovery.py"
+      - "tests/test_discovery.py"
+  schedule:
+    # Run after the Top 100 and shared-odds refreshes.
+    # EDT: 08:35=12:35Z, 11:35=15:35Z, 17:35=21:35Z, 20:35=00:35Z.
+    - cron: "35 12,15,21 * 3-11 *"
+    - cron: "35 0 * 3-11 *"
+    # EST equivalents; the ET gate skips the duplicate offset run.
+    - cron: "35 13,16,22 * 3-11 *"
+    - cron: "35 1 * 3-11 *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: top-100-discovery-archive
+  cancel-in-progress: false
+
+jobs:
+  archive:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Resolve valid ET archive window
+        id: window
+        shell: bash
+        run: |
+          python - <<'PY' >> "$GITHUB_OUTPUT"
+          import os
+          from datetime import datetime
+          from zoneinfo import ZoneInfo
+
+          now = datetime.now(ZoneInfo("America/New_York"))
+          manual = os.environ.get("GITHUB_EVENT_NAME") != "schedule"
+          labels = {8: "0817", 11: "1117", 17: "1717", 20: "2017"}
+          due = manual or now.hour in labels
+          checkpoint = labels.get(now.hour, f"manual-{now:%H%M}")
+          print(f"due={'true' if due else 'false'}")
+          print(f"checkpoint={checkpoint}")
+          print(f"observed_et={now.isoformat()}")
+          PY
+
+      - uses: actions/setup-python@v5
+        if: steps.window.outputs.due == 'true'
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - if: steps.window.outputs.due == 'true'
+        run: pip install -r requirements.txt
+
+      - name: Archive Top 100 odds and rebuild discovery reports
+        if: steps.window.outputs.due == 'true'
+        run: python scripts/build_discovery.py --checkpoint "${{ steps.window.outputs.checkpoint }}"
+
+      - name: Run model and discovery tests
+        if: steps.window.outputs.due == 'true'
+        run: python -m unittest discover -s tests -v
+
+      - name: Commit discovery archive
+        if: steps.window.outputs.due == 'true'
+        shell: bash
+        run: |
+          if git diff --quiet && [ -z "$(git status --porcelain)" ]; then
+            echo "No discovery changes."
+            exit 0
+          fi
+          git config user.name "hr-form-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/discovery.json data/discovery/archive
+          git commit -m "Archive Top 100 discovery checkpoint"
+          git pull --rebase origin main
+          git push
