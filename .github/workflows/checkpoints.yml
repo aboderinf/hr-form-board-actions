@@ -1,0 +1,66 @@
+name: HR form checkpoints
+
+on:
+  workflow_dispatch:
+    inputs:
+      slate_date:
+        description: Optional YYYY-MM-DD manual slate date
+        required: false
+      checkpoint:
+        description: Optional ET checkpoint (08:17, 11:17, 17:17, 20:17)
+        required: false
+  schedule:
+    # Each ET checkpoint has an EDT and EST UTC expression. The script gates
+    # to the latest valid ET checkpoint and immutable file names make duplicates no-ops.
+    - cron: '17 12 * * *'
+    - cron: '17 13 * * *'
+    - cron: '17 15 * * *'
+    - cron: '17 16 * * *'
+    - cron: '17 21 * * *'
+    - cron: '17 22 * * *'
+    - cron: '17 0 * * *'
+    - cron: '17 1 * * *'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: hr-form-checkpoint
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Run checkpoint and settle prior picks
+        env:
+          MANUAL_DATE: ${{ github.event.inputs.slate_date }}
+          MANUAL_CHECKPOINT: ${{ github.event.inputs.checkpoint }}
+        run: |
+          if [ -n "$MANUAL_DATE" ] && [ -n "$MANUAL_CHECKPOINT" ]; then
+            python scripts/run_checkpoint.py --date "$MANUAL_DATE" --checkpoint "$MANUAL_CHECKPOINT"
+          else
+            python scripts/run_checkpoint.py
+          fi
+      - name: Validate
+        run: python -m unittest discover -s tests -v
+      - name: Commit immutable ledger updates
+        run: |
+          if git diff --quiet && [ -z "$(git status --porcelain)" ]; then
+            echo "No data changes."
+            exit 0
+          fi
+          git config user.name "hr-form-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data index.html
+          git commit -m "Update HR form checkpoint ledger"
+          git push
