@@ -69,31 +69,35 @@ def parse_edge_payload(
             captured_at = quote.get("capturedAt")
             if offered == 0 or not captured_at:
                 continue
-            prices.append({
-                "book": BOOK_NAMES[book_id],
-                "book_id": book_id,
-                "odds": offered,
-                "captured_at": str(captured_at),
-                "source": str(quote.get("source") or "mlb-hr-edge"),
-                "source_event_id": quote.get("sourceEventId"),
-                "source_odd_id": quote.get("sourceOddId"),
-                "verified": True,
-                "url": None,
-            })
+            prices.append(
+                {
+                    "book": BOOK_NAMES[book_id],
+                    "book_id": book_id,
+                    "odds": offered,
+                    "captured_at": str(captured_at),
+                    "source": str(quote.get("source") or "mlb-hr-edge"),
+                    "source_event_id": quote.get("sourceEventId"),
+                    "source_odd_id": quote.get("sourceOddId"),
+                    "verified": True,
+                    "url": None,
+                }
+            )
 
         if prices:
-            players.append({
-                "name": name,
-                "key": normalize_name(name),
-                "batter_id": int(batter_id),
-                "batter_team": row.get("batterTeam"),
-                "matchup": row.get("matchup"),
-                "lineup_position": row.get("lineupPosition"),
-                "game_pk": row.get("gamePk"),
-                "game_start_at": row.get("gameStartAt"),
-                "prediction_id": row.get("predictionId"),
-                "prices": prices,
-            })
+            players.append(
+                {
+                    "name": name,
+                    "key": normalize_name(name),
+                    "batter_id": int(batter_id),
+                    "batter_team": row.get("batterTeam"),
+                    "matchup": row.get("matchup"),
+                    "lineup_position": row.get("lineupPosition"),
+                    "game_pk": row.get("gamePk"),
+                    "game_start_at": row.get("gameStartAt"),
+                    "prediction_id": row.get("predictionId"),
+                    "prices": prices,
+                }
+            )
 
     if players and enforce_checkpoint_age:
         cutoff = _parse_timestamp(payload.get("asOf"))
@@ -108,7 +112,8 @@ def parse_edge_payload(
         "source": "MLB HR Edge",
         "source_url": EDGE_ODDS_URL,
         "source_date": source_date,
-        "date_matches": expected_date is None or source_date == expected_date.isoformat(),
+        "date_matches": expected_date is None
+        or source_date == expected_date.isoformat(),
         "as_of": payload.get("asOf"),
         "status": payload.get("status") or "pending",
         "generated_at": payload.get("generatedAt"),
@@ -119,46 +124,81 @@ def parse_edge_payload(
     }
 
 
-def _dashboard_payload(payload: dict[str, Any], slate_date: date) -> dict[str, Any] | None:
+def _dashboard_payload(
+    payload: dict[str, Any],
+    slate_date: date,
+    as_of: datetime | None = None,
+) -> dict[str, Any] | None:
+    """Convert the live database dashboard into the odds API contract.
+
+    This is a compatibility path for deployments where /api/odds has not yet
+    reached production. Only database rows are accepted. Quotes after the
+    requested checkpoint or after game start are discarded.
+    """
     if payload.get("source") != "database":
         return None
-    rows = []
+
+    rows: list[dict[str, Any]] = []
+    latest_capture: datetime | None = None
+    cutoff = as_of.astimezone(as_of.tzinfo) if as_of else None
+
     for row in payload.get("rows") or []:
-        offered = {}
+        offered: dict[str, dict[str, Any]] = {}
+        game_start_raw = row.get("gameStartAt")
+        game_start = _parse_timestamp(game_start_raw) if game_start_raw else None
+
         for book_id, quote in (row.get("odds") or {}).items():
             if book_id not in BOOK_NAMES or not isinstance(quote, dict):
                 continue
             if quote.get("americanOdds") is None or not quote.get("capturedAt"):
                 continue
+
+            try:
+                captured = _parse_timestamp(quote.get("capturedAt"))
+            except ValueError:
+                continue
+            if cutoff and captured > cutoff:
+                continue
+            if game_start and captured >= game_start:
+                continue
+
             offered[book_id] = {
                 "americanOdds": quote["americanOdds"],
                 "capturedAt": quote["capturedAt"],
                 "source": "mlb-hr-edge-dashboard",
-                "sourceEventId": None,
-                "sourceOddId": None,
+                "sourceEventId": quote.get("sourceEventId"),
+                "sourceOddId": quote.get("sourceOddId"),
             }
+            if latest_capture is None or captured > latest_capture:
+                latest_capture = captured
+
         if not offered:
             continue
-        rows.append({
-            "predictionId": row.get("id"),
-            "gameDate": row.get("gameDate") or slate_date.isoformat(),
-            "gamePk": row.get("gamePk"),
-            "gameStartAt": row.get("gameStartAt"),
-            "batterId": row.get("batterId"),
-            "batterName": row.get("batterName"),
-            "batterTeam": row.get("batterTeam"),
-            "matchup": row.get("matchup"),
-            "lineupPosition": row.get("lineupPosition"),
-            "lineupConfirmed": True,
-            "odds": offered,
-        })
+        rows.append(
+            {
+                "predictionId": row.get("id"),
+                "gameDate": row.get("gameDate") or slate_date.isoformat(),
+                "gamePk": row.get("gamePk"),
+                "gameStartAt": row.get("gameStartAt"),
+                "batterId": row.get("batterId"),
+                "batterName": row.get("batterName"),
+                "batterTeam": row.get("batterTeam"),
+                "matchup": row.get("matchup"),
+                "lineupPosition": row.get("lineupPosition"),
+                "lineupConfirmed": True,
+                "odds": offered,
+            }
+        )
+
     if not rows:
         return None
+
+    generated_at = latest_capture.isoformat() if latest_capture else payload.get("generatedAt")
     return {
         "schemaVersion": 1,
         "date": slate_date.isoformat(),
-        "asOf": None,
-        "generatedAt": payload.get("generatedAt"),
+        "asOf": as_of.isoformat() if as_of else None,
+        "generatedAt": generated_at,
         "latestIngestAt": payload.get("generatedAt"),
         "status": payload.get("feedStatus") or "live",
         "source": "mlb-hr-edge-database",
@@ -170,7 +210,28 @@ def _dashboard_payload(payload: dict[str, Any], slate_date: date) -> dict[str, A
 
 def fetch_edge_odds(client: Any, expected_date: date, as_of: datetime) -> dict[str, Any]:
     query = urlencode({"date": expected_date.isoformat(), "asOf": as_of.isoformat()})
-    return parse_edge_payload(client.json(f"{EDGE_ODDS_URL}?{query}"), expected_date)
+    primary_error: Exception | None = None
+    try:
+        return parse_edge_payload(
+            client.json(f"{EDGE_ODDS_URL}?{query}"),
+            expected_date,
+        )
+    except Exception as exc:
+        primary_error = exc
+
+    dashboard_query = urlencode({"date": expected_date.isoformat()})
+    dashboard = client.json(f"{EDGE_DASHBOARD_URL}?{dashboard_query}")
+    converted = _dashboard_payload(dashboard, expected_date, as_of)
+    if not converted:
+        raise ValueError(
+            f"Odds API unavailable ({primary_error}); dashboard fallback had no "
+            "verified database prices at or before the checkpoint"
+        )
+
+    market = parse_edge_payload(converted, expected_date)
+    market["source_url"] = f"{EDGE_DASHBOARD_URL}?{dashboard_query}"
+    market["compatibility_fallback"] = "dashboard"
+    return market
 
 
 def fetch_latest_edge_odds(client: Any) -> dict[str, Any]:
@@ -185,5 +246,12 @@ def fetch_latest_edge_odds(client: Any) -> dict[str, Any]:
             dashboard = client.json(f"{EDGE_DASHBOARD_URL}?{query}")
             converted = _dashboard_payload(dashboard, slate_date)
             if converted:
-                return parse_edge_payload(converted, None, enforce_checkpoint_age=False)
+                market = parse_edge_payload(
+                    converted,
+                    None,
+                    enforce_checkpoint_age=False,
+                )
+                market["source_url"] = f"{EDGE_DASHBOARD_URL}?{query}"
+                market["compatibility_fallback"] = "dashboard"
+                return market
         raise ValueError("No database-backed MLB HR Edge slate with verified odds was found")
