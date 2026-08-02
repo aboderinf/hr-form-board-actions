@@ -6,6 +6,8 @@ on:
     branches: [main]
     paths:
       - ".github/workflows/refresh-latest.yml"
+      - "src/edge_source.py"
+      - "scripts/refresh_latest.py"
 
 permissions:
   contents: write
