@@ -5,6 +5,11 @@ from typing import Any
 from urllib.parse import urlencode
 from zoneinfo import ZoneInfo
 
+from .durable_source import (
+    CENTRAL_LATEST_URL,
+    checkpoint_archive_url,
+    parse_durable_payload,
+)
 from .model import normalize_name
 
 EDGE_BASE_URL = "https://mlb-hr-edge.feranmi.chatgpt.site"
@@ -105,7 +110,9 @@ def parse_edge_payload(
         generated = _parse_timestamp(payload.get("generatedAt"))
         age = cutoff - generated
         if age < timedelta(0):
-            raise ValueError("Shared odds snapshot was captured after the allowed source window")
+            raise ValueError(
+                "Shared odds snapshot was captured after the allowed source window"
+            )
         if age > MAX_SHARED_SNAPSHOT_AGE:
             raise ValueError(f"Shared odds snapshot is stale for this checkpoint ({age})")
 
@@ -188,7 +195,9 @@ def _dashboard_payload(
     if not rows:
         return None
 
-    generated_at = latest_capture.isoformat() if latest_capture else payload.get("generatedAt")
+    generated_at = (
+        latest_capture.isoformat() if latest_capture else payload.get("generatedAt")
+    )
     return {
         "schemaVersion": 1,
         "date": slate_date.isoformat(),
@@ -203,18 +212,18 @@ def _dashboard_payload(
     }
 
 
-def fetch_edge_odds(client: Any, expected_date: date, as_of: datetime) -> dict[str, Any]:
-    """Read the source fetch assigned to a checkpoint.
-
-    MLB HR Edge begins its source request at the labeled checkpoint, so quotes
-    can naturally be timestamped a few seconds later. A fixed 15-minute window
-    admits only that scheduled capture; game-start filtering remains enforced.
-    """
+def fetch_edge_odds(
+    client: Any,
+    expected_date: date,
+    as_of: datetime,
+) -> dict[str, Any]:
+    """Read the one shared source fetch assigned to a checkpoint."""
     capture_cutoff = as_of + CHECKPOINT_CAPTURE_GRACE
     query = urlencode(
         {"date": expected_date.isoformat(), "asOf": capture_cutoff.isoformat()}
     )
-    primary_error: Exception | None = None
+    errors: list[str] = []
+
     try:
         market = parse_edge_payload(
             client.json(f"{EDGE_ODDS_URL}?{query}"),
@@ -224,34 +233,57 @@ def fetch_edge_odds(client: Any, expected_date: date, as_of: datetime) -> dict[s
         market["capture_cutoff"] = capture_cutoff.isoformat()
         return market
     except Exception as exc:
-        primary_error = exc
+        errors.append(f"odds API: {exc}")
 
     dashboard_query = urlencode({"date": expected_date.isoformat()})
-    dashboard = client.json(f"{EDGE_DASHBOARD_URL}?{dashboard_query}")
-    converted = _dashboard_payload(dashboard, expected_date, capture_cutoff)
-    if not converted:
-        raise ValueError(
-            f"Odds API unavailable ({primary_error}); dashboard fallback had no "
-            "verified database prices inside the scheduled capture window"
-        )
+    try:
+        dashboard = client.json(f"{EDGE_DASHBOARD_URL}?{dashboard_query}")
+        converted = _dashboard_payload(dashboard, expected_date, capture_cutoff)
+        if converted:
+            market = parse_edge_payload(converted, expected_date)
+            market["source_url"] = f"{EDGE_DASHBOARD_URL}?{dashboard_query}"
+            market["compatibility_fallback"] = "dashboard"
+            market["checkpoint_at"] = as_of.isoformat()
+            market["capture_cutoff"] = capture_cutoff.isoformat()
+            return market
+        errors.append("dashboard: no verified prices inside source window")
+    except Exception as exc:
+        errors.append(f"dashboard: {exc}")
 
-    market = parse_edge_payload(converted, expected_date)
-    market["source_url"] = f"{EDGE_DASHBOARD_URL}?{dashboard_query}"
-    market["compatibility_fallback"] = "dashboard"
-    market["checkpoint_at"] = as_of.isoformat()
-    market["capture_cutoff"] = capture_cutoff.isoformat()
-    return market
+    archive_url = checkpoint_archive_url(expected_date, as_of)
+    try:
+        market = parse_durable_payload(
+            client.json(archive_url),
+            expected_date,
+            capture_cutoff=capture_cutoff,
+            include_market_quotes=False,
+            source_url=archive_url,
+        )
+        if not market["players"]:
+            raise ValueError("payload contained no prediction-linked prices")
+        market["compatibility_fallback"] = "durable_archive"
+        market["checkpoint_at"] = as_of.isoformat()
+        market["capture_cutoff"] = capture_cutoff.isoformat()
+        return market
+    except Exception as exc:
+        errors.append(f"durable archive: {exc}")
+
+    raise ValueError("Shared MLB HR odds unavailable; " + " | ".join(errors))
 
 
 def fetch_latest_edge_odds(client: Any) -> dict[str, Any]:
+    errors: list[str] = []
     try:
         payload = client.json(f"{EDGE_ODDS_URL}?latest=1")
         return parse_edge_payload(payload, None, enforce_checkpoint_age=False)
-    except Exception:
-        today = datetime.now(ZoneInfo("America/New_York")).date()
-        for offset in range(0, 8):
-            slate_date = today - timedelta(days=offset)
-            query = urlencode({"date": slate_date.isoformat()})
+    except Exception as exc:
+        errors.append(f"odds API: {exc}")
+
+    today = datetime.now(ZoneInfo("America/New_York")).date()
+    for offset in range(0, 8):
+        slate_date = today - timedelta(days=offset)
+        query = urlencode({"date": slate_date.isoformat()})
+        try:
             dashboard = client.json(f"{EDGE_DASHBOARD_URL}?{query}")
             converted = _dashboard_payload(dashboard, slate_date)
             if converted:
@@ -263,4 +295,21 @@ def fetch_latest_edge_odds(client: Any) -> dict[str, Any]:
                 market["source_url"] = f"{EDGE_DASHBOARD_URL}?{query}"
                 market["compatibility_fallback"] = "dashboard"
                 return market
-        raise ValueError("No database-backed MLB HR Edge slate with verified odds was found")
+        except Exception as exc:
+            errors.append(f"dashboard {slate_date}: {exc}")
+
+    try:
+        market = parse_durable_payload(
+            client.json(CENTRAL_LATEST_URL),
+            None,
+            include_market_quotes=True,
+            source_url=CENTRAL_LATEST_URL,
+        )
+        market["compatibility_fallback"] = "durable_latest"
+        return market
+    except Exception as exc:
+        errors.append(f"durable latest: {exc}")
+
+    raise ValueError(
+        "No shared MLB HR odds snapshot was found; " + " | ".join(errors[-4:])
+    )
