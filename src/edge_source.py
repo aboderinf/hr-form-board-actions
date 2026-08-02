@@ -1,7 +1,8 @@
 from __future__ import annotations
 
-from datetime import date
+from datetime import date, datetime
 from typing import Any
+from urllib.parse import urlencode
 
 from .model import normalize_name
 
@@ -26,9 +27,7 @@ def parse_edge_payload(payload: dict[str, Any], expected_date: date) -> dict[str
 
     players: list[dict[str, Any]] = []
     for row in payload.get("rows") or []:
-        if row.get("gameDate") != expected:
-            continue
-        if not row.get("lineupConfirmed"):
+        if row.get("gameDate") != expected or not row.get("lineupConfirmed"):
             continue
         batter_id = row.get("batterId")
         name = str(row.get("batterName") or "").strip()
@@ -46,10 +45,8 @@ def parse_edge_payload(payload: dict[str, Any], expected_date: date) -> dict[str
                 odds = int(raw_odds)
             except (TypeError, ValueError):
                 continue
-            if odds == 0:
-                continue
             captured_at = quote.get("capturedAt")
-            if not captured_at:
+            if odds == 0 or not captured_at:
                 continue
             prices.append(
                 {
@@ -65,36 +62,47 @@ def parse_edge_payload(payload: dict[str, Any], expected_date: date) -> dict[str
                 }
             )
 
-        if not prices:
-            continue
-        players.append(
-            {
-                "name": name,
-                "key": normalize_name(name),
-                "batter_id": int(batter_id),
-                "batter_team": row.get("batterTeam"),
-                "matchup": row.get("matchup"),
-                "lineup_position": row.get("lineupPosition"),
-                "game_pk": row.get("gamePk"),
-                "game_start_at": row.get("gameStartAt"),
-                "prediction_id": row.get("predictionId"),
-                "prices": prices,
-            }
-        )
+        if prices:
+            players.append(
+                {
+                    "name": name,
+                    "key": normalize_name(name),
+                    "batter_id": int(batter_id),
+                    "batter_team": row.get("batterTeam"),
+                    "matchup": row.get("matchup"),
+                    "lineup_position": row.get("lineupPosition"),
+                    "game_pk": row.get("gamePk"),
+                    "game_start_at": row.get("gameStartAt"),
+                    "prediction_id": row.get("predictionId"),
+                    "prices": prices,
+                }
+            )
 
     return {
         "source": "MLB HR Edge",
         "source_url": EDGE_ODDS_URL,
         "source_date": expected,
         "date_matches": True,
+        "as_of": payload.get("asOf"),
         "status": payload.get("status") or "pending",
         "generated_at": payload.get("generatedAt"),
+        "latest_ingest_at": payload.get("latestIngestAt"),
         "books": [BOOK_NAMES.get(x, x) for x in (payload.get("books") or [])],
         "row_count": int(payload.get("rowCount") or len(players)),
         "players": players,
     }
 
 
-def fetch_edge_odds(client: Any, expected_date: date) -> dict[str, Any]:
-    payload = client.json(f"{EDGE_ODDS_URL}?date={expected_date.isoformat()}")
+def fetch_edge_odds(
+    client: Any,
+    expected_date: date,
+    as_of: datetime,
+) -> dict[str, Any]:
+    query = urlencode(
+        {
+            "date": expected_date.isoformat(),
+            "asOf": as_of.isoformat(),
+        }
+    )
+    payload = client.json(f"{EDGE_ODDS_URL}?{query}")
     return parse_edge_payload(payload, expected_date)
