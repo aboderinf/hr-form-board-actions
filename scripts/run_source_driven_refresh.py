@@ -123,6 +123,7 @@ def main() -> int:
                 "scripts/build_top100.py",
                 "--date",
                 args.date,
+                "--odds-only",
             ],
         }
         with ThreadPoolExecutor(max_workers=2) as executor:
