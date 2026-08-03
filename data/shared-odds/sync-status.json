@@ -1,19 +1,11 @@
 {
-  "status": "failed",
-  "checked_at": "2026-08-03T03:10:53.696157+00:00",
-  "sources": [
-    "https://mlb-hr-edge.feranmi.chatgpt.site/api/odds?latest=1",
-    "https://aboderinf.github.io/mlb-hr-fair-odds-v1/latest.json"
-  ],
-  "expected_date": "2026-08-02",
-  "expected_checkpoint": "2017",
-  "errors": [
-    "attempt 58 https://mlb-hr-edge.feranmi.chatgpt.site/api/odds?latest=1: HTTP Error 404: Not Found",
-    "attempt 58 https://aboderinf.github.io/mlb-hr-fair-odds-v1/latest.json: HTTP Error 404: Not Found",
-    "attempt 59 https://mlb-hr-edge.feranmi.chatgpt.site/api/odds?latest=1: HTTP Error 404: Not Found",
-    "attempt 59 https://aboderinf.github.io/mlb-hr-fair-odds-v1/latest.json: HTTP Error 404: Not Found",
-    "attempt 60 https://mlb-hr-edge.feranmi.chatgpt.site/api/odds?latest=1: HTTP Error 404: Not Found",
-    "attempt 60 https://aboderinf.github.io/mlb-hr-fair-odds-v1/latest.json: HTTP Error 404: Not Found"
-  ],
-  "retained_existing_mirror": true
+  "status": "success",
+  "checked_at": "2026-08-03T03:21:37.564910+00:00",
+  "source_url": "local:data/shared-odds/archive/2026-08-02_2017.json",
+  "date": "2026-08-02",
+  "checkpoint": "2017",
+  "providerCallId": "2026-08-02:2026-08-03T00:25:58.912253+00:00:06f045a5e495",
+  "providerResponseSha256": "06f045a5e495e8f344760ad3585b6ebc47e0966df19e28c6755d05c1882cd6a0",
+  "quoteCount": 0,
+  "rowCount": 0
 }

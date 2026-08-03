@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "kind": "top_100_profit_discovery",
-  "generated_at": "2026-08-03T02:53:58.205137+00:00",
-  "generated_at_et": "2026-08-02T22:53:58.205137-04:00",
+  "generated_at": "2026-08-03T03:21:58.928645+00:00",
+  "generated_at_et": "2026-08-02T23:21:58.928645-04:00",
   "status": "ready",
   "methodology": {
     "capture": "All Top 100 form-score rows are archived at each discovery checkpoint, including rows without an available price.",
@@ -11,16 +11,16 @@
     "staking": "One flat unit per priced player-game. Wins earn the archived American-odds profit; losses lose one unit; no appearances are void.",
     "warning": "Results are exploratory and sample sizes must be considered before treating any segment as a repeatable edge."
   },
-  "archive_started": "2026-08-02T15:57:29.980725-04:00",
-  "capture_count": 2,
-  "raw_top100_rows": 200,
+  "archive_started": "2026-08-02T23:21:58.928645-04:00",
+  "capture_count": 3,
+  "raw_top100_rows": 300,
   "raw_priced_rows": 0,
   "unique_priced_player_games": 0,
   "reports": {
     "rolling_14d": {
       "start": "2026-07-20",
       "end": "2026-08-02",
-      "raw_checkpoint_captures": 200,
+      "raw_checkpoint_captures": 300,
       "unique_player_games": 0,
       "overall": {
         "captures": 0,
@@ -43,7 +43,7 @@
     "calendar_month": {
       "start": "2026-08-01",
       "end": "2026-08-02",
-      "raw_checkpoint_captures": 200,
+      "raw_checkpoint_captures": 300,
       "unique_player_games": 0,
       "overall": {
         "captures": 0,
@@ -66,7 +66,7 @@
     "all_time": {
       "start": "2026-08-02",
       "end": "2026-08-02",
-      "raw_checkpoint_captures": 200,
+      "raw_checkpoint_captures": 300,
       "unique_player_games": 0,
       "overall": {
         "captures": 0,
@@ -107,6 +107,16 @@
       "odds_coverage": 0.0,
       "source_status": "unavailable",
       "source_generated_at": null
+    },
+    {
+      "slate_date": "2026-08-02",
+      "checkpoint": "2017",
+      "captured_at_et": "2026-08-02T23:21:58.928645-04:00",
+      "top100_rows": 100,
+      "priced_rows": 0,
+      "odds_coverage": 0.0,
+      "source_status": "pending",
+      "source_generated_at": "2026-08-03T00:25:58.912253+00:00"
     }
   ],
   "recent_results": [],
