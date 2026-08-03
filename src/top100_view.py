@@ -7,17 +7,33 @@ from .model import choose_best_price, normalize_name
 
 
 def compact_recent_games(games: Iterable[dict[str, Any]]) -> list[dict[str, Any]]:
-    """Return a safe, compact newest-first representation of up to 15 games."""
+    """Return a safe, compact newest-first representation of up to 15 games.
+
+    Accept both raw MLB camelCase game logs and already-normalized snake_case
+    model output. This prevents a second normalization pass from replacing
+    real home-run and plate-appearance values with zeros.
+    """
     output: list[dict[str, Any]] = []
     for game in list(games)[:15]:
-        home_runs = int(game.get("homeRuns") or 0)
+        home_runs = int(
+            game.get("home_runs")
+            if game.get("home_runs") is not None
+            else game.get("homeRuns") or 0
+        )
+        plate_appearances = int(
+            game.get("plate_appearances")
+            if game.get("plate_appearances") is not None
+            else game.get("plateAppearances") or 0
+        )
         output.append(
             {
                 "date": game.get("date"),
-                "game_pk": game.get("gamePk"),
+                "game_pk": game.get("game_pk")
+                if game.get("game_pk") is not None
+                else game.get("gamePk"),
                 "opponent": game.get("opponent"),
                 "home_runs": home_runs,
-                "plate_appearances": int(game.get("plateAppearances") or 0),
+                "plate_appearances": plate_appearances,
                 "hr_game": home_runs > 0,
             }
         )
