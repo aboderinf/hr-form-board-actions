@@ -110,6 +110,19 @@ def calculate_form_open_pool(
     return result
 
 
+def _display_game(game: dict[str, Any]) -> dict[str, Any]:
+    """Serialize one MLB game consistently for the browser form strip."""
+    home_runs = int(game.get("homeRuns", 0))
+    return {
+        "date": game.get("date"),
+        "game_pk": game.get("gamePk"),
+        "opponent": game.get("opponent"),
+        "home_runs": home_runs,
+        "plate_appearances": int(game.get("plateAppearances", 0)),
+        "hr_game": home_runs > 0,
+    }
+
+
 def _form_from_prior(
     prior: list[dict[str, Any]], *, provisional: bool
 ) -> dict[str, Any]:
@@ -127,7 +140,7 @@ def _form_from_prior(
         "home_runs_l15": sum(int(game.get("homeRuns", 0)) for game in recent),
         "games_available": len(recent),
         "provisional": provisional,
-        "recent_games": recent,
+        "recent_games": [_display_game(game) for game in recent],
     }
 
 
