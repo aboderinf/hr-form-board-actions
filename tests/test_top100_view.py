@@ -28,6 +28,23 @@ class Top100ViewTests(unittest.TestCase):
         self.assertEqual(compact[0]["home_runs"], 2)
         self.assertFalse(compact[1]["hr_game"])
 
+    def test_compact_recent_games_preserves_normalized_values(self):
+        games = [
+            {
+                "date": "2026-08-01",
+                "game_pk": 101,
+                "opponent": "New York Yankees",
+                "home_runs": 1,
+                "plate_appearances": 4,
+                "hr_game": True,
+            }
+        ]
+        compact = compact_recent_games(games)
+        self.assertEqual(compact[0]["game_pk"], 101)
+        self.assertEqual(compact[0]["home_runs"], 1)
+        self.assertEqual(compact[0]["plate_appearances"], 4)
+        self.assertTrue(compact[0]["hr_game"])
+
     def test_attach_market_data_uses_id_and_best_price(self):
         players = [
             {
