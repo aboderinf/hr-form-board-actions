@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 import importlib.util
+import json
 from pathlib import Path
+import tempfile
 import unittest
 
 
@@ -39,6 +41,36 @@ class SourceDrivenRefreshTests(unittest.TestCase):
             "rows": [],
         }
 
+    def dashboard(self) -> dict:
+        return {
+            "source": "database",
+            "generatedAt": "2026-08-03T00:25:58+00:00",
+            "feedStatus": "live",
+            "rows": [
+                {
+                    "id": "prediction-1",
+                    "gameDate": "2026-08-02",
+                    "gamePk": 123,
+                    "gameStartAt": "2026-08-03T01:10:00+00:00",
+                    "batterId": 77,
+                    "batterName": "Test Hitter",
+                    "batterTeam": "TST",
+                    "matchup": "TST @ OPP",
+                    "lineupPosition": 2,
+                    "odds": {
+                        "fanduel": {
+                            "americanOdds": 650,
+                            "capturedAt": "2026-08-03T00:25:58+00:00",
+                        },
+                        "draftkings": {
+                            "americanOdds": 700,
+                            "capturedAt": "2026-08-03T00:40:00+00:00",
+                        },
+                    },
+                }
+            ],
+        }
+
     def test_checkpoint_formats_normalize_identically(self) -> None:
         self.assertEqual(orchestrator.normalize_checkpoint("20:17"), "2017")
         self.assertEqual(orchestrator.normalize_checkpoint("8:17"), "0817")
@@ -68,6 +100,37 @@ class SourceDrivenRefreshTests(unittest.TestCase):
                 expected_date="2026-08-02",
                 expected_checkpoint="20:17",
             )
+
+    def test_matching_local_archive_is_reused_without_network(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            output = Path(temporary)
+            archive = output / "archive" / "2026-08-02_2017.json"
+            archive.parent.mkdir(parents=True)
+            archive.write_text(json.dumps(self.payload()), encoding="utf-8")
+            selected = mirror.load_matching_local(output, "2026-08-02", "20:17")
+            self.assertIsNotNone(selected)
+            payload, source = selected
+            self.assertEqual(payload["providerCallId"], "call-1")
+            self.assertTrue(source.startswith("local:"))
+
+    def test_dashboard_handoff_keeps_only_checkpoint_valid_quotes(self) -> None:
+        payload = mirror.dashboard_to_shared(
+            self.dashboard(), "2026-08-02", "20:17"
+        )
+        self.assertEqual(payload["checkpoint"], "2017")
+        self.assertEqual(payload["allAvailableQuoteCount"], 2)
+        self.assertEqual(payload["quoteCount"], 1)
+        self.assertEqual(payload["excludedLiveOrPostStartQuoteCount"], 1)
+        self.assertEqual(
+            payload["rows"][0]["odds"]["fanduel"]["americanOdds"], 650
+        )
+        self.assertEqual(len(payload["providerResponseSha256"]), 64)
+
+    def test_dashboard_from_previous_checkpoint_is_rejected(self) -> None:
+        stale = self.dashboard()
+        stale["generatedAt"] = "2026-08-02T21:25:58+00:00"
+        with self.assertRaisesRegex(ValueError, "predates"):
+            mirror.dashboard_to_shared(stale, "2026-08-02", "20:17")
 
 
 if __name__ == "__main__":
