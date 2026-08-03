@@ -10,14 +10,16 @@ class OpenPoolFormTests(unittest.TestCase):
             {
                 "date": "2026-07-30",
                 "gamePk": 1,
+                "opponent": "Boston Red Sox",
                 "plateAppearances": 4,
                 "homeRuns": 1,
             },
             {
                 "date": "2026-07-31",
                 "gamePk": 2,
-                "plateAppearances": 4,
-                "homeRuns": 1,
+                "opponent": "Boston Red Sox",
+                "plateAppearances": 5,
+                "homeRuns": 2,
             },
         ]
         form = calculate_form_open_pool(games, date(2026, 8, 2))
@@ -26,6 +28,21 @@ class OpenPoolFormTests(unittest.TestCase):
         self.assertEqual(form["games_available"], 2)
         expected = 0.50 * 2 / 5 + 0.30 * 2 / 7 + 0.20 * 2 / 15
         self.assertAlmostEqual(form["score"], expected)
+
+        # Browser-facing form history must preserve the same values used by
+        # scoring rather than emitting zero-filled snake_case placeholders.
+        self.assertEqual(
+            form["recent_games"][0],
+            {
+                "date": "2026-07-31",
+                "game_pk": 2,
+                "opponent": "Boston Red Sox",
+                "home_runs": 2,
+                "plate_appearances": 5,
+                "hr_game": True,
+            },
+        )
+        self.assertEqual(form["recent_games"][1]["home_runs"], 1)
 
     def test_player_without_recent_hr_is_not_in_form(self):
         games = [
