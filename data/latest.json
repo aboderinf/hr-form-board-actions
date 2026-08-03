@@ -1,12 +1,37 @@
 {
   "schema_version": 1,
   "kind": "latest_shared_slate",
-  "refreshed_at": "2026-08-02T19:35:35.537167+00:00",
-  "refreshed_at_et": "2026-08-02T15:35:35.537167-04:00",
-  "status": "shared_odds_source_unavailable",
-  "sources": {},
-  "diagnostics": [
-    "No database-backed MLB HR Edge slate with verified odds was found"
-  ],
-  "portfolios": {}
+  "refreshed_at": "2026-08-03T02:53:36.934195+00:00",
+  "refreshed_at_et": "2026-08-02T22:53:36.934195-04:00",
+  "status": "shared_odds_slate_empty",
+  "sources": {
+    "mlb_hr_edge": {
+      "source": "MLB HR Edge",
+      "source_url": "https://hr-form-board-actions.vercel.app/data/shared-odds/latest.json",
+      "delivery": "public-form-board-mirror",
+      "source_date": "2026-08-02",
+      "date_matches": true,
+      "as_of": "2026-08-03T00:25:58.912253+00:00",
+      "status": "pending",
+      "generated_at": "2026-08-03T00:25:58.912253+00:00",
+      "latest_ingest_at": "2026-08-03T00:25:58.912253+00:00",
+      "provider_call_id": "2026-08-02:2026-08-03T00:25:58.912253+00:00:06f045a5e495",
+      "provider_response_sha256": "06f045a5e495e8f344760ad3585b6ebc47e0966df19e28c6755d05c1882cd6a0",
+      "archived_call_count": 1,
+      "quote_count": 0,
+      "all_available_quote_count": 62,
+      "excluded_live_or_post_start_quote_count": 62,
+      "books": [
+        "FanDuel",
+        "DraftKings",
+        "BetMGM"
+      ],
+      "row_count": 0,
+      "compatibility_fallback": "public_form_board_mirror"
+    }
+  },
+  "diagnostics": [],
+  "portfolios": {},
+  "slate_date": "2026-08-02",
+  "source_generated_at": "2026-08-03T00:25:58.912253+00:00"
 }
