@@ -9,6 +9,10 @@ on:
       checkpoint:
         description: Optional ET checkpoint (08:17, 11:17, 17:17, 20:17)
         required: false
+  push:
+    branches: [main]
+    paths:
+      - "data/triggers/run-source-driven-refresh-now.txt"
   schedule:
     # Start one consumer job shortly after the source's :17 request. The job
     # waits for the exact archived call instead of relying on later cron jobs.
@@ -50,7 +54,7 @@ jobs:
           labels = {8: "08:17", 11: "11:17", 17: "17:17", 20: "20:17"}
           requested_date = os.environ.get("REQUESTED_DATE", "").strip()
           requested_checkpoint = os.environ.get("REQUESTED_CHECKPOINT", "").strip()
-          manual = os.environ.get("GITHUB_EVENT_NAME") == "workflow_dispatch"
+          manual = os.environ.get("GITHUB_EVENT_NAME") != "schedule"
 
           if requested_date and requested_checkpoint:
               slate_date = requested_date
