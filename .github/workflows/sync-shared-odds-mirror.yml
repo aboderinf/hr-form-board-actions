@@ -1,0 +1,71 @@
+name: Sync shared odds mirror
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "scripts/sync_shared_odds_mirror.py"
+      - ".github/workflows/sync-shared-odds-mirror.yml"
+  schedule:
+    # Nine to twelve minutes after the source fetch, before the :32 checkpoint.
+    - cron: "29 12,15,21 * 3-11 *"
+    - cron: "29 0 * 3-11 *"
+    - cron: "29 13,16,22 * 3-11 *"
+    - cron: "29 1 * 3-11 *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-shared-odds-mirror
+  cancel-in-progress: true
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Resolve valid ET sync window
+        id: window
+        run: |
+          python - <<'PY' >> "$GITHUB_OUTPUT"
+          import os
+          from datetime import datetime
+          from zoneinfo import ZoneInfo
+          now = datetime.now(ZoneInfo("America/New_York"))
+          manual = os.environ.get("GITHUB_EVENT_NAME") != "schedule"
+          due = manual or now.hour in {8, 11, 17, 20}
+          print(f"due={'true' if due else 'false'}")
+          PY
+      - name: Synchronize owned public mirror
+        if: steps.window.outputs.due == 'true'
+        continue-on-error: true
+        run: python scripts/sync_shared_odds_mirror.py --output-dir data/shared-odds
+      - name: Commit mirror and sync status
+        if: steps.window.outputs.due == 'true'
+        run: |
+          git config user.name "hr-form-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/shared-odds
+          if git diff --cached --quiet; then
+            echo "Shared mirror unchanged."
+            exit 0
+          fi
+          git commit -m "Sync public shared odds mirror"
+          git pull --rebase origin main
+          git push
+      - name: Require a successful source when no prior mirror exists
+        if: steps.window.outputs.due == 'true'
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          status = json.loads(Path('data/shared-odds/sync-status.json').read_text())
+          if status.get('status') == 'failed' and not status.get('retained_existing_mirror'):
+              raise SystemExit('No central source and no retained public mirror')
+          print(json.dumps(status, indent=2))
+          PY
