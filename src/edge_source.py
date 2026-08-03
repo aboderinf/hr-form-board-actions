@@ -12,9 +12,14 @@ from .durable_source import (
 )
 from .model import normalize_name
 
+ET = ZoneInfo("America/New_York")
 EDGE_BASE_URL = "https://mlb-hr-edge.feranmi.chatgpt.site"
 EDGE_ODDS_URL = f"{EDGE_BASE_URL}/api/odds"
 EDGE_DASHBOARD_URL = f"{EDGE_BASE_URL}/api/dashboard"
+PUBLIC_MIRROR_BASES = (
+    "https://hr-form-board-actions.vercel.app/data/shared-odds",
+    "https://aboderinf.github.io/mlb-hr-fair-odds-v1",
+)
 BOOK_NAMES = {
     "fanduel": "FanDuel",
     "draftkings": "DraftKings",
@@ -86,9 +91,11 @@ def parse_edge_payload(
                     "odds": offered,
                     "captured_at": str(captured_at),
                     "source": str(quote.get("source") or "mlb-hr-edge"),
-                    "source_event_id": quote.get("sourceEventId") or row.get("sourceEventId"),
+                    "source_event_id": quote.get("sourceEventId")
+                    or row.get("sourceEventId"),
                     "source_odd_id": quote.get("sourceOddId"),
-                    "provider_call_id": quote.get("callId") or payload.get("providerCallId"),
+                    "provider_call_id": quote.get("callId")
+                    or payload.get("providerCallId"),
                     "verified": True,
                     "url": None,
                 }
@@ -117,15 +124,19 @@ def parse_edge_payload(
         generated = _parse_timestamp(payload.get("generatedAt"))
         age = cutoff - generated
         if age < timedelta(0):
-            raise ValueError("Shared odds snapshot was captured after the allowed source window")
+            raise ValueError(
+                "Shared odds snapshot was captured after the allowed source window"
+            )
         if age > MAX_SHARED_SNAPSHOT_AGE:
             raise ValueError(f"Shared odds snapshot is stale for this checkpoint ({age})")
 
     return {
         "source": "MLB HR Edge",
         "source_url": EDGE_ODDS_URL,
+        "delivery": payload.get("delivery") or "api",
         "source_date": source_date,
-        "date_matches": expected_date is None or source_date == expected_date.isoformat(),
+        "date_matches": expected_date is None
+        or source_date == expected_date.isoformat(),
         "as_of": payload.get("asOf"),
         "status": payload.get("status") or "pending",
         "generated_at": payload.get("generatedAt"),
@@ -134,6 +145,12 @@ def parse_edge_payload(
         "provider_response_sha256": payload.get("providerResponseSha256"),
         "archived_call_count": int(payload.get("archivedCallCount") or 0),
         "quote_count": int(payload.get("quoteCount") or 0),
+        "all_available_quote_count": int(
+            payload.get("allAvailableQuoteCount") or payload.get("quoteCount") or 0
+        ),
+        "excluded_live_or_post_start_quote_count": int(
+            payload.get("excludedLiveOrPostStartQuoteCount") or 0
+        ),
         "books": [BOOK_NAMES.get(x, x) for x in (payload.get("books") or [])],
         "row_count": int(payload.get("rowCount") or len(players)),
         "players": players,
@@ -197,7 +214,9 @@ def _dashboard_payload(
         "schemaVersion": 1,
         "date": slate_date.isoformat(),
         "asOf": as_of.isoformat() if as_of else None,
-        "generatedAt": latest_capture.isoformat() if latest_capture else payload.get("generatedAt"),
+        "generatedAt": latest_capture.isoformat()
+        if latest_capture
+        else payload.get("generatedAt"),
         "latestIngestAt": payload.get("generatedAt"),
         "status": payload.get("feedStatus") or "live",
         "source": "mlb-hr-edge-database",
@@ -207,15 +226,45 @@ def _dashboard_payload(
     }
 
 
+def _checkpoint_mirror_url(base: str, slate_date: date, checkpoint: datetime) -> str:
+    label = checkpoint.astimezone(ET).strftime("%H%M")
+    return f"{base}/archive/{slate_date.isoformat()}_{label}.json"
+
+
+def _mark_source(
+    market: dict[str, Any],
+    *,
+    source_url: str,
+    fallback: str,
+    checkpoint: datetime | None = None,
+    cutoff: datetime | None = None,
+) -> dict[str, Any]:
+    market["source_url"] = source_url
+    market["compatibility_fallback"] = fallback
+    if checkpoint:
+        market["checkpoint_at"] = checkpoint.isoformat()
+    if cutoff:
+        market["capture_cutoff"] = cutoff.isoformat()
+    return market
+
+
 def fetch_edge_odds(client: Any, expected_date: date, as_of: datetime) -> dict[str, Any]:
     capture_cutoff = as_of + CHECKPOINT_CAPTURE_GRACE
-    query = urlencode({"date": expected_date.isoformat(), "asOf": capture_cutoff.isoformat()})
+    query = urlencode(
+        {"date": expected_date.isoformat(), "asOf": capture_cutoff.isoformat()}
+    )
     errors: list[str] = []
     try:
-        market = parse_edge_payload(client.json(f"{EDGE_ODDS_URL}?{query}"), expected_date)
-        market["checkpoint_at"] = as_of.isoformat()
-        market["capture_cutoff"] = capture_cutoff.isoformat()
-        return market
+        market = parse_edge_payload(
+            client.json(f"{EDGE_ODDS_URL}?{query}"), expected_date
+        )
+        return _mark_source(
+            market,
+            source_url=f"{EDGE_ODDS_URL}?{query}",
+            fallback="odds_api",
+            checkpoint=as_of,
+            cutoff=capture_cutoff,
+        )
     except Exception as exc:
         errors.append(f"odds API: {exc}")
 
@@ -227,15 +276,38 @@ def fetch_edge_odds(client: Any, expected_date: date, as_of: datetime) -> dict[s
             capture_cutoff,
         )
         if converted:
-            market = parse_edge_payload(converted, expected_date)
-            market["source_url"] = f"{EDGE_DASHBOARD_URL}?{dashboard_query}"
-            market["compatibility_fallback"] = "dashboard"
-            market["checkpoint_at"] = as_of.isoformat()
-            market["capture_cutoff"] = capture_cutoff.isoformat()
-            return market
+            return _mark_source(
+                parse_edge_payload(converted, expected_date),
+                source_url=f"{EDGE_DASHBOARD_URL}?{dashboard_query}",
+                fallback="dashboard",
+                checkpoint=as_of,
+                cutoff=capture_cutoff,
+            )
         errors.append("dashboard: no verified prices inside source window")
     except Exception as exc:
         errors.append(f"dashboard: {exc}")
+
+    expected_label = as_of.astimezone(ET).strftime("%H%M")
+    for index, base in enumerate(PUBLIC_MIRROR_BASES):
+        mirror_url = _checkpoint_mirror_url(base, expected_date, as_of)
+        try:
+            payload = client.json(mirror_url)
+            if payload.get("checkpoint") and str(payload["checkpoint"]) != expected_label:
+                raise ValueError(
+                    f"mirror checkpoint {payload['checkpoint']!r} did not match {expected_label}"
+                )
+            market = parse_edge_payload(payload, expected_date)
+            return _mark_source(
+                market,
+                source_url=mirror_url,
+                fallback="public_form_board_mirror"
+                if index == 0
+                else "github_pages_mirror",
+                checkpoint=as_of,
+                cutoff=capture_cutoff,
+            )
+        except Exception as exc:
+            errors.append(f"public mirror {mirror_url}: {exc}")
 
     archive_url = checkpoint_archive_url(expected_date, as_of)
     try:
@@ -248,10 +320,13 @@ def fetch_edge_odds(client: Any, expected_date: date, as_of: datetime) -> dict[s
         )
         if not market["players"]:
             raise ValueError("payload contained no prediction-linked prices")
-        market["compatibility_fallback"] = "durable_archive"
-        market["checkpoint_at"] = as_of.isoformat()
-        market["capture_cutoff"] = capture_cutoff.isoformat()
-        return market
+        return _mark_source(
+            market,
+            source_url=archive_url,
+            fallback="private_durable_archive",
+            checkpoint=as_of,
+            cutoff=capture_cutoff,
+        )
     except Exception as exc:
         errors.append(f"durable archive: {exc}")
     raise ValueError("Shared MLB HR odds unavailable; " + " | ".join(errors))
@@ -261,28 +336,55 @@ def fetch_latest_edge_odds(client: Any) -> dict[str, Any]:
     errors: list[str] = []
     try:
         payload = client.json(f"{EDGE_ODDS_URL}?latest=1")
-        return parse_edge_payload(
-            payload,
-            None,
-            enforce_checkpoint_age=False,
-            require_confirmed_lineup=False,
+        return _mark_source(
+            parse_edge_payload(
+                payload,
+                None,
+                enforce_checkpoint_age=False,
+                require_confirmed_lineup=False,
+            ),
+            source_url=f"{EDGE_ODDS_URL}?latest=1",
+            fallback="odds_api",
         )
     except Exception as exc:
         errors.append(f"odds API: {exc}")
 
-    today = datetime.now(ZoneInfo("America/New_York")).date()
+    today = datetime.now(ET).date()
     for offset in range(0, 8):
         slate_date = today - timedelta(days=offset)
         query = urlencode({"date": slate_date.isoformat()})
         try:
-            converted = _dashboard_payload(client.json(f"{EDGE_DASHBOARD_URL}?{query}"), slate_date)
+            converted = _dashboard_payload(
+                client.json(f"{EDGE_DASHBOARD_URL}?{query}"), slate_date
+            )
             if converted:
-                market = parse_edge_payload(converted, None, enforce_checkpoint_age=False)
-                market["source_url"] = f"{EDGE_DASHBOARD_URL}?{query}"
-                market["compatibility_fallback"] = "dashboard"
-                return market
+                return _mark_source(
+                    parse_edge_payload(
+                        converted, None, enforce_checkpoint_age=False
+                    ),
+                    source_url=f"{EDGE_DASHBOARD_URL}?{query}",
+                    fallback="dashboard",
+                )
         except Exception as exc:
             errors.append(f"dashboard {slate_date}: {exc}")
+
+    for index, base in enumerate(PUBLIC_MIRROR_BASES):
+        mirror_url = f"{base}/latest.json"
+        try:
+            return _mark_source(
+                parse_edge_payload(
+                    client.json(mirror_url),
+                    None,
+                    enforce_checkpoint_age=False,
+                    require_confirmed_lineup=False,
+                ),
+                source_url=mirror_url,
+                fallback="public_form_board_mirror"
+                if index == 0
+                else "github_pages_mirror",
+            )
+        except Exception as exc:
+            errors.append(f"public mirror {mirror_url}: {exc}")
 
     try:
         market = parse_durable_payload(
@@ -291,8 +393,13 @@ def fetch_latest_edge_odds(client: Any) -> dict[str, Any]:
             include_market_quotes=True,
             source_url=CENTRAL_LATEST_URL,
         )
-        market["compatibility_fallback"] = "durable_latest"
-        return market
+        return _mark_source(
+            market,
+            source_url=CENTRAL_LATEST_URL,
+            fallback="private_durable_latest",
+        )
     except Exception as exc:
         errors.append(f"durable latest: {exc}")
-    raise ValueError("No shared MLB HR odds snapshot was found; " + " | ".join(errors[-4:]))
+    raise ValueError(
+        "No shared MLB HR odds snapshot was found; " + " | ".join(errors[-6:])
+    )
