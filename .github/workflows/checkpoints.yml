@@ -16,7 +16,6 @@ on:
   schedule:
     # MLB HR Edge starts its one shared provider fetch at :17. The consumer runs
     # at :32 so the source request, archive and ingest can finish first.
-    # run_checkpoint.py still resolves and freezes the corresponding :17 label.
     - cron: '32 12,15,21 * 3-11 *'
     - cron: '32 0 * 3-11 *'
     - cron: '32 13,16,22 * 3-11 *'
@@ -42,6 +41,13 @@ jobs:
           python-version: '3.12'
           cache: pip
       - run: pip install -r requirements.txt
+      - name: Test checkpoint calculation and odds-source contracts
+        run: |
+          python -m unittest discover -s tests -p 'test_tracker.py' -v
+          python -m unittest discover -s tests -p 'test_edge_source.py' -v
+          python -m unittest discover -s tests -p 'test_durable_source.py' -v
+          python -m unittest discover -s tests -p 'test_edge_dashboard_fallback.py' -v
+          python -m unittest discover -s tests -p 'test_public_mirror_fallback.py' -v
       - name: Run checkpoint and settle prior picks
         env:
           MANUAL_DATE: ${{ github.event.inputs.slate_date }}
@@ -52,8 +58,6 @@ jobs:
           else
             python scripts/run_checkpoint.py
           fi
-      - name: Validate
-        run: python -m unittest discover -s tests -v
       - name: Commit immutable ledger updates
         run: |
           if git diff --quiet && [ -z "$(git status --porcelain)" ]; then
