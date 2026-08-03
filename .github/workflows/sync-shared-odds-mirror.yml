@@ -15,6 +15,7 @@ on:
       - ".github/workflows/sync-shared-odds-mirror.yml"
       - "scripts/run_source_driven_refresh.py"
       - "scripts/sync_shared_odds_mirror.py"
+      - "scripts/build_top100.py"
       - "tests/test_source_driven_refresh.py"
       - "data/triggers/run-source-driven-refresh-now.txt"
   schedule:
@@ -30,7 +31,7 @@ permissions:
 
 concurrency:
   group: source-driven-form-board-refresh
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   refresh:
