@@ -12,6 +12,10 @@ on:
   push:
     branches: [main]
     paths:
+      - ".github/workflows/source-driven-refresh.yml"
+      - "scripts/run_source_driven_refresh.py"
+      - "scripts/sync_shared_odds_mirror.py"
+      - "tests/test_source_driven_refresh.py"
       - "data/triggers/run-source-driven-refresh-now.txt"
   schedule:
     # Start one consumer job shortly after the source's :17 request. The job
@@ -85,6 +89,33 @@ jobs:
       - name: Skip duplicate UTC invocation
         if: steps.window.outputs.due != 'true'
         run: echo "Not the valid ET source-consumer window."
+
+      - name: Initialize durable pipeline status
+        if: steps.window.outputs.due == 'true'
+        shell: bash
+        env:
+          SLATE_DATE: ${{ steps.window.outputs.slate_date }}
+          CHECKPOINT: ${{ steps.window.outputs.checkpoint }}
+        run: |
+          mkdir -p data
+          python - <<'PY'
+          import json
+          import os
+          from datetime import datetime, timezone
+          from pathlib import Path
+          payload = {
+              "schema_version": 1,
+              "status": "workflow_started",
+              "slate_date": os.environ["SLATE_DATE"],
+              "checkpoint_label": os.environ["CHECKPOINT"],
+              "workflow_run_id": os.environ["GITHUB_RUN_ID"],
+              "workflow_event": os.environ["GITHUB_EVENT_NAME"],
+              "workflow_started_at": datetime.now(timezone.utc).isoformat(),
+          }
+          Path("data/pipeline-status.json").write_text(
+              json.dumps(payload, indent=2) + "\n", encoding="utf-8"
+          )
+          PY
 
       - uses: actions/setup-python@v5
         if: steps.window.outputs.due == 'true'
