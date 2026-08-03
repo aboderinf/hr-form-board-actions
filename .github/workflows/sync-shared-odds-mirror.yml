@@ -1,72 +1,165 @@
-name: Sync shared odds mirror
+name: Source-driven Form Board refresh
 
 on:
   workflow_dispatch:
+    inputs:
+      slate_date:
+        description: Optional YYYY-MM-DD slate date
+        required: false
+      checkpoint:
+        description: Optional ET checkpoint (08:17, 11:17, 17:17, 20:17)
+        required: false
   push:
     branches: [main]
     paths:
-      - "scripts/sync_shared_odds_mirror.py"
       - ".github/workflows/sync-shared-odds-mirror.yml"
+      - "scripts/run_source_driven_refresh.py"
+      - "scripts/sync_shared_odds_mirror.py"
+      - "tests/test_source_driven_refresh.py"
+      - "data/triggers/run-source-driven-refresh-now.txt"
   schedule:
-    # Recovery-only fallback. The primary source-driven workflow waits for and
-    # mirrors the exact checkpoint before rebuilding all board surfaces.
-    - cron: "45 12,15,21 * 3-11 *"
-    - cron: "45 0 * 3-11 *"
-    - cron: "45 13,16,22 * 3-11 *"
-    - cron: "45 1 * 3-11 *"
+    # This existing, registered workflow starts shortly after the source's :17
+    # request and waits for the exact archived provider call.
+    - cron: "20 12,15,21 * 3-11 *"
+    - cron: "20 0 * 3-11 *"
+    - cron: "20 13,16,22 * 3-11 *"
+    - cron: "20 1 * 3-11 *"
 
 permissions:
   contents: write
 
 concurrency:
-  group: sync-shared-odds-mirror
-  cancel-in-progress: true
+  group: source-driven-form-board-refresh
+  cancel-in-progress: false
 
 jobs:
-  sync:
+  refresh:
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 35
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Resolve valid ET sync window
+
+      - name: Resolve the exact ET source checkpoint
         id: window
+        shell: bash
+        env:
+          REQUESTED_DATE: ${{ github.event.inputs.slate_date }}
+          REQUESTED_CHECKPOINT: ${{ github.event.inputs.checkpoint }}
         run: |
           python - <<'PY' >> "$GITHUB_OUTPUT"
           import os
-          from datetime import datetime
+          from datetime import datetime, timedelta
           from zoneinfo import ZoneInfo
-          now = datetime.now(ZoneInfo("America/New_York"))
+
+          et = ZoneInfo("America/New_York")
+          now = datetime.now(et)
+          labels = {8: "08:17", 11: "11:17", 17: "17:17", 20: "20:17"}
+          requested_date = os.environ.get("REQUESTED_DATE", "").strip()
+          requested_checkpoint = os.environ.get("REQUESTED_CHECKPOINT", "").strip()
           manual = os.environ.get("GITHUB_EVENT_NAME") != "schedule"
-          due = manual or now.hour in {8, 11, 17, 20}
+
+          if requested_date and requested_checkpoint:
+              slate_date = requested_date
+              checkpoint = requested_checkpoint
+              due = True
+          elif manual:
+              candidates = [
+                  hour for hour in labels
+                  if hour < now.hour or (hour == now.hour and now.minute >= 17)
+              ]
+              if candidates:
+                  hour = max(candidates)
+                  day = now.date()
+              else:
+                  hour = 20
+                  day = now.date() - timedelta(days=1)
+              slate_date = day.isoformat()
+              checkpoint = labels[hour]
+              due = True
+          else:
+              due = now.hour in labels
+              slate_date = now.date().isoformat()
+              checkpoint = labels.get(now.hour, "")
+
           print(f"due={'true' if due else 'false'}")
+          print(f"slate_date={slate_date}")
+          print(f"checkpoint={checkpoint}")
+          print(f"observed_et={now.isoformat()}")
           PY
-      - name: Synchronize owned public mirror
+
+      - name: Skip duplicate UTC invocation
+        if: steps.window.outputs.due != 'true'
+        run: echo "Not the valid ET source-consumer window."
+
+      - name: Initialize durable pipeline status
+        if: steps.window.outputs.due == 'true'
+        shell: bash
+        env:
+          SLATE_DATE: ${{ steps.window.outputs.slate_date }}
+          CHECKPOINT: ${{ steps.window.outputs.checkpoint }}
+        run: |
+          mkdir -p data
+          python - <<'PY'
+          import json
+          import os
+          from datetime import datetime, timezone
+          from pathlib import Path
+          payload = {
+              "schema_version": 1,
+              "status": "workflow_started",
+              "slate_date": os.environ["SLATE_DATE"],
+              "checkpoint_label": os.environ["CHECKPOINT"],
+              "workflow_run_id": os.environ["GITHUB_RUN_ID"],
+              "workflow_event": os.environ["GITHUB_EVENT_NAME"],
+              "workflow_started_at": datetime.now(timezone.utc).isoformat(),
+          }
+          Path("data/pipeline-status.json").write_text(
+              json.dumps(payload, indent=2) + "\n", encoding="utf-8"
+          )
+          PY
+
+      - uses: actions/setup-python@v5
+        if: steps.window.outputs.due == 'true'
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install consumer runtime once
+        if: steps.window.outputs.due == 'true'
+        run: pip install -r requirements.txt
+
+      - name: Verify checkpoint matching guard
+        if: steps.window.outputs.due == 'true'
+        run: python -m unittest discover -s tests -p 'test_source_driven_refresh.py' -v
+
+      - name: Wait for source and refresh all Form Board surfaces
+        id: refresh
         if: steps.window.outputs.due == 'true'
         continue-on-error: true
-        run: python scripts/sync_shared_odds_mirror.py --output-dir data/shared-odds
-      - name: Commit mirror and sync status
-        if: steps.window.outputs.due == 'true'
+        run: |
+          python scripts/run_source_driven_refresh.py \
+            --date "${{ steps.window.outputs.slate_date }}" \
+            --checkpoint "${{ steps.window.outputs.checkpoint }}" \
+            --attempts 60 \
+            --delay 15
+
+      - name: Commit one atomic board update
+        if: always() && steps.window.outputs.due == 'true'
+        shell: bash
         run: |
           git config user.name "hr-form-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add data/shared-odds
+          git add data index.html
           if git diff --cached --quiet; then
-            echo "Shared mirror unchanged."
+            echo "No Form Board changes."
             exit 0
           fi
-          git commit -m "Sync public shared odds mirror"
+          git commit -m "Refresh all Form Board surfaces from shared source"
           git pull --rebase origin main
           git push
-      - name: Require a successful source when no prior mirror exists
-        if: steps.window.outputs.due == 'true'
-        run: |
-          python - <<'PY'
-          import json
-          from pathlib import Path
-          status = json.loads(Path('data/shared-odds/sync-status.json').read_text())
-          if status.get('status') == 'failed' and not status.get('retained_existing_mirror'):
-              raise SystemExit('No central source and no retained public mirror')
-          print(json.dumps(status, indent=2))
-          PY
+
+      - name: Require successful source-driven refresh
+        if: always() && steps.window.outputs.due == 'true' && steps.refresh.outcome != 'success'
+        run: exit 1
