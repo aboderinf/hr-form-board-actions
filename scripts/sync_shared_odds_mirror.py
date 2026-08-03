@@ -7,6 +7,7 @@ import argparse
 from datetime import datetime, timezone
 import json
 from pathlib import Path
+import re
 import time
 from urllib.request import Request, urlopen
 from zoneinfo import ZoneInfo
@@ -27,7 +28,30 @@ def fetch_json(url: str) -> dict:
         return json.load(response)
 
 
-def validate(payload: dict) -> None:
+def normalize_checkpoint(value: str | None) -> str:
+    digits = re.sub(r"\D", "", str(value or ""))
+    if len(digits) == 3:
+        digits = f"0{digits}"
+    return digits
+
+
+def checkpoint_label(payload: dict) -> str:
+    explicit = str(payload.get("checkpoint") or "")
+    if explicit:
+        return normalize_checkpoint(explicit)
+    stamp = payload.get("latestIngestAt") or payload.get("generatedAt")
+    if stamp:
+        parsed = datetime.fromisoformat(str(stamp).replace("Z", "+00:00"))
+        return parsed.astimezone(ET).strftime("%H%M")
+    return datetime.now(ET).strftime("%H%M")
+
+
+def validate(
+    payload: dict,
+    *,
+    expected_date: str | None = None,
+    expected_checkpoint: str | None = None,
+) -> None:
     if payload.get("source") != "mlb-hr-edge-database":
         raise ValueError("source is not mlb-hr-edge-database")
     if payload.get("status") == "error":
@@ -42,16 +66,17 @@ def validate(payload: dict) -> None:
     if not isinstance(payload.get("rows"), list):
         raise ValueError("rows must be a list")
 
-
-def checkpoint_label(payload: dict) -> str:
-    explicit = str(payload.get("checkpoint") or "")
-    if explicit:
-        return explicit
-    stamp = payload.get("latestIngestAt") or payload.get("generatedAt")
-    if stamp:
-        parsed = datetime.fromisoformat(str(stamp).replace("Z", "+00:00"))
-        return parsed.astimezone(ET).strftime("%H%M")
-    return datetime.now(ET).strftime("%H%M")
+    if expected_date and str(payload.get("date")) != expected_date:
+        raise ValueError(
+            f"source slate {payload.get('date')} does not match expected {expected_date}"
+        )
+    if expected_checkpoint:
+        actual = checkpoint_label(payload)
+        expected = normalize_checkpoint(expected_checkpoint)
+        if actual != expected:
+            raise ValueError(
+                f"source checkpoint {actual or 'missing'} does not match expected {expected}"
+            )
 
 
 def main() -> int:
@@ -59,6 +84,8 @@ def main() -> int:
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--attempts", type=int, default=3)
     parser.add_argument("--delay", type=int, default=10)
+    parser.add_argument("--expected-date")
+    parser.add_argument("--expected-checkpoint")
     args = parser.parse_args()
 
     errors: list[str] = []
@@ -68,7 +95,11 @@ def main() -> int:
         for url in SOURCES:
             try:
                 candidate = fetch_json(url)
-                validate(candidate)
+                validate(
+                    candidate,
+                    expected_date=args.expected_date,
+                    expected_checkpoint=args.expected_checkpoint,
+                )
                 payload = candidate
                 selected_url = url
                 break
@@ -86,6 +117,8 @@ def main() -> int:
             "status": "failed",
             "checked_at": datetime.now(timezone.utc).isoformat(),
             "sources": list(SOURCES),
+            "expected_date": args.expected_date,
+            "expected_checkpoint": normalize_checkpoint(args.expected_checkpoint),
             "errors": errors[-6:],
             "retained_existing_mirror": (args.output_dir / "latest.json").exists(),
         }
