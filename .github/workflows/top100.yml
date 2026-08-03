@@ -19,6 +19,8 @@ on:
       - "tests/test_open_pool.py"
       - "tests/test_top100_view.py"
       - "tests/test_durable_source.py"
+      - "tests/test_edge_source.py"
+      - "tests/test_public_mirror_fallback.py"
   schedule:
     - cron: "25 12,15,21 * 3-11 *"
     - cron: "25 0 * 3-11 *"
@@ -60,12 +62,17 @@ jobs:
           cache: pip
       - if: steps.window.outputs.due == 'true'
         run: pip install -r requirements.txt
+      - name: Test only Top 100 ranking and shared-odds contracts
+        if: steps.window.outputs.due == 'true'
+        run: |
+          python -m unittest discover -s tests -p 'test_open_pool.py' -v
+          python -m unittest discover -s tests -p 'test_top100_view.py' -v
+          python -m unittest discover -s tests -p 'test_edge_source.py' -v
+          python -m unittest discover -s tests -p 'test_durable_source.py' -v
+          python -m unittest discover -s tests -p 'test_public_mirror_fallback.py' -v
       - name: Build Top 100 leaderboard with optional shared odds
         if: steps.window.outputs.due == 'true'
         run: python scripts/build_top100.py
-      - name: Run tests
-        if: steps.window.outputs.due == 'true'
-        run: python -m unittest discover -s tests -v
       - name: Commit leaderboard
         if: steps.window.outputs.due == 'true'
         run: |
