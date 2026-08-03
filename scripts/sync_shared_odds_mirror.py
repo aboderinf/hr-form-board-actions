@@ -4,20 +4,26 @@
 from __future__ import annotations
 
 import argparse
-from datetime import datetime, timezone
+from datetime import date, datetime, time as clock_time, timedelta, timezone
+import hashlib
 import json
 from pathlib import Path
 import re
 import time
+from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 from zoneinfo import ZoneInfo
 
 
 ET = ZoneInfo("America/New_York")
+EDGE_BASE_URL = "https://mlb-hr-edge.feranmi.chatgpt.site"
 SOURCES = (
-    "https://mlb-hr-edge.feranmi.chatgpt.site/api/odds?latest=1",
+    f"{EDGE_BASE_URL}/api/odds?latest=1",
     "https://aboderinf.github.io/mlb-hr-fair-odds-v1/latest.json",
 )
+BOOKS = ("fanduel", "draftkings", "betmgm")
+CAPTURE_GRACE = timedelta(minutes=15)
+MAX_SOURCE_FINISH_DELAY = timedelta(minutes=60)
 
 
 def fetch_json(url: str) -> dict:
@@ -35,13 +41,34 @@ def normalize_checkpoint(value: str | None) -> str:
     return digits
 
 
+def parse_timestamp(value: object) -> datetime:
+    if not value:
+        raise ValueError("timestamp is missing")
+    parsed = datetime.fromisoformat(str(value).replace("Z", "+00:00"))
+    if parsed.tzinfo is None:
+        raise ValueError("timestamp must be timezone-aware")
+    return parsed
+
+
+def scheduled_checkpoint(expected_date: str, checkpoint: str) -> datetime:
+    digits = normalize_checkpoint(checkpoint)
+    if len(digits) != 4:
+        raise ValueError(f"invalid checkpoint {checkpoint!r}")
+    day = date.fromisoformat(expected_date)
+    return datetime.combine(
+        day,
+        clock_time(int(digits[:2]), int(digits[2:])),
+        ET,
+    )
+
+
 def checkpoint_label(payload: dict) -> str:
     explicit = str(payload.get("checkpoint") or "")
     if explicit:
         return normalize_checkpoint(explicit)
     stamp = payload.get("latestIngestAt") or payload.get("generatedAt")
     if stamp:
-        parsed = datetime.fromisoformat(str(stamp).replace("Z", "+00:00"))
+        parsed = parse_timestamp(stamp)
         return parsed.astimezone(ET).strftime("%H%M")
     return datetime.now(ET).strftime("%H%M")
 
@@ -79,6 +106,131 @@ def validate(
             )
 
 
+def load_matching_local(
+    output_dir: Path,
+    expected_date: str | None,
+    expected_checkpoint: str | None,
+) -> tuple[dict, str] | None:
+    candidates: list[Path] = []
+    if expected_date and expected_checkpoint:
+        label = normalize_checkpoint(expected_checkpoint)
+        candidates.append(output_dir / "archive" / f"{expected_date}_{label}.json")
+    candidates.append(output_dir / "latest.json")
+    for path in candidates:
+        if not path.exists() or path.stat().st_size == 0:
+            continue
+        try:
+            payload = json.loads(path.read_text(encoding="utf-8"))
+            validate(
+                payload,
+                expected_date=expected_date,
+                expected_checkpoint=expected_checkpoint,
+            )
+            return payload, f"local:{path.as_posix()}"
+        except Exception:
+            continue
+    return None
+
+
+def dashboard_to_shared(
+    dashboard: dict,
+    expected_date: str,
+    expected_checkpoint: str,
+) -> dict:
+    if dashboard.get("source") != "database":
+        raise ValueError("dashboard response is not database-backed")
+    generated_at = parse_timestamp(dashboard.get("generatedAt"))
+    checkpoint = scheduled_checkpoint(expected_date, expected_checkpoint)
+    checkpoint_utc = checkpoint.astimezone(timezone.utc)
+    if generated_at < checkpoint_utc:
+        raise ValueError("dashboard sync predates the requested checkpoint")
+    if generated_at > checkpoint_utc + MAX_SOURCE_FINISH_DELAY:
+        raise ValueError("dashboard sync is outside the requested checkpoint window")
+
+    cutoff = checkpoint_utc + CAPTURE_GRACE
+    rows: list[dict] = []
+    available_count = 0
+    excluded_count = 0
+    for row in dashboard.get("rows") or []:
+        offered: dict[str, dict] = {}
+        game_start = None
+        if row.get("gameStartAt"):
+            try:
+                game_start = parse_timestamp(row["gameStartAt"])
+            except ValueError:
+                game_start = None
+        for book_id, quote in (row.get("odds") or {}).items():
+            if book_id not in BOOKS or not isinstance(quote, dict):
+                continue
+            raw_odds = quote.get("americanOdds")
+            captured_raw = quote.get("capturedAt")
+            if raw_odds is None or not captured_raw:
+                continue
+            available_count += 1
+            try:
+                captured = parse_timestamp(captured_raw)
+                offered_odds = int(raw_odds)
+            except (TypeError, ValueError):
+                excluded_count += 1
+                continue
+            if captured > cutoff or (game_start and captured >= game_start):
+                excluded_count += 1
+                continue
+            offered[book_id] = {
+                "americanOdds": offered_odds,
+                "capturedAt": captured.isoformat(),
+                "source": "mlb-hr-edge-dashboard",
+                "sourceEventId": quote.get("sourceEventId"),
+                "sourceOddId": quote.get("sourceOddId"),
+            }
+        if offered:
+            rows.append(
+                {
+                    "predictionId": row.get("id"),
+                    "gameDate": row.get("gameDate") or expected_date,
+                    "gamePk": row.get("gamePk"),
+                    "gameStartAt": row.get("gameStartAt"),
+                    "batterId": row.get("batterId"),
+                    "batterName": row.get("batterName"),
+                    "batterTeam": row.get("batterTeam"),
+                    "matchup": row.get("matchup"),
+                    "lineupPosition": row.get("lineupPosition"),
+                    "lineupConfirmed": True,
+                    "odds": offered,
+                }
+            )
+
+    canonical = json.dumps(
+        dashboard, sort_keys=True, separators=(",", ":"), ensure_ascii=False
+    ).encode("utf-8")
+    snapshot_hash = hashlib.sha256(canonical).hexdigest()
+    label = normalize_checkpoint(expected_checkpoint)
+    return {
+        "schemaVersion": 2,
+        "date": expected_date,
+        "checkpoint": label,
+        "asOf": cutoff.isoformat(),
+        "generatedAt": generated_at.isoformat(),
+        "latestIngestAt": generated_at.isoformat(),
+        "status": "ready" if rows else "pending",
+        "source": "mlb-hr-edge-database",
+        "delivery": "dashboard-compatibility-handoff",
+        "books": list(BOOKS),
+        "rowCount": len(rows),
+        "quoteCount": sum(len(row["odds"]) for row in rows),
+        "allAvailableQuoteCount": available_count,
+        "excludedLiveOrPostStartQuoteCount": excluded_count,
+        "archivedCallCount": 1,
+        "providerCallId": f"dashboard:{expected_date}:{label}:{generated_at.isoformat()}",
+        "providerResponseSha256": snapshot_hash,
+        "rows": rows,
+    }
+
+
+def dashboard_url(expected_date: str) -> str:
+    return f"{EDGE_BASE_URL}/api/dashboard?{urlencode({'date': expected_date})}"
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--output-dir", type=Path, required=True)
@@ -88,10 +240,20 @@ def main() -> int:
     parser.add_argument("--expected-checkpoint")
     args = parser.parse_args()
 
+    args.output_dir.mkdir(parents=True, exist_ok=True)
     errors: list[str] = []
     selected_url: str | None = None
     payload: dict | None = None
+
+    local = load_matching_local(
+        args.output_dir, args.expected_date, args.expected_checkpoint
+    )
+    if local:
+        payload, selected_url = local
+
     for attempt in range(1, args.attempts + 1):
+        if payload is not None:
+            break
         for url in SOURCES:
             try:
                 candidate = fetch_json(url)
@@ -105,21 +267,35 @@ def main() -> int:
                 break
             except Exception as exc:
                 errors.append(f"attempt {attempt} {url}: {exc}")
-        if payload is not None:
-            break
-        if attempt < args.attempts:
+
+        if payload is None and args.expected_date and args.expected_checkpoint:
+            url = dashboard_url(args.expected_date)
+            try:
+                candidate = dashboard_to_shared(
+                    fetch_json(url), args.expected_date, args.expected_checkpoint
+                )
+                validate(
+                    candidate,
+                    expected_date=args.expected_date,
+                    expected_checkpoint=args.expected_checkpoint,
+                )
+                payload = candidate
+                selected_url = url
+            except Exception as exc:
+                errors.append(f"attempt {attempt} {url}: {exc}")
+
+        if payload is None and attempt < args.attempts:
             time.sleep(args.delay)
 
-    args.output_dir.mkdir(parents=True, exist_ok=True)
     status_path = args.output_dir / "sync-status.json"
     if payload is None:
         status = {
             "status": "failed",
             "checked_at": datetime.now(timezone.utc).isoformat(),
-            "sources": list(SOURCES),
+            "sources": [*SOURCES, dashboard_url(args.expected_date or "YYYY-MM-DD")],
             "expected_date": args.expected_date,
             "expected_checkpoint": normalize_checkpoint(args.expected_checkpoint),
-            "errors": errors[-6:],
+            "errors": errors[-9:],
             "retained_existing_mirror": (args.output_dir / "latest.json").exists(),
         }
         status_path.write_text(json.dumps(status, indent=2) + "\n", encoding="utf-8")
