@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-04T15:10:05.004107+00:00",
+  "generated_at": "2026-08-04T16:03:27.183875+00:00",
   "method": "0.50*L5 + 0.30*L7 + 0.20*L15 cumulative HR-game rates",
   "checkpoints_et": [
     "08:17",
@@ -263,6 +263,21 @@
       "sources": {},
       "diagnostics": [
         "Centralized MLB HR Edge API could not be reached from this run, and the authorized database-derived mirror data/shared-odds/archive/2026-08-03_1717.json was not present. No direct sportsbook or SportsGameOdds fallback was attempted."
+      ],
+      "portfolios": {}
+    },
+    {
+      "schema_version": 2,
+      "snapshot_id": "2026-08-04_1117",
+      "slate_date": "2026-08-04",
+      "checkpoint_et": "11:17",
+      "scheduled_at_et": "2026-08-04T11:17:00-04:00",
+      "observed_at": "2026-08-04T16:02:48.631238+00:00",
+      "observed_at_et": "2026-08-04T12:02:48.631238-04:00",
+      "status": "shared_odds_source_unavailable",
+      "sources": {},
+      "diagnostics": [
+        "Shared MLB HR odds unavailable; odds API: GET failed https://mlb-hr-edge.feranmi.chatgpt.site/api/odds?date=2026-08-04&asOf=2026-08-04T11%3A32%3A00-04%3A00: 404 Client Error: Not Found for url: https://mlb-hr-edge.feranmi.chatgpt.site/api/odds?date=2026-08-04&asOf=2026-08-04T11%3A32%3A00-04%3A00 | dashboard: no verified prices inside source window | public mirror https://hr-form-board-actions.vercel.app/data/shared-odds/archive/2026-08-04_1117.json: GET failed https://hr-form-board-actions.vercel.app/data/shared-odds/archive/2026-08-04_1117.json: 404 Client Error: Not Found for url: https://hr-form-board-actions.vercel.app/data/shared-odds/archive/2026-08-04_1117.json | public mirror https://aboderinf.github.io/mlb-hr-fair-odds-v1/archive/2026-08-04_1117.json: GET failed https://aboderinf.github.io/mlb-hr-fair-odds-v1/archive/2026-08-04_1117.json: 404 Client Error: Not Found for url: https://aboderinf.github.io/mlb-hr-fair-odds-v1/archive/2026-08-04_1117.json | durable archive: GET failed https://raw.githubusercontent.com/aboderinf/mlb-hr-fair-odds-v1/main/generated/shared/archive/2026-08-04_1117.json: 404 Client Error: Not Found for url: https://raw.githubusercontent.com/aboderinf/mlb-hr-fair-odds-v1/main/generated/shared/archive/2026-08-04_1117.json"
       ],
       "portfolios": {}
     }
