@@ -71,7 +71,7 @@ def main() -> int:
     checkpoint_label = checkpoint_with_colon(args.checkpoint)
     started_at = datetime.now(timezone.utc)
     status: dict = {
-        "schema_version": 1,
+        "schema_version": 2,
         "status": "running",
         "slate_date": args.date,
         "checkpoint": checkpoint_digits,
@@ -144,11 +144,26 @@ def main() -> int:
         status["steps"]["discovery_seconds"] = run(
             [
                 PYTHON,
-                "scripts/build_discovery.py",
+                "scripts/capture_top100_checkpoint.py",
+                "--date",
+                args.date,
                 "--checkpoint",
-                checkpoint_digits,
+                checkpoint_label,
             ]
         )
+
+        capture_path = (
+            ROOT
+            / "data"
+            / "discovery"
+            / "archive"
+            / f"{args.date}_{checkpoint_digits}.json"
+        )
+        capture = read_json(capture_path)
+        status["top100_checkpoint_rows"] = capture.get("top100_rows", 0)
+        status["top100_checkpoint_priced_rows"] = capture.get("priced_rows", 0)
+        if int(capture.get("priced_rows") or 0) <= 0:
+            raise RuntimeError("Top 100 checkpoint history contains no prices")
 
         completed_at = datetime.now(timezone.utc)
         status["status"] = "success"
