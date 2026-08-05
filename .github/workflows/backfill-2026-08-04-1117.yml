@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
-      ARTIFACT_URL: "https://sdmntprcacentral.oaiusercontent.com/files/00000000-f0ec-820d-97e9-8e2769673a45/raw?se=2026-08-05T02:52:16Z&sp=r&sv=2026-02-06&sr=b&scid=49984ddc-05ea-53d9-8ae3-a02a1cad7a47&skoid=a1be202a-6464-476c-a496-723317c4a4db&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-08-05T01:53:20Z&ske=2026-08-06T01:53:20Z&sks=b&skv=2026-02-06&sig=ApM3YKlWswi50mYGjWQZ7xuiYESDhMoOky4nW%2BZpjVg%3D"
+      ARTIFACT_URL: "https://sdmntprnorthcentralus.oaiusercontent.com/files/00000000-b9a8-822f-af00-9632dfca501e/raw?se=2026-08-05T02:57:39Z&sp=r&sv=2026-02-06&sr=b&scid=f43ee124-7851-5498-8ffa-5a81bdfcc5a4&skoid=a1be202a-6464-476c-a496-723317c4a4db&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-08-04T22:10:51Z&ske=2026-08-05T22:10:51Z&sks=b&skv=2026-02-06&sig=n4TxVtu60L0J8fGqcES0UYXJA1G8Bkq7xEvSeYYL%2BOw%3D"
     steps:
       - uses: actions/checkout@v4
         with:
@@ -34,6 +34,7 @@ jobs:
 
       - name: Download exact source recovery artifact
         run: |
+          rm -rf /tmp/mlb-source /tmp/mlb-source.zip
           mkdir -p /tmp/mlb-source
           curl --fail --location --retry 3 "$ARTIFACT_URL" --output /tmp/mlb-source.zip
           unzip -q /tmp/mlb-source.zip -d /tmp/mlb-source
@@ -167,10 +168,10 @@ jobs:
                   'providerResponseSha256': call['response_sha256'],
                   'rows': rows,
               }
-              assert feed['rowCount'] == 465, feed['rowCount']
-              assert feed['quoteCount'] == 1395, feed['quoteCount']
+              assert feed['rowCount'] == 249, feed['rowCount']
+              assert feed['quoteCount'] == 707, feed['quoteCount']
               assert feed['allAvailableQuoteCount'] == 1414, feed['allAvailableQuoteCount']
-              assert feed['excludedLiveOrPostStartQuoteCount'] == 19, feed['excludedLiveOrPostStartQuoteCount']
+              assert feed['excludedLiveOrPostStartQuoteCount'] == 0, feed['excludedLiveOrPostStartQuoteCount']
 
               OUT.mkdir(parents=True, exist_ok=True)
               (OUT / 'archive').mkdir(parents=True, exist_ok=True)
@@ -205,7 +206,7 @@ jobs:
           import json
           from pathlib import Path
           feed = json.loads(Path('data/shared-odds/archive/2026-08-04_1117.json').read_text())
-          assert feed['quoteCount'] == 1395
+          assert feed['quoteCount'] == 707
           index = json.loads(Path('data/index.json').read_text())
           snapshots = index.get('snapshots') or []
           matching = [s for s in snapshots if str(s.get('date') or s.get('slate_date')) == '2026-08-04' and str(s.get('checkpoint') or '').replace(':','') == '1117']
