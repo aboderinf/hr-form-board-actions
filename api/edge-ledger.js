@@ -1,13 +1,29 @@
-const EDGE_LEDGER_URL = "https://mlb-hr-edge.feranmi.chatgpt.site/api/ledger";
+const EDGE_BASE_URL = "https://mlb-hr-edge.feranmi.chatgpt.site";
+const EDGE_LEDGER_URL = `${EDGE_BASE_URL}/api/ledger`;
 
 function validLedger(payload) {
   return (
     payload &&
-    payload.source === "mlb-hr-edge-database" &&
     Array.isArray(payload.rows) &&
     payload.summary &&
     typeof payload.summary.settledBets === "number"
   );
+}
+
+function normalizeLedger(payload) {
+  return {
+    schemaVersion: Number(payload.schemaVersion || 1),
+    status: payload.status === "unavailable" ? "unavailable" : "ready",
+    source: "mlb-hr-edge-database",
+    generatedAt: payload.generatedAt || new Date().toISOString(),
+    rowCount: Number(payload.rowCount ?? payload.rows.length),
+    rows: payload.rows,
+    summary: payload.summary,
+    trackerUrl: `${EDGE_BASE_URL}/tracker`,
+    legacyTrackerUrl: `${EDGE_BASE_URL}/ledger`,
+    compatibilityMode:
+      payload.source === "mlb-hr-edge-database" ? "current-contract" : "legacy-ledger-normalized",
+  };
 }
 
 module.exports = async function handler(request, response) {
@@ -18,7 +34,7 @@ module.exports = async function handler(request, response) {
 
   try {
     const upstream = await fetch(EDGE_LEDGER_URL, {
-      headers: { "User-Agent": "hr-form-tracker-network/1.0" },
+      headers: { "User-Agent": "hr-form-tracker-network/1.1" },
       cache: "no-store",
     });
     const payload = await upstream.json().catch(() => null);
@@ -27,12 +43,14 @@ module.exports = async function handler(request, response) {
         payload?.message || `MLB HR Edge tracker returned HTTP ${upstream.status}`,
       );
     }
+    const normalized = normalizeLedger(payload);
 
     response.setHeader("Cache-Control", "public, s-maxage=30, stale-while-revalidate=90");
     response.setHeader("Access-Control-Allow-Origin", "*");
     response.setHeader("X-Tracker-Source", "mlb-hr-edge-database");
+    response.setHeader("X-Tracker-Compatibility", normalized.compatibilityMode);
     if (request.method === "HEAD") return response.status(200).end();
-    return response.status(200).json(payload);
+    return response.status(200).json(normalized);
   } catch (error) {
     response.setHeader("Cache-Control", "no-store");
     return response.status(502).json({
@@ -50,6 +68,8 @@ module.exports = async function handler(request, response) {
         roi: null,
         maximumDrawdownCents: null,
       },
+      trackerUrl: `${EDGE_BASE_URL}/tracker`,
+      legacyTrackerUrl: `${EDGE_BASE_URL}/ledger`,
       message: error instanceof Error ? error.message : String(error),
     });
   }
