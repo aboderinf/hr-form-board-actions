@@ -2,11 +2,12 @@ const crypto = require("node:crypto");
 
 const EDGE_BASE_URL = "https://mlb-hr-edge.feranmi.chatgpt.site";
 const ALLOWED_QUERY_KEYS = new Set(["date", "checkpoint", "asOf", "latest"]);
+const ALLOWED_BOOKS = new Set(["fanduel", "draftkings", "betmgm"]);
 
 async function fetchJson(url) {
   const upstream = await fetch(url, {
     method: "GET",
-    headers: { "User-Agent": "hr-form-central-db-proxy/2.0" },
+    headers: { "User-Agent": "hr-form-central-db-proxy/2.1" },
     cache: "no-store",
   });
   const text = await upstream.text();
@@ -20,16 +21,50 @@ async function fetchJson(url) {
   }
 }
 
+function validTime(value) {
+  const milliseconds = Date.parse(String(value || ""));
+  return Number.isFinite(milliseconds) ? milliseconds : null;
+}
+
+function filterPregameRows(rows) {
+  let allAvailableQuoteCount = 0;
+  let excludedLiveOrPostStartQuoteCount = 0;
+  const filteredRows = rows.map((row) => {
+    const gameStart = validTime(row?.gameStartAt);
+    const odds = {};
+    for (const [book, quote] of Object.entries(row?.odds || {})) {
+      if (!ALLOWED_BOOKS.has(book) || !quote || typeof quote !== "object") continue;
+      const americanOdds = Number(quote.americanOdds);
+      const capturedAt = validTime(quote.capturedAt);
+      if (!Number.isFinite(americanOdds) || capturedAt == null) continue;
+      allAvailableQuoteCount += 1;
+      if (gameStart != null && capturedAt >= gameStart) {
+        excludedLiveOrPostStartQuoteCount += 1;
+        continue;
+      }
+      odds[book] = quote;
+    }
+    return { ...row, odds };
+  });
+  const quoteCount = filteredRows.reduce(
+    (total, row) => total + Object.keys(row.odds || {}).length,
+    0,
+  );
+  return {
+    rows: filteredRows,
+    quoteCount,
+    allAvailableQuoteCount,
+    excludedLiveOrPostStartQuoteCount,
+  };
+}
+
 function normalizeDashboard(dashboard, slateDate, sourceUrl) {
   if (dashboard?.source !== "database" || !Array.isArray(dashboard.rows)) {
     throw new Error("Dashboard response is not database-backed");
   }
   const canonical = JSON.stringify(dashboard);
   const generatedAt = dashboard.generatedAt || new Date().toISOString();
-  const quoteCount = dashboard.rows.reduce(
-    (total, row) => total + Object.keys(row?.odds || {}).length,
-    0,
-  );
+  const filtered = filterPregameRows(dashboard.rows);
   return {
     schemaVersion: 2,
     date: dashboard.date || slateDate,
@@ -37,16 +72,15 @@ function normalizeDashboard(dashboard, slateDate, sourceUrl) {
     asOf: generatedAt,
     generatedAt,
     latestIngestAt: generatedAt,
-    status: quoteCount > 0 ? "ready" : "pending",
+    status: filtered.quoteCount > 0 ? "ready" : "pending",
     source: "mlb-hr-edge-database",
     delivery: "central-database-dashboard-read",
     books: ["fanduel", "draftkings", "betmgm"],
-    rowCount: dashboard.rows.length,
-    quoteCount,
-    allAvailableQuoteCount: Number(dashboard.allAvailableQuoteCount || quoteCount),
-    excludedLiveOrPostStartQuoteCount: Number(
-      dashboard.excludedLiveOrPostStartQuoteCount || 0,
-    ),
+    rowCount: filtered.rows.length,
+    quoteCount: filtered.quoteCount,
+    allAvailableQuoteCount: filtered.allAvailableQuoteCount,
+    excludedLiveOrPostStartQuoteCount:
+      filtered.excludedLiveOrPostStartQuoteCount,
     archivedCallCount: Number(dashboard.archivedCallCount || 1),
     providerCallId:
       dashboard.providerCallId || `dashboard:${slateDate}:${generatedAt}`,
@@ -54,7 +88,7 @@ function normalizeDashboard(dashboard, slateDate, sourceUrl) {
       dashboard.providerResponseSha256
       || crypto.createHash("sha256").update(canonical).digest("hex"),
     databaseUrl: sourceUrl,
-    rows: dashboard.rows,
+    rows: filtered.rows,
   };
 }
 
