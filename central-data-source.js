@@ -1,4 +1,4 @@
-const CENTRAL_ODDS_ENDPOINT = "https://mlb-hr-edge.feranmi.chatgpt.site/api/odds?latest=1";
+const CENTRAL_ODDS_ENDPOINT = "/api/central-odds?latest=1";
 const nativeFetch = window.fetch.bind(window);
 
 function normalizedPlayerKey(value) {
