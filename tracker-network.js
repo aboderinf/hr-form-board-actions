@@ -1,4 +1,5 @@
 const EDGE_TRACKER_URL = "https://mlb-hr-edge.feranmi.chatgpt.site/tracker";
+const EDGE_LEGACY_TRACKER_URL = "https://mlb-hr-edge.feranmi.chatgpt.site/ledger";
 const EDGE_LEDGER_ENDPOINT = "/api/edge-ledger";
 
 let edgeLedger = null;
@@ -8,6 +9,10 @@ let lastLoadedAt = 0;
 
 function trackerRouteActive() {
   return (location.hash.slice(1) || "today") === "tracker";
+}
+
+function activeEdgeTrackerUrl() {
+  return edgeLedger?.activeTrackerUrl || EDGE_LEGACY_TRACKER_URL;
 }
 
 function percent(value) {
@@ -35,12 +40,16 @@ function escapeHtml(value) {
 
 function networkMarkup() {
   const summary = edgeLedger?.summary || {};
+  const trackerUrl = activeEdgeTrackerUrl();
   if (edgeLoading && !edgeLedger) {
     return `<div class="eyebrow">Cross-site tracker</div><h2>Loading MLB HR Edge tracker…</h2><p class="muted">Reading the central database ledger. The Form Board ledger below remains independent and available.</p>`;
   }
   if (edgeError) {
-    return `<div class="eyebrow">Cross-site tracker</div><h2>MLB HR Edge tracker unavailable</h2><p class="muted">${escapeHtml(edgeError)}. No stale Edge record is being substituted.</p><p><button class="nav" type="button" data-edge-tracker-retry>Retry Edge tracker</button> <a class="nav" href="${EDGE_TRACKER_URL}">Open Edge tracker</a></p>`;
+    return `<div class="eyebrow">Cross-site tracker</div><h2>MLB HR Edge tracker unavailable</h2><p class="muted">${escapeHtml(edgeError)}. No stale Edge record is being substituted.</p><p><button class="nav" type="button" data-edge-tracker-retry>Retry Edge tracker</button> <a class="nav" href="${EDGE_LEGACY_TRACKER_URL}">Open Edge ledger</a></p>`;
   }
+  const routeNote = edgeLedger?.trackerRoute === "tracker"
+    ? "The standardized /tracker route is live."
+    : "The legacy /ledger route is being used until the standardized /tracker deployment is live.";
   return `<div class="eyebrow">Tracker network</div>
     <h2>Form strategy here · model strategy on MLB HR Edge</h2>
     <p class="muted">This page tracks the frozen Top 10 and Top 20 cumulative-form portfolios. MLB HR Edge separately tracks up to seven +500 to +900 model-EV selections from the same central odds database.</p>
@@ -50,7 +59,8 @@ function networkMarkup() {
       <div class="card"><div class="metric"><strong>${dollars(summary.profitCents)}</strong><span>Edge model net</span></div></div>
       <div class="card"><div class="metric"><strong>${edgeLedger?.rowCount ?? edgeLedger?.rows?.length ?? 0}</strong><span>Frozen Edge selections</span></div></div>
     </div>
-    <p><a class="nav" href="${EDGE_TRACKER_URL}">Open full MLB HR Edge tracker</a></p>`;
+    <p class="muted">${escapeHtml(routeNote)}</p>
+    <p><a class="nav" href="${trackerUrl}">Open full MLB HR Edge tracker</a></p>`;
 }
 
 function mountTrackerNetwork() {
