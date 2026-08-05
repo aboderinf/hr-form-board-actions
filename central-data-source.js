@@ -1,5 +1,6 @@
-const CENTRAL_ODDS_ENDPOINT = "/api/central-odds?latest=1";
+const CENTRAL_ODDS_ENDPOINT = "/api/central-odds";
 const nativeFetch = window.fetch.bind(window);
+const centralRequests = new Map();
 
 function normalizedPlayerKey(value) {
   return String(value || "")
@@ -14,6 +15,22 @@ function decimalPrice(american) {
   const value = Number(american);
   if (!Number.isFinite(value) || value === 0) return 0;
   return value > 0 ? 1 + value / 100 : 1 + 100 / Math.abs(value);
+}
+
+function centralOddsForDate(slateDate) {
+  const date = String(slateDate || "").trim();
+  if (!date) return Promise.reject(new Error("Top 100 slate date is missing"));
+  if (!centralRequests.has(date)) {
+    const url = `${CENTRAL_ODDS_ENDPOINT}?${new URLSearchParams({ date })}`;
+    centralRequests.set(
+      date,
+      nativeFetch(url, { cache: "no-store" }).then((response) => {
+        if (!response.ok) throw new Error(`Central odds fetch failed: ${response.status}`);
+        return response.json();
+      }),
+    );
+  }
+  return centralRequests.get(date);
 }
 
 function mergeCentralOdds(top100, central) {
@@ -71,6 +88,7 @@ function mergeCentralOdds(top100, central) {
       ...(top100.odds || {}),
       source: "mlb-hr-edge-database",
       endpoint: CENTRAL_ODDS_ENDPOINT,
+      database_url: central.databaseUrl || null,
       date: central.date || null,
       checkpoint: central.checkpoint || null,
       provider_call_id: central.providerCallId || null,
@@ -82,11 +100,7 @@ function mergeCentralOdds(top100, central) {
   };
 }
 
-window.centralOddsDatabase = nativeFetch(CENTRAL_ODDS_ENDPOINT, { cache: "no-store" })
-  .then((response) => {
-    if (!response.ok) throw new Error(`Central odds fetch failed: ${response.status}`);
-    return response.json();
-  });
+window.getCentralOddsDatabase = centralOddsForDate;
 
 window.fetch = async function centralDatabaseFetch(input, init) {
   const response = await nativeFetch(input, init);
@@ -97,10 +111,8 @@ window.fetch = async function centralDatabaseFetch(input, init) {
   }
 
   try {
-    const [top100, central] = await Promise.all([
-      response.clone().json(),
-      window.centralOddsDatabase,
-    ]);
+    const top100 = await response.clone().json();
+    const central = await centralOddsForDate(top100.slate_date);
     const merged = mergeCentralOdds(top100, central);
     return new Response(JSON.stringify(merged), {
       status: response.status,
