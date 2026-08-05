@@ -12,30 +12,40 @@ function validLedger(payload) {
   );
 }
 
-async function resolveTrackerRoute() {
+async function inspectTrackerRoute(url, markers) {
   try {
-    const response = await fetch(EDGE_TRACKER_URL, {
-      headers: { "User-Agent": "hr-form-tracker-route-check/1.0" },
+    const response = await fetch(url, {
+      headers: { "User-Agent": "hr-form-tracker-route-check/1.1" },
       cache: "no-store",
     });
     const html = await response.text();
-    if (
-      response.ok &&
-      html.includes("FORWARD-TRACKED RECORD") &&
-      html.includes("Central database ledger")
-    ) {
-      return {
-        activeTrackerUrl: EDGE_TRACKER_URL,
-        trackerRoute: "tracker",
-      };
-    }
+    return response.ok && markers.every((marker) => html.includes(marker));
   } catch {
-    // The legacy ledger route remains the safe compatibility target.
+    return false;
   }
-  return {
-    activeTrackerUrl: EDGE_LEGACY_TRACKER_URL,
-    trackerRoute: "legacy-ledger",
-  };
+}
+
+async function resolveTrackerRoute() {
+  const [trackerReady, legacyReady] = await Promise.all([
+    inspectTrackerRoute(EDGE_TRACKER_URL, [
+      "FORWARD-TRACKED RECORD",
+      "Central database ledger",
+    ]),
+    inspectTrackerRoute(EDGE_LEGACY_TRACKER_URL, ["Results ledger"]),
+  ]);
+  if (trackerReady) {
+    return {
+      activeTrackerUrl: EDGE_TRACKER_URL,
+      trackerRoute: "tracker",
+    };
+  }
+  if (legacyReady) {
+    return {
+      activeTrackerUrl: EDGE_LEGACY_TRACKER_URL,
+      trackerRoute: "legacy-ledger",
+    };
+  }
+  throw new Error("Neither MLB HR Edge tracker route is currently available");
 }
 
 function normalizeLedger(payload, route) {
@@ -65,7 +75,7 @@ module.exports = async function handler(request, response) {
   try {
     const [upstream, route] = await Promise.all([
       fetch(EDGE_LEDGER_URL, {
-        headers: { "User-Agent": "hr-form-tracker-network/1.2" },
+        headers: { "User-Agent": "hr-form-tracker-network/1.3" },
         cache: "no-store",
       }),
       resolveTrackerRoute(),
@@ -104,8 +114,8 @@ module.exports = async function handler(request, response) {
       },
       trackerUrl: EDGE_TRACKER_URL,
       legacyTrackerUrl: EDGE_LEGACY_TRACKER_URL,
-      activeTrackerUrl: EDGE_LEGACY_TRACKER_URL,
-      trackerRoute: "legacy-ledger",
+      activeTrackerUrl: null,
+      trackerRoute: "unavailable",
       message: error instanceof Error ? error.message : String(error),
     });
   }
