@@ -7,7 +7,7 @@ const ALLOWED_BOOKS = new Set(["fanduel", "draftkings", "betmgm"]);
 async function fetchJson(url) {
   const upstream = await fetch(url, {
     method: "GET",
-    headers: { "User-Agent": "hr-form-central-db-proxy/2.1" },
+    headers: { "User-Agent": "hr-form-central-db-proxy/2.2" },
     cache: "no-store",
   });
   const text = await upstream.text();
@@ -92,12 +92,33 @@ function normalizeDashboard(dashboard, slateDate, sourceUrl) {
   };
 }
 
+function compactSummary(payload) {
+  return {
+    schemaVersion: payload.schemaVersion,
+    date: payload.date,
+    checkpoint: payload.checkpoint,
+    status: payload.status,
+    source: payload.source,
+    delivery: payload.delivery,
+    databaseUrl: payload.databaseUrl || null,
+    rowCount: Number(payload.rowCount || 0),
+    quoteCount: Number(payload.quoteCount || 0),
+    allAvailableQuoteCount: Number(payload.allAvailableQuoteCount || 0),
+    excludedLiveOrPostStartQuoteCount: Number(
+      payload.excludedLiveOrPostStartQuoteCount || 0,
+    ),
+    providerCallId: payload.providerCallId || null,
+    providerResponseSha256: payload.providerResponseSha256 || null,
+  };
+}
+
 module.exports = async function handler(request, response) {
   if (request.method !== "GET" && request.method !== "HEAD") {
     response.setHeader("Allow", "GET, HEAD");
     return response.status(405).json({ status: "error", message: "Method not allowed" });
   }
 
+  const summaryRequested = String(request.query?.summary || "") === "1";
   const query = new URLSearchParams();
   for (const [key, rawValue] of Object.entries(request.query || {})) {
     if (!ALLOWED_QUERY_KEYS.has(key)) continue;
@@ -152,5 +173,5 @@ module.exports = async function handler(request, response) {
   response.setHeader("X-Odds-Source", "mlb-hr-edge-database");
   response.setHeader("X-Central-Database-Url", selectedUrl);
   if (request.method === "HEAD") return response.status(200).end();
-  return response.status(200).json(payload);
+  return response.status(200).json(summaryRequested ? compactSummary(payload) : payload);
 };
