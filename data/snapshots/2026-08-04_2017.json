@@ -4,12 +4,37 @@
   "slate_date": "2026-08-04",
   "checkpoint_et": "20:17",
   "scheduled_at_et": "2026-08-04T20:17:00-04:00",
-  "observed_at": "2026-08-05T04:16:34.799229+00:00",
-  "observed_at_et": "2026-08-05T00:16:34.799229-04:00",
-  "status": "shared_odds_source_unavailable",
-  "sources": {},
-  "diagnostics": [
-    "Shared MLB HR odds unavailable; odds API: GET failed https://mlb-hr-edge.feranmi.chatgpt.site/api/odds?date=2026-08-04&asOf=2026-08-04T20%3A32%3A00-04%3A00: 404 Client Error: Not Found for url: https://mlb-hr-edge.feranmi.chatgpt.site/api/odds?date=2026-08-04&asOf=2026-08-04T20%3A32%3A00-04%3A00 | dashboard: no verified prices inside source window | public mirror https://hr-form-board-actions.vercel.app/data/shared-odds/archive/2026-08-04_2017.json: GET failed https://hr-form-board-actions.vercel.app/data/shared-odds/archive/2026-08-04_2017.json: 404 Client Error: Not Found for url: https://hr-form-board-actions.vercel.app/data/shared-odds/archive/2026-08-04_2017.json | public mirror https://aboderinf.github.io/mlb-hr-fair-odds-v1/archive/2026-08-04_2017.json: GET failed https://aboderinf.github.io/mlb-hr-fair-odds-v1/archive/2026-08-04_2017.json: 404 Client Error: Not Found for url: https://aboderinf.github.io/mlb-hr-fair-odds-v1/archive/2026-08-04_2017.json | durable archive: GET failed https://raw.githubusercontent.com/aboderinf/mlb-hr-fair-odds-v1/main/generated/shared/archive/2026-08-04_2017.json: 404 Client Error: Not Found for url: https://raw.githubusercontent.com/aboderinf/mlb-hr-fair-odds-v1/main/generated/shared/archive/2026-08-04_2017.json"
-  ],
+  "observed_at": "2026-08-05T04:25:04.199589+00:00",
+  "observed_at_et": "2026-08-05T00:25:04.199589-04:00",
+  "status": "shared_odds_not_available_at_checkpoint",
+  "sources": {
+    "mlb_hr_edge": {
+      "source": "MLB HR Edge",
+      "source_url": "https://hr-form-board-actions.vercel.app/data/shared-odds/archive/2026-08-04_2017.json",
+      "delivery": "central-database-consumer-cache",
+      "source_date": "2026-08-04",
+      "date_matches": true,
+      "as_of": "2026-08-05T03:52:44.963415+00:00",
+      "status": "pending",
+      "generated_at": "2026-08-05T03:37:44.963415+00:00",
+      "latest_ingest_at": "2026-08-05T03:37:44.963415+00:00",
+      "provider_call_id": "dashboard:2026-08-04:2017:2026-08-05T03:37:44.963415+00:00",
+      "provider_response_sha256": "64097a2cde8c6975f43cef45fcf9a5a95eacca40aa137270ca937a370e0f290d",
+      "archived_call_count": 1,
+      "quote_count": 0,
+      "all_available_quote_count": 42,
+      "excluded_live_or_post_start_quote_count": 42,
+      "books": [
+        "FanDuel",
+        "DraftKings",
+        "BetMGM"
+      ],
+      "row_count": 0,
+      "compatibility_fallback": "public_form_board_mirror",
+      "checkpoint_at": "2026-08-04T20:17:00-04:00",
+      "capture_cutoff": "2026-08-04T20:32:00-04:00"
+    }
+  },
+  "diagnostics": [],
   "portfolios": {}
 }
