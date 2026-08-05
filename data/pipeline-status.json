@@ -1,12 +1,24 @@
 {
-  "schema_version": 1,
-  "status": "failed",
+  "schema_version": 2,
+  "status": "success",
   "slate_date": "2026-08-04",
   "checkpoint": "1117",
   "checkpoint_label": "11:17",
-  "started_at": "2026-08-04T15:39:15.070151+00:00",
-  "steps": {},
-  "completed_at": "2026-08-04T15:55:15.505606+00:00",
-  "elapsed_seconds": 960.435,
-  "error": "CalledProcessError: Command '['/opt/hostedtoolcache/Python/3.12.13/x64/bin/python', 'scripts/sync_shared_odds_mirror.py', '--output-dir', 'data/shared-odds', '--attempts', '60', '--delay', '15', '--expected-date', '2026-08-04', '--expected-checkpoint', '1117']' returned non-zero exit status 1."
+  "started_at": "2026-08-05T03:01:07.511237+00:00",
+  "steps": {
+    "wait_for_source_seconds": 0.078,
+    "top100_seconds": 0.202,
+    "checkpoint_seconds": 37.199,
+    "today_seconds": 9.717,
+    "discovery_seconds": 0.814
+  },
+  "source_detected_at": "2026-08-05T03:01:07.592347+00:00",
+  "provider_call_id": "2026-08-04:2026-08-04T15:35:51.452981+00:00:09da49e9eda7",
+  "provider_response_sha256": "09da49e9eda771c9ce0106481c3a1796f1a30f350b9938985d3de54b40295b4b",
+  "source_quote_count": 707,
+  "source_available_quote_count": 1414,
+  "top100_checkpoint_rows": 100,
+  "top100_checkpoint_priced_rows": 66,
+  "completed_at": "2026-08-05T03:01:55.324620+00:00",
+  "elapsed_seconds": 47.813
 }
