@@ -1,10 +1,22 @@
 {
   "schema_version": 2,
-  "status": "workflow_started",
+  "status": "failed",
   "slate_date": "2026-08-04",
+  "checkpoint": "2017",
   "checkpoint_label": "20:17",
-  "scheduled_at_et": null,
-  "workflow_run_id": "30974634649",
-  "workflow_event": "push",
-  "workflow_started_at": "2026-08-05T04:16:03.048309+00:00"
+  "started_at": "2026-08-05T04:16:33.701881+00:00",
+  "steps": {
+    "wait_for_source_seconds": 0.762,
+    "top100_seconds": 0.379,
+    "checkpoint_seconds": 37.807,
+    "today_seconds": 9.957
+  },
+  "source_detected_at": "2026-08-05T04:16:34.464734+00:00",
+  "provider_call_id": "dashboard:2026-08-04:2017:2026-08-05T03:37:44.963415+00:00",
+  "provider_response_sha256": "64097a2cde8c6975f43cef45fcf9a5a95eacca40aa137270ca937a370e0f290d",
+  "source_quote_count": 0,
+  "source_available_quote_count": 42,
+  "completed_at": "2026-08-05T04:17:22.435269+00:00",
+  "elapsed_seconds": 48.733,
+  "error": "CalledProcessError: Command '['/opt/hostedtoolcache/Python/3.12.13/x64/bin/python', 'scripts/capture_top100_checkpoint.py', '--date', '2026-08-04', '--checkpoint', '20:17']' returned non-zero exit status 1."
 }
