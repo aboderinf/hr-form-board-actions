@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run all Form Board consumers immediately after one matching source capture."""
+"""Refresh every Form Board surface from one matching central database call."""
 
 from __future__ import annotations
 
@@ -41,6 +41,7 @@ def source_matches(payload: dict, slate_date: str, checkpoint: str) -> bool:
     return (
         str(payload.get("date") or "") == slate_date
         and actual_checkpoint == normalize_checkpoint(checkpoint)
+        and payload.get("source") == "mlb-hr-edge-database"
         and bool(payload.get("providerCallId"))
         and len(str(payload.get("providerResponseSha256") or "")) == 64
     )
@@ -71,8 +72,9 @@ def main() -> int:
     checkpoint_label = checkpoint_with_colon(args.checkpoint)
     started_at = datetime.now(timezone.utc)
     status: dict = {
-        "schema_version": 2,
+        "schema_version": 3,
         "status": "running",
+        "source": "central-database-only",
         "slate_date": args.date,
         "checkpoint": checkpoint_digits,
         "checkpoint_label": checkpoint_label,
@@ -82,7 +84,7 @@ def main() -> int:
     write_status(status)
 
     try:
-        status["steps"]["wait_for_source_seconds"] = run(
+        status["steps"]["wait_for_central_database_seconds"] = run(
             [
                 PYTHON,
                 "scripts/sync_shared_odds_mirror.py",
@@ -101,12 +103,18 @@ def main() -> int:
 
         source = read_json(ROOT / "data" / "shared-odds" / "latest.json")
         if not source_matches(source, args.date, checkpoint_digits):
-            raise RuntimeError("Synchronized source does not match the requested checkpoint")
+            raise RuntimeError("Central database result does not match the requested checkpoint")
         status["source_detected_at"] = datetime.now(timezone.utc).isoformat()
         status["provider_call_id"] = source["providerCallId"]
         status["provider_response_sha256"] = source["providerResponseSha256"]
-        status["source_quote_count"] = source.get("quoteCount", 0)
-        status["source_available_quote_count"] = source.get("allAvailableQuoteCount", 0)
+        status["database_url"] = source.get("databaseUrl")
+        status["source_quote_count"] = int(source.get("quoteCount") or 0)
+        status["source_available_quote_count"] = int(
+            source.get("allAvailableQuoteCount") or 0
+        )
+        status["source_excluded_live_or_post_start_quote_count"] = int(
+            source.get("excludedLiveOrPostStartQuoteCount") or 0
+        )
 
         parallel = {
             "checkpoint_seconds": [
@@ -160,10 +168,16 @@ def main() -> int:
             / f"{args.date}_{checkpoint_digits}.json"
         )
         capture = read_json(capture_path)
-        status["top100_checkpoint_rows"] = capture.get("top100_rows", 0)
-        status["top100_checkpoint_priced_rows"] = capture.get("priced_rows", 0)
-        if int(capture.get("priced_rows") or 0) <= 0:
-            raise RuntimeError("Top 100 checkpoint history contains no prices")
+        status["top100_checkpoint_rows"] = int(capture.get("top100_rows") or 0)
+        status["top100_checkpoint_priced_rows"] = int(capture.get("priced_rows") or 0)
+        if status["top100_checkpoint_priced_rows"] <= 0:
+            if status["source_quote_count"] > 0:
+                raise RuntimeError(
+                    "Central database had usable pregame quotes but Top 100 joined none"
+                )
+            status["odds_result"] = "no_remaining_pregame_prices"
+        else:
+            status["odds_result"] = "priced"
 
         completed_at = datetime.now(timezone.utc)
         status["status"] = "success"
