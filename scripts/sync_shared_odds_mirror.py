@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-"""Synchronize the public Form Board mirror from owned central data sources."""
+"""Materialize one exact checkpoint from the central MLB HR Edge database.
+
+This consumer never calls an odds provider and never reads a repository mirror.
+The only network sources are public, database-backed MLB HR Edge endpoints.
+"""
 
 from __future__ import annotations
 
@@ -17,17 +21,13 @@ from zoneinfo import ZoneInfo
 
 ET = ZoneInfo("America/New_York")
 EDGE_BASE_URL = "https://mlb-hr-edge.feranmi.chatgpt.site"
-SOURCES = (
-    f"{EDGE_BASE_URL}/api/odds?latest=1",
-    "https://aboderinf.github.io/mlb-hr-fair-odds-v1/latest.json",
-)
 BOOKS = ("fanduel", "draftkings", "betmgm")
 CAPTURE_GRACE = timedelta(minutes=15)
-MAX_SOURCE_FINISH_DELAY = timedelta(minutes=60)
+MAX_SOURCE_FINISH_DELAY = timedelta(hours=4)
 
 
 def fetch_json(url: str) -> dict:
-    request = Request(url, headers={"User-Agent": "hr-form-shared-mirror/1.0"})
+    request = Request(url, headers={"User-Agent": "hr-form-central-db/2.0"})
     with urlopen(request, timeout=20) as response:
         if response.status != 200:
             raise RuntimeError(f"HTTP {response.status}")
@@ -68,9 +68,8 @@ def checkpoint_label(payload: dict) -> str:
         return normalize_checkpoint(explicit)
     stamp = payload.get("latestIngestAt") or payload.get("generatedAt")
     if stamp:
-        parsed = parse_timestamp(stamp)
-        return parsed.astimezone(ET).strftime("%H%M")
-    return datetime.now(ET).strftime("%H%M")
+        return parse_timestamp(stamp).astimezone(ET).strftime("%H%M")
+    return ""
 
 
 def validate(
@@ -106,30 +105,20 @@ def validate(
             )
 
 
-def load_matching_local(
-    output_dir: Path,
-    expected_date: str | None,
-    expected_checkpoint: str | None,
-) -> tuple[dict, str] | None:
-    candidates: list[Path] = []
-    if expected_date and expected_checkpoint:
-        label = normalize_checkpoint(expected_checkpoint)
-        candidates.append(output_dir / "archive" / f"{expected_date}_{label}.json")
-    candidates.append(output_dir / "latest.json")
-    for path in candidates:
-        if not path.exists() or path.stat().st_size == 0:
-            continue
-        try:
-            payload = json.loads(path.read_text(encoding="utf-8"))
-            validate(
-                payload,
-                expected_date=expected_date,
-                expected_checkpoint=expected_checkpoint,
-            )
-            return payload, f"local:{path.as_posix()}"
-        except Exception:
-            continue
-    return None
+def central_odds_urls(expected_date: str, expected_checkpoint: str) -> tuple[str, ...]:
+    """Return central-database reads ordered from most exact to most compatible."""
+    checkpoint = normalize_checkpoint(expected_checkpoint)
+    checkpoint_at = scheduled_checkpoint(expected_date, checkpoint)
+    now_as_of = datetime.now(timezone.utc).isoformat()
+    compatibility_as_of = (checkpoint_at + MAX_SOURCE_FINISH_DELAY).astimezone(
+        timezone.utc
+    ).isoformat()
+    return (
+        f"{EDGE_BASE_URL}/api/odds?{urlencode({'date': expected_date, 'checkpoint': checkpoint})}",
+        f"{EDGE_BASE_URL}/api/odds?{urlencode({'date': expected_date, 'asOf': now_as_of})}",
+        f"{EDGE_BASE_URL}/api/odds?{urlencode({'date': expected_date, 'asOf': compatibility_as_of})}",
+        f"{EDGE_BASE_URL}/api/odds?latest=1",
+    )
 
 
 def dashboard_to_shared(
@@ -147,7 +136,7 @@ def dashboard_to_shared(
     if generated_at > checkpoint_utc + MAX_SOURCE_FINISH_DELAY:
         raise ValueError("dashboard sync is outside the requested checkpoint window")
 
-    cutoff = checkpoint_utc + CAPTURE_GRACE
+    cutoff = generated_at + CAPTURE_GRACE
     rows: list[dict] = []
     available_count = 0
     excluded_count = 0
@@ -214,15 +203,20 @@ def dashboard_to_shared(
         "latestIngestAt": generated_at.isoformat(),
         "status": "ready" if rows else "pending",
         "source": "mlb-hr-edge-database",
-        "delivery": "dashboard-compatibility-handoff",
+        "delivery": "central-database-dashboard-compatibility",
         "books": list(BOOKS),
         "rowCount": len(rows),
         "quoteCount": sum(len(row["odds"]) for row in rows),
         "allAvailableQuoteCount": available_count,
         "excludedLiveOrPostStartQuoteCount": excluded_count,
-        "archivedCallCount": 1,
-        "providerCallId": f"dashboard:{expected_date}:{label}:{generated_at.isoformat()}",
-        "providerResponseSha256": snapshot_hash,
+        "archivedCallCount": int(dashboard.get("archivedCallCount") or 1),
+        "providerCallId": str(
+            dashboard.get("providerCallId")
+            or f"dashboard:{expected_date}:{label}:{generated_at.isoformat()}"
+        ),
+        "providerResponseSha256": str(
+            dashboard.get("providerResponseSha256") or snapshot_hash
+        ),
         "rows": rows,
     }
 
@@ -231,30 +225,38 @@ def dashboard_url(expected_date: str) -> str:
     return f"{EDGE_BASE_URL}/api/dashboard?{urlencode({'date': expected_date})}"
 
 
+def materialize(payload: dict, output_dir: Path, source_url: str) -> dict:
+    label = checkpoint_label(payload)
+    payload = dict(payload)
+    payload["delivery"] = "central-database-consumer-cache"
+    payload["databaseUrl"] = source_url
+    payload["materializedAt"] = datetime.now(timezone.utc).isoformat()
+    latest_path = output_dir / "latest.json"
+    archive_path = output_dir / "archive" / f"{payload['date']}_{label}.json"
+    archive_path.parent.mkdir(parents=True, exist_ok=True)
+    text = json.dumps(payload, indent=2) + "\n"
+    latest_path.write_text(text, encoding="utf-8")
+    archive_path.write_text(text, encoding="utf-8")
+    return payload
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--attempts", type=int, default=3)
     parser.add_argument("--delay", type=int, default=10)
-    parser.add_argument("--expected-date")
-    parser.add_argument("--expected-checkpoint")
+    parser.add_argument("--expected-date", required=True)
+    parser.add_argument("--expected-checkpoint", required=True)
     args = parser.parse_args()
 
     args.output_dir.mkdir(parents=True, exist_ok=True)
+    urls = central_odds_urls(args.expected_date, args.expected_checkpoint)
     errors: list[str] = []
     selected_url: str | None = None
     payload: dict | None = None
 
-    local = load_matching_local(
-        args.output_dir, args.expected_date, args.expected_checkpoint
-    )
-    if local:
-        payload, selected_url = local
-
     for attempt in range(1, args.attempts + 1):
-        if payload is not None:
-            break
-        for url in SOURCES:
+        for url in urls:
             try:
                 candidate = fetch_json(url)
                 validate(
@@ -268,7 +270,7 @@ def main() -> int:
             except Exception as exc:
                 errors.append(f"attempt {attempt} {url}: {exc}")
 
-        if payload is None and args.expected_date and args.expected_checkpoint:
+        if payload is None:
             url = dashboard_url(args.expected_date)
             try:
                 candidate = dashboard_to_shared(
@@ -284,38 +286,34 @@ def main() -> int:
             except Exception as exc:
                 errors.append(f"attempt {attempt} {url}: {exc}")
 
-        if payload is None and attempt < args.attempts:
+        if payload is not None:
+            break
+        if attempt < args.attempts:
             time.sleep(args.delay)
 
     status_path = args.output_dir / "sync-status.json"
-    if payload is None:
+    if payload is None or selected_url is None:
         status = {
             "status": "failed",
             "checked_at": datetime.now(timezone.utc).isoformat(),
-            "sources": [*SOURCES, dashboard_url(args.expected_date or "YYYY-MM-DD")],
+            "source": "central-database-only",
+            "sources": [*urls, dashboard_url(args.expected_date)],
             "expected_date": args.expected_date,
             "expected_checkpoint": normalize_checkpoint(args.expected_checkpoint),
-            "errors": errors[-9:],
-            "retained_existing_mirror": (args.output_dir / "latest.json").exists(),
+            "errors": errors[-12:],
+            "retained_existing_cache": (args.output_dir / "latest.json").exists(),
         }
         status_path.write_text(json.dumps(status, indent=2) + "\n", encoding="utf-8")
         print(json.dumps(status, indent=2))
         return 1
 
+    payload = materialize(payload, args.output_dir, selected_url)
     label = checkpoint_label(payload)
-    payload["delivery"] = "public-form-board-mirror"
-    payload["mirroredFrom"] = selected_url
-    payload["mirroredAt"] = datetime.now(timezone.utc).isoformat()
-    latest_path = args.output_dir / "latest.json"
-    archive_path = args.output_dir / "archive" / f"{payload['date']}_{label}.json"
-    archive_path.parent.mkdir(parents=True, exist_ok=True)
-    text = json.dumps(payload, indent=2) + "\n"
-    latest_path.write_text(text, encoding="utf-8")
-    archive_path.write_text(text, encoding="utf-8")
     status = {
         "status": "success",
         "checked_at": datetime.now(timezone.utc).isoformat(),
-        "source_url": selected_url,
+        "source": "central-database-only",
+        "database_url": selected_url,
         "date": payload["date"],
         "checkpoint": label,
         "providerCallId": payload["providerCallId"],
