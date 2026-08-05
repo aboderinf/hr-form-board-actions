@@ -1,5 +1,7 @@
 const EDGE_BASE_URL = "https://mlb-hr-edge.feranmi.chatgpt.site";
 const EDGE_LEDGER_URL = `${EDGE_BASE_URL}/api/ledger`;
+const EDGE_TRACKER_URL = `${EDGE_BASE_URL}/tracker`;
+const EDGE_LEGACY_TRACKER_URL = `${EDGE_BASE_URL}/ledger`;
 
 function validLedger(payload) {
   return (
@@ -10,7 +12,33 @@ function validLedger(payload) {
   );
 }
 
-function normalizeLedger(payload) {
+async function resolveTrackerRoute() {
+  try {
+    const response = await fetch(EDGE_TRACKER_URL, {
+      headers: { "User-Agent": "hr-form-tracker-route-check/1.0" },
+      cache: "no-store",
+    });
+    const html = await response.text();
+    if (
+      response.ok &&
+      html.includes("FORWARD-TRACKED RECORD") &&
+      html.includes("Central database ledger")
+    ) {
+      return {
+        activeTrackerUrl: EDGE_TRACKER_URL,
+        trackerRoute: "tracker",
+      };
+    }
+  } catch {
+    // The legacy ledger route remains the safe compatibility target.
+  }
+  return {
+    activeTrackerUrl: EDGE_LEGACY_TRACKER_URL,
+    trackerRoute: "legacy-ledger",
+  };
+}
+
+function normalizeLedger(payload, route) {
   return {
     schemaVersion: Number(payload.schemaVersion || 1),
     status: payload.status === "unavailable" ? "unavailable" : "ready",
@@ -19,8 +47,10 @@ function normalizeLedger(payload) {
     rowCount: Number(payload.rowCount ?? payload.rows.length),
     rows: payload.rows,
     summary: payload.summary,
-    trackerUrl: `${EDGE_BASE_URL}/tracker`,
-    legacyTrackerUrl: `${EDGE_BASE_URL}/ledger`,
+    trackerUrl: EDGE_TRACKER_URL,
+    legacyTrackerUrl: EDGE_LEGACY_TRACKER_URL,
+    activeTrackerUrl: route.activeTrackerUrl,
+    trackerRoute: route.trackerRoute,
     compatibilityMode:
       payload.source === "mlb-hr-edge-database" ? "current-contract" : "legacy-ledger-normalized",
   };
@@ -33,22 +63,26 @@ module.exports = async function handler(request, response) {
   }
 
   try {
-    const upstream = await fetch(EDGE_LEDGER_URL, {
-      headers: { "User-Agent": "hr-form-tracker-network/1.1" },
-      cache: "no-store",
-    });
+    const [upstream, route] = await Promise.all([
+      fetch(EDGE_LEDGER_URL, {
+        headers: { "User-Agent": "hr-form-tracker-network/1.2" },
+        cache: "no-store",
+      }),
+      resolveTrackerRoute(),
+    ]);
     const payload = await upstream.json().catch(() => null);
     if (!upstream.ok || !validLedger(payload)) {
       throw new Error(
         payload?.message || `MLB HR Edge tracker returned HTTP ${upstream.status}`,
       );
     }
-    const normalized = normalizeLedger(payload);
+    const normalized = normalizeLedger(payload, route);
 
     response.setHeader("Cache-Control", "public, s-maxage=30, stale-while-revalidate=90");
     response.setHeader("Access-Control-Allow-Origin", "*");
     response.setHeader("X-Tracker-Source", "mlb-hr-edge-database");
     response.setHeader("X-Tracker-Compatibility", normalized.compatibilityMode);
+    response.setHeader("X-Tracker-Route", normalized.trackerRoute);
     if (request.method === "HEAD") return response.status(200).end();
     return response.status(200).json(normalized);
   } catch (error) {
@@ -68,8 +102,10 @@ module.exports = async function handler(request, response) {
         roi: null,
         maximumDrawdownCents: null,
       },
-      trackerUrl: `${EDGE_BASE_URL}/tracker`,
-      legacyTrackerUrl: `${EDGE_BASE_URL}/ledger`,
+      trackerUrl: EDGE_TRACKER_URL,
+      legacyTrackerUrl: EDGE_LEGACY_TRACKER_URL,
+      activeTrackerUrl: EDGE_LEGACY_TRACKER_URL,
+      trackerRoute: "legacy-ledger",
       message: error instanceof Error ? error.message : String(error),
     });
   }
