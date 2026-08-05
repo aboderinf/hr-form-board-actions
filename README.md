@@ -1,10 +1,6 @@
 # HR Form Board — GitHub Actions edition
 
-Independent cloud-run version of the MLB home-run form tracker. It does not modify or depend on the ChatGPT Scheduled Task site at `hr-form-board.vercel.app`.
-
-## Status
-
-The repository is populated and the GitHub Actions workflow is installed. The independent dashboard is available at `hr-form-board-actions.vercel.app`.
+Independent cloud-run version of the MLB home-run form tracker. The dashboard is available at `hr-form-board-actions.vercel.app`.
 
 ## Locked model
 
@@ -12,42 +8,52 @@ The repository is populated and the GitHub Actions workflow is installed. The in
 
 The windows are cumulative. A multi-home-run game counts as one HR game for the score. Same-day games are never used in another same-day checkpoint.
 
-## Single shared odds source
+## One provider call, one central database
 
-This repository never calls SportsGameOdds, DraftKings, FanDuel, BetMGM, Vegas Insider, or another sportsbook source directly.
+Only `aboderinf/mlb-hr-fair-odds-v1` may call SportsGameOdds. For each enabled checkpoint it makes at most one provider request and immediately writes the returned payload to the MLB HR Edge hosted database.
 
-Only `aboderinf/mlb-hr-fair-odds-v1` is allowed to make the single provider request for a checkpoint. That project publishes the verified FanDuel, DraftKings, and BetMGM 1+ HR snapshot into the user-owned MLB HR Edge database. This tracker then reads:
+The three public surfaces then read that same database-backed source:
 
-`https://mlb-hr-edge.feranmi.chatgpt.site/api/odds?date=YYYY-MM-DD&asOf=<checkpoint timestamp>`
+- `https://mlb-hr-edge.feranmi.chatgpt.site`
+- `https://hr-form-board-actions.vercel.app`
+- `https://hr-form-board.vercel.app`
 
-The `asOf` cutoff ensures a delayed retry cannot use prices captured after the frozen checkpoint. If the shared source is pending or unavailable, the tracker records that status and does not scrape, infer, or substitute prices.
+This repository never calls SportsGameOdds, DraftKings, FanDuel, BetMGM, Vegas Insider, or another sportsbook provider directly. It reads only public MLB HR Edge database endpoints such as:
+
+`https://mlb-hr-edge.feranmi.chatgpt.site/api/odds?date=YYYY-MM-DD&checkpoint=0817`
+
+Compatibility reads may use `date` plus `asOf`, or the database-backed `/api/dashboard` route. GitHub Pages, repository-to-repository JSON handoffs, and previously materialized local files are not accepted as source data.
+
+After validating the requested date, checkpoint, provider call ID, and response hash, the workflow writes a static consumer cache under `data/shared-odds`. That cache allows Vercel to serve the board efficiently, but it is derived from the central database and is never used to satisfy a new checkpoint before the database is checked.
+
+No `FORM_BOARD_REPO_TOKEN` is required. The only sportsbook credential is `SPORTSGAMEODDS_API_KEY`, stored in the central source repository.
 
 ## Daily operation
 
-GitHub Actions checks at 8:17 AM, 11:17 AM, 5:17 PM and 8:17 PM America/New_York. The central odds source refreshes at 8:00 AM, 11:00 AM, 5:00 PM and 8:00 PM ET, giving the single provider run up to 17 minutes to finish before each frozen form checkpoint. Because GitHub cron uses UTC, the workflow contains both DST and standard-time expressions; the Python runner gates to the correct ET checkpoint and immutable filenames prevent duplicate snapshots.
+GitHub Actions resolves the intended Eastern Time checkpoint from the scheduled cron instant, so delayed GitHub runners retain the correct checkpoint. The enabled checkpoints are 8:17 AM, 11:17 AM, 5:17 PM, and 8:17 PM ET.
 
 At each checkpoint it:
 
-1. Settles earlier frozen picks using MLB game logs.
-2. Reads the shared, timestamped MLB HR Edge odds snapshot.
-3. Uses exact MLB batter IDs, game IDs, game starts, sportsbook names, prices, capture times, source event IDs, and source odd IDs.
+1. Waits for the exact central database record.
+2. Verifies its slate date, checkpoint, provider call ID, and SHA-256 response identity.
+3. Settles earlier frozen picks using official MLB game logs.
 4. Loads prior MLB PA-games and calculates the cumulative L5/L7/L15 score.
 5. Excludes games already started at the checkpoint.
 6. Keeps players whose best verified FanDuel, DraftKings, or BetMGM 1+ HR price is at least +500.
 7. Freezes separate Top 10 and Top 20 portfolios.
-8. Commits JSON ledgers and a rebuilt static dashboard.
+8. Rebuilds the Today, Top 100 Scores, Discovery, Tracker, and Data surfaces in one atomic commit.
 
 Prices are never guessed. A missing DraftKings quote remains unavailable rather than being inferred.
 
 ## GitHub settings
 
-The workflow needs **Read and write permissions** under **Settings → Actions → General → Workflow permissions** so it can commit updated ledgers and `index.html`.
+The workflow needs **Read and write permissions** under **Settings → Actions → General → Workflow permissions** so it can commit updated ledgers and generated site data.
 
-The separate Vercel project should be connected to this repository so every Action commit triggers a deployment. The existing `hr-form-board` project must remain connected to its current source.
+The Vercel project is connected to this repository, so each successful Action commit triggers deployment.
 
 ## Manual verification
 
-Open **Actions → HR form checkpoints → Run workflow**. A manual date and checkpoint can be supplied, or left blank for the current scheduled checkpoint.
+Open **Actions → Source-driven Form Board refresh → Run workflow** and supply a slate date and checkpoint. The workflow must find the matching central database record; it does not make or retry a sportsbook provider request.
 
 ## Local checks
 
