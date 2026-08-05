@@ -1,13 +1,28 @@
 {
   "schema_version": 3,
-  "status": "failed",
+  "status": "success",
   "source": "central-database-only",
   "slate_date": "2026-08-05",
-  "checkpoint": "0817",
-  "checkpoint_label": "08:17",
-  "started_at": "2026-08-05T14:33:18.084074+00:00",
-  "steps": {},
-  "completed_at": "2026-08-05T15:37:02.218025+00:00",
-  "elapsed_seconds": 3824.134,
-  "error": "CalledProcessError: Command '['/opt/hostedtoolcache/Python/3.12.13/x64/bin/python', 'scripts/sync_shared_odds_mirror.py', '--output-dir', 'data/shared-odds', '--attempts', '240', '--delay', '15', '--expected-date', '2026-08-05', '--expected-checkpoint', '0817']' returned non-zero exit status 1."
+  "checkpoint": "1117",
+  "checkpoint_label": "11:17",
+  "started_at": "2026-08-05T16:55:28.379046+00:00",
+  "steps": {
+    "wait_for_central_database_seconds": 1.865,
+    "top100_seconds": 0.284,
+    "checkpoint_seconds": 37.856,
+    "today_seconds": 9.919,
+    "discovery_seconds": 0.829
+  },
+  "source_detected_at": "2026-08-05T16:55:30.244714+00:00",
+  "provider_call_id": "dashboard:2026-08-05:1117:2026-08-05T16:53:51.218477+00:00",
+  "provider_response_sha256": "5bb043ae8ce265084da3c619bd578b3cd952b1a950be647264f055ea2958d9c5",
+  "database_url": "https://mlb-hr-edge.feranmi.chatgpt.site/api/dashboard?date=2026-08-05",
+  "source_quote_count": 145,
+  "source_available_quote_count": 145,
+  "source_excluded_live_or_post_start_quote_count": 0,
+  "top100_checkpoint_rows": 100,
+  "top100_checkpoint_priced_rows": 13,
+  "odds_result": "priced",
+  "completed_at": "2026-08-05T16:56:18.850371+00:00",
+  "elapsed_seconds": 50.471
 }

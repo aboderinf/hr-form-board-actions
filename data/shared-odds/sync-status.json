@@ -1,29 +1,12 @@
 {
-  "status": "failed",
-  "checked_at": "2026-08-05T15:37:02.206292+00:00",
+  "status": "success",
+  "checked_at": "2026-08-05T16:55:30.233701+00:00",
   "source": "central-database-only",
-  "sources": [
-    "https://mlb-hr-edge.feranmi.chatgpt.site/api/odds?date=2026-08-05&checkpoint=0817",
-    "https://mlb-hr-edge.feranmi.chatgpt.site/api/odds?date=2026-08-05&asOf=2026-08-05T14%3A33%3A18.145626%2B00%3A00",
-    "https://mlb-hr-edge.feranmi.chatgpt.site/api/odds?date=2026-08-05&asOf=2026-08-05T16%3A17%3A00%2B00%3A00",
-    "https://mlb-hr-edge.feranmi.chatgpt.site/api/odds?latest=1",
-    "https://mlb-hr-edge.feranmi.chatgpt.site/api/dashboard?date=2026-08-05"
-  ],
-  "expected_date": "2026-08-05",
-  "expected_checkpoint": "0817",
-  "errors": [
-    "attempt 238 https://mlb-hr-edge.feranmi.chatgpt.site/api/odds?latest=1: HTTP Error 404: Not Found",
-    "attempt 238 https://mlb-hr-edge.feranmi.chatgpt.site/api/dashboard?date=2026-08-05: dashboard response is not database-backed",
-    "attempt 239 https://mlb-hr-edge.feranmi.chatgpt.site/api/odds?date=2026-08-05&checkpoint=0817: HTTP Error 404: Not Found",
-    "attempt 239 https://mlb-hr-edge.feranmi.chatgpt.site/api/odds?date=2026-08-05&asOf=2026-08-05T14%3A33%3A18.145626%2B00%3A00: HTTP Error 404: Not Found",
-    "attempt 239 https://mlb-hr-edge.feranmi.chatgpt.site/api/odds?date=2026-08-05&asOf=2026-08-05T16%3A17%3A00%2B00%3A00: HTTP Error 404: Not Found",
-    "attempt 239 https://mlb-hr-edge.feranmi.chatgpt.site/api/odds?latest=1: HTTP Error 404: Not Found",
-    "attempt 239 https://mlb-hr-edge.feranmi.chatgpt.site/api/dashboard?date=2026-08-05: dashboard response is not database-backed",
-    "attempt 240 https://mlb-hr-edge.feranmi.chatgpt.site/api/odds?date=2026-08-05&checkpoint=0817: HTTP Error 404: Not Found",
-    "attempt 240 https://mlb-hr-edge.feranmi.chatgpt.site/api/odds?date=2026-08-05&asOf=2026-08-05T14%3A33%3A18.145626%2B00%3A00: HTTP Error 404: Not Found",
-    "attempt 240 https://mlb-hr-edge.feranmi.chatgpt.site/api/odds?date=2026-08-05&asOf=2026-08-05T16%3A17%3A00%2B00%3A00: HTTP Error 404: Not Found",
-    "attempt 240 https://mlb-hr-edge.feranmi.chatgpt.site/api/odds?latest=1: HTTP Error 404: Not Found",
-    "attempt 240 https://mlb-hr-edge.feranmi.chatgpt.site/api/dashboard?date=2026-08-05: dashboard response is not database-backed"
-  ],
-  "retained_existing_cache": true
+  "database_url": "https://mlb-hr-edge.feranmi.chatgpt.site/api/dashboard?date=2026-08-05",
+  "date": "2026-08-05",
+  "checkpoint": "1117",
+  "providerCallId": "dashboard:2026-08-05:1117:2026-08-05T16:53:51.218477+00:00",
+  "providerResponseSha256": "5bb043ae8ce265084da3c619bd578b3cd952b1a950be647264f055ea2958d9c5",
+  "quoteCount": 145,
+  "rowCount": 49
 }
