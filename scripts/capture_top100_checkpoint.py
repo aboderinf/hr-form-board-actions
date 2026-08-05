@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Archive Top 100 odds from one exact local shared-odds checkpoint."""
+"""Archive Top 100 odds from one exact central-database checkpoint cache."""
 
 from __future__ import annotations
 
@@ -43,13 +43,13 @@ def main() -> int:
     slate = date.fromisoformat(args.date)
     source_path = ROOT / "data" / "shared-odds" / "archive" / f"{args.date}_{checkpoint}.json"
     if not source_path.exists() or source_path.stat().st_size == 0:
-        raise SystemExit(f"Exact local checkpoint archive is missing: {source_path}")
+        raise SystemExit(f"Exact central checkpoint cache is missing: {source_path}")
 
     payload = read_json(source_path)
     if str(payload.get("date") or "") != args.date:
-        raise SystemExit("Local checkpoint archive has the wrong slate date")
+        raise SystemExit("Central checkpoint cache has the wrong slate date")
     if normalize_checkpoint(str(payload.get("checkpoint") or "")) != checkpoint:
-        raise SystemExit("Local checkpoint archive has the wrong checkpoint label")
+        raise SystemExit("Central checkpoint cache has the wrong checkpoint label")
 
     edge = parse_edge_payload(
         payload,
@@ -58,7 +58,7 @@ def main() -> int:
         require_confirmed_lineup=False,
     )
     edge["source_url"] = str(source_path.relative_to(ROOT))
-    edge["compatibility_fallback"] = "exact_local_checkpoint_archive"
+    edge["compatibility_fallback"] = "central_database_consumer_cache"
 
     top100_path = ROOT / "data" / "top100.json"
     top100 = read_json(top100_path)
@@ -76,25 +76,35 @@ def main() -> int:
 
     if capture.get("top100_rows") != 100:
         raise SystemExit(f"Expected 100 Top 100 rows, got {capture.get('top100_rows')}")
-    if int(capture.get("priced_rows") or 0) <= 0:
-        raise SystemExit("Exact checkpoint capture contains no Top 100 prices")
+
+    priced_rows = int(capture.get("priced_rows") or 0)
+    source_quotes = int(edge.get("quote_count") or 0)
+    available_quotes = int(payload.get("allAvailableQuoteCount") or 0)
+    excluded_quotes = int(payload.get("excludedLiveOrPostStartQuoteCount") or 0)
+    if priced_rows <= 0 and source_quotes > 0:
+        raise SystemExit(
+            "Central checkpoint had usable pregame quotes but none joined to Top 100"
+        )
 
     subprocess.run(
         [sys.executable, "scripts/build_discovery.py", "--no-capture"],
         cwd=ROOT,
         check=True,
     )
+    status = "success" if priced_rows > 0 else "no_remaining_pregame_prices"
     print(
         json.dumps(
             {
-                "status": "success",
+                "status": status,
                 "slate_date": args.date,
                 "checkpoint": checkpoint,
                 "source": str(source_path.relative_to(ROOT)),
                 "source_rows": edge.get("row_count"),
-                "source_quotes": edge.get("quote_count"),
+                "source_quotes": source_quotes,
+                "available_quotes": available_quotes,
+                "excluded_live_or_post_start_quotes": excluded_quotes,
                 "top100_rows": capture.get("top100_rows"),
-                "priced_rows": capture.get("priced_rows"),
+                "priced_rows": priced_rows,
                 "capture": str(capture_path.relative_to(ROOT)),
             },
             indent=2,
