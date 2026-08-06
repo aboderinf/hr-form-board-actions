@@ -7,7 +7,7 @@ const ALLOWED_BOOKS = new Set(["fanduel", "draftkings", "betmgm"]);
 async function fetchJson(url) {
   const upstream = await fetch(url, {
     method: "GET",
-    headers: { "User-Agent": "hr-form-central-db-proxy/2.2" },
+    headers: { "User-Agent": "hr-form-central-db-proxy/2.3" },
     cache: "no-store",
   });
   const text = await upstream.text();
@@ -19,6 +19,14 @@ async function fetchJson(url) {
   } catch {
     throw new Error(`Invalid JSON from ${url}`);
   }
+}
+
+function normalizeCheckpoint(value) {
+  const raw = String(value || "").trim().toLowerCase();
+  const digits = raw.replace(/\D/g, "");
+  if (digits.length === 3) return `0${digits}`;
+  if (digits.length === 4) return digits;
+  return raw;
 }
 
 function validTime(value) {
@@ -68,7 +76,7 @@ function normalizeDashboard(dashboard, slateDate, sourceUrl) {
   return {
     schemaVersion: 2,
     date: dashboard.date || slateDate,
-    checkpoint: dashboard.checkpoint || null,
+    checkpoint: null,
     asOf: generatedAt,
     generatedAt,
     latestIngestAt: generatedAt,
@@ -127,6 +135,7 @@ module.exports = async function handler(request, response) {
   }
   if (![...query.keys()].length) query.set("latest", "1");
 
+  const requestedCheckpoint = normalizeCheckpoint(query.get("checkpoint"));
   const oddsUrl = `${EDGE_BASE_URL}/api/odds?${query.toString()}`;
   const errors = [];
   let payload;
@@ -137,6 +146,14 @@ module.exports = async function handler(request, response) {
     if (candidate?.source !== "mlb-hr-edge-database") {
       throw new Error("Odds response is not database-backed");
     }
+    if (
+      requestedCheckpoint
+      && normalizeCheckpoint(candidate.checkpoint) !== requestedCheckpoint
+    ) {
+      throw new Error(
+        `Central odds checkpoint mismatch: requested ${requestedCheckpoint}, received ${candidate.checkpoint || "none"}`,
+      );
+    }
     payload = candidate;
     selectedUrl = oddsUrl;
   } catch (error) {
@@ -144,7 +161,9 @@ module.exports = async function handler(request, response) {
   }
 
   const slateDate = query.get("date");
-  if (!payload && slateDate) {
+  // A dashboard response has no immutable checkpoint identity. It is safe only
+  // for latest-slate browsing, never as a substitute for an exact checkpoint.
+  if (!payload && slateDate && !requestedCheckpoint) {
     const dashboardUrl = `${EDGE_BASE_URL}/api/dashboard?${new URLSearchParams({ date: slateDate })}`;
     try {
       payload = normalizeDashboard(
@@ -163,7 +182,10 @@ module.exports = async function handler(request, response) {
     return response.status(502).json({
       status: "error",
       source: "mlb-hr-edge-database",
-      message: "Central database is temporarily unavailable for this query",
+      checkpoint: requestedCheckpoint || null,
+      message: requestedCheckpoint
+        ? "Exact checkpoint is not yet available from the central database"
+        : "Central database is temporarily unavailable for this query",
       errors,
     });
   }
