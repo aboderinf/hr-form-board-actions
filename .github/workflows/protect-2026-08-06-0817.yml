@@ -1,0 +1,104 @@
+name: Protect Form Board 2026-08-06 0817
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "data/triggers/protect-2026-08-06-0817.txt"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  # Match the scheduled 12:20 UTC consumer run.
+  group: source-driven-form-board-20 12 * 3-11 *-scheduled
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 80
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Wait until 08:20 ET
+        run: |
+          python - <<'PY'
+          import time
+          from datetime import datetime
+          from zoneinfo import ZoneInfo
+
+          target = datetime(2026, 8, 6, 8, 20, 0, tzinfo=ZoneInfo("America/New_York"))
+          seconds = max(0, int((target - datetime.now(ZoneInfo("America/New_York"))).total_seconds()))
+          print(f"Waiting {seconds} seconds for the 08:20 ET consumer window.", flush=True)
+          if seconds:
+              time.sleep(seconds)
+          PY
+
+      - name: Initialize checkpoint status
+        run: |
+          mkdir -p data
+          python - <<'PY'
+          import json
+          import os
+          from datetime import datetime, timezone
+          from pathlib import Path
+          payload = {
+              "schema_version": 3,
+              "status": "workflow_started",
+              "slate_date": "2026-08-06",
+              "checkpoint_label": "08:17",
+              "scheduled_at_et": "2026-08-06T08:20:00-04:00",
+              "workflow_run_id": os.environ["GITHUB_RUN_ID"],
+              "workflow_event": os.environ["GITHUB_EVENT_NAME"],
+              "workflow_started_at": datetime.now(timezone.utc).isoformat(),
+          }
+          Path("data/pipeline-status.json").write_text(json.dumps(payload, indent=2) + "\n")
+          PY
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install consumer runtime
+        run: pip install -r requirements.txt
+
+      - name: Verify only checkpoint-critical contracts
+        run: |
+          python -m unittest discover -s tests -p 'test_source_driven_refresh.py' -v
+          python -m unittest discover -s tests -p 'test_checkpoint_browser_overlay.py' -v
+
+      - name: Wait for exact source and refresh every Form Board surface
+        id: refresh
+        continue-on-error: true
+        run: |
+          python scripts/run_source_driven_refresh.py \
+            --date 2026-08-06 \
+            --checkpoint 08:17 \
+            --attempts 240 \
+            --delay 15
+
+      - name: Commit one atomic checkpoint update
+        run: |
+          git config user.name "hr-form-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data index.html
+          if git diff --cached --quiet; then
+            echo "No Form Board changes."
+          else
+            git commit -m "Refresh Form Board from 2026-08-06 0817 checkpoint"
+            for attempt in 1 2 3; do
+              git pull --rebase origin main && git push && exit 0
+              sleep $((attempt * 2))
+            done
+            exit 1
+          fi
+
+      - name: Require successful exact checkpoint refresh
+        if: steps.refresh.outcome != 'success'
+        run: exit 1
