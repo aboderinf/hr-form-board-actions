@@ -11,31 +11,55 @@ function normalizedPlayerKey(value) {
     .trim();
 }
 
+function normalizedCheckpoint(value) {
+  const raw = String(value || "").trim().toLowerCase();
+  const digits = raw.replace(/\D/g, "");
+  if (digits.length === 3) return `0${digits}`;
+  if (digits.length === 4) return digits;
+  return raw;
+}
+
 function decimalPrice(american) {
   const value = Number(american);
   if (!Number.isFinite(value) || value === 0) return 0;
   return value > 0 ? 1 + value / 100 : 1 + 100 / Math.abs(value);
 }
 
-function centralOddsForDate(slateDate) {
+function centralOddsForDate(slateDate, checkpoint = "") {
   const date = String(slateDate || "").trim();
+  const checkpointKey = normalizedCheckpoint(checkpoint);
   if (!date) return Promise.reject(new Error("Top 100 slate date is missing"));
-  if (!centralRequests.has(date)) {
-    const url = `${CENTRAL_ODDS_ENDPOINT}?${new URLSearchParams({ date })}`;
+  const cacheKey = `${date}:${checkpointKey || "latest"}`;
+  if (!centralRequests.has(cacheKey)) {
+    const parameters = { date };
+    if (checkpointKey) parameters.checkpoint = checkpointKey;
+    const url = `${CENTRAL_ODDS_ENDPOINT}?${new URLSearchParams(parameters)}`;
     centralRequests.set(
-      date,
-      nativeFetch(url, { cache: "no-store" }).then((response) => {
-        if (!response.ok) throw new Error(`Central odds fetch failed: ${response.status}`);
-        return response.json();
+      cacheKey,
+      nativeFetch(url, { cache: "no-store" }).then(async (response) => {
+        const payload = await response.json().catch(() => null);
+        if (!response.ok) {
+          throw new Error(payload?.message || `Central odds fetch failed: ${response.status}`);
+        }
+        return payload;
       }),
     );
   }
-  return centralRequests.get(date);
+  return centralRequests.get(cacheKey);
 }
 
-function mergeCentralOdds(top100, central) {
+function mergeCentralOdds(top100, central, requestedCheckpoint = "") {
   if (central?.source !== "mlb-hr-edge-database" || !Array.isArray(central.rows)) {
     throw new Error("Central odds response is not database-backed");
+  }
+  const expectedCheckpoint = normalizedCheckpoint(requestedCheckpoint);
+  if (
+    expectedCheckpoint
+    && normalizedCheckpoint(central.checkpoint) !== expectedCheckpoint
+  ) {
+    throw new Error(
+      `Central checkpoint mismatch: expected ${expectedCheckpoint}, received ${central.checkpoint || "none"}`,
+    );
   }
 
   const byId = new Map();
@@ -46,7 +70,6 @@ function mergeCentralOdds(top100, central) {
     if (nameKey) byName.set(nameKey, row);
   }
 
-  let pricedPlayers = 0;
   const players = (top100.players || []).map((player) => {
     const id = player.batter_id ?? player.player_id ?? player.mlbam_id;
     const row = (id != null ? byId.get(String(id)) : null)
@@ -65,7 +88,6 @@ function mergeCentralOdds(top100, central) {
       .sort((a, b) => decimalPrice(b.odds) - decimalPrice(a.odds));
 
     if (!prices.length) return player;
-    pricedPlayers += 1;
     const best = prices[0];
     return {
       ...player,
@@ -81,6 +103,7 @@ function mergeCentralOdds(top100, central) {
     };
   });
 
+  const pricedPlayers = players.filter((player) => player.odds_available).length;
   return {
     ...top100,
     players,
@@ -89,12 +112,23 @@ function mergeCentralOdds(top100, central) {
       source: "mlb-hr-edge-database",
       endpoint: CENTRAL_ODDS_ENDPOINT,
       database_url: central.databaseUrl || null,
-      date: central.date || null,
-      checkpoint: central.checkpoint || null,
-      provider_call_id: central.providerCallId || null,
-      provider_response_sha256: central.providerResponseSha256 || null,
+      date: central.date || top100.slate_date || null,
+      checkpoint:
+        normalizedCheckpoint(central.checkpoint)
+        || normalizedCheckpoint(top100.checkpoint)
+        || normalizedCheckpoint(top100.odds?.checkpoint)
+        || null,
+      provider_call_id:
+        central.providerCallId || top100.odds?.provider_call_id || null,
+      provider_response_sha256:
+        central.providerResponseSha256
+        || top100.odds?.provider_response_sha256
+        || null,
       priced_players: pricedPlayers,
-      quote_count: Number(central.quoteCount || 0),
+      quote_count: Math.max(
+        Number(central.quoteCount || 0),
+        Number(top100.odds?.quote_count || 0),
+      ),
       refreshed_in_browser: new Date().toISOString(),
     },
   };
@@ -112,8 +146,11 @@ window.fetch = async function centralDatabaseFetch(input, init) {
 
   try {
     const top100 = await response.clone().json();
-    const central = await centralOddsForDate(top100.slate_date);
-    const merged = mergeCentralOdds(top100, central);
+    const checkpoint =
+      normalizedCheckpoint(top100.checkpoint)
+      || normalizedCheckpoint(top100.odds?.checkpoint);
+    const central = await centralOddsForDate(top100.slate_date, checkpoint);
+    const merged = mergeCentralOdds(top100, central, checkpoint);
     return new Response(JSON.stringify(merged), {
       status: response.status,
       statusText: response.statusText,
@@ -121,10 +158,14 @@ window.fetch = async function centralDatabaseFetch(input, init) {
         "Content-Type": "application/json; charset=utf-8",
         "Cache-Control": "no-store",
         "X-Odds-Source": "mlb-hr-edge-database",
+        "X-Odds-Checkpoint": checkpoint || "latest",
       },
     });
   } catch (error) {
-    console.warn("Central database overlay unavailable; retaining last generated Top 100 data.", error);
+    console.warn(
+      "Exact central checkpoint unavailable; retaining generated checkpoint odds.",
+      error,
+    );
     return response;
   }
 };
