@@ -2,6 +2,7 @@ const { checkpointAuth } = require("../lib/checkpoint-runtime");
 const { resolveQstash } = require("../lib/qstash-runtime");
 
 const DESTINATION = "https://hr-form-board-actions.vercel.app/api/capture-checkpoint";
+const CALLBACK = "https://hr-form-board-actions.vercel.app/api/test-qstash-callback";
 
 module.exports = async function handler(request, response) {
   if (request.method !== "POST" && request.method !== "GET") {
@@ -32,6 +33,7 @@ module.exports = async function handler(request, response) {
       "Upstash-Method": "POST",
       "Upstash-Retries": "0",
       "Upstash-Timeout": "30s",
+      "Upstash-Callback": CALLBACK,
       "Upstash-Forward-X-Checkpoint-Auth": auth,
       "Upstash-Redact-Fields": "header[X-Checkpoint-Auth]",
     },
@@ -44,6 +46,7 @@ module.exports = async function handler(request, response) {
     status: upstream.ok ? "queued" : "error",
     qstashApiBase: resolved.base,
     destination: DESTINATION,
+    callback: CALLBACK,
     testDate: "2026-08-07",
     testCheckpoint: "0817",
     expectedCaptureOutcome: "outside_window",
