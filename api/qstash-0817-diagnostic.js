@@ -1,5 +1,22 @@
 const { resolveQstash } = require("../lib/qstash-runtime");
 
+function safeLog(row) {
+  return {
+    time: row.time || null,
+    messageId: row.messageId || null,
+    scheduleId: row.scheduleId || null,
+    state: row.state || null,
+    error: row.error || null,
+    responseStatus: row.responseStatus ?? null,
+    responseBody: row.responseBody || null,
+    nextDeliveryTime: row.nextDeliveryTime || null,
+    url: row.url || null,
+    method: row.method || null,
+    maxRetries: row.maxRetries ?? null,
+    retryDelayExpression: row.retryDelayExpression || null,
+  };
+}
+
 module.exports = async function handler(request, response) {
   if (request.method !== "GET") {
     response.setHeader("Allow", "GET");
@@ -7,36 +24,56 @@ module.exports = async function handler(request, response) {
   }
   try {
     const resolved = await resolveQstash();
-    const params = new URLSearchParams({
-      scheduleId: "mlb-hr-checkpoint-0817",
+    const headers = { Authorization: `Bearer ${resolved.token}` };
+    const logParams = new URLSearchParams({
       fromDate: String(Date.parse("2026-08-07T12:15:00Z")),
       toDate: String(Date.parse("2026-08-07T13:30:00Z")),
-      count: "50",
+      count: "100",
     });
-    const upstream = await fetch(`${resolved.base}/v2/logs?${params}`, {
-      headers: { Authorization: `Bearer ${resolved.token}` },
-      cache: "no-store",
-    });
-    const payload = await upstream.json().catch(() => ({}));
-    if (!upstream.ok) {
-      return response.status(502).json({ status: "error", qstashStatus: upstream.status, message: payload?.error || "QStash log read failed" });
+    const [logsResponse, schedulesResponse] = await Promise.all([
+      fetch(`${resolved.base}/v2/logs?${logParams}`, { headers, cache: "no-store" }),
+      fetch(`${resolved.base}/v2/schedules`, { headers, cache: "no-store" }),
+    ]);
+    const logsPayload = await logsResponse.json().catch(() => ({}));
+    const schedulesPayload = await schedulesResponse.json().catch(() => ([]));
+    if (!logsResponse.ok || !schedulesResponse.ok) {
+      return response.status(502).json({
+        status: "error",
+        logsStatus: logsResponse.status,
+        schedulesStatus: schedulesResponse.status,
+      });
     }
-    const logs = (payload.logs || []).map((row) => ({
-      time: row.time || null,
-      messageId: row.messageId || null,
-      scheduleId: row.scheduleId || null,
-      state: row.state || null,
-      error: row.error || null,
-      responseStatus: row.responseStatus ?? null,
-      responseBody: row.responseBody || null,
-      nextDeliveryTime: row.nextDeliveryTime || null,
-      url: row.url || null,
-      method: row.method || null,
-      maxRetries: row.maxRetries ?? null,
-      retryDelayExpression: row.retryDelayExpression || null,
-    }));
+    const allLogs = (logsPayload.logs || []).map(safeLog);
+    const relevantLogs = allLogs.filter((row) =>
+      row.scheduleId === "mlb-hr-checkpoint-0817"
+      || row.url === "https://hr-form-board-actions.vercel.app/api/capture-checkpoint"
+    );
+    const schedule = (Array.isArray(schedulesPayload) ? schedulesPayload : []).find(
+      (row) => row.scheduleId === "mlb-hr-checkpoint-0817",
+    );
+    const safeSchedule = schedule ? {
+      scheduleId: schedule.scheduleId || null,
+      cron: schedule.cron || null,
+      destination: schedule.destination || schedule.url || null,
+      method: schedule.method || null,
+      body: schedule.body || null,
+      bodyBase64: schedule.bodyBase64 || null,
+      headerNames: Object.keys(schedule.header || {}),
+      maxRetries: schedule.maxRetries ?? null,
+      isPaused: Boolean(schedule.isPaused),
+      lastScheduleTime: schedule.lastScheduleTime || null,
+      nextScheduleTime: schedule.nextScheduleTime || null,
+    } : null;
     response.setHeader("Cache-Control", "no-store");
-    return response.status(200).json({ status: "ok", qstashApiBase: resolved.base, logCount: logs.length, logs });
+    return response.status(200).json({
+      status: "ok",
+      qstashApiBase: resolved.base,
+      schedule: safeSchedule,
+      allLogCount: allLogs.length,
+      relevantLogCount: relevantLogs.length,
+      relevantLogs,
+      allLogs,
+    });
   } catch (error) {
     return response.status(500).json({ status: "error", message: error instanceof Error ? error.message : String(error) });
   }
