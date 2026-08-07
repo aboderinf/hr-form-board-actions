@@ -36,7 +36,7 @@ module.exports = async function handler(request, response) {
     const scheduleId = `mlb-hr-checkpoint-${checkpoint}`;
     const cron = `CRON_TZ=America/New_York 17 ${hour} * 3-11 *`;
     const upstream = await fetch(
-      `${resolved.base}/v2/schedules/${encodeURIComponent(DESTINATION)}`,
+      `${resolved.base}/v2/schedules/${DESTINATION}`,
       {
         method: "POST",
         headers: {
