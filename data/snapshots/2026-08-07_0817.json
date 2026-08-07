@@ -1,0 +1,67 @@
+{
+  "schema_version": 2,
+  "snapshot_id": "2026-08-07_0817",
+  "slate_date": "2026-08-07",
+  "checkpoint_et": "08:17",
+  "scheduled_at_et": "2026-08-07T08:17:00-04:00",
+  "observed_at": "2026-08-07T13:39:32.850034+00:00",
+  "observed_at_et": "2026-08-07T09:39:32.850034-04:00",
+  "status": "no_eligible_players",
+  "sources": {
+    "mlb_hr_edge": {
+      "source": "MLB HR Edge",
+      "source_url": "data/shared-odds/latest.json",
+      "delivery": "qstash-vercel-redis",
+      "source_date": "2026-08-07",
+      "date_matches": true,
+      "as_of": "2026-08-07T12:17:00.000Z",
+      "status": "ready",
+      "generated_at": "2026-08-07T12:17:05.786Z",
+      "latest_ingest_at": "2026-08-07T12:17:05.786Z",
+      "provider_call_id": "2026-08-07:0817:2026-08-07T12:17:05.786Z:79e12be94b54",
+      "provider_response_sha256": "79e12be94b54be9773122ad1bcb97879855df1dba66849052d3db7b6107f852d",
+      "archived_call_count": 1,
+      "quote_count": 45,
+      "all_available_quote_count": 1512,
+      "excluded_live_or_post_start_quote_count": 0,
+      "books": [
+        "FanDuel",
+        "DraftKings",
+        "BetMGM"
+      ],
+      "row_count": 15,
+      "compatibility_fallback": "exact_upstash_checkpoint_cache",
+      "checkpoint_at": "2026-08-07T08:17:00-04:00"
+    }
+  },
+  "diagnostics": [],
+  "portfolios": {
+    "top10": {
+      "picks": [],
+      "summary": {
+        "selections": 0,
+        "settled": 0,
+        "wins": 0,
+        "losses": 0,
+        "pushes": 0,
+        "hit_rate": null,
+        "net_units": 0,
+        "roi": null
+      }
+    },
+    "top20": {
+      "picks": [],
+      "summary": {
+        "selections": 0,
+        "settled": 0,
+        "wins": 0,
+        "losses": 0,
+        "pushes": 0,
+        "hit_rate": null,
+        "net_units": 0,
+        "roi": null
+      }
+    }
+  },
+  "eligible_candidates": 0
+}
