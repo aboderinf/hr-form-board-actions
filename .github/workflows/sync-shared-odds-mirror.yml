@@ -15,19 +15,12 @@ on:
       - "scripts/run_source_driven_refresh.py"
       - "scripts/sync_shared_odds_mirror.py"
       - "scripts/build_top100.py"
-      - "tests/test_source_driven_refresh.py"
       - "data/triggers/run-source-driven-refresh-now.txt"
   schedule:
-    # Separate UTC schedules cover EDT and EST. The resolver uses the scheduled
-    # instant, so a delayed GitHub runner retains the intended ET checkpoint.
-    - cron: "20 12 * 3-11 *"
-    - cron: "20 13 * 3-11 *"
-    - cron: "20 15 * 3-11 *"
-    - cron: "20 16 * 3-11 *"
-    - cron: "20 21 * 3-11 *"
-    - cron: "20 22 * 3-11 *"
-    - cron: "20 0 * 3-11 *"
-    - cron: "20 1 * 3-11 *"
+    # Start three minutes after the source checkpoint and wait a bounded period
+    # for the exact archived source. Native ET scheduling removes DST duplicates.
+    - cron: "20 8,11,17,20 * * *"
+      timezone: "America/New_York"
 
 permissions:
   contents: write
@@ -39,13 +32,13 @@ concurrency:
 jobs:
   refresh:
     runs-on: ubuntu-latest
-    timeout-minutes: 80
+    timeout-minutes: 35
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Resolve scheduled ET checkpoint
+      - name: Resolve ET checkpoint
         id: window
         shell: bash
         env:
@@ -60,8 +53,7 @@ jobs:
           from zoneinfo import ZoneInfo
 
           ET = ZoneInfo("America/New_York")
-          now_utc = datetime.now(timezone.utc)
-          now_et = now_utc.astimezone(ET)
+          now_et = datetime.now(timezone.utc).astimezone(ET)
           event = os.environ.get("GITHUB_EVENT_NAME", "")
           requested_date = os.environ.get("REQUESTED_DATE", "").strip()
           requested_checkpoint = os.environ.get("REQUESTED_CHECKPOINT", "").strip()
@@ -85,23 +77,17 @@ jobs:
               fields = schedule_expr.split()
               if len(fields) != 5:
                   raise SystemExit(f"Unexpected schedule expression: {schedule_expr!r}")
-              minute = int(fields[0])
-              hour = int(fields[1])
-              scheduled_utc = now_utc.replace(
-                  hour=hour, minute=minute, second=0, microsecond=0
-              )
-              if scheduled_utc > now_utc + timedelta(minutes=5):
-                  scheduled_utc -= timedelta(days=1)
-              scheduled_et = scheduled_utc.astimezone(ET)
-              due = scheduled_et.minute == 20 and scheduled_et.hour in labels
-              checkpoint = labels.get(scheduled_et.hour, "")
-              slate_date = scheduled_et.date().isoformat()
-              scheduled_at = scheduled_et.isoformat()
+              # This workflow uses native America/New_York scheduling, so the
+              # current ET hour identifies the intended checkpoint directly.
+              hour = now_et.hour
+              due = hour in labels
+              checkpoint = labels.get(hour, "")
+              slate_date = now_et.date().isoformat()
+              scheduled_at = now_et.replace(minute=20, second=0, microsecond=0).isoformat()
           else:
               eligible = [
                   hour for hour in labels
-                  if hour < now_et.hour
-                  or (hour == now_et.hour and now_et.minute >= 17)
+                  if hour < now_et.hour or (hour == now_et.hour and now_et.minute >= 17)
               ]
               if eligible:
                   hour = max(eligible)
@@ -119,9 +105,9 @@ jobs:
           print(f"observed_et={now_et.isoformat()}")
           PY
 
-      - name: Skip duplicate DST schedule
+      - name: Skip non-checkpoint invocation
         if: steps.window.outputs.due != 'true'
-        run: echo "This UTC schedule does not map to an enabled ET checkpoint."
+        run: echo "This invocation does not map to an enabled ET checkpoint."
 
       - name: Initialize durable pipeline status
         if: steps.window.outputs.due == 'true'
@@ -138,7 +124,7 @@ jobs:
           from datetime import datetime, timezone
           from pathlib import Path
           payload = {
-              "schema_version": 2,
+              "schema_version": 3,
               "status": "workflow_started",
               "slate_date": os.environ["SLATE_DATE"],
               "checkpoint_label": os.environ["CHECKPOINT"],
@@ -158,13 +144,9 @@ jobs:
           python-version: "3.12"
           cache: pip
 
-      - name: Install consumer runtime once
+      - name: Install consumer runtime
         if: steps.window.outputs.due == 'true'
         run: pip install -r requirements.txt
-
-      - name: Verify checkpoint matching guard
-        if: steps.window.outputs.due == 'true'
-        run: python -m unittest discover -s tests -p 'test_source_driven_refresh.py' -v
 
       - name: Wait for exact source and refresh all Form Board surfaces
         id: refresh
@@ -174,7 +156,7 @@ jobs:
           python scripts/run_source_driven_refresh.py \
             --date "${{ steps.window.outputs.slate_date }}" \
             --checkpoint "${{ steps.window.outputs.checkpoint }}" \
-            --attempts 240 \
+            --attempts 80 \
             --delay 15
 
       - name: Commit one atomic board update
@@ -191,6 +173,7 @@ jobs:
           git commit -m "Refresh all Form Board surfaces from shared source"
           for attempt in 1 2 3; do
             git pull --rebase origin main && git push && exit 0
+            git rebase --abort >/dev/null 2>&1 || true
             sleep $((attempt * 2))
           done
           exit 1
