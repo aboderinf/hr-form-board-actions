@@ -1,7 +1,7 @@
 const {
   checkpointAuth,
-  envFirst,
 } = require("../lib/checkpoint-runtime");
+const { resolveQstash } = require("../lib/qstash-runtime");
 
 const DESTINATION = "https://hr-form-board-actions.vercel.app/api/capture-checkpoint";
 const CHECKPOINTS = ["0817", "1117", "1717", "2017"];
@@ -12,12 +12,21 @@ module.exports = async function handler(request, response) {
     return response.status(405).json({ status: "error", message: "Method not allowed" });
   }
 
-  const token = envFirst("QSTASH_TOKEN");
   const auth = checkpointAuth();
-  if (!token || !auth) {
+  if (!auth) {
     return response.status(503).json({
       status: "not_ready",
-      message: "QStash environment is missing from Vercel production",
+      message: "QStash token is missing from Vercel production",
+    });
+  }
+
+  let resolved;
+  try {
+    resolved = await resolveQstash();
+  } catch (error) {
+    return response.status(503).json({
+      status: "not_ready",
+      message: error instanceof Error ? error.message : String(error),
     });
   }
 
@@ -27,11 +36,11 @@ module.exports = async function handler(request, response) {
     const scheduleId = `mlb-hr-checkpoint-${checkpoint}`;
     const cron = `CRON_TZ=America/New_York 17 ${hour} * 3-11 *`;
     const upstream = await fetch(
-      `https://qstash.upstash.io/v2/schedules/${encodeURIComponent(DESTINATION)}`,
+      `${resolved.base}/v2/schedules/${encodeURIComponent(DESTINATION)}`,
       {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${resolved.token}`,
           "Content-Type": "application/json",
           "Upstash-Cron": cron,
           "Upstash-Schedule-Id": scheduleId,
@@ -49,6 +58,7 @@ module.exports = async function handler(request, response) {
     if (!upstream.ok) {
       return response.status(502).json({
         status: "error",
+        qstashApiBase: resolved.base,
         checkpoint,
         scheduleId,
         message: payload?.error || `QStash HTTP ${upstream.status}`,
@@ -62,6 +72,7 @@ module.exports = async function handler(request, response) {
   return response.status(200).json({
     status: "configured",
     scheduler: "upstash-qstash",
+    qstashApiBase: resolved.base,
     destination: DESTINATION,
     schedules: results,
   });
