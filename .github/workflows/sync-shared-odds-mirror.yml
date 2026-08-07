@@ -17,9 +17,15 @@ on:
       - "scripts/build_top100.py"
       - "data/triggers/run-source-driven-refresh-now.txt"
   schedule:
-    # Start three minutes after the source checkpoint and wait a bounded period
-    # for the exact archived source. Native ET scheduling removes DST duplicates.
-    - cron: "20 8,11,17,20 * * *"
+    # Separate native-ET schedules preserve the intended checkpoint even when
+    # GitHub queues a run into a later clock hour.
+    - cron: "20 8 * * *"
+      timezone: "America/New_York"
+    - cron: "20 11 * * *"
+      timezone: "America/New_York"
+    - cron: "20 17 * * *"
+      timezone: "America/New_York"
+    - cron: "20 20 * * *"
       timezone: "America/New_York"
 
 permissions:
@@ -77,13 +83,14 @@ jobs:
               fields = schedule_expr.split()
               if len(fields) != 5:
                   raise SystemExit(f"Unexpected schedule expression: {schedule_expr!r}")
-              # This workflow uses native America/New_York scheduling, so the
-              # current ET hour identifies the intended checkpoint directly.
-              hour = now_et.hour
+              hour = int(fields[1])
               due = hour in labels
               checkpoint = labels.get(hour, "")
-              slate_date = now_et.date().isoformat()
-              scheduled_at = now_et.replace(minute=20, second=0, microsecond=0).isoformat()
+              candidate = now_et.replace(hour=hour, minute=20, second=0, microsecond=0)
+              if candidate > now_et + timedelta(hours=2):
+                  candidate -= timedelta(days=1)
+              slate_date = candidate.date().isoformat()
+              scheduled_at = candidate.isoformat()
           else:
               eligible = [
                   hour for hour in labels
