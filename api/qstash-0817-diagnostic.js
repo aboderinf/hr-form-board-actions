@@ -1,4 +1,5 @@
 const { resolveQstash } = require("../lib/qstash-runtime");
+const { redisCommand } = require("../lib/checkpoint-runtime");
 
 function safeLog(row) {
   return {
@@ -30,9 +31,13 @@ module.exports = async function handler(request, response) {
       toDate: String(Date.parse("2026-08-07T13:30:00Z")),
       count: "100",
     });
-    const [logsResponse, scheduleResponse] = await Promise.all([
+    const [logsResponse, scheduleResponse, checkpointRaw, attemptRaw, failureRaw, rawArchiveRaw] = await Promise.all([
       fetch(`${resolved.base}/v2/logs?${logParams}`, { headers, cache: "no-store" }),
       fetch(`${resolved.base}/v2/schedules/mlb-hr-checkpoint-0817`, { headers, cache: "no-store" }),
+      redisCommand(["GET", "mlbhr:checkpoint:2026-08-07:0817"]),
+      redisCommand(["GET", "mlbhr:attempt:2026-08-07:0817"]),
+      redisCommand(["GET", "mlbhr:failure:2026-08-07:0817"]),
+      redisCommand(["GET", "mlbhr:raw:2026-08-07:0817"]),
     ]);
     const logsPayload = await logsResponse.json().catch(() => ({}));
     const schedule = await scheduleResponse.json().catch(() => ({}));
@@ -66,11 +71,21 @@ module.exports = async function handler(request, response) {
       nextScheduleTime: schedule.nextScheduleTime || null,
       lastScheduleStates: schedule.lastScheduleStates || null,
     };
+    let failure = null;
+    try { failure = failureRaw ? JSON.parse(failureRaw) : null; } catch { failure = { raw: String(failureRaw) }; }
     response.setHeader("Cache-Control", "no-store");
     return response.status(200).json({
       status: "ok",
       qstashApiBase: resolved.base,
       schedule: safeSchedule,
+      redis: {
+        checkpointPresent: Boolean(checkpointRaw),
+        attemptPresent: Boolean(attemptRaw),
+        attemptValue: attemptRaw || null,
+        failurePresent: Boolean(failureRaw),
+        failure,
+        rawArchivePresent: Boolean(rawArchiveRaw),
+      },
       allLogCount: allLogs.length,
       relevantLogCount: relevantLogs.length,
       relevantLogs,
