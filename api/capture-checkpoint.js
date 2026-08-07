@@ -1,8 +1,10 @@
 const {
   captureCheckpoint,
   checkpointAuth,
+  envFirst,
   intendedSlateDate,
   normalizeCheckpoint,
+  redisConfig,
   safeEqual,
 } = require("../lib/checkpoint-runtime");
 
@@ -18,6 +20,19 @@ module.exports = async function handler(request, response) {
     return response.status(401).json({ status: "error", message: "Unauthorized" });
   }
 
+  const redis = redisConfig();
+  const missing = [];
+  if (!redis.url || !redis.token) missing.push("Upstash Redis");
+  if (!envFirst("SPORTSGAMEODDS_API_KEY")) missing.push("SPORTSGAMEODDS_API_KEY");
+  if (missing.length) {
+    response.setHeader("Cache-Control", "no-store");
+    return response.status(503).json({
+      status: "configuration_missing",
+      providerRequests: 0,
+      missing,
+    });
+  }
+
   const body = request.body && typeof request.body === "object" ? request.body : {};
   const checkpoint = normalizeCheckpoint(body.checkpoint);
   if (!checkpoint) {
@@ -29,9 +44,16 @@ module.exports = async function handler(request, response) {
   try {
     const result = await captureCheckpoint({ slateDate, checkpoint, now });
     const payload = result.payload || null;
-    const success = ["captured", "reused", "already_attempted", "outside_window", "provider_failed_after_single_attempt", "pagination_refused_second_call"].includes(result.outcome);
+    const terminal = [
+      "captured",
+      "reused",
+      "already_attempted",
+      "outside_window",
+      "provider_failed_after_single_attempt",
+      "pagination_refused_second_call",
+    ].includes(result.outcome);
     response.setHeader("Cache-Control", "no-store");
-    return response.status(success ? 200 : 500).json({
+    return response.status(terminal ? 200 : 500).json({
       status: result.outcome,
       date: slateDate,
       checkpoint,
