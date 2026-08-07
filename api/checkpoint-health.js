@@ -3,6 +3,7 @@ const {
   redisCommand,
   redisConfig,
 } = require("../lib/checkpoint-runtime");
+const { resolveQstash } = require("../lib/qstash-runtime");
 
 module.exports = async function handler(request, response) {
   if (request.method !== "GET" && request.method !== "HEAD") {
@@ -12,9 +13,9 @@ module.exports = async function handler(request, response) {
 
   const redis = redisConfig();
   const env = {
-    qstashToken: Boolean(envFirst("QSTASH_TOKEN")),
-    qstashCurrentSigningKey: Boolean(envFirst("QSTASH_CURRENT_SIGNING_KEY")),
-    qstashNextSigningKey: Boolean(envFirst("QSTASH_NEXT_SIGNING_KEY")),
+    qstashToken: Boolean(envFirst("QSTASH_TOKEN", "US_EAST_1_QSTASH_TOKEN", "EU_CENTRAL_1_QSTASH_TOKEN")),
+    qstashCurrentSigningKey: Boolean(envFirst("QSTASH_CURRENT_SIGNING_KEY", "US_EAST_1_QSTASH_CURRENT_SIGNING_KEY", "EU_CENTRAL_1_QSTASH_CURRENT_SIGNING_KEY")),
+    qstashNextSigningKey: Boolean(envFirst("QSTASH_NEXT_SIGNING_KEY", "US_EAST_1_QSTASH_NEXT_SIGNING_KEY", "EU_CENTRAL_1_QSTASH_NEXT_SIGNING_KEY")),
     redisUrl: Boolean(redis.url),
     redisToken: Boolean(redis.token),
     sportsGameOddsApiKey: Boolean(envFirst("SPORTSGAMEODDS_API_KEY")),
@@ -32,18 +33,14 @@ module.exports = async function handler(request, response) {
 
   let qstashOk = false;
   let qstashSchedules = [];
+  let qstashRegionBase = null;
   let qstashError = null;
-  const qstashToken = envFirst("QSTASH_TOKEN");
-  if (qstashToken) {
+  if (env.qstashToken) {
     try {
-      const upstream = await fetch("https://qstash.upstash.io/v2/schedules", {
-        headers: { Authorization: `Bearer ${qstashToken}` },
-        cache: "no-store",
-      });
-      const payload = await upstream.json();
-      if (!upstream.ok) throw new Error(payload?.error || `QStash HTTP ${upstream.status}`);
-      qstashOk = Array.isArray(payload);
-      qstashSchedules = (Array.isArray(payload) ? payload : [])
+      const resolved = await resolveQstash();
+      qstashOk = true;
+      qstashRegionBase = resolved.base;
+      qstashSchedules = resolved.schedules
         .filter((row) => String(row.scheduleId || "").startsWith("mlb-hr-checkpoint-"))
         .map((row) => ({
           scheduleId: row.scheduleId,
@@ -70,6 +67,7 @@ module.exports = async function handler(request, response) {
     redis: { ok: redisOk, error: redisError },
     qstash: {
       ok: qstashOk,
+      apiBase: qstashRegionBase,
       checkpointScheduleCount: qstashSchedules.length,
       schedules: qstashSchedules,
       error: qstashError,
