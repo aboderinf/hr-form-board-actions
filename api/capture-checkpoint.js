@@ -4,6 +4,7 @@ const {
   envFirst,
   intendedSlateDate,
   normalizeCheckpoint,
+  redisCommand,
   redisConfig,
   safeEqual,
 } = require("../lib/checkpoint-runtime");
@@ -23,7 +24,18 @@ module.exports = async function handler(request, response) {
   const redis = redisConfig();
   const missing = [];
   if (!redis.url || !redis.token) missing.push("Upstash Redis");
-  if (!envFirst("SPORTSGAMEODDS_API_KEY")) missing.push("SPORTSGAMEODDS_API_KEY");
+
+  let providerKey = envFirst("SPORTSGAMEODDS_API_KEY");
+  if (!providerKey && redis.url && redis.token) {
+    try {
+      providerKey = String(await redisCommand(["GET", "mlbhr:config:sportsgameodds-api-key"]) || "").trim();
+      if (providerKey) process.env.SPORTSGAMEODDS_API_KEY = providerKey;
+    } catch {
+      providerKey = "";
+    }
+  }
+  if (!providerKey) missing.push("SPORTSGAMEODDS_API_KEY");
+
   if (missing.length) {
     response.setHeader("Cache-Control", "no-store");
     return response.status(503).json({
