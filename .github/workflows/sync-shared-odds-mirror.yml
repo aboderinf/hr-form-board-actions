@@ -1,4 +1,4 @@
-name: Source-driven Form Board refresh
+name: Apply captured checkpoint to Form Board
 
 on:
   workflow_dispatch:
@@ -12,13 +12,8 @@ on:
   push:
     branches: [main]
     paths:
-      - "scripts/run_source_driven_refresh.py"
-      - "scripts/sync_shared_odds_mirror.py"
-      - "scripts/build_top100.py"
       - "data/triggers/run-source-driven-refresh-now.txt"
   schedule:
-    # Separate native-ET schedules preserve the intended checkpoint even when
-    # GitHub queues a run into a later clock hour.
     - cron: "20 8 * * *"
       timezone: "America/New_York"
     - cron: "20 11 * * *"
@@ -32,19 +27,19 @@ permissions:
   contents: write
 
 concurrency:
-  group: source-driven-form-board-${{ github.event.inputs.slate_date || github.event.schedule || 'manual' }}-${{ github.event.inputs.checkpoint || 'scheduled' }}
+  group: form-board-redis-consumer-${{ github.event.inputs.slate_date || github.event.schedule || 'manual' }}-${{ github.event.inputs.checkpoint || 'scheduled' }}
   cancel-in-progress: false
 
 jobs:
   refresh:
     runs-on: ubuntu-latest
-    timeout-minutes: 35
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Resolve ET checkpoint
+      - name: Resolve intended ET checkpoint
         id: window
         shell: bash
         env:
@@ -53,138 +48,100 @@ jobs:
           SCHEDULE_EXPR: ${{ github.event.schedule }}
         run: |
           python - <<'PY' >> "$GITHUB_OUTPUT"
-          import os
-          import re
+          import os, re
           from datetime import datetime, timedelta, timezone
           from zoneinfo import ZoneInfo
-
           ET = ZoneInfo("America/New_York")
-          now_et = datetime.now(timezone.utc).astimezone(ET)
-          event = os.environ.get("GITHUB_EVENT_NAME", "")
+          now = datetime.now(timezone.utc).astimezone(ET)
+          labels = {8:"08:17", 11:"11:17", 17:"17:17", 20:"20:17"}
+          requested = os.environ.get("REQUESTED_CHECKPOINT", "").strip()
           requested_date = os.environ.get("REQUESTED_DATE", "").strip()
-          requested_checkpoint = os.environ.get("REQUESTED_CHECKPOINT", "").strip()
-          schedule_expr = os.environ.get("SCHEDULE_EXPR", "").strip()
-          labels = {8: "08:17", 11: "11:17", 17: "17:17", 20: "20:17"}
-
-          def normalize(value: str) -> str:
-              digits = re.sub(r"\D", "", value)
-              if len(digits) == 3:
-                  digits = "0" + digits
-              if len(digits) != 4:
-                  return ""
-              return f"{digits[:2]}:{digits[2:]}"
-
-          scheduled_at = None
-          if requested_checkpoint:
-              checkpoint = normalize(requested_checkpoint)
-              due = checkpoint in labels.values()
-              slate_date = requested_date or now_et.date().isoformat()
-          elif event == "schedule" and schedule_expr:
-              fields = schedule_expr.split()
-              if len(fields) != 5:
-                  raise SystemExit(f"Unexpected schedule expression: {schedule_expr!r}")
-              hour = int(fields[1])
-              due = hour in labels
-              checkpoint = labels.get(hour, "")
-              candidate = now_et.replace(hour=hour, minute=20, second=0, microsecond=0)
-              if candidate > now_et + timedelta(hours=2):
-                  candidate -= timedelta(days=1)
-              slate_date = candidate.date().isoformat()
-              scheduled_at = candidate.isoformat()
-          else:
-              eligible = [
-                  hour for hour in labels
-                  if hour < now_et.hour or (hour == now_et.hour and now_et.minute >= 17)
-              ]
-              if eligible:
-                  hour = max(eligible)
-                  slate_date = requested_date or now_et.date().isoformat()
-              else:
-                  hour = 20
-                  slate_date = requested_date or (now_et.date() - timedelta(days=1)).isoformat()
+          schedule = os.environ.get("SCHEDULE_EXPR", "").strip()
+          if requested:
+              digits = re.sub(r"\D", "", requested).zfill(4)
+              checkpoint = f"{digits[:2]}:{digits[2:]}"
+              if checkpoint not in labels.values(): raise SystemExit("invalid checkpoint")
+              slate_date = requested_date or now.date().isoformat()
+          elif schedule:
+              hour = int(schedule.split()[1])
               checkpoint = labels[hour]
-              due = True
-
-          print(f"due={'true' if due else 'false'}")
+              candidate = now.replace(hour=hour, minute=20, second=0, microsecond=0)
+              if candidate > now + timedelta(hours=2): candidate -= timedelta(days=1)
+              slate_date = candidate.date().isoformat()
+          else:
+              eligible = [h for h in labels if h < now.hour or (h == now.hour and now.minute >= 17)]
+              hour = max(eligible) if eligible else 20
+              slate_date = requested_date or (now.date() if eligible else (now - timedelta(days=1)).date()).isoformat()
+              checkpoint = labels[hour]
           print(f"slate_date={slate_date}")
           print(f"checkpoint={checkpoint}")
-          print(f"scheduled_at_et={scheduled_at or ''}")
-          print(f"observed_et={now_et.isoformat()}")
-          PY
-
-      - name: Skip non-checkpoint invocation
-        if: steps.window.outputs.due != 'true'
-        run: echo "This invocation does not map to an enabled ET checkpoint."
-
-      - name: Initialize durable pipeline status
-        if: steps.window.outputs.due == 'true'
-        shell: bash
-        env:
-          SLATE_DATE: ${{ steps.window.outputs.slate_date }}
-          CHECKPOINT: ${{ steps.window.outputs.checkpoint }}
-          SCHEDULED_AT_ET: ${{ steps.window.outputs.scheduled_at_et }}
-        run: |
-          mkdir -p data
-          python - <<'PY'
-          import json
-          import os
-          from datetime import datetime, timezone
-          from pathlib import Path
-          payload = {
-              "schema_version": 3,
-              "status": "workflow_started",
-              "slate_date": os.environ["SLATE_DATE"],
-              "checkpoint_label": os.environ["CHECKPOINT"],
-              "scheduled_at_et": os.environ.get("SCHEDULED_AT_ET") or None,
-              "workflow_run_id": os.environ["GITHUB_RUN_ID"],
-              "workflow_event": os.environ["GITHUB_EVENT_NAME"],
-              "workflow_started_at": datetime.now(timezone.utc).isoformat(),
-          }
-          Path("data/pipeline-status.json").write_text(
-              json.dumps(payload, indent=2) + "\n", encoding="utf-8"
-          )
           PY
 
       - uses: actions/setup-python@v5
-        if: steps.window.outputs.due == 'true'
         with:
           python-version: "3.12"
           cache: pip
 
       - name: Install consumer runtime
-        if: steps.window.outputs.due == 'true'
         run: pip install -r requirements.txt
 
-      - name: Wait for exact source and refresh all Form Board surfaces
-        id: refresh
-        if: steps.window.outputs.due == 'true'
-        continue-on-error: true
+      - name: Materialize exact Redis checkpoint
         run: |
-          python scripts/run_source_driven_refresh.py \
+          python scripts/sync_upstash_checkpoint.py \
             --date "${{ steps.window.outputs.slate_date }}" \
             --checkpoint "${{ steps.window.outputs.checkpoint }}" \
-            --attempts 80 \
-            --delay 15
+            --attempts 40 --delay 15
 
-      - name: Commit one atomic board update
-        if: always() && steps.window.outputs.due == 'true'
-        shell: bash
+      - name: Score immutable checkpoint
+        run: |
+          python scripts/run_checkpoint_from_cache.py \
+            --date "${{ steps.window.outputs.slate_date }}" \
+            --checkpoint "${{ steps.window.outputs.checkpoint }}" \
+            --force
+
+      - name: Refresh Top 100 from same checkpoint
+        run: |
+          python scripts/build_top100.py --date "${{ steps.window.outputs.slate_date }}" --odds-only
+          python scripts/refresh_latest.py
+          python scripts/capture_top100_checkpoint.py \
+            --date "${{ steps.window.outputs.slate_date }}" \
+            --checkpoint "${{ steps.window.outputs.checkpoint }}"
+
+      - name: Record successful pipeline status
+        env:
+          SLATE_DATE: ${{ steps.window.outputs.slate_date }}
+          CHECKPOINT: ${{ steps.window.outputs.checkpoint }}
+        run: |
+          python - <<'PY'
+          import json, os
+          from datetime import datetime, timezone
+          from pathlib import Path
+          source = json.loads(Path("data/shared-odds/latest.json").read_text())
+          payload = {
+              "schema_version": 4,
+              "status": "success",
+              "source": "upstash-qstash-vercel",
+              "slate_date": os.environ["SLATE_DATE"],
+              "checkpoint_label": os.environ["CHECKPOINT"],
+              "provider_call_id": source.get("providerCallId"),
+              "provider_response_sha256": source.get("providerResponseSha256"),
+              "quote_count": source.get("quoteCount", 0),
+              "completed_at": datetime.now(timezone.utc).isoformat(),
+              "workflow_run_id": os.environ.get("GITHUB_RUN_ID"),
+          }
+          Path("data/pipeline-status.json").write_text(json.dumps(payload, indent=2) + "\n")
+          PY
+
+      - name: Commit board update
         run: |
           git config user.name "hr-form-bot"
           git config user.email "actions@users.noreply.github.com"
           git add data index.html
-          if git diff --cached --quiet; then
-            echo "No Form Board changes."
-            exit 0
-          fi
-          git commit -m "Refresh all Form Board surfaces from shared source"
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "Apply exact Upstash checkpoint to Form Board"
           for attempt in 1 2 3; do
             git pull --rebase origin main && git push && exit 0
             git rebase --abort >/dev/null 2>&1 || true
             sleep $((attempt * 2))
           done
           exit 1
-
-      - name: Require successful source-driven refresh
-        if: always() && steps.window.outputs.due == 'true' && steps.refresh.outcome != 'success'
-        run: exit 1
