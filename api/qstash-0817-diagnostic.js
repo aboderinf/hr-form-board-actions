@@ -30,17 +30,17 @@ module.exports = async function handler(request, response) {
       toDate: String(Date.parse("2026-08-07T13:30:00Z")),
       count: "100",
     });
-    const [logsResponse, schedulesResponse] = await Promise.all([
+    const [logsResponse, scheduleResponse] = await Promise.all([
       fetch(`${resolved.base}/v2/logs?${logParams}`, { headers, cache: "no-store" }),
-      fetch(`${resolved.base}/v2/schedules`, { headers, cache: "no-store" }),
+      fetch(`${resolved.base}/v2/schedules/mlb-hr-checkpoint-0817`, { headers, cache: "no-store" }),
     ]);
     const logsPayload = await logsResponse.json().catch(() => ({}));
-    const schedulesPayload = await schedulesResponse.json().catch(() => ([]));
-    if (!logsResponse.ok || !schedulesResponse.ok) {
+    const schedule = await scheduleResponse.json().catch(() => ({}));
+    if (!logsResponse.ok || !scheduleResponse.ok) {
       return response.status(502).json({
         status: "error",
         logsStatus: logsResponse.status,
-        schedulesStatus: schedulesResponse.status,
+        scheduleStatus: scheduleResponse.status,
       });
     }
     const allLogs = (logsPayload.logs || []).map(safeLog);
@@ -48,10 +48,7 @@ module.exports = async function handler(request, response) {
       row.scheduleId === "mlb-hr-checkpoint-0817"
       || row.url === "https://hr-form-board-actions.vercel.app/api/capture-checkpoint"
     );
-    const schedule = (Array.isArray(schedulesPayload) ? schedulesPayload : []).find(
-      (row) => row.scheduleId === "mlb-hr-checkpoint-0817",
-    );
-    const safeSchedule = schedule ? {
+    const safeSchedule = {
       scheduleId: schedule.scheduleId || null,
       cron: schedule.cron || null,
       destination: schedule.destination || schedule.url || null,
@@ -59,11 +56,16 @@ module.exports = async function handler(request, response) {
       body: schedule.body || null,
       bodyBase64: schedule.bodyBase64 || null,
       headerNames: Object.keys(schedule.header || {}),
-      maxRetries: schedule.maxRetries ?? null,
+      retries: schedule.retries ?? null,
+      delay: schedule.delay ?? null,
+      callback: schedule.callback || null,
+      failureCallback: schedule.failureCallback || null,
+      label: schedule.label || null,
       isPaused: Boolean(schedule.isPaused),
       lastScheduleTime: schedule.lastScheduleTime || null,
       nextScheduleTime: schedule.nextScheduleTime || null,
-    } : null;
+      lastScheduleStates: schedule.lastScheduleStates || null,
+    };
     response.setHeader("Cache-Control", "no-store");
     return response.status(200).json({
       status: "ok",
