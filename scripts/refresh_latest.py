@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+import argparse
+import json
 import sys
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import date, datetime, timezone
@@ -9,8 +11,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from src.edge_source import fetch_latest_edge_odds
+from src.edge_source import fetch_latest_edge_odds, parse_edge_payload
 from src.model import ET, calculate_form, choose_best_price, game_has_started, portfolio_summary, rank_candidates
+from src.player_ids import hydrate_mlbam_ids
 from src.sources import HttpClient, game_log, schedule
 from src.storage import rebuild, write_json
 
@@ -23,7 +26,55 @@ def games_by_pk(rows: dict[int, dict]) -> dict[int, dict]:
     }
 
 
-def main() -> int:
+def normalize_checkpoint(value: str) -> str:
+    digits = "".join(character for character in value if character.isdigit())
+    if len(digits) == 3:
+        digits = f"0{digits}"
+    if len(digits) != 4:
+        raise ValueError(f"Invalid checkpoint: {value!r}")
+    return digits
+
+
+def load_cached_market(
+    path: Path,
+    expected_date: date,
+    expected_checkpoint: str,
+) -> dict:
+    if not path.exists() or path.stat().st_size == 0:
+        raise RuntimeError("Exact Upstash checkpoint cache is missing")
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    actual_checkpoint = normalize_checkpoint(str(payload.get("checkpoint") or ""))
+    if str(payload.get("date") or "") != expected_date.isoformat():
+        raise RuntimeError("Cached checkpoint slate date mismatch")
+    if actual_checkpoint != normalize_checkpoint(expected_checkpoint):
+        raise RuntimeError(
+            f"Cached checkpoint {actual_checkpoint!r} does not match "
+            f"{normalize_checkpoint(expected_checkpoint)!r}"
+        )
+    if payload.get("delivery") != "qstash-vercel-redis":
+        raise RuntimeError("Cached checkpoint did not come from QStash/Vercel/Redis")
+
+    market = parse_edge_payload(
+        payload,
+        expected_date,
+        enforce_checkpoint_age=False,
+        require_confirmed_lineup=False,
+    )
+    market["source_url"] = str(path)
+    market["compatibility_fallback"] = "exact_upstash_checkpoint_cache"
+    market["checkpoint"] = actual_checkpoint
+    return market
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--cache", help="Exact materialized Upstash checkpoint JSON")
+    parser.add_argument("--date", help="Expected cache slate date (YYYY-MM-DD)")
+    parser.add_argument("--checkpoint", help="Expected cache ET checkpoint")
+    args = parser.parse_args(argv)
+    if args.cache and (not args.date or not args.checkpoint):
+        parser.error("--cache requires --date and --checkpoint")
+
     now = datetime.now(timezone.utc)
     client = HttpClient()
     data_dir = ROOT / "data"
@@ -40,18 +91,32 @@ def main() -> int:
     }
 
     try:
-        market = fetch_latest_edge_odds(client)
+        if args.cache:
+            cache_path = Path(args.cache)
+            if not cache_path.is_absolute():
+                cache_path = ROOT / cache_path
+            market = load_cached_market(
+                cache_path,
+                date.fromisoformat(args.date),
+                args.checkpoint,
+            )
+        else:
+            market = fetch_latest_edge_odds(client)
+        slate_date = date.fromisoformat(market["source_date"])
+        hydrate_mlbam_ids(client, market, slate_date.year)
         latest["sources"]["mlb_hr_edge"] = {
             key: value for key, value in market.items() if key != "players"
         }
     except Exception as exc:
+        if args.cache:
+            print(f"Today board refresh failed: {exc}", file=sys.stderr)
+            return 1
         latest["status"] = "shared_odds_source_unavailable"
         latest["diagnostics"].append(str(exc))
         write_json(data_dir / "latest.json", latest)
         rebuild(data_dir, ROOT)
         return 0
 
-    slate_date = date.fromisoformat(market["source_date"])
     latest["slate_date"] = slate_date.isoformat()
     latest["source_generated_at"] = market.get("generated_at")
 

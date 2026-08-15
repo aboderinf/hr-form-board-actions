@@ -15,8 +15,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 from src.edge_source import parse_edge_payload
-from src.model import normalize_name
-from src.sources import season_hitter_pool
+from src.player_ids import hydrate_mlbam_ids
 
 
 RUN_CHECKPOINT = ROOT / "scripts" / "run_checkpoint.py"
@@ -24,57 +23,6 @@ spec = importlib.util.spec_from_file_location("run_checkpoint_original", RUN_CHE
 assert spec and spec.loader
 module = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(module)
-
-# SportsGameOdds sometimes uses legal/formal first names while MLB Stats uses
-# the common baseball name. Keep only explicit, deterministic aliases here;
-# never fuzzy-match a price to a different hitter.
-PROVIDER_NAME_ALIASES = {
-    "benjaminrice": "benrice",
-    "jasradochisholm": "jazzchisholm",
-    "joshuabell": "joshbell",
-    "mikebusch": "michaelbusch",
-    "mikemassey": "michaelmassey",
-    "nicholaslopez": "nickylopez",
-    "zacharyneto": "zachneto",
-}
-
-
-def _provider_name_key(name: str) -> str:
-    key = normalize_name(name)
-    return PROVIDER_NAME_ALIASES.get(key, key)
-
-
-def _hydrate_mlbam_ids(client: Any, market: dict[str, Any], season: int) -> None:
-    pool = season_hitter_pool(client, season)
-    by_name: dict[str, int] = {}
-    duplicates: set[str] = set()
-    for row in pool:
-        key = normalize_name(str(row["player"]))
-        if key in by_name and by_name[key] != int(row["mlbam_id"]):
-            duplicates.add(key)
-        else:
-            by_name[key] = int(row["mlbam_id"])
-    for key in duplicates:
-        by_name.pop(key, None)
-
-    resolved: list[dict[str, Any]] = []
-    unresolved: list[str] = []
-    for row in market.get("players") or []:
-        existing = row.get("batter_id")
-        if existing:
-            resolved.append(row)
-            continue
-        player_id = by_name.get(_provider_name_key(str(row.get("name") or "")))
-        if player_id is None:
-            unresolved.append(str(row.get("name") or ""))
-            continue
-        row["batter_id"] = player_id
-        resolved.append(row)
-
-    market["players"] = resolved
-    market["mlbam_ids_hydrated"] = len(resolved)
-    market["unresolved_player_names"] = sorted(set(unresolved))
-
 
 def cached_fetch_edge_odds(client: Any, expected_date: date, as_of: Any) -> dict[str, Any]:
     path = ROOT / "data" / "shared-odds" / "latest.json"
@@ -98,7 +46,7 @@ def cached_fetch_edge_odds(client: Any, expected_date: date, as_of: Any) -> dict
         enforce_checkpoint_age=False,
         require_confirmed_lineup=False,
     )
-    _hydrate_mlbam_ids(client, market, expected_date.year)
+    hydrate_mlbam_ids(client, market, expected_date.year)
     market["source_url"] = str(path.relative_to(ROOT))
     market["compatibility_fallback"] = "exact_upstash_checkpoint_cache"
     market["checkpoint_at"] = as_of.isoformat()

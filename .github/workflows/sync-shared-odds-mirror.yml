@@ -102,8 +102,16 @@ jobs:
       - name: Refresh Top 100 from same checkpoint
         run: |
           python scripts/build_top100.py --date "${{ steps.window.outputs.slate_date }}" --odds-only
-          python scripts/refresh_latest.py
           python scripts/capture_top100_checkpoint.py \
+            --date "${{ steps.window.outputs.slate_date }}" \
+            --checkpoint "${{ steps.window.outputs.checkpoint }}"
+
+      - name: Refresh Today board from same checkpoint
+        id: today
+        continue-on-error: true
+        run: |
+          python scripts/refresh_latest.py \
+            --cache data/shared-odds/latest.json \
             --date "${{ steps.window.outputs.slate_date }}" \
             --checkpoint "${{ steps.window.outputs.checkpoint }}"
 
@@ -111,6 +119,7 @@ jobs:
         env:
           SLATE_DATE: ${{ steps.window.outputs.slate_date }}
           CHECKPOINT: ${{ steps.window.outputs.checkpoint }}
+          TODAY_REFRESH_OUTCOME: ${{ steps.today.outcome }}
         run: |
           python - <<'PY'
           import json, os
@@ -126,6 +135,7 @@ jobs:
               "provider_call_id": source.get("providerCallId"),
               "provider_response_sha256": source.get("providerResponseSha256"),
               "quote_count": source.get("quoteCount", 0),
+              "today_board_refresh": os.environ.get("TODAY_REFRESH_OUTCOME"),
               "completed_at": datetime.now(timezone.utc).isoformat(),
               "workflow_run_id": os.environ.get("GITHUB_RUN_ID"),
           }
