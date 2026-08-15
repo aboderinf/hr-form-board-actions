@@ -1,33 +1,38 @@
 {
   "schema_version": 1,
   "kind": "latest_shared_slate",
-  "refreshed_at": "2026-08-14T02:47:20.568445+00:00",
-  "refreshed_at_et": "2026-08-13T22:47:20.568445-04:00",
+  "refreshed_at": "2026-08-15T20:36:32.363430+00:00",
+  "refreshed_at_et": "2026-08-15T16:36:32.363430-04:00",
   "status": "no_current_eligible_players",
   "sources": {
     "mlb_hr_edge": {
       "source": "MLB HR Edge",
-      "source_url": "https://mlb-hr-edge.feranmi.chatgpt.site/api/dashboard?date=2026-08-06",
-      "delivery": "api",
-      "source_date": "2026-08-06",
+      "source_url": "https://hr-form-board-actions.vercel.app/data/shared-odds/latest.json",
+      "delivery": "qstash-vercel-redis",
+      "source_date": "2026-08-13",
       "date_matches": true,
-      "as_of": null,
-      "status": "stale",
-      "generated_at": "2026-08-07T01:00:58.617000+00:00",
-      "latest_ingest_at": "2026-08-07T01:04:23.966174+00:00",
-      "provider_call_id": null,
-      "provider_response_sha256": null,
-      "archived_call_count": 0,
-      "quote_count": 0,
-      "all_available_quote_count": 0,
-      "excluded_live_or_post_start_quote_count": 0,
+      "as_of": "2026-08-14T00:17:00.000Z",
+      "status": "ready",
+      "generated_at": "2026-08-14T00:17:02.310Z",
+      "latest_ingest_at": "2026-08-14T00:17:02.310Z",
+      "provider_call_id": "2026-08-13:2017:2026-08-14T00:17:02.310Z:809a67115bee",
+      "provider_response_sha256": "809a67115bee7d195fab8ae3dd7478a2597498bee751842a68be39a3e7129fc3",
+      "archived_call_count": 1,
+      "quote_count": 100,
+      "all_available_quote_count": 252,
+      "excluded_live_or_post_start_quote_count": 52,
       "books": [
         "FanDuel",
         "DraftKings",
         "BetMGM"
       ],
-      "row_count": 16,
-      "compatibility_fallback": "dashboard"
+      "row_count": 34,
+      "compatibility_fallback": "public_form_board_mirror",
+      "mlbam_ids_hydrated": 33,
+      "mlbam_ids_added": 33,
+      "unresolved_player_names": [
+        "Thomas Edman"
+      ]
     }
   },
   "diagnostics": [],
@@ -59,7 +64,7 @@
       }
     }
   },
-  "slate_date": "2026-08-06",
-  "source_generated_at": "2026-08-07T01:00:58.617000+00:00",
+  "slate_date": "2026-08-13",
+  "source_generated_at": "2026-08-14T00:17:02.310Z",
   "eligible_candidates": 0
 }
