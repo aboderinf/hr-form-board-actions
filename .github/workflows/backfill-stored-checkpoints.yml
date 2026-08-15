@@ -1,0 +1,68 @@
+name: Backfill stored Form Board checkpoints
+
+on:
+  workflow_dispatch:
+    inputs:
+      targets:
+        description: Space-separated YYYY-MM-DD:HHMM checkpoints
+        required: true
+        default: "2026-08-14:0817 2026-08-14:1117 2026-08-14:1717 2026-08-14:2017 2026-08-15:0817"
+  push:
+    branches: [main]
+    paths:
+      - "data/triggers/backfill-stored-checkpoints.txt"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: form-board-historical-backfill
+  cancel-in-progress: false
+
+jobs:
+  backfill:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      TARGETS: ${{ github.event.inputs.targets || '2026-08-14:0817 2026-08-14:1117 2026-08-14:1717 2026-08-14:2017 2026-08-15:0817' }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install consumer runtime
+        run: pip install -r requirements.txt
+
+      - name: Rebuild missing Discovery and Tracker checkpoints
+        shell: bash
+        run: |
+          args=()
+          for target in $TARGETS; do
+            args+=(--target "$target")
+          done
+          python scripts/backfill_stored_checkpoints.py "${args[@]}"
+
+      - name: Verify backfill contracts
+        run: |
+          python -m unittest discover -s tests -p 'test_backfill_stored_checkpoints.py' -v
+          python -m unittest discover -s tests -p 'test_discovery.py' -v
+          python -m unittest discover -s tests -p 'test_tracker.py' -v
+
+      - name: Commit reconstructed historical data
+        run: |
+          git config user.name "hr-form-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data index.html
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "Backfill stored Aug 14-15 Form Board checkpoints"
+          for attempt in 1 2 3; do
+            git pull --rebase origin main && git push && exit 0
+            git rebase --abort >/dev/null 2>&1 || true
+            sleep $((attempt * 2))
+          done
+          exit 1

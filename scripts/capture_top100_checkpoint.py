@@ -37,6 +37,15 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--date", required=True, help="Slate date YYYY-MM-DD")
     parser.add_argument("--checkpoint", required=True, help="Checkpoint such as 11:17")
+    parser.add_argument(
+        "--captured-at",
+        help="Optional timezone-aware ISO timestamp for a historical capture",
+    )
+    parser.add_argument(
+        "--no-rebuild",
+        action="store_true",
+        help="Write the capture without rebuilding aggregate Discovery reports",
+    )
     args = parser.parse_args()
 
     checkpoint = normalize_checkpoint(args.checkpoint)
@@ -67,7 +76,13 @@ def main() -> int:
             f"Top 100 slate {top100.get('slate_date')!r} does not match {args.date}"
         )
 
-    now = datetime.now(timezone.utc)
+    now = (
+        datetime.fromisoformat(args.captured_at.replace("Z", "+00:00"))
+        if args.captured_at
+        else datetime.now(timezone.utc)
+    )
+    if now.tzinfo is None:
+        raise SystemExit("--captured-at must include a timezone")
     capture = create_capture(top100, edge, now, checkpoint)
     archive_dir = ROOT / "data" / "discovery" / "archive"
     archive_dir.mkdir(parents=True, exist_ok=True)
@@ -86,11 +101,12 @@ def main() -> int:
             "Central checkpoint had usable pregame quotes but none joined to Top 100"
         )
 
-    subprocess.run(
-        [sys.executable, "scripts/build_discovery.py", "--no-capture"],
-        cwd=ROOT,
-        check=True,
-    )
+    if not args.no_rebuild:
+        subprocess.run(
+            [sys.executable, "scripts/build_discovery.py", "--no-capture"],
+            cwd=ROOT,
+            check=True,
+        )
     status = "success" if priced_rows > 0 else "no_remaining_pregame_prices"
     print(
         json.dumps(
