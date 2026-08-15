@@ -1,13 +1,16 @@
 {
-  "schema_version": 1,
-  "kind": "latest_shared_slate",
-  "refreshed_at": "2026-08-15T21:35:22.169410+00:00",
-  "refreshed_at_et": "2026-08-15T17:35:22.169410-04:00",
-  "status": "current",
+  "schema_version": 2,
+  "snapshot_id": "2026-08-15_1717",
+  "slate_date": "2026-08-15",
+  "checkpoint_et": "17:17",
+  "scheduled_at_et": "2026-08-15T17:17:00-04:00",
+  "observed_at": "2026-08-15T21:35:15.632780+00:00",
+  "observed_at_et": "2026-08-15T17:35:15.632780-04:00",
+  "status": "frozen",
   "sources": {
     "mlb_hr_edge": {
       "source": "MLB HR Edge",
-      "source_url": "/home/runner/work/hr-form-board-actions/hr-form-board-actions/data/shared-odds/latest.json",
+      "source_url": "data/shared-odds/latest.json",
       "delivery": "qstash-vercel-redis",
       "source_date": "2026-08-15",
       "date_matches": true,
@@ -27,8 +30,6 @@
         "BetMGM"
       ],
       "row_count": 165,
-      "compatibility_fallback": "exact_upstash_checkpoint_cache",
-      "checkpoint": "1717",
       "mlbam_ids_hydrated": 160,
       "mlbam_ids_added": 160,
       "unresolved_player_names": [
@@ -37,7 +38,9 @@
         "Richard Palacios",
         "Thomas Edman",
         "Tyler France"
-      ]
+      ],
+      "compatibility_fallback": "exact_upstash_checkpoint_cache",
+      "checkpoint_at": "2026-08-15T17:17:00-04:00"
     }
   },
   "diagnostics": [],
@@ -48,6 +51,7 @@
           "rank": 1,
           "player": "Lawrence Butler",
           "mlbam_id": 671732,
+          "team_id": null,
           "slate_date": "2026-08-15",
           "score": 0.4952380952380952,
           "hr_games_l5": 3,
@@ -61,6 +65,7 @@
           "best_source_event_id": "8w0pKMVclORABgzL56vm",
           "best_source_odd_id": "batting_homeRuns-LAWRENCE_BUTLER_1_MLB-game-yn-yes",
           "dk_odds": 800,
+          "dk_url": null,
           "all_prices": [
             {
               "book": "FanDuel",
@@ -107,13 +112,15 @@
           "lineup_position": null,
           "source_prediction_id": null,
           "settled": false,
-          "result": "LIVE",
+          "result": "PENDING",
+          "home_runs": null,
           "profit_units": null
         },
         {
           "rank": 2,
           "player": "Yandy Diaz",
           "mlbam_id": 650490,
+          "team_id": null,
           "slate_date": "2026-08-15",
           "score": 0.32571428571428573,
           "hr_games_l5": 2,
@@ -127,6 +134,7 @@
           "best_source_event_id": "Utk2y121QHDtCFfM6dis",
           "best_source_odd_id": "batting_homeRuns-YANDY_DIAZ_1_MLB-game-yn-yes",
           "dk_odds": 680,
+          "dk_url": null,
           "all_prices": [
             {
               "book": "FanDuel",
@@ -173,13 +181,15 @@
           "lineup_position": null,
           "source_prediction_id": null,
           "settled": false,
-          "result": "LIVE",
+          "result": "PENDING",
+          "home_runs": null,
           "profit_units": null
         },
         {
           "rank": 3,
           "player": "Randy Arozarena",
           "mlbam_id": 668227,
+          "team_id": null,
           "slate_date": "2026-08-15",
           "score": 0.32571428571428573,
           "hr_games_l5": 2,
@@ -193,6 +203,7 @@
           "best_source_event_id": "WevDqJYIFONQTbU1Mbk8",
           "best_source_odd_id": "batting_homeRuns-RANDY_AROZARENA_1_MLB-game-yn-yes",
           "dk_odds": 512,
+          "dk_url": null,
           "all_prices": [
             {
               "book": "FanDuel",
@@ -239,13 +250,15 @@
           "lineup_position": null,
           "source_prediction_id": null,
           "settled": false,
-          "result": "LIVE",
+          "result": "PENDING",
+          "home_runs": null,
           "profit_units": null
         },
         {
           "rank": 4,
           "player": "Xander Bogaerts",
           "mlbam_id": 593428,
+          "team_id": null,
           "slate_date": "2026-08-15",
           "score": 0.31238095238095237,
           "hr_games_l5": 2,
@@ -259,6 +272,7 @@
           "best_source_event_id": "2Da0BqVmCj5uYbD49YJJ",
           "best_source_odd_id": "batting_homeRuns-XANDER_BOGAERTS_1_MLB-game-yn-yes",
           "dk_odds": 820,
+          "dk_url": null,
           "all_prices": [
             {
               "book": "DraftKings",
@@ -305,13 +319,15 @@
           "lineup_position": null,
           "source_prediction_id": null,
           "settled": false,
-          "result": "LIVE",
+          "result": "PENDING",
+          "home_runs": null,
           "profit_units": null
         },
         {
           "rank": 5,
           "player": "Mookie Betts",
           "mlbam_id": 605141,
+          "team_id": null,
           "slate_date": "2026-08-15",
           "score": 0.31238095238095237,
           "hr_games_l5": 2,
@@ -325,6 +341,7 @@
           "best_source_event_id": "02hvF3el2O4RNaBp76Mr",
           "best_source_odd_id": "batting_homeRuns-MOOKIE_BETTS_1_MLB-game-yn-yes",
           "dk_odds": 630,
+          "dk_url": null,
           "all_prices": [
             {
               "book": "FanDuel",
@@ -371,13 +388,15 @@
           "lineup_position": null,
           "source_prediction_id": null,
           "settled": false,
-          "result": "LIVE",
+          "result": "PENDING",
+          "home_runs": null,
           "profit_units": null
         },
         {
           "rank": 6,
           "player": "Gunnar Henderson",
           "mlbam_id": 683002,
+          "team_id": null,
           "slate_date": "2026-08-15",
           "score": 0.31238095238095237,
           "hr_games_l5": 2,
@@ -391,6 +410,7 @@
           "best_source_event_id": "Utk2y121QHDtCFfM6dis",
           "best_source_odd_id": "batting_homeRuns-GUNNAR_HENDERSON_1_MLB-game-yn-yes",
           "dk_odds": 577,
+          "dk_url": null,
           "all_prices": [
             {
               "book": "FanDuel",
@@ -437,13 +457,15 @@
           "lineup_position": null,
           "source_prediction_id": null,
           "settled": false,
-          "result": "LIVE",
+          "result": "PENDING",
+          "home_runs": null,
           "profit_units": null
         },
         {
           "rank": 7,
           "player": "Nolan Arenado",
           "mlbam_id": 571448,
+          "team_id": null,
           "slate_date": "2026-08-15",
           "score": 0.23904761904761906,
           "hr_games_l5": 1,
@@ -457,6 +479,7 @@
           "best_source_event_id": "xleIVqvj0t6QwPmb7dP7",
           "best_source_odd_id": "batting_homeRuns-NOLAN_ARENADO_1_MLB-game-yn-yes",
           "dk_odds": 567,
+          "dk_url": null,
           "all_prices": [
             {
               "book": "FanDuel",
@@ -503,13 +526,15 @@
           "lineup_position": null,
           "source_prediction_id": null,
           "settled": false,
-          "result": "LIVE",
+          "result": "PENDING",
+          "home_runs": null,
           "profit_units": null
         },
         {
           "rank": 8,
           "player": "Taylor Trammell",
           "mlbam_id": 666211,
+          "team_id": null,
           "slate_date": "2026-08-15",
           "score": 0.23904761904761906,
           "hr_games_l5": 1,
@@ -523,6 +548,7 @@
           "best_source_event_id": "WevDqJYIFONQTbU1Mbk8",
           "best_source_odd_id": "batting_homeRuns-TAYLOR_TRAMMELL_1_MLB-game-yn-yes",
           "dk_odds": 567,
+          "dk_url": null,
           "all_prices": [
             {
               "book": "FanDuel",
@@ -569,13 +595,15 @@
           "lineup_position": null,
           "source_prediction_id": null,
           "settled": false,
-          "result": "LIVE",
+          "result": "PENDING",
+          "home_runs": null,
           "profit_units": null
         },
         {
           "rank": 9,
           "player": "Joshua Bell",
           "mlbam_id": 605137,
+          "team_id": null,
           "slate_date": "2026-08-15",
           "score": 0.22571428571428573,
           "hr_games_l5": 1,
@@ -589,6 +617,7 @@
           "best_source_event_id": "qpfQJfTNKU45juzpGuEK",
           "best_source_odd_id": "batting_homeRuns-JOSHUA_BELL_1_MLB-game-yn-yes",
           "dk_odds": 600,
+          "dk_url": null,
           "all_prices": [
             {
               "book": "DraftKings",
@@ -635,13 +664,15 @@
           "lineup_position": null,
           "source_prediction_id": null,
           "settled": false,
-          "result": "LIVE",
+          "result": "PENDING",
+          "home_runs": null,
           "profit_units": null
         },
         {
           "rank": 10,
           "player": "Tyler Stephenson",
           "mlbam_id": 663886,
+          "team_id": null,
           "slate_date": "2026-08-15",
           "score": 0.22571428571428573,
           "hr_games_l5": 1,
@@ -655,6 +686,7 @@
           "best_source_event_id": "kuqcDEZMDh3Mjv7jKEeT",
           "best_source_odd_id": "batting_homeRuns-TYLER_STEPHENSON_1_MLB-game-yn-yes",
           "dk_odds": 502,
+          "dk_url": null,
           "all_prices": [
             {
               "book": "FanDuel",
@@ -701,7 +733,8 @@
           "lineup_position": null,
           "source_prediction_id": null,
           "settled": false,
-          "result": "LIVE",
+          "result": "PENDING",
+          "home_runs": null,
           "profit_units": null
         }
       ],
@@ -722,6 +755,7 @@
           "rank": 1,
           "player": "Lawrence Butler",
           "mlbam_id": 671732,
+          "team_id": null,
           "slate_date": "2026-08-15",
           "score": 0.4952380952380952,
           "hr_games_l5": 3,
@@ -735,6 +769,7 @@
           "best_source_event_id": "8w0pKMVclORABgzL56vm",
           "best_source_odd_id": "batting_homeRuns-LAWRENCE_BUTLER_1_MLB-game-yn-yes",
           "dk_odds": 800,
+          "dk_url": null,
           "all_prices": [
             {
               "book": "FanDuel",
@@ -781,13 +816,15 @@
           "lineup_position": null,
           "source_prediction_id": null,
           "settled": false,
-          "result": "LIVE",
+          "result": "PENDING",
+          "home_runs": null,
           "profit_units": null
         },
         {
           "rank": 2,
           "player": "Yandy Diaz",
           "mlbam_id": 650490,
+          "team_id": null,
           "slate_date": "2026-08-15",
           "score": 0.32571428571428573,
           "hr_games_l5": 2,
@@ -801,6 +838,7 @@
           "best_source_event_id": "Utk2y121QHDtCFfM6dis",
           "best_source_odd_id": "batting_homeRuns-YANDY_DIAZ_1_MLB-game-yn-yes",
           "dk_odds": 680,
+          "dk_url": null,
           "all_prices": [
             {
               "book": "FanDuel",
@@ -847,13 +885,15 @@
           "lineup_position": null,
           "source_prediction_id": null,
           "settled": false,
-          "result": "LIVE",
+          "result": "PENDING",
+          "home_runs": null,
           "profit_units": null
         },
         {
           "rank": 3,
           "player": "Randy Arozarena",
           "mlbam_id": 668227,
+          "team_id": null,
           "slate_date": "2026-08-15",
           "score": 0.32571428571428573,
           "hr_games_l5": 2,
@@ -867,6 +907,7 @@
           "best_source_event_id": "WevDqJYIFONQTbU1Mbk8",
           "best_source_odd_id": "batting_homeRuns-RANDY_AROZARENA_1_MLB-game-yn-yes",
           "dk_odds": 512,
+          "dk_url": null,
           "all_prices": [
             {
               "book": "FanDuel",
@@ -913,13 +954,15 @@
           "lineup_position": null,
           "source_prediction_id": null,
           "settled": false,
-          "result": "LIVE",
+          "result": "PENDING",
+          "home_runs": null,
           "profit_units": null
         },
         {
           "rank": 4,
           "player": "Xander Bogaerts",
           "mlbam_id": 593428,
+          "team_id": null,
           "slate_date": "2026-08-15",
           "score": 0.31238095238095237,
           "hr_games_l5": 2,
@@ -933,6 +976,7 @@
           "best_source_event_id": "2Da0BqVmCj5uYbD49YJJ",
           "best_source_odd_id": "batting_homeRuns-XANDER_BOGAERTS_1_MLB-game-yn-yes",
           "dk_odds": 820,
+          "dk_url": null,
           "all_prices": [
             {
               "book": "DraftKings",
@@ -979,13 +1023,15 @@
           "lineup_position": null,
           "source_prediction_id": null,
           "settled": false,
-          "result": "LIVE",
+          "result": "PENDING",
+          "home_runs": null,
           "profit_units": null
         },
         {
           "rank": 5,
           "player": "Mookie Betts",
           "mlbam_id": 605141,
+          "team_id": null,
           "slate_date": "2026-08-15",
           "score": 0.31238095238095237,
           "hr_games_l5": 2,
@@ -999,6 +1045,7 @@
           "best_source_event_id": "02hvF3el2O4RNaBp76Mr",
           "best_source_odd_id": "batting_homeRuns-MOOKIE_BETTS_1_MLB-game-yn-yes",
           "dk_odds": 630,
+          "dk_url": null,
           "all_prices": [
             {
               "book": "FanDuel",
@@ -1045,13 +1092,15 @@
           "lineup_position": null,
           "source_prediction_id": null,
           "settled": false,
-          "result": "LIVE",
+          "result": "PENDING",
+          "home_runs": null,
           "profit_units": null
         },
         {
           "rank": 6,
           "player": "Gunnar Henderson",
           "mlbam_id": 683002,
+          "team_id": null,
           "slate_date": "2026-08-15",
           "score": 0.31238095238095237,
           "hr_games_l5": 2,
@@ -1065,6 +1114,7 @@
           "best_source_event_id": "Utk2y121QHDtCFfM6dis",
           "best_source_odd_id": "batting_homeRuns-GUNNAR_HENDERSON_1_MLB-game-yn-yes",
           "dk_odds": 577,
+          "dk_url": null,
           "all_prices": [
             {
               "book": "FanDuel",
@@ -1111,13 +1161,15 @@
           "lineup_position": null,
           "source_prediction_id": null,
           "settled": false,
-          "result": "LIVE",
+          "result": "PENDING",
+          "home_runs": null,
           "profit_units": null
         },
         {
           "rank": 7,
           "player": "Nolan Arenado",
           "mlbam_id": 571448,
+          "team_id": null,
           "slate_date": "2026-08-15",
           "score": 0.23904761904761906,
           "hr_games_l5": 1,
@@ -1131,6 +1183,7 @@
           "best_source_event_id": "xleIVqvj0t6QwPmb7dP7",
           "best_source_odd_id": "batting_homeRuns-NOLAN_ARENADO_1_MLB-game-yn-yes",
           "dk_odds": 567,
+          "dk_url": null,
           "all_prices": [
             {
               "book": "FanDuel",
@@ -1177,13 +1230,15 @@
           "lineup_position": null,
           "source_prediction_id": null,
           "settled": false,
-          "result": "LIVE",
+          "result": "PENDING",
+          "home_runs": null,
           "profit_units": null
         },
         {
           "rank": 8,
           "player": "Taylor Trammell",
           "mlbam_id": 666211,
+          "team_id": null,
           "slate_date": "2026-08-15",
           "score": 0.23904761904761906,
           "hr_games_l5": 1,
@@ -1197,6 +1252,7 @@
           "best_source_event_id": "WevDqJYIFONQTbU1Mbk8",
           "best_source_odd_id": "batting_homeRuns-TAYLOR_TRAMMELL_1_MLB-game-yn-yes",
           "dk_odds": 567,
+          "dk_url": null,
           "all_prices": [
             {
               "book": "FanDuel",
@@ -1243,13 +1299,15 @@
           "lineup_position": null,
           "source_prediction_id": null,
           "settled": false,
-          "result": "LIVE",
+          "result": "PENDING",
+          "home_runs": null,
           "profit_units": null
         },
         {
           "rank": 9,
           "player": "Joshua Bell",
           "mlbam_id": 605137,
+          "team_id": null,
           "slate_date": "2026-08-15",
           "score": 0.22571428571428573,
           "hr_games_l5": 1,
@@ -1263,6 +1321,7 @@
           "best_source_event_id": "qpfQJfTNKU45juzpGuEK",
           "best_source_odd_id": "batting_homeRuns-JOSHUA_BELL_1_MLB-game-yn-yes",
           "dk_odds": 600,
+          "dk_url": null,
           "all_prices": [
             {
               "book": "DraftKings",
@@ -1309,13 +1368,15 @@
           "lineup_position": null,
           "source_prediction_id": null,
           "settled": false,
-          "result": "LIVE",
+          "result": "PENDING",
+          "home_runs": null,
           "profit_units": null
         },
         {
           "rank": 10,
           "player": "Tyler Stephenson",
           "mlbam_id": 663886,
+          "team_id": null,
           "slate_date": "2026-08-15",
           "score": 0.22571428571428573,
           "hr_games_l5": 1,
@@ -1329,6 +1390,7 @@
           "best_source_event_id": "kuqcDEZMDh3Mjv7jKEeT",
           "best_source_odd_id": "batting_homeRuns-TYLER_STEPHENSON_1_MLB-game-yn-yes",
           "dk_odds": 502,
+          "dk_url": null,
           "all_prices": [
             {
               "book": "FanDuel",
@@ -1375,13 +1437,15 @@
           "lineup_position": null,
           "source_prediction_id": null,
           "settled": false,
-          "result": "LIVE",
+          "result": "PENDING",
+          "home_runs": null,
           "profit_units": null
         },
         {
           "rank": 11,
           "player": "Cam Smith",
           "mlbam_id": 701358,
+          "team_id": null,
           "slate_date": "2026-08-15",
           "score": 0.2123809523809524,
           "hr_games_l5": 1,
@@ -1395,6 +1459,7 @@
           "best_source_event_id": "WevDqJYIFONQTbU1Mbk8",
           "best_source_odd_id": "batting_homeRuns-CAM_SMITH_1_MLB-game-yn-yes",
           "dk_odds": 660,
+          "dk_url": null,
           "all_prices": [
             {
               "book": "FanDuel",
@@ -1441,13 +1506,15 @@
           "lineup_position": null,
           "source_prediction_id": null,
           "settled": false,
-          "result": "LIVE",
+          "result": "PENDING",
+          "home_runs": null,
           "profit_units": null
         },
         {
           "rank": 12,
           "player": "Ceddanne Rafaela",
           "mlbam_id": 678882,
+          "team_id": null,
           "slate_date": "2026-08-15",
           "score": 0.1961904761904762,
           "hr_games_l5": 1,
@@ -1461,6 +1528,7 @@
           "best_source_event_id": "hLuKHjRs9fHrTP03hbuw",
           "best_source_odd_id": "batting_homeRuns-CEDDANNE_RAFAELA_1_MLB-game-yn-yes",
           "dk_odds": 700,
+          "dk_url": null,
           "all_prices": [
             {
               "book": "FanDuel",
@@ -1507,13 +1575,15 @@
           "lineup_position": null,
           "source_prediction_id": null,
           "settled": false,
-          "result": "LIVE",
+          "result": "PENDING",
+          "home_runs": null,
           "profit_units": null
         },
         {
           "rank": 13,
           "player": "Luke Keaschall",
           "mlbam_id": 807712,
+          "team_id": null,
           "slate_date": "2026-08-15",
           "score": 0.18285714285714286,
           "hr_games_l5": 1,
@@ -1527,6 +1597,7 @@
           "best_source_event_id": "qpfQJfTNKU45juzpGuEK",
           "best_source_odd_id": "batting_homeRuns-LUKE_KEASCHALL_1_MLB-game-yn-yes",
           "dk_odds": 1160,
+          "dk_url": null,
           "all_prices": [
             {
               "book": "DraftKings",
@@ -1573,13 +1644,15 @@
           "lineup_position": null,
           "source_prediction_id": null,
           "settled": false,
-          "result": "LIVE",
+          "result": "PENDING",
+          "home_runs": null,
           "profit_units": null
         },
         {
           "rank": 14,
           "player": "Leody Taveras",
           "mlbam_id": 665750,
+          "team_id": null,
           "slate_date": "2026-08-15",
           "score": 0.18285714285714286,
           "hr_games_l5": 1,
@@ -1593,6 +1666,7 @@
           "best_source_event_id": "Utk2y121QHDtCFfM6dis",
           "best_source_odd_id": "batting_homeRuns-LEODY_TAVERAS_1_MLB-game-yn-yes",
           "dk_odds": 930,
+          "dk_url": null,
           "all_prices": [
             {
               "book": "FanDuel",
@@ -1639,13 +1713,15 @@
           "lineup_position": null,
           "source_prediction_id": null,
           "settled": false,
-          "result": "LIVE",
+          "result": "PENDING",
+          "home_runs": null,
           "profit_units": null
         },
         {
           "rank": 15,
           "player": "Derek Hill",
           "mlbam_id": 656537,
+          "team_id": null,
           "slate_date": "2026-08-15",
           "score": 0.18285714285714286,
           "hr_games_l5": 1,
@@ -1659,6 +1735,7 @@
           "best_source_event_id": "qpfQJfTNKU45juzpGuEK",
           "best_source_odd_id": "batting_homeRuns-DEREK_HILL_1_MLB-game-yn-yes",
           "dk_odds": 850,
+          "dk_url": null,
           "all_prices": [
             {
               "book": "DraftKings",
@@ -1705,13 +1782,15 @@
           "lineup_position": null,
           "source_prediction_id": null,
           "settled": false,
-          "result": "LIVE",
+          "result": "PENDING",
+          "home_runs": null,
           "profit_units": null
         },
         {
           "rank": 16,
           "player": "Trea Turner",
           "mlbam_id": 607208,
+          "team_id": null,
           "slate_date": "2026-08-15",
           "score": 0.18285714285714286,
           "hr_games_l5": 1,
@@ -1725,6 +1804,7 @@
           "best_source_event_id": "qpfQJfTNKU45juzpGuEK",
           "best_source_odd_id": "batting_homeRuns-TREA_TURNER_1_MLB-game-yn-yes",
           "dk_odds": 700,
+          "dk_url": null,
           "all_prices": [
             {
               "book": "DraftKings",
@@ -1771,13 +1851,15 @@
           "lineup_position": null,
           "source_prediction_id": null,
           "settled": false,
-          "result": "LIVE",
+          "result": "PENDING",
+          "home_runs": null,
           "profit_units": null
         },
         {
           "rank": 17,
           "player": "Tim Tawa",
           "mlbam_id": 694374,
+          "team_id": null,
           "slate_date": "2026-08-15",
           "score": 0.18285714285714286,
           "hr_games_l5": 1,
@@ -1791,6 +1873,7 @@
           "best_source_event_id": "xleIVqvj0t6QwPmb7dP7",
           "best_source_odd_id": "batting_homeRuns-TIM_TAWA_1_MLB-game-yn-yes",
           "dk_odds": 563,
+          "dk_url": null,
           "all_prices": [
             {
               "book": "FanDuel",
@@ -1837,13 +1920,15 @@
           "lineup_position": null,
           "source_prediction_id": null,
           "settled": false,
-          "result": "LIVE",
+          "result": "PENDING",
+          "home_runs": null,
           "profit_units": null
         },
         {
           "rank": 18,
           "player": "Jake Mangum",
           "mlbam_id": 663968,
+          "team_id": null,
           "slate_date": "2026-08-15",
           "score": 0.16952380952380952,
           "hr_games_l5": 1,
@@ -1857,6 +1942,7 @@
           "best_source_event_id": "hLuKHjRs9fHrTP03hbuw",
           "best_source_odd_id": "batting_homeRuns-JAKE_MANGUM_1_MLB-game-yn-yes",
           "dk_odds": 1580,
+          "dk_url": null,
           "all_prices": [
             {
               "book": "FanDuel",
@@ -1903,13 +1989,15 @@
           "lineup_position": null,
           "source_prediction_id": null,
           "settled": false,
-          "result": "LIVE",
+          "result": "PENDING",
+          "home_runs": null,
           "profit_units": null
         },
         {
           "rank": 19,
           "player": "Caleb Durbin",
           "mlbam_id": 702332,
+          "team_id": null,
           "slate_date": "2026-08-15",
           "score": 0.16952380952380952,
           "hr_games_l5": 1,
@@ -1923,6 +2011,7 @@
           "best_source_event_id": "hLuKHjRs9fHrTP03hbuw",
           "best_source_odd_id": "batting_homeRuns-CALEB_DURBIN_1_MLB-game-yn-yes",
           "dk_odds": 1140,
+          "dk_url": null,
           "all_prices": [
             {
               "book": "FanDuel",
@@ -1969,13 +2058,15 @@
           "lineup_position": null,
           "source_prediction_id": null,
           "settled": false,
-          "result": "LIVE",
+          "result": "PENDING",
+          "home_runs": null,
           "profit_units": null
         },
         {
           "rank": 20,
           "player": "Jacob Gonzalez",
           "mlbam_id": 694378,
+          "team_id": null,
           "slate_date": "2026-08-15",
           "score": 0.16952380952380952,
           "hr_games_l5": 1,
@@ -1989,6 +2080,7 @@
           "best_source_event_id": "hLuKHjRs9fHrTP03hbuw",
           "best_source_odd_id": "batting_homeRuns-JACOB_GONZALEZ_1_MLB-game-yn-yes",
           "dk_odds": 960,
+          "dk_url": null,
           "all_prices": [
             {
               "book": "FanDuel",
@@ -2035,7 +2127,8 @@
           "lineup_position": null,
           "source_prediction_id": null,
           "settled": false,
-          "result": "LIVE",
+          "result": "PENDING",
+          "home_runs": null,
           "profit_units": null
         }
       ],
@@ -2051,7 +2144,5 @@
       }
     }
   },
-  "slate_date": "2026-08-15",
-  "source_generated_at": "2026-08-15T21:17:04.605Z",
   "eligible_candidates": 106
 }
