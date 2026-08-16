@@ -2,6 +2,12 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "headers": [
-    {"source": "/data/(.*)", "headers": [{"key": "Cache-Control", "value": "public, max-age=60, s-maxage=60"}]}
+    {
+      "source": "/data/(.*)",
+      "headers": [
+        {"key": "Cache-Control", "value": "public, max-age=60, s-maxage=60"},
+        {"key": "Access-Control-Allow-Origin", "value": "*"}
+      ]
+    }
   ]
 }
