@@ -21,7 +21,7 @@ from src.model import ET
 from src.sources import HttpClient, MLB, game_log, season_hitter_pool
 from src.storage import write_json
 from src.triples import calculate_triples_form_open_pool, rank_triples_scores
-from src.triples_discovery import build_reports, collapse_best
+from src.triples_discovery import build_reports, collapse_best, complete_slate_partition
 from src.triples_settlement import (
     best_archived_quote,
     map_event_game,
@@ -33,7 +33,7 @@ from src.triples_settlement import (
 
 
 ARCHIVE_START = date(2026, 8, 7)
-CHECKPOINTS = ("1117", "1717")
+CHECKPOINTS = ("0817", "1117", "1717")
 FORM_BOARD = "https://hr-form-board-actions.vercel.app"
 
 
@@ -282,22 +282,13 @@ def build_output(
 ) -> dict[str, Any]:
     now = datetime.now(timezone.utc)
     archive_dates = sorted({str(capture.get("date")) for capture in captures})
-    best_rows = collapse_best(entries)
+    complete_entries, fully_settled_dates, incomplete_dates = complete_slate_partition(entries)
+    best_rows = collapse_best(complete_entries)
     recent_settled = sorted(
         (row for row in best_rows if row.get("result") in {"WIN", "LOSS"}),
         key=lambda row: (row["slate_date"], row.get("player") or ""),
         reverse=True,
     )[:50]
-    result_dates = sorted({row["slate_date"] for row in entries})
-    fully_settled_dates = [
-        slate
-        for slate in result_dates
-        if not any(
-            row.get("result") == "PENDING"
-            for row in entries
-            if row["slate_date"] == slate
-        )
-    ]
     return {
         "schema_version": 1,
         "kind": "triples_historical_profit_discovery",
@@ -310,7 +301,7 @@ def build_output(
             "start": archive_dates[0] if archive_dates else None,
             "end": archive_dates[-1] if archive_dates else None,
             "checkpoint_files": len(captures),
-            "checkpoints_et": ["11:17", "17:17"],
+            "checkpoints_et": ["08:17", "11:17", "17:17"],
             "source": "Existing archived SportsGameOdds /events responses",
             "provider_requests_added": 0,
             "provider_objects_added": 0,
@@ -319,8 +310,9 @@ def build_output(
             "market": "Player to hit a triple — Yes",
             "stake": "1 unit per bet; American-odds profit on wins and -1 unit on losses",
             "outcomes": "Official MLB game logs matched to the exact gamePk; no plate appearance is void",
-            "archive_best_benchmark": "Best archived price across 11:17 and 17:17, once per player/slate. This is a hindsight price benchmark, not a fixed-time strategy.",
-            "checkpoint_strategy": "Each fixed checkpoint is also reported separately so 11:17 and 17:17 can be judged as executable timing rules.",
+            "archive_best_benchmark": "Best archived price across 08:17, 11:17, and 17:17, once per player/slate. This is a hindsight price benchmark, not a fixed-time strategy.",
+            "checkpoint_strategy": "Each fixed checkpoint is reported separately so 08:17, 11:17, and 17:17 can be judged as executable timing rules.",
+            "completed_slate_policy": "Profit reports include a slate only after every resolved priced row on that date has a final result; partial slates are excluded wholesale.",
             "form_score": "0.50*(triple games L5/5) + 0.30*(triple games L7/7) + 0.20*(triple games L15/15), using only games before the slate",
             "edge_gate": "At least 40 settled bets, 3 wins, 5 slates, and positive net units",
             "warning": "Observed historical segments are provisional and multiple comparisons can produce false positives. They are not guarantees or fair-value estimates.",
@@ -330,6 +322,9 @@ def build_output(
             "settled_rows": sum(row.get("result") in {"WIN", "LOSS"} for row in entries),
             "void_rows": sum(row.get("result") == "VOID" for row in entries),
             "pending_rows": sum(row.get("result") == "PENDING" for row in entries),
+            "rows_in_completed_slates": len(complete_entries),
+            "completed_slates": len(fully_settled_dates),
+            "excluded_incomplete_slates": incomplete_dates,
             "game_log_failures": sum(item.startswith("Game log failed") for item in diagnostics),
         },
         "reports": build_reports(entries, today),

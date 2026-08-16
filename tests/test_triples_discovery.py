@@ -58,14 +58,33 @@ class TriplesDiscoveryTests(unittest.TestCase):
 
     def test_reports_keep_checkpoint_strategies_separate(self):
         rows = [
+            row("2026-08-07", 1, "0817", 1800, "WIN"),
             row("2026-08-07", 1, "1117", 2000, "WIN"),
             row("2026-08-07", 1, "1717", 3000, "WIN"),
+            row("2026-08-07", 2, "0817", 1300, "LOSS"),
             row("2026-08-07", 2, "1117", 1500, "LOSS"),
         ]
         report = build_reports(rows, date(2026, 8, 7))["all_time"]
         self.assertEqual(report["overall"]["settled"], 2)
         self.assertEqual(report["checkpoint_strategies"][0]["settled"], 2)
-        self.assertEqual(report["checkpoint_strategies"][1]["settled"], 1)
+        self.assertEqual(report["checkpoint_strategies"][1]["settled"], 2)
+        self.assertEqual(report["checkpoint_strategies"][2]["settled"], 1)
+
+    def test_reports_exclude_an_entire_incomplete_slate(self):
+        rows = [
+            row("2026-08-07", 1, "0817", 2000, "WIN"),
+            row("2026-08-07", 2, "0817", 1500, "LOSS"),
+            row("2026-08-08", 1, "0817", 2500, "WIN"),
+            row("2026-08-08", 2, "0817", 1800, "PENDING"),
+        ]
+        report = build_reports(rows, date(2026, 8, 8))["all_time"]
+        self.assertEqual(report["raw_checkpoint_rows"], 4)
+        self.assertEqual(report["analyzed_checkpoint_rows"], 2)
+        self.assertEqual(report["complete_slates"], 1)
+        self.assertEqual(report["latest_complete_slate"], "2026-08-07")
+        self.assertEqual(report["excluded_incomplete_slates"], ["2026-08-08"])
+        self.assertEqual(report["overall"]["settled"], 2)
+        self.assertEqual(report["overall"]["net_units"], 19.0)
 
 
 if __name__ == "__main__":
