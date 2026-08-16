@@ -1,0 +1,92 @@
+name: Build Triples Profit Discovery
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/triples-discovery.yml"
+      - "src/discovery.py"
+      - "src/triples.py"
+      - "src/triples_discovery.py"
+      - "src/triples_settlement.py"
+      - "src/sources.py"
+      - "scripts/build_triples_discovery.py"
+      - "tests/test_triples_discovery.py"
+      - "tests/test_triples_settlement.py"
+  schedule:
+    # 1:35 AM ET, after the prior slate can be settled. The ET gate removes
+    # the duplicate UTC invocation around daylight-saving transitions.
+    - cron: "35 5,6 * 3-11 *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: triples-profit-discovery
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Resolve ET build window
+        id: window
+        shell: bash
+        run: |
+          python - <<'PY' >> "$GITHUB_OUTPUT"
+          import os
+          from datetime import datetime
+          from zoneinfo import ZoneInfo
+
+          now = datetime.now(ZoneInfo("America/New_York"))
+          manual_or_code_change = os.environ.get("GITHUB_EVENT_NAME") != "schedule"
+          due = manual_or_code_change or now.hour == 1
+          print(f"due={'true' if due else 'false'}")
+          print(f"today={now.date().isoformat()}")
+          print(f"observed_et={now.isoformat()}")
+          PY
+
+      - name: Skip duplicate UTC invocation
+        if: steps.window.outputs.due != 'true'
+        run: echo "Not the 1 AM ET build window; skipping."
+
+      - uses: actions/setup-python@v5
+        if: steps.window.outputs.due == 'true'
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install runtime
+        if: steps.window.outputs.due == 'true'
+        run: pip install -r requirements.txt
+
+      - name: Test Triples Discovery contracts
+        if: steps.window.outputs.due == 'true'
+        run: |
+          python -m unittest discover -s tests -p 'test_triples_discovery.py' -v
+          python -m unittest discover -s tests -p 'test_triples_settlement.py' -v
+
+      - name: Backfill archives, settle outcomes, and build reports
+        if: steps.window.outputs.due == 'true'
+        run: python scripts/build_triples_discovery.py --today "${{ steps.window.outputs.today }}"
+
+      - name: Commit Triples Discovery data
+        if: steps.window.outputs.due == 'true'
+        shell: bash
+        run: |
+          if git diff --quiet && [ -z "$(git status --porcelain)" ]; then
+            echo "No Triples Discovery changes."
+            exit 0
+          fi
+          git config user.name "hr-form-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/triples-discovery.json data/triples-discovery/archive
+          git commit -m "Update Triples profit discovery"
+          git pull --rebase origin main
+          git push
