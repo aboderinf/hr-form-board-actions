@@ -15,9 +15,11 @@ on:
       - "src/edge_source.py"
       - "src/durable_source.py"
       - "src/top100_view.py"
+      - "src/triples.py"
       - "scripts/build_top100.py"
       - "tests/test_open_pool.py"
       - "tests/test_top100_view.py"
+      - "tests/test_triples.py"
   schedule:
     # Full daily rebuild at 4:05 AM ET so the new slate is ready before 8:17.
     # A 6:05 AM ET invocation is recovery-only and skips when today's board exists.
@@ -101,6 +103,7 @@ jobs:
         run: |
           python -m unittest discover -s tests -p 'test_open_pool.py' -v
           python -m unittest discover -s tests -p 'test_top100_view.py' -v
+          python -m unittest discover -s tests -p 'test_triples.py' -v
 
       - name: Build today's Top 100 leaderboard
         if: steps.window.outputs.due == 'true'
@@ -117,11 +120,20 @@ jobs:
 
           expected = os.environ["EXPECTED_SLATE"]
           payload = json.loads(Path("data/top100.json").read_text(encoding="utf-8"))
+          triples = json.loads(Path("data/triples-top100.json").read_text(encoding="utf-8"))
           actual = payload.get("slate_date")
           if actual != expected:
               raise SystemExit(f"Top 100 slate mismatch: expected {expected}, got {actual}")
           if payload.get("status") not in {"ready", "no_players_in_form"}:
               raise SystemExit(f"Top 100 build was not usable: {payload.get('status')}")
+          if triples.get("slate_date") != expected:
+              raise SystemExit(
+                  f"Triples Top 100 slate mismatch: expected {expected}, got {triples.get('slate_date')}"
+              )
+          if triples.get("status") not in {"ready", "no_players_in_form"}:
+              raise SystemExit(
+                  f"Triples Top 100 build was not usable: {triples.get('status')}"
+              )
           print(f"Top 100 advanced to {actual} with {len(payload.get('players') or [])} rows")
           PY
         env:
@@ -136,7 +148,7 @@ jobs:
           fi
           git config user.name "hr-form-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add data/top100.json
+          git add data/top100.json data/triples-top100.json
           git commit -m "Advance Top 100 daily slate"
           git pull --rebase origin main
           git push
