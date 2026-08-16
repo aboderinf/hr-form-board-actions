@@ -16,10 +16,17 @@ on:
       - "src/durable_source.py"
       - "src/top100_view.py"
       - "src/triples.py"
+      - "src/triples_model.py"
       - "scripts/build_top100.py"
+      - "scripts/build_triples_model.py"
+      - "scripts/train_triples_model.py"
+      - "data/triples-model/model.json"
+      - "data/triples-model/performance.json"
+      - "data/triples-model/state-parts/**"
       - "tests/test_open_pool.py"
       - "tests/test_top100_view.py"
       - "tests/test_triples.py"
+      - "tests/test_triples_model.py"
   schedule:
     # Full daily rebuild at 4:05 AM ET so the new slate is ready before 8:17.
     # A 6:05 AM ET invocation is recovery-only and skips when today's board exists.
@@ -104,10 +111,15 @@ jobs:
           python -m unittest discover -s tests -p 'test_open_pool.py' -v
           python -m unittest discover -s tests -p 'test_top100_view.py' -v
           python -m unittest discover -s tests -p 'test_triples.py' -v
+          python -m unittest discover -s tests -p 'test_triples_model.py' -v
 
       - name: Build today's Top 100 leaderboard
         if: steps.window.outputs.due == 'true'
         run: python scripts/build_top100.py --date "${{ steps.window.outputs.slate_date }}"
+
+      - name: Build today's public-data Triples model board
+        if: steps.window.outputs.due == 'true'
+        run: python scripts/build_triples_model.py --date "${{ steps.window.outputs.slate_date }}"
 
       - name: Require today's slate
         if: steps.window.outputs.due == 'true'
@@ -121,6 +133,7 @@ jobs:
           expected = os.environ["EXPECTED_SLATE"]
           payload = json.loads(Path("data/top100.json").read_text(encoding="utf-8"))
           triples = json.loads(Path("data/triples-top100.json").read_text(encoding="utf-8"))
+          model = json.loads(Path("data/triples-model.json").read_text(encoding="utf-8"))
           actual = payload.get("slate_date")
           if actual != expected:
               raise SystemExit(f"Top 100 slate mismatch: expected {expected}, got {actual}")
@@ -134,6 +147,16 @@ jobs:
               raise SystemExit(
                   f"Triples Top 100 build was not usable: {triples.get('status')}"
               )
+          if model.get("slate_date") != expected:
+              raise SystemExit(
+                  f"Triples model slate mismatch: expected {expected}, got {model.get('slate_date')}"
+              )
+          if model.get("status") not in {"ready", "no_scheduled_players"}:
+              raise SystemExit(
+                  f"Triples model build was not usable: {model.get('status')}"
+              )
+          if int(model.get("sports_game_odds_objects_added") or 0) != 0:
+              raise SystemExit("Triples model must not add SportsGameOdds objects")
           print(f"Top 100 advanced to {actual} with {len(payload.get('players') or [])} rows")
           PY
         env:
@@ -148,7 +171,7 @@ jobs:
           fi
           git config user.name "hr-form-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add data/top100.json data/triples-top100.json
+          git add -A data/top100.json data/triples-top100.json data/triples-model.json data/triples-model/state-parts
           git commit -m "Advance Top 100 daily slate"
           git pull --rebase origin main
           git push

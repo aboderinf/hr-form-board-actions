@@ -1,0 +1,157 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-08-16T06:48:59.217530+00:00",
+  "model_status": "research_ready",
+  "observations": 229228,
+  "triples": 3324,
+  "candidate_trials": [
+    {
+      "params": {
+        "learning_rate": 0.05,
+        "max_iter": 180,
+        "max_leaf_nodes": 7,
+        "min_samples_leaf": 160,
+        "l2_regularization": 2.0
+      },
+      "validation": {
+        "rows": 37407,
+        "positives": 552,
+        "prevalence": 0.014756596358970246,
+        "log_loss": 0.07354390556879872,
+        "brier": 0.014423164310858227,
+        "average_precision": 0.03502297900694646,
+        "roc_auc": 0.6853413986264227,
+        "top5_hit_rate": 0.062420382165605096,
+        "top5_hits": 49,
+        "top5_bets": 785,
+        "top10_hit_rate": 0.045859872611464965,
+        "top10_hits": 72,
+        "top10_bets": 1570
+      },
+      "selection_score": 0.1267427242298764
+    },
+    {
+      "params": {
+        "learning_rate": 0.04,
+        "max_iter": 240,
+        "max_leaf_nodes": 7,
+        "min_samples_leaf": 240,
+        "l2_regularization": 4.0
+      },
+      "validation": {
+        "rows": 37407,
+        "positives": 552,
+        "prevalence": 0.014756596358970246,
+        "log_loss": 0.0735220130010817,
+        "brier": 0.014426151365881188,
+        "average_precision": 0.03402542051318998,
+        "roc_auc": 0.6873958904756006,
+        "top5_hit_rate": 0.05605095541401274,
+        "top5_hits": 44,
+        "top5_bets": 785,
+        "top10_hit_rate": 0.048407643312101914,
+        "top10_hits": 76,
+        "top10_bets": 1570
+      },
+      "selection_score": 0.13084070713739382
+    },
+    {
+      "params": {
+        "learning_rate": 0.035,
+        "max_iter": 260,
+        "max_leaf_nodes": 11,
+        "min_samples_leaf": 240,
+        "l2_regularization": 6.0
+      },
+      "validation": {
+        "rows": 37407,
+        "positives": 552,
+        "prevalence": 0.014756596358970246,
+        "log_loss": 0.07365573484446956,
+        "brier": 0.014436000724600506,
+        "average_precision": 0.03234567280131965,
+        "roc_auc": 0.6847983381799807,
+        "top5_hit_rate": 0.05477707006369427,
+        "top5_hits": 43,
+        "top5_bets": 785,
+        "top10_hit_rate": 0.04394904458598726,
+        "top10_hits": 69,
+        "top10_bets": 1570
+      },
+      "selection_score": 0.12024376197329417
+    }
+  ],
+  "out_of_time_2025": {
+    "rows": 37453,
+    "positives": 509,
+    "prevalence": 0.013590366592796305,
+    "log_loss": 0.07008179167295205,
+    "brier": 0.013342994669900746,
+    "average_precision": 0.027474116502171884,
+    "roc_auc": 0.6657959883636339,
+    "top5_hit_rate": 0.04779874213836478,
+    "top5_hits": 38,
+    "top5_bets": 795,
+    "top10_hit_rate": 0.03962264150943396,
+    "top10_hits": 63,
+    "top10_bets": 1590
+  },
+  "out_of_time_august_2026": {
+    "rows": 3366,
+    "positives": 47,
+    "prevalence": 0.013963161021984551,
+    "log_loss": 0.06947990415416977,
+    "brier": 0.013630415552773941,
+    "average_precision": 0.03680073978833481,
+    "roc_auc": 0.7102786663504131,
+    "top5_hit_rate": 0.05714285714285714,
+    "top5_hits": 4,
+    "top5_bets": 70,
+    "top10_hit_rate": 0.05714285714285714,
+    "top10_hits": 8,
+    "top10_bets": 140
+  },
+  "odds_archive": {
+    "status": "provisional",
+    "archive_rows_matched": 1632,
+    "archive_slates": 8,
+    "warning": "The odds archive is too short to optimize thresholds. Policies were pre-registered before evaluation and remain provisional.",
+    "all_priced": {
+      "bets": 1632,
+      "wins": 23,
+      "losses": 1609,
+      "hit_rate": 0.014093137254901961,
+      "net_units": -649.6,
+      "roi": -0.39803921568627454,
+      "slates": 8
+    },
+    "top5_hit_probability": {
+      "bets": 40,
+      "wins": 3,
+      "losses": 37,
+      "hit_rate": 0.075,
+      "net_units": 15.4,
+      "roi": 0.385,
+      "slates": 8
+    },
+    "top5_positive_ev": {
+      "bets": 37,
+      "wins": 3,
+      "losses": 34,
+      "hit_rate": 0.08108108108108109,
+      "net_units": 41.0,
+      "roi": 1.1081081081081081,
+      "slates": 8
+    }
+  },
+  "export_max_probability_difference": 2.7755575615628914e-17,
+  "sources": [
+    "MLB Baseball Savant Statcast PA-level CSV",
+    "MLB Stats API schedules, probable pitchers, venues, park dimensions, and recorded weather",
+    "Baseball Savant sprint speed leaderboard",
+    "Baseball Savant Statcast park factors",
+    "Existing archived SportsGameOdds triples prices"
+  ],
+  "leakage_policy": "Every rolling performance feature is calculated before the slate date. Model selection uses 2024, probability testing uses 2025 and August 2026, and the odds archive is not used to fit the hit model or tune the betting thresholds.",
+  "warning": "Predictive performance is historical and not a guarantee. Odds-archive ROI remains provisional until substantially more slates settle."
+}
