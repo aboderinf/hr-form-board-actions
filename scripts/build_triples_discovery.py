@@ -284,6 +284,15 @@ def build_output(
     archive_dates = sorted({str(capture.get("date")) for capture in captures})
     complete_entries, fully_settled_dates, incomplete_dates = complete_slate_partition(entries)
     best_rows = collapse_best(complete_entries)
+    settled_hit_points = sorted(
+        (row for row in best_rows if row.get("result") == "WIN"),
+        key=lambda row: (
+            row["slate_date"],
+            float(row.get("score") or -1.0),
+            int(row.get("best_odds") or 0),
+            row.get("player") or "",
+        ),
+    )
     recent_settled = sorted(
         (row for row in best_rows if row.get("result") in {"WIN", "LOSS"}),
         key=lambda row: (row["slate_date"], row.get("player") or ""),
@@ -328,6 +337,7 @@ def build_output(
             "game_log_failures": sum(item.startswith("Game log failed") for item in diagnostics),
         },
         "reports": build_reports(entries, today),
+        "settled_hit_points": [public_result(row) for row in settled_hit_points],
         "recent_settled_bets": [public_result(row) for row in recent_settled],
         "diagnostics": diagnostics[:100],
     }
