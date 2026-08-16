@@ -34,7 +34,7 @@ SCORE_ORDER = [
 ]
 RANK_ORDER = ["Ranks 1–10", "Ranks 11–25", "Ranks 26–50", "Ranks 51–100", "Unranked"]
 BOOK_ORDER = ["fanduel", "draftkings", "betmgm"]
-CHECKPOINT_ORDER = ["1117", "1717"]
+CHECKPOINT_ORDER = ["0817", "1117", "1717"]
 
 
 def implied_probability(american: int) -> float:
@@ -106,6 +106,29 @@ def collapse_best(entries: Iterable[dict[str, Any]]) -> list[dict[str, Any]]:
         if current is None or decimal_odds(int(row["best_odds"])) > decimal_odds(int(current["best_odds"])):
             selected[key] = row
     return sorted(selected.values(), key=lambda row: (row["slate_date"], int(row.get("rank") or 999), row.get("player") or ""))
+
+
+def complete_slate_partition(
+    entries: Iterable[dict[str, Any]],
+) -> tuple[list[dict[str, Any]], list[str], list[str]]:
+    """Split rows by whether every priced row on the slate has a final result."""
+    rows = list(entries)
+    by_slate: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for row in rows:
+        by_slate[str(row["slate_date"])].append(row)
+
+    complete_slates = sorted(
+        slate
+        for slate, slate_rows in by_slate.items()
+        if not any(row.get("result") in {None, "PENDING"} for row in slate_rows)
+    )
+    incomplete_slates = sorted(set(by_slate) - set(complete_slates))
+    complete_set = set(complete_slates)
+    return (
+        [row for row in rows if str(row["slate_date"]) in complete_set],
+        complete_slates,
+        incomplete_slates,
+    )
 
 
 def summary(rows: Iterable[dict[str, Any]]) -> dict[str, Any]:
@@ -257,7 +280,8 @@ def edge_candidates(best_rows: list[dict[str, Any]], checkpoint_rows: list[dict[
 
 
 def period_report(entries: Iterable[dict[str, Any]], start: date, end: date) -> dict[str, Any]:
-    filtered = [row for row in entries if start <= date.fromisoformat(row["slate_date"]) <= end]
+    window_rows = [row for row in entries if start <= date.fromisoformat(row["slate_date"]) <= end]
+    filtered, complete_slates, incomplete_slates = complete_slate_partition(window_rows)
     by_checkpoint = {
         checkpoint: collapse_best(row for row in filtered if row.get("checkpoint") == checkpoint)
         for checkpoint in CHECKPOINT_ORDER
@@ -267,7 +291,11 @@ def period_report(entries: Iterable[dict[str, Any]], start: date, end: date) -> 
     return {
         "start": start.isoformat(),
         "end": end.isoformat(),
-        "raw_checkpoint_rows": len(filtered),
+        "raw_checkpoint_rows": len(window_rows),
+        "analyzed_checkpoint_rows": len(filtered),
+        "complete_slates": len(complete_slates),
+        "latest_complete_slate": complete_slates[-1] if complete_slates else None,
+        "excluded_incomplete_slates": incomplete_slates,
         "unique_player_slates": len(best_rows),
         "overall": summary(best_rows),
         "checkpoint_strategies": [
