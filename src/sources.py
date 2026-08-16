@@ -92,6 +92,7 @@ def game_log(client: HttpClient, player_id: int, season: int) -> list[dict]:
             "gamePk": (row.get("game") or {}).get("gamePk"),
             "opponent": (row.get("opponent") or {}).get("name"),
             "homeRuns": int((row.get("stat") or {}).get("homeRuns") or 0),
+            "triples": int((row.get("stat") or {}).get("triples") or 0),
             "plateAppearances": int(
                 (row.get("stat") or {}).get("plateAppearances") or 0
             ),

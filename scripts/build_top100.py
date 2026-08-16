@@ -16,6 +16,7 @@ from src.model import ET, calculate_form_open_pool, rank_form_scores
 from src.sources import HttpClient, game_log, season_hitter_pool
 from src.storage import write_json
 from src.top100_view import attach_market_data
+from src.triples import calculate_triples_form_open_pool, rank_triples_scores
 
 
 def local_edge_odds(slate_date: date) -> dict | None:
@@ -86,6 +87,27 @@ def refresh_existing_odds(client: HttpClient, slate_date: date, now: datetime) -
     return True
 
 
+def empty_triples_output(slate_date: date, now: datetime) -> dict:
+    return {
+        "schema_version": 1,
+        "kind": "top_100_triples_form_scores",
+        "slate_date": slate_date.isoformat(),
+        "generated_at": now.isoformat(),
+        "generated_at_et": now.astimezone(ET).isoformat(),
+        "status": "collecting",
+        "method": "0.50*(triple games L5/5) + 0.30*(triple games L7/7) + 0.20*(triple games L15/15)",
+        "method_note": "A descriptive recent-form index, not a probability or fair-odds estimate.",
+        "eligibility": "Every MLB hitter with a current-season batting appearance and at least one prior PA-game containing a triple; no lineup or odds requirement.",
+        "short_history_policy": "Fixed 5/7/15 denominators. Missing pre-debut games contribute zero. Fewer than 15 prior PA-games is labeled provisional.",
+        "odds_policy": "The separate Triples Board joins prices from the existing archived /events checkpoints; ranking never uses odds.",
+        "archive_policy": "Uses the same SportsGameOdds /events responses already captured for the Form Board and adds zero provider objects.",
+        "player_pool_count": 0,
+        "scored_player_count": 0,
+        "players": [],
+        "diagnostics": [],
+    }
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--date", help="Slate date YYYY-MM-DD; defaults to current ET date")
@@ -125,16 +147,21 @@ def main() -> int:
         },
         "diagnostics": [],
     }
+    triples_output = empty_triples_output(slate_date, now)
 
     try:
         pool = season_hitter_pool(client, slate_date.year)
     except Exception as exc:
         output["status"] = "player_pool_unavailable"
         output["diagnostics"].append(str(exc))
+        triples_output["status"] = "player_pool_unavailable"
+        triples_output["diagnostics"].append(str(exc))
         write_json(ROOT / "data" / "top100.json", output)
+        write_json(ROOT / "data" / "triples-top100.json", triples_output)
         return 0
 
     output["player_pool_count"] = len(pool)
+    triples_output["player_pool_count"] = len(pool)
     logs: dict[int, list[dict] | Exception] = {}
 
     def fetch(row: dict) -> tuple[int, list[dict]]:
@@ -153,6 +180,7 @@ def main() -> int:
                 logs[player_id] = exc
 
     rows: list[dict] = []
+    triples_rows: list[dict] = []
     failures = 0
     for player in pool:
         player_id = int(player["mlbam_id"])
@@ -161,18 +189,30 @@ def main() -> int:
             failures += 1
             continue
         form = calculate_form_open_pool(player_games, slate_date)
-        if not form:
-            continue
-        rows.append(
-            {
-                "player": player["player"],
-                "mlbam_id": player_id,
-                "team": player.get("team"),
-                "team_id": player.get("team_id"),
-                "season_plate_appearances": player.get("season_plate_appearances"),
-                **form,
-            }
-        )
+        if form:
+            rows.append(
+                {
+                    "player": player["player"],
+                    "mlbam_id": player_id,
+                    "team": player.get("team"),
+                    "team_id": player.get("team_id"),
+                    "season_plate_appearances": player.get("season_plate_appearances"),
+                    **form,
+                }
+            )
+
+        triples_form = calculate_triples_form_open_pool(player_games, slate_date)
+        if triples_form:
+            triples_rows.append(
+                {
+                    "player": player["player"],
+                    "mlbam_id": player_id,
+                    "team": player.get("team"),
+                    "team_id": player.get("team_id"),
+                    "season_plate_appearances": player.get("season_plate_appearances"),
+                    **triples_form,
+                }
+            )
 
     ranked = rank_form_scores(rows)
     published = ranked[:100]
@@ -191,10 +231,23 @@ def main() -> int:
     if failures:
         output["diagnostics"].append(f"Game logs failed for {failures} players")
 
+    triples_ranked = rank_triples_scores(triples_rows)
+    triples_published = triples_ranked[:100]
+    for rank, row in enumerate(triples_published, 1):
+        row["rank"] = rank
+        row["sample_status"] = "Provisional" if row["provisional"] else "Established"
+    triples_output["scored_player_count"] = len(triples_ranked)
+    triples_output["players"] = triples_published
+    triples_output["status"] = "ready" if triples_ranked else "no_players_in_form"
+    if failures:
+        triples_output["diagnostics"].append(f"Game logs failed for {failures} players")
+
     write_json(ROOT / "data" / "top100.json", output)
+    write_json(ROOT / "data" / "triples-top100.json", triples_output)
     print(
         f"Top 100 built: pool={len(pool)} scored={len(ranked)} "
-        f"published={len(output['players'])} priced={output['odds']['priced_players']}"
+        f"published={len(output['players'])} priced={output['odds']['priced_players']}; "
+        f"triples_scored={len(triples_ranked)} triples_published={len(triples_published)}"
     )
     return 0
 
