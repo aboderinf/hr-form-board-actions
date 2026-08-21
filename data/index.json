@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-21T21:38:38.812784+00:00",
+  "generated_at": "2026-08-21T21:59:03.533482+00:00",
   "method": "0.50*L5 + 0.30*L7 + 0.20*L15 cumulative HR-game rates",
   "checkpoints_et": [
     "08:17",
@@ -32,13 +32,13 @@
   "latest": {
     "schema_version": 1,
     "kind": "latest_shared_slate",
-    "refreshed_at": "2026-08-21T21:38:37.955692+00:00",
-    "refreshed_at_et": "2026-08-21T17:38:37.955692-04:00",
+    "refreshed_at": "2026-08-21T21:58:49.413304+00:00",
+    "refreshed_at_et": "2026-08-21T17:58:49.413304-04:00",
     "status": "current",
     "sources": {
       "mlb_hr_edge": {
         "source": "MLB HR Edge",
-        "source_url": "/home/runner/work/hr-form-board-actions/hr-form-board-actions/data/shared-odds/latest.json",
+        "source_url": "https://hr-form-board-actions.vercel.app/data/shared-odds/latest.json",
         "delivery": "qstash-vercel-redis",
         "source_date": "2026-08-21",
         "date_matches": true,
@@ -58,8 +58,7 @@
           "BetMGM"
         ],
         "row_count": 237,
-        "compatibility_fallback": "exact_upstash_checkpoint_cache",
-        "checkpoint": "1717",
+        "compatibility_fallback": "public_form_board_mirror",
         "mlbam_ids_hydrated": 232,
         "mlbam_ids_added": 232,
         "unresolved_player_names": [
