@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
   "kind": "top_100_triples_form_scores",
-  "slate_date": "2026-08-23",
-  "generated_at": "2026-08-23T08:42:25.603695+00:00",
-  "generated_at_et": "2026-08-23T04:42:25.603695-04:00",
+  "slate_date": "2026-08-24",
+  "generated_at": "2026-08-24T04:35:54.754824+00:00",
+  "generated_at_et": "2026-08-24T00:35:54.754824-04:00",
   "status": "ready",
   "method": "0.50*(triple games L5/5) + 0.30*(triple games L7/7) + 0.20*(triple games L15/15)",
   "method_note": "A descriptive recent-form index, not a probability or fair-odds estimate.",
@@ -12,14 +12,14 @@
   "odds_policy": "The separate Triples Board joins prices from the existing archived /events checkpoints; ranking never uses odds.",
   "archive_policy": "Uses the same SportsGameOdds /events responses already captured for the Form Board and adds zero provider objects.",
   "player_pool_count": 639,
-  "scored_player_count": 75,
+  "scored_player_count": 78,
   "players": [
     {
       "player": "Victor Robles",
       "mlbam_id": 645302,
       "team": "Seattle Mariners",
       "team_id": 136,
-      "season_plate_appearances": 141,
+      "season_plate_appearances": 145,
       "score": 0.31238095238095237,
       "triple_games_l5": 2,
       "triple_games_l7": 2,
@@ -28,6 +28,14 @@
       "games_available": 15,
       "provisional": false,
       "recent_games": [
+        {
+          "date": "2026-08-23",
+          "game_pk": 823099,
+          "opponent": "Chicago Cubs",
+          "triples": 0,
+          "plate_appearances": 4,
+          "triple_game": false
+        },
         {
           "date": "2026-08-21",
           "game_pk": 823101,
@@ -139,17 +147,147 @@
           "triples": 0,
           "plate_appearances": 4,
           "triple_game": false
-        },
-        {
-          "date": "2026-07-08",
-          "game_pk": 823848,
-          "opponent": "Miami Marlins",
-          "triples": 0,
-          "plate_appearances": 3,
-          "triple_game": false
         }
       ],
       "rank": 1,
+      "sample_status": "Established"
+    },
+    {
+      "player": "Corbin Carroll",
+      "mlbam_id": 682998,
+      "team": "Arizona Diamondbacks",
+      "team_id": 109,
+      "season_plate_appearances": 552,
+      "score": 0.1961904761904762,
+      "triple_games_l5": 1,
+      "triple_games_l7": 1,
+      "triple_games_l15": 4,
+      "triples_l15": 4,
+      "games_available": 15,
+      "provisional": false,
+      "recent_games": [
+        {
+          "date": "2026-08-23",
+          "game_pk": 825043,
+          "opponent": "Cincinnati Reds",
+          "triples": 1,
+          "plate_appearances": 4,
+          "triple_game": true
+        },
+        {
+          "date": "2026-08-22",
+          "game_pk": 825044,
+          "opponent": "Cincinnati Reds",
+          "triples": 0,
+          "plate_appearances": 5,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-21",
+          "game_pk": 825045,
+          "opponent": "Cincinnati Reds",
+          "triples": 0,
+          "plate_appearances": 5,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-19",
+          "game_pk": 824722,
+          "opponent": "Boston Red Sox",
+          "triples": 0,
+          "plate_appearances": 5,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-18",
+          "game_pk": 824723,
+          "opponent": "Boston Red Sox",
+          "triples": 0,
+          "plate_appearances": 4,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-17",
+          "game_pk": 824725,
+          "opponent": "Boston Red Sox",
+          "triples": 0,
+          "plate_appearances": 3,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-16",
+          "game_pk": 824880,
+          "opponent": "Atlanta Braves",
+          "triples": 0,
+          "plate_appearances": 4,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-15",
+          "game_pk": 824884,
+          "opponent": "Atlanta Braves",
+          "triples": 1,
+          "plate_appearances": 5,
+          "triple_game": true
+        },
+        {
+          "date": "2026-08-14",
+          "game_pk": 824882,
+          "opponent": "Atlanta Braves",
+          "triples": 0,
+          "plate_appearances": 5,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-12",
+          "game_pk": 825047,
+          "opponent": "Colorado Rockies",
+          "triples": 1,
+          "plate_appearances": 5,
+          "triple_game": true
+        },
+        {
+          "date": "2026-08-11",
+          "game_pk": 825046,
+          "opponent": "Colorado Rockies",
+          "triples": 0,
+          "plate_appearances": 4,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-10",
+          "game_pk": 825048,
+          "opponent": "Colorado Rockies",
+          "triples": 0,
+          "plate_appearances": 4,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-09",
+          "game_pk": 825050,
+          "opponent": "Los Angeles Dodgers",
+          "triples": 0,
+          "plate_appearances": 4,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-08",
+          "game_pk": 825049,
+          "opponent": "Los Angeles Dodgers",
+          "triples": 1,
+          "plate_appearances": 5,
+          "triple_game": true
+        },
+        {
+          "date": "2026-08-07",
+          "game_pk": 825051,
+          "opponent": "Los Angeles Dodgers",
+          "triples": 0,
+          "plate_appearances": 4,
+          "triple_game": false
+        }
+      ],
+      "rank": 2,
       "sample_status": "Established"
     },
     {
@@ -157,7 +295,7 @@
       "mlbam_id": 805300,
       "team": "Miami Marlins",
       "team_id": 146,
-      "season_plate_appearances": 495,
+      "season_plate_appearances": 497,
       "score": 0.16952380952380952,
       "triple_games_l5": 1,
       "triple_games_l7": 1,
@@ -166,6 +304,14 @@
       "games_available": 15,
       "provisional": false,
       "recent_games": [
+        {
+          "date": "2026-08-23",
+          "game_pk": 823827,
+          "opponent": "Washington Nationals",
+          "triples": 0,
+          "plate_appearances": 2,
+          "triple_game": false
+        },
         {
           "date": "2026-08-22",
           "game_pk": 823831,
@@ -277,17 +423,9 @@
           "triples": 0,
           "plate_appearances": 3,
           "triple_game": false
-        },
-        {
-          "date": "2026-08-05",
-          "game_pk": 824889,
-          "opponent": "Atlanta Braves",
-          "triples": 0,
-          "plate_appearances": 3,
-          "triple_game": false
         }
       ],
-      "rank": 2,
+      "rank": 3,
       "sample_status": "Established"
     },
     {
@@ -425,7 +563,145 @@
           "triple_game": false
         }
       ],
-      "rank": 3,
+      "rank": 4,
+      "sample_status": "Established"
+    },
+    {
+      "player": "Chase DeLauter",
+      "mlbam_id": 800050,
+      "team": "Cleveland Guardians",
+      "team_id": 114,
+      "season_plate_appearances": 466,
+      "score": 0.15619047619047619,
+      "triple_games_l5": 1,
+      "triple_games_l7": 1,
+      "triple_games_l15": 1,
+      "triples_l15": 2,
+      "games_available": 15,
+      "provisional": false,
+      "recent_games": [
+        {
+          "date": "2026-08-23",
+          "game_pk": 824315,
+          "opponent": "Colorado Rockies",
+          "triples": 2,
+          "plate_appearances": 5,
+          "triple_game": true
+        },
+        {
+          "date": "2026-08-22",
+          "game_pk": 824316,
+          "opponent": "Colorado Rockies",
+          "triples": 0,
+          "plate_appearances": 4,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-21",
+          "game_pk": 824317,
+          "opponent": "Colorado Rockies",
+          "triples": 0,
+          "plate_appearances": 4,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-16",
+          "game_pk": 824397,
+          "opponent": "San Diego Padres",
+          "triples": 0,
+          "plate_appearances": 1,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-15",
+          "game_pk": 824400,
+          "opponent": "San Diego Padres",
+          "triples": 0,
+          "plate_appearances": 4,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-14",
+          "game_pk": 824399,
+          "opponent": "San Diego Padres",
+          "triples": 0,
+          "plate_appearances": 5,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-13",
+          "game_pk": 824238,
+          "opponent": "Detroit Tigers",
+          "triples": 0,
+          "plate_appearances": 4,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-12",
+          "game_pk": 824241,
+          "opponent": "Detroit Tigers",
+          "triples": 0,
+          "plate_appearances": 5,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-11",
+          "game_pk": 824240,
+          "opponent": "Detroit Tigers",
+          "triples": 0,
+          "plate_appearances": 5,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-09",
+          "game_pk": 824564,
+          "opponent": "Chicago White Sox",
+          "triples": 0,
+          "plate_appearances": 5,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-08",
+          "game_pk": 824565,
+          "opponent": "Chicago White Sox",
+          "triples": 0,
+          "plate_appearances": 5,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-07",
+          "game_pk": 824566,
+          "opponent": "Chicago White Sox",
+          "triples": 0,
+          "plate_appearances": 5,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-06",
+          "game_pk": 824401,
+          "opponent": "New York Mets",
+          "triples": 0,
+          "plate_appearances": 5,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-05",
+          "game_pk": 824402,
+          "opponent": "New York Mets",
+          "triples": 0,
+          "plate_appearances": 6,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-04",
+          "game_pk": 824403,
+          "opponent": "New York Mets",
+          "triples": 0,
+          "plate_appearances": 5,
+          "triple_game": false
+        }
+      ],
+      "rank": 5,
       "sample_status": "Established"
     },
     {
@@ -563,15 +839,15 @@
           "triple_game": false
         }
       ],
-      "rank": 4,
+      "rank": 6,
       "sample_status": "Established"
     },
     {
-      "player": "Edmundo Sosa",
-      "mlbam_id": 624641,
-      "team": "Philadelphia Phillies",
-      "team_id": 143,
-      "season_plate_appearances": 209,
+      "player": "Cody Freeman",
+      "mlbam_id": 683227,
+      "team": "Texas Rangers",
+      "team_id": 140,
+      "season_plate_appearances": 40,
       "score": 0.15619047619047619,
       "triple_games_l5": 1,
       "triple_games_l7": 1,
@@ -580,6 +856,152 @@
       "games_available": 15,
       "provisional": false,
       "recent_games": [
+        {
+          "date": "2026-08-23",
+          "game_pk": 822856,
+          "opponent": "Los Angeles Angels",
+          "triples": 1,
+          "plate_appearances": 3,
+          "triple_game": true
+        },
+        {
+          "date": "2026-08-22",
+          "game_pk": 822858,
+          "opponent": "Los Angeles Angels",
+          "triples": 0,
+          "plate_appearances": 3,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-21",
+          "game_pk": 822857,
+          "opponent": "Los Angeles Angels",
+          "triples": 0,
+          "plate_appearances": 2,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-20",
+          "game_pk": 822861,
+          "opponent": "Washington Nationals",
+          "triples": 0,
+          "plate_appearances": 2,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-19",
+          "game_pk": 822860,
+          "opponent": "Washington Nationals",
+          "triples": 0,
+          "plate_appearances": 1,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-18",
+          "game_pk": 822859,
+          "opponent": "Washington Nationals",
+          "triples": 0,
+          "plate_appearances": 4,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-16",
+          "game_pk": 824965,
+          "opponent": "Athletics",
+          "triples": 0,
+          "plate_appearances": 4,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-14",
+          "game_pk": 824968,
+          "opponent": "Athletics",
+          "triples": 0,
+          "plate_appearances": 3,
+          "triple_game": false
+        },
+        {
+          "date": "2026-06-20",
+          "game_pk": 822885,
+          "opponent": "San Diego Padres",
+          "triples": 0,
+          "plate_appearances": 1,
+          "triple_game": false
+        },
+        {
+          "date": "2026-06-18",
+          "game_pk": 822889,
+          "opponent": "Minnesota Twins",
+          "triples": 0,
+          "plate_appearances": 2,
+          "triple_game": false
+        },
+        {
+          "date": "2026-06-16",
+          "game_pk": 822888,
+          "opponent": "Minnesota Twins",
+          "triples": 0,
+          "plate_appearances": 1,
+          "triple_game": false
+        },
+        {
+          "date": "2026-06-15",
+          "game_pk": 822887,
+          "opponent": "Minnesota Twins",
+          "triples": 0,
+          "plate_appearances": 3,
+          "triple_game": false
+        },
+        {
+          "date": "2026-06-14",
+          "game_pk": 824751,
+          "opponent": "Boston Red Sox",
+          "triples": 0,
+          "plate_appearances": 5,
+          "triple_game": false
+        },
+        {
+          "date": "2026-06-13",
+          "game_pk": 824749,
+          "opponent": "Boston Red Sox",
+          "triples": 0,
+          "plate_appearances": 4,
+          "triple_game": false
+        },
+        {
+          "date": "2026-06-03",
+          "game_pk": 823051,
+          "opponent": "St. Louis Cardinals",
+          "triples": 0,
+          "plate_appearances": 2,
+          "triple_game": false
+        }
+      ],
+      "rank": 7,
+      "sample_status": "Established"
+    },
+    {
+      "player": "Edmundo Sosa",
+      "mlbam_id": 624641,
+      "team": "Philadelphia Phillies",
+      "team_id": 143,
+      "season_plate_appearances": 213,
+      "score": 0.15619047619047619,
+      "triple_games_l5": 1,
+      "triple_games_l7": 1,
+      "triple_games_l15": 1,
+      "triples_l15": 1,
+      "games_available": 15,
+      "provisional": false,
+      "recent_games": [
+        {
+          "date": "2026-08-23",
+          "game_pk": 823421,
+          "opponent": "St. Louis Cardinals",
+          "triples": 0,
+          "plate_appearances": 4,
+          "triple_game": false
+        },
         {
           "date": "2026-08-22",
           "game_pk": 823422,
@@ -691,17 +1113,9 @@
           "triples": 0,
           "plate_appearances": 4,
           "triple_game": false
-        },
-        {
-          "date": "2026-07-12",
-          "game_pk": 824250,
-          "opponent": "Detroit Tigers",
-          "triples": 0,
-          "plate_appearances": 4,
-          "triple_game": false
         }
       ],
-      "rank": 5,
+      "rank": 8,
       "sample_status": "Established"
     },
     {
@@ -709,7 +1123,7 @@
       "mlbam_id": 677649,
       "team": "Texas Rangers",
       "team_id": 140,
-      "season_plate_appearances": 463,
+      "season_plate_appearances": 467,
       "score": 0.15619047619047619,
       "triple_games_l5": 1,
       "triple_games_l7": 1,
@@ -718,6 +1132,14 @@
       "games_available": 15,
       "provisional": false,
       "recent_games": [
+        {
+          "date": "2026-08-23",
+          "game_pk": 822856,
+          "opponent": "Los Angeles Angels",
+          "triples": 0,
+          "plate_appearances": 4,
+          "triple_game": false
+        },
         {
           "date": "2026-08-22",
           "game_pk": 822858,
@@ -829,17 +1251,9 @@
           "triples": 0,
           "plate_appearances": 3,
           "triple_game": false
-        },
-        {
-          "date": "2026-08-07",
-          "game_pk": 822863,
-          "opponent": "Baltimore Orioles",
-          "triples": 0,
-          "plate_appearances": 3,
-          "triple_game": false
         }
       ],
-      "rank": 6,
+      "rank": 9,
       "sample_status": "Established"
     },
     {
@@ -977,15 +1391,15 @@
           "triple_game": false
         }
       ],
-      "rank": 7,
+      "rank": 10,
       "sample_status": "Established"
     },
     {
-      "player": "JJ Bleday",
-      "mlbam_id": 668709,
-      "team": "Cincinnati Reds",
-      "team_id": 113,
-      "season_plate_appearances": 425,
+      "player": "Ildemaro Vargas",
+      "mlbam_id": 545121,
+      "team": "Arizona Diamondbacks",
+      "team_id": 109,
+      "season_plate_appearances": 404,
       "score": 0.15619047619047619,
       "triple_games_l5": 1,
       "triple_games_l7": 1,
@@ -994,6 +1408,152 @@
       "games_available": 15,
       "provisional": false,
       "recent_games": [
+        {
+          "date": "2026-08-23",
+          "game_pk": 825043,
+          "opponent": "Cincinnati Reds",
+          "triples": 1,
+          "plate_appearances": 4,
+          "triple_game": true
+        },
+        {
+          "date": "2026-08-22",
+          "game_pk": 825044,
+          "opponent": "Cincinnati Reds",
+          "triples": 0,
+          "plate_appearances": 4,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-21",
+          "game_pk": 825045,
+          "opponent": "Cincinnati Reds",
+          "triples": 0,
+          "plate_appearances": 5,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-19",
+          "game_pk": 824722,
+          "opponent": "Boston Red Sox",
+          "triples": 0,
+          "plate_appearances": 5,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-18",
+          "game_pk": 824723,
+          "opponent": "Boston Red Sox",
+          "triples": 0,
+          "plate_appearances": 4,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-17",
+          "game_pk": 824725,
+          "opponent": "Boston Red Sox",
+          "triples": 0,
+          "plate_appearances": 4,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-16",
+          "game_pk": 824880,
+          "opponent": "Atlanta Braves",
+          "triples": 0,
+          "plate_appearances": 2,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-15",
+          "game_pk": 824884,
+          "opponent": "Atlanta Braves",
+          "triples": 0,
+          "plate_appearances": 5,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-14",
+          "game_pk": 824882,
+          "opponent": "Atlanta Braves",
+          "triples": 0,
+          "plate_appearances": 4,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-12",
+          "game_pk": 825047,
+          "opponent": "Colorado Rockies",
+          "triples": 0,
+          "plate_appearances": 2,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-11",
+          "game_pk": 825046,
+          "opponent": "Colorado Rockies",
+          "triples": 0,
+          "plate_appearances": 3,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-10",
+          "game_pk": 825048,
+          "opponent": "Colorado Rockies",
+          "triples": 0,
+          "plate_appearances": 2,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-09",
+          "game_pk": 825050,
+          "opponent": "Los Angeles Dodgers",
+          "triples": 0,
+          "plate_appearances": 4,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-08",
+          "game_pk": 825049,
+          "opponent": "Los Angeles Dodgers",
+          "triples": 0,
+          "plate_appearances": 1,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-07",
+          "game_pk": 825051,
+          "opponent": "Los Angeles Dodgers",
+          "triples": 0,
+          "plate_appearances": 1,
+          "triple_game": false
+        }
+      ],
+      "rank": 11,
+      "sample_status": "Established"
+    },
+    {
+      "player": "JJ Bleday",
+      "mlbam_id": 668709,
+      "team": "Cincinnati Reds",
+      "team_id": 113,
+      "season_plate_appearances": 429,
+      "score": 0.15619047619047619,
+      "triple_games_l5": 1,
+      "triple_games_l7": 1,
+      "triple_games_l15": 1,
+      "triples_l15": 1,
+      "games_available": 15,
+      "provisional": false,
+      "recent_games": [
+        {
+          "date": "2026-08-23",
+          "game_pk": 825043,
+          "opponent": "Arizona Diamondbacks",
+          "triples": 0,
+          "plate_appearances": 4,
+          "triple_game": false
+        },
         {
           "date": "2026-08-22",
           "game_pk": 825044,
@@ -1105,25 +1665,17 @@
           "triples": 0,
           "plate_appearances": 4,
           "triple_game": false
-        },
-        {
-          "date": "2026-08-08",
-          "game_pk": 822701,
-          "opponent": "Washington Nationals",
-          "triples": 0,
-          "plate_appearances": 4,
-          "triple_game": false
         }
       ],
-      "rank": 8,
+      "rank": 12,
       "sample_status": "Established"
     },
     {
-      "player": "Jarren Duran",
-      "mlbam_id": 680776,
+      "player": "Jahmai Jones",
+      "mlbam_id": 663330,
       "team": "Boston Red Sox",
       "team_id": 111,
-      "season_plate_appearances": 511,
+      "season_plate_appearances": 134,
       "score": 0.15619047619047619,
       "triple_games_l5": 1,
       "triple_games_l7": 1,
@@ -1132,6 +1684,152 @@
       "games_available": 15,
       "provisional": false,
       "recent_games": [
+        {
+          "date": "2026-08-23",
+          "game_pk": 824720,
+          "opponent": "San Francisco Giants",
+          "triples": 1,
+          "plate_appearances": 2,
+          "triple_game": true
+        },
+        {
+          "date": "2026-08-22",
+          "game_pk": 824718,
+          "opponent": "San Francisco Giants",
+          "triples": 0,
+          "plate_appearances": 1,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-19",
+          "game_pk": 824722,
+          "opponent": "Arizona Diamondbacks",
+          "triples": 0,
+          "plate_appearances": 1,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-15",
+          "game_pk": 823347,
+          "opponent": "Pittsburgh Pirates",
+          "triples": 0,
+          "plate_appearances": 2,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-09",
+          "game_pk": 824724,
+          "opponent": "Athletics",
+          "triples": 0,
+          "plate_appearances": 1,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-08",
+          "game_pk": 824726,
+          "opponent": "Athletics",
+          "triples": 0,
+          "plate_appearances": 5,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-06",
+          "game_pk": 824729,
+          "opponent": "Chicago White Sox",
+          "triples": 0,
+          "plate_appearances": 1,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-05",
+          "game_pk": 824728,
+          "opponent": "Chicago White Sox",
+          "triples": 0,
+          "plate_appearances": 1,
+          "triple_game": false
+        },
+        {
+          "date": "2026-07-29",
+          "game_pk": 824973,
+          "opponent": "Athletics",
+          "triples": 0,
+          "plate_appearances": 3,
+          "triple_game": false
+        },
+        {
+          "date": "2026-07-28",
+          "game_pk": 824976,
+          "opponent": "Athletics",
+          "triples": 0,
+          "plate_appearances": 3,
+          "triple_game": false
+        },
+        {
+          "date": "2026-07-26",
+          "game_pk": 824730,
+          "opponent": "Toronto Blue Jays",
+          "triples": 0,
+          "plate_appearances": 1,
+          "triple_game": false
+        },
+        {
+          "date": "2026-07-24",
+          "game_pk": 824733,
+          "opponent": "Toronto Blue Jays",
+          "triples": 0,
+          "plate_appearances": 1,
+          "triple_game": false
+        },
+        {
+          "date": "2026-07-22",
+          "game_pk": 824732,
+          "opponent": "Baltimore Orioles",
+          "triples": 0,
+          "plate_appearances": 1,
+          "triple_game": false
+        },
+        {
+          "date": "2026-07-19",
+          "game_pk": 824739,
+          "opponent": "Tampa Bay Rays",
+          "triples": 0,
+          "plate_appearances": 4,
+          "triple_game": false
+        },
+        {
+          "date": "2026-07-18",
+          "game_pk": 824738,
+          "opponent": "Tampa Bay Rays",
+          "triples": 0,
+          "plate_appearances": 1,
+          "triple_game": false
+        }
+      ],
+      "rank": 13,
+      "sample_status": "Established"
+    },
+    {
+      "player": "Jarren Duran",
+      "mlbam_id": 680776,
+      "team": "Boston Red Sox",
+      "team_id": 111,
+      "season_plate_appearances": 512,
+      "score": 0.15619047619047619,
+      "triple_games_l5": 1,
+      "triple_games_l7": 1,
+      "triple_games_l15": 1,
+      "triples_l15": 1,
+      "games_available": 15,
+      "provisional": false,
+      "recent_games": [
+        {
+          "date": "2026-08-23",
+          "game_pk": 824720,
+          "opponent": "San Francisco Giants",
+          "triples": 0,
+          "plate_appearances": 1,
+          "triple_game": false
+        },
         {
           "date": "2026-08-22",
           "game_pk": 824718,
@@ -1243,17 +1941,9 @@
           "triples": 0,
           "plate_appearances": 5,
           "triple_game": false
-        },
-        {
-          "date": "2026-08-06",
-          "game_pk": 824729,
-          "opponent": "Chicago White Sox",
-          "triples": 0,
-          "plate_appearances": 6,
-          "triple_game": false
         }
       ],
-      "rank": 9,
+      "rank": 14,
       "sample_status": "Established"
     },
     {
@@ -1261,7 +1951,7 @@
       "mlbam_id": 665862,
       "team": "New York Yankees",
       "team_id": 147,
-      "season_plate_appearances": 470,
+      "season_plate_appearances": 474,
       "score": 0.15619047619047619,
       "triple_games_l5": 1,
       "triple_games_l7": 1,
@@ -1270,6 +1960,14 @@
       "games_available": 15,
       "provisional": false,
       "recent_games": [
+        {
+          "date": "2026-08-23",
+          "game_pk": 823507,
+          "opponent": "Toronto Blue Jays",
+          "triples": 0,
+          "plate_appearances": 4,
+          "triple_game": false
+        },
         {
           "date": "2026-08-22",
           "game_pk": 823509,
@@ -1381,17 +2079,9 @@
           "triples": 0,
           "plate_appearances": 4,
           "triple_game": false
-        },
-        {
-          "date": "2026-08-04",
-          "game_pk": 823517,
-          "opponent": "St. Louis Cardinals",
-          "triples": 0,
-          "plate_appearances": 3,
-          "triple_game": false
         }
       ],
-      "rank": 10,
+      "rank": 15,
       "sample_status": "Established"
     },
     {
@@ -1399,7 +2089,7 @@
       "mlbam_id": 665019,
       "team": "Minnesota Twins",
       "team_id": 142,
-      "season_plate_appearances": 456,
+      "season_plate_appearances": 459,
       "score": 0.15619047619047619,
       "triple_games_l5": 1,
       "triple_games_l7": 1,
@@ -1408,6 +2098,14 @@
       "games_available": 15,
       "provisional": false,
       "recent_games": [
+        {
+          "date": "2026-08-23",
+          "game_pk": 823258,
+          "opponent": "San Diego Padres",
+          "triples": 0,
+          "plate_appearances": 3,
+          "triple_game": false
+        },
         {
           "date": "2026-08-22",
           "game_pk": 823261,
@@ -1519,17 +2217,9 @@
           "triples": 0,
           "plate_appearances": 4,
           "triple_game": false
-        },
-        {
-          "date": "2026-08-04",
-          "game_pk": 824084,
-          "opponent": "Kansas City Royals",
-          "triples": 0,
-          "plate_appearances": 4,
-          "triple_game": false
         }
       ],
-      "rank": 11,
+      "rank": 16,
       "sample_status": "Established"
     },
     {
@@ -1667,7 +2357,145 @@
           "triple_game": false
         }
       ],
-      "rank": 12,
+      "rank": 17,
+      "sample_status": "Established"
+    },
+    {
+      "player": "Luis Lara",
+      "mlbam_id": 800325,
+      "team": "Milwaukee Brewers",
+      "team_id": 158,
+      "season_plate_appearances": 121,
+      "score": 0.15619047619047619,
+      "triple_games_l5": 1,
+      "triple_games_l7": 1,
+      "triple_games_l15": 1,
+      "triples_l15": 1,
+      "games_available": 15,
+      "provisional": false,
+      "recent_games": [
+        {
+          "date": "2026-08-23",
+          "game_pk": 823745,
+          "opponent": "Atlanta Braves",
+          "triples": 1,
+          "plate_appearances": 2,
+          "triple_game": true
+        },
+        {
+          "date": "2026-08-22",
+          "game_pk": 823743,
+          "opponent": "Atlanta Braves",
+          "triples": 0,
+          "plate_appearances": 4,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-21",
+          "game_pk": 823746,
+          "opponent": "Atlanta Braves",
+          "triples": 0,
+          "plate_appearances": 3,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-20",
+          "game_pk": 823747,
+          "opponent": "Seattle Mariners",
+          "triples": 0,
+          "plate_appearances": 4,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-19",
+          "game_pk": 823748,
+          "opponent": "Seattle Mariners",
+          "triples": 0,
+          "plate_appearances": 4,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-18",
+          "game_pk": 823749,
+          "opponent": "Seattle Mariners",
+          "triples": 0,
+          "plate_appearances": 6,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-16",
+          "game_pk": 823912,
+          "opponent": "Los Angeles Dodgers",
+          "triples": 0,
+          "plate_appearances": 5,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-15",
+          "game_pk": 823914,
+          "opponent": "Los Angeles Dodgers",
+          "triples": 0,
+          "plate_appearances": 4,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-14",
+          "game_pk": 823913,
+          "opponent": "Los Angeles Dodgers",
+          "triples": 0,
+          "plate_appearances": 4,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-12",
+          "game_pk": 823263,
+          "opponent": "San Diego Padres",
+          "triples": 0,
+          "plate_appearances": 1,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-11",
+          "game_pk": 823264,
+          "opponent": "San Diego Padres",
+          "triples": 0,
+          "plate_appearances": 4,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-10",
+          "game_pk": 823265,
+          "opponent": "San Diego Padres",
+          "triples": 0,
+          "plate_appearances": 3,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-09",
+          "game_pk": 823751,
+          "opponent": "Minnesota Twins",
+          "triples": 0,
+          "plate_appearances": 4,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-07",
+          "game_pk": 823750,
+          "opponent": "Minnesota Twins",
+          "triples": 0,
+          "plate_appearances": 4,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-06",
+          "game_pk": 823754,
+          "opponent": "Pittsburgh Pirates",
+          "triples": 0,
+          "plate_appearances": 3,
+          "triple_game": false
+        }
+      ],
+      "rank": 18,
       "sample_status": "Established"
     },
     {
@@ -1805,7 +2633,7 @@
           "triple_game": false
         }
       ],
-      "rank": 13,
+      "rank": 19,
       "sample_status": "Established"
     },
     {
@@ -1943,7 +2771,7 @@
           "triple_game": false
         }
       ],
-      "rank": 14,
+      "rank": 20,
       "sample_status": "Established"
     },
     {
@@ -1951,7 +2779,7 @@
       "mlbam_id": 679845,
       "team": "Kansas City Royals",
       "team_id": 118,
-      "season_plate_appearances": 327,
+      "season_plate_appearances": 332,
       "score": 0.15619047619047619,
       "triple_games_l5": 1,
       "triple_games_l7": 1,
@@ -1960,6 +2788,14 @@
       "games_available": 15,
       "provisional": false,
       "recent_games": [
+        {
+          "date": "2026-08-23",
+          "game_pk": 824071,
+          "opponent": "Detroit Tigers",
+          "triples": 0,
+          "plate_appearances": 5,
+          "triple_game": false
+        },
         {
           "date": "2026-08-22",
           "game_pk": 824073,
@@ -2071,17 +2907,9 @@
           "triples": 0,
           "plate_appearances": 4,
           "triple_game": false
-        },
-        {
-          "date": "2026-08-06",
-          "game_pk": 824080,
-          "opponent": "Minnesota Twins",
-          "triples": 0,
-          "plate_appearances": 1,
-          "triple_game": false
         }
       ],
-      "rank": 15,
+      "rank": 21,
       "sample_status": "Established"
     },
     {
@@ -2089,7 +2917,7 @@
       "mlbam_id": 665833,
       "team": "Pittsburgh Pirates",
       "team_id": 134,
-      "season_plate_appearances": 299,
+      "season_plate_appearances": 300,
       "score": 0.15619047619047619,
       "triple_games_l5": 1,
       "triple_games_l7": 1,
@@ -2098,6 +2926,14 @@
       "games_available": 15,
       "provisional": false,
       "recent_games": [
+        {
+          "date": "2026-08-23",
+          "game_pk": 823909,
+          "opponent": "Los Angeles Dodgers",
+          "triples": 0,
+          "plate_appearances": 1,
+          "triple_game": false
+        },
         {
           "date": "2026-08-22",
           "game_pk": 823910,
@@ -2209,17 +3045,9 @@
           "triples": 0,
           "plate_appearances": 4,
           "triple_game": false
-        },
-        {
-          "date": "2026-05-26",
-          "game_pk": 823379,
-          "opponent": "Chicago Cubs",
-          "triples": 0,
-          "plate_appearances": 4,
-          "triple_game": false
         }
       ],
-      "rank": 16,
+      "rank": 22,
       "sample_status": "Established"
     },
     {
@@ -2357,7 +3185,7 @@
           "triple_game": false
         }
       ],
-      "rank": 17,
+      "rank": 23,
       "sample_status": "Established"
     },
     {
@@ -2365,7 +3193,7 @@
       "mlbam_id": 606192,
       "team": "Los Angeles Dodgers",
       "team_id": 119,
-      "season_plate_appearances": 366,
+      "season_plate_appearances": 370,
       "score": 0.15619047619047619,
       "triple_games_l5": 1,
       "triple_games_l7": 1,
@@ -2374,6 +3202,14 @@
       "games_available": 15,
       "provisional": false,
       "recent_games": [
+        {
+          "date": "2026-08-23",
+          "game_pk": 823909,
+          "opponent": "Pittsburgh Pirates",
+          "triples": 0,
+          "plate_appearances": 4,
+          "triple_game": false
+        },
         {
           "date": "2026-08-22",
           "game_pk": 823910,
@@ -2485,17 +3321,9 @@
           "triples": 0,
           "plate_appearances": 4,
           "triple_game": false
-        },
-        {
-          "date": "2026-08-07",
-          "game_pk": 825051,
-          "opponent": "Arizona Diamondbacks",
-          "triples": 0,
-          "plate_appearances": 4,
-          "triple_game": false
         }
       ],
-      "rank": 18,
+      "rank": 24,
       "sample_status": "Established"
     },
     {
@@ -2633,7 +3461,7 @@
           "triple_game": false
         }
       ],
-      "rank": 19,
+      "rank": 25,
       "sample_status": "Established"
     },
     {
@@ -2641,7 +3469,7 @@
       "mlbam_id": 687859,
       "team": "Colorado Rockies",
       "team_id": 115,
-      "season_plate_appearances": 379,
+      "season_plate_appearances": 381,
       "score": 0.15619047619047619,
       "triple_games_l5": 1,
       "triple_games_l7": 1,
@@ -2650,6 +3478,14 @@
       "games_available": 15,
       "provisional": false,
       "recent_games": [
+        {
+          "date": "2026-08-23",
+          "game_pk": 824315,
+          "opponent": "Cleveland Guardians",
+          "triples": 0,
+          "plate_appearances": 2,
+          "triple_game": false
+        },
         {
           "date": "2026-08-22",
           "game_pk": 824316,
@@ -2761,17 +3597,9 @@
           "triples": 0,
           "plate_appearances": 4,
           "triple_game": false
-        },
-        {
-          "date": "2026-07-21",
-          "game_pk": 824329,
-          "opponent": "Washington Nationals",
-          "triples": 0,
-          "plate_appearances": 4,
-          "triple_game": false
         }
       ],
-      "rank": 20,
+      "rank": 26,
       "sample_status": "Established"
     },
     {
@@ -2909,7 +3737,7 @@
           "triple_game": false
         }
       ],
-      "rank": 21,
+      "rank": 27,
       "sample_status": "Established"
     },
     {
@@ -2917,7 +3745,7 @@
       "mlbam_id": 677800,
       "team": "Boston Red Sox",
       "team_id": 111,
-      "season_plate_appearances": 550,
+      "season_plate_appearances": 554,
       "score": 0.15619047619047619,
       "triple_games_l5": 1,
       "triple_games_l7": 1,
@@ -2926,6 +3754,14 @@
       "games_available": 15,
       "provisional": false,
       "recent_games": [
+        {
+          "date": "2026-08-23",
+          "game_pk": 824720,
+          "opponent": "San Francisco Giants",
+          "triples": 0,
+          "plate_appearances": 4,
+          "triple_game": false
+        },
         {
           "date": "2026-08-22",
           "game_pk": 824718,
@@ -3037,17 +3873,9 @@
           "triples": 0,
           "plate_appearances": 3,
           "triple_game": false
-        },
-        {
-          "date": "2026-08-06",
-          "game_pk": 824729,
-          "opponent": "Chicago White Sox",
-          "triples": 0,
-          "plate_appearances": 7,
-          "triple_game": false
         }
       ],
-      "rank": 22,
+      "rank": 28,
       "sample_status": "Established"
     },
     {
@@ -3055,7 +3883,7 @@
       "mlbam_id": 687263,
       "team": "Los Angeles Angels",
       "team_id": 108,
-      "season_plate_appearances": 563,
+      "season_plate_appearances": 568,
       "score": 0.15619047619047619,
       "triple_games_l5": 1,
       "triple_games_l7": 1,
@@ -3064,6 +3892,14 @@
       "games_available": 15,
       "provisional": false,
       "recent_games": [
+        {
+          "date": "2026-08-23",
+          "game_pk": 822856,
+          "opponent": "Texas Rangers",
+          "triples": 0,
+          "plate_appearances": 5,
+          "triple_game": false
+        },
         {
           "date": "2026-08-22",
           "game_pk": 822858,
@@ -3175,17 +4011,9 @@
           "triples": 0,
           "plate_appearances": 4,
           "triple_game": false
-        },
-        {
-          "date": "2026-08-06",
-          "game_pk": 824804,
-          "opponent": "Baltimore Orioles",
-          "triples": 0,
-          "plate_appearances": 5,
-          "triple_game": false
         }
       ],
-      "rank": 23,
+      "rank": 29,
       "sample_status": "Established"
     },
     {
@@ -3193,15 +4021,23 @@
       "mlbam_id": 703520,
       "team": "Toronto Blue Jays",
       "team_id": 141,
-      "season_plate_appearances": 61,
+      "season_plate_appearances": 65,
       "score": 0.15619047619047619,
       "triple_games_l5": 1,
       "triple_games_l7": 1,
       "triple_games_l15": 1,
       "triples_l15": 1,
-      "games_available": 13,
+      "games_available": 14,
       "provisional": true,
       "recent_games": [
+        {
+          "date": "2026-08-23",
+          "game_pk": 823507,
+          "opponent": "New York Yankees",
+          "triples": 0,
+          "plate_appearances": 4,
+          "triple_game": false
+        },
         {
           "date": "2026-08-22",
           "game_pk": 823509,
@@ -3307,7 +4143,7 @@
           "triple_game": false
         }
       ],
-      "rank": 24,
+      "rank": 30,
       "sample_status": "Provisional"
     },
     {
@@ -3389,7 +4225,7 @@
           "triple_game": false
         }
       ],
-      "rank": 25,
+      "rank": 31,
       "sample_status": "Provisional"
     },
     {
@@ -3463,7 +4299,7 @@
           "triple_game": false
         }
       ],
-      "rank": 26,
+      "rank": 32,
       "sample_status": "Provisional"
     },
     {
@@ -3521,153 +4357,15 @@
           "triple_game": false
         }
       ],
-      "rank": 27,
+      "rank": 33,
       "sample_status": "Provisional"
-    },
-    {
-      "player": "Corbin Carroll",
-      "mlbam_id": 682998,
-      "team": "Arizona Diamondbacks",
-      "team_id": 109,
-      "season_plate_appearances": 548,
-      "score": 0.08285714285714287,
-      "triple_games_l5": 0,
-      "triple_games_l7": 1,
-      "triple_games_l15": 3,
-      "triples_l15": 3,
-      "games_available": 15,
-      "provisional": false,
-      "recent_games": [
-        {
-          "date": "2026-08-22",
-          "game_pk": 825044,
-          "opponent": "Cincinnati Reds",
-          "triples": 0,
-          "plate_appearances": 5,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-21",
-          "game_pk": 825045,
-          "opponent": "Cincinnati Reds",
-          "triples": 0,
-          "plate_appearances": 5,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-19",
-          "game_pk": 824722,
-          "opponent": "Boston Red Sox",
-          "triples": 0,
-          "plate_appearances": 5,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-18",
-          "game_pk": 824723,
-          "opponent": "Boston Red Sox",
-          "triples": 0,
-          "plate_appearances": 4,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-17",
-          "game_pk": 824725,
-          "opponent": "Boston Red Sox",
-          "triples": 0,
-          "plate_appearances": 3,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-16",
-          "game_pk": 824880,
-          "opponent": "Atlanta Braves",
-          "triples": 0,
-          "plate_appearances": 4,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-15",
-          "game_pk": 824884,
-          "opponent": "Atlanta Braves",
-          "triples": 1,
-          "plate_appearances": 5,
-          "triple_game": true
-        },
-        {
-          "date": "2026-08-14",
-          "game_pk": 824882,
-          "opponent": "Atlanta Braves",
-          "triples": 0,
-          "plate_appearances": 5,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-12",
-          "game_pk": 825047,
-          "opponent": "Colorado Rockies",
-          "triples": 1,
-          "plate_appearances": 5,
-          "triple_game": true
-        },
-        {
-          "date": "2026-08-11",
-          "game_pk": 825046,
-          "opponent": "Colorado Rockies",
-          "triples": 0,
-          "plate_appearances": 4,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-10",
-          "game_pk": 825048,
-          "opponent": "Colorado Rockies",
-          "triples": 0,
-          "plate_appearances": 4,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-09",
-          "game_pk": 825050,
-          "opponent": "Los Angeles Dodgers",
-          "triples": 0,
-          "plate_appearances": 4,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-08",
-          "game_pk": 825049,
-          "opponent": "Los Angeles Dodgers",
-          "triples": 1,
-          "plate_appearances": 5,
-          "triple_game": true
-        },
-        {
-          "date": "2026-08-07",
-          "game_pk": 825051,
-          "opponent": "Los Angeles Dodgers",
-          "triples": 0,
-          "plate_appearances": 4,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-06",
-          "game_pk": 825053,
-          "opponent": "San Diego Padres",
-          "triples": 0,
-          "plate_appearances": 4,
-          "triple_game": false
-        }
-      ],
-      "rank": 28,
-      "sample_status": "Established"
     },
     {
       "player": "Jonah Cox",
       "mlbam_id": 813841,
       "team": "San Francisco Giants",
       "team_id": 137,
-      "season_plate_appearances": 46,
+      "season_plate_appearances": 50,
       "score": 0.06952380952380953,
       "triple_games_l5": 0,
       "triple_games_l7": 1,
@@ -3676,6 +4374,14 @@
       "games_available": 15,
       "provisional": false,
       "recent_games": [
+        {
+          "date": "2026-08-23",
+          "game_pk": 824720,
+          "opponent": "Boston Red Sox",
+          "triples": 0,
+          "plate_appearances": 4,
+          "triple_game": false
+        },
         {
           "date": "2026-08-21",
           "game_pk": 824721,
@@ -3787,17 +4493,9 @@
           "triples": 1,
           "plate_appearances": 2,
           "triple_game": true
-        },
-        {
-          "date": "2026-06-08",
-          "game_pk": 823218,
-          "opponent": "Washington Nationals",
-          "triples": 0,
-          "plate_appearances": 2,
-          "triple_game": false
         }
       ],
-      "rank": 29,
+      "rank": 34,
       "sample_status": "Established"
     },
     {
@@ -3805,7 +4503,7 @@
       "mlbam_id": 695257,
       "team": "Pittsburgh Pirates",
       "team_id": 134,
-      "season_plate_appearances": 49,
+      "season_plate_appearances": 51,
       "score": 0.05619047619047619,
       "triple_games_l5": 0,
       "triple_games_l7": 1,
@@ -3814,6 +4512,14 @@
       "games_available": 15,
       "provisional": false,
       "recent_games": [
+        {
+          "date": "2026-08-23",
+          "game_pk": 823909,
+          "opponent": "Los Angeles Dodgers",
+          "triples": 0,
+          "plate_appearances": 2,
+          "triple_game": false
+        },
         {
           "date": "2026-08-16",
           "game_pk": 823344,
@@ -3925,17 +4631,9 @@
           "triples": 0,
           "plate_appearances": 1,
           "triple_game": false
-        },
-        {
-          "date": "2026-05-10",
-          "game_pk": 823221,
-          "opponent": "San Francisco Giants",
-          "triples": 0,
-          "plate_appearances": 1,
-          "triple_game": false
         }
       ],
-      "rank": 30,
+      "rank": 35,
       "sample_status": "Established"
     },
     {
@@ -3943,7 +4641,7 @@
       "mlbam_id": 691458,
       "team": "St. Louis Cardinals",
       "team_id": 138,
-      "season_plate_appearances": 189,
+      "season_plate_appearances": 193,
       "score": 0.05619047619047619,
       "triple_games_l5": 0,
       "triple_games_l7": 1,
@@ -3952,6 +4650,14 @@
       "games_available": 15,
       "provisional": false,
       "recent_games": [
+        {
+          "date": "2026-08-23",
+          "game_pk": 823421,
+          "opponent": "Philadelphia Phillies",
+          "triples": 0,
+          "plate_appearances": 4,
+          "triple_game": false
+        },
         {
           "date": "2026-08-22",
           "game_pk": 823422,
@@ -4063,17 +4769,9 @@
           "triples": 0,
           "plate_appearances": 4,
           "triple_game": false
-        },
-        {
-          "date": "2026-08-04",
-          "game_pk": 823517,
-          "opponent": "New York Yankees",
-          "triples": 0,
-          "plate_appearances": 4,
-          "triple_game": false
         }
       ],
-      "rank": 31,
+      "rank": 36,
       "sample_status": "Established"
     },
     {
@@ -4081,7 +4779,7 @@
       "mlbam_id": 666182,
       "team": "New York Mets",
       "team_id": 121,
-      "season_plate_appearances": 557,
+      "season_plate_appearances": 561,
       "score": 0.05619047619047619,
       "triple_games_l5": 0,
       "triple_games_l7": 1,
@@ -4090,6 +4788,14 @@
       "games_available": 15,
       "provisional": false,
       "recent_games": [
+        {
+          "date": "2026-08-23",
+          "game_pk": 824558,
+          "opponent": "Chicago White Sox",
+          "triples": 0,
+          "plate_appearances": 4,
+          "triple_game": false
+        },
         {
           "date": "2026-08-22",
           "game_pk": 824560,
@@ -4201,293 +4907,9 @@
           "triples": 0,
           "plate_appearances": 5,
           "triple_game": false
-        },
-        {
-          "date": "2026-08-06",
-          "game_pk": 824401,
-          "opponent": "Cleveland Guardians",
-          "triples": 0,
-          "plate_appearances": 6,
-          "triple_game": false
         }
       ],
-      "rank": 32,
-      "sample_status": "Established"
-    },
-    {
-      "player": "Cam Smith",
-      "mlbam_id": 701358,
-      "team": "Houston Astros",
-      "team_id": 117,
-      "season_plate_appearances": 464,
-      "score": 0.05619047619047619,
-      "triple_games_l5": 0,
-      "triple_games_l7": 1,
-      "triple_games_l15": 1,
-      "triples_l15": 1,
-      "games_available": 15,
-      "provisional": false,
-      "recent_games": [
-        {
-          "date": "2026-08-22",
-          "game_pk": 824151,
-          "opponent": "Athletics",
-          "triples": 0,
-          "plate_appearances": 4,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-21",
-          "game_pk": 824152,
-          "opponent": "Athletics",
-          "triples": 0,
-          "plate_appearances": 4,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-20",
-          "game_pk": 824153,
-          "opponent": "Los Angeles Angels",
-          "triples": 0,
-          "plate_appearances": 4,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-19",
-          "game_pk": 824155,
-          "opponent": "Los Angeles Angels",
-          "triples": 0,
-          "plate_appearances": 3,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-18",
-          "game_pk": 824154,
-          "opponent": "Los Angeles Angels",
-          "triples": 0,
-          "plate_appearances": 3,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-15",
-          "game_pk": 824157,
-          "opponent": "Seattle Mariners",
-          "triples": 0,
-          "plate_appearances": 4,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-14",
-          "game_pk": 824159,
-          "opponent": "Seattle Mariners",
-          "triples": 1,
-          "plate_appearances": 4,
-          "triple_game": true
-        },
-        {
-          "date": "2026-08-12",
-          "game_pk": 823187,
-          "opponent": "San Francisco Giants",
-          "triples": 0,
-          "plate_appearances": 3,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-11",
-          "game_pk": 823186,
-          "opponent": "San Francisco Giants",
-          "triples": 0,
-          "plate_appearances": 4,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-10",
-          "game_pk": 823189,
-          "opponent": "San Francisco Giants",
-          "triples": 0,
-          "plate_appearances": 4,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-08",
-          "game_pk": 823267,
-          "opponent": "San Diego Padres",
-          "triples": 0,
-          "plate_appearances": 4,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-07",
-          "game_pk": 823266,
-          "opponent": "San Diego Padres",
-          "triples": 0,
-          "plate_appearances": 4,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-04",
-          "game_pk": 824161,
-          "opponent": "Toronto Blue Jays",
-          "triples": 0,
-          "plate_appearances": 4,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-03",
-          "game_pk": 824160,
-          "opponent": "Toronto Blue Jays",
-          "triples": 0,
-          "plate_appearances": 4,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-02",
-          "game_pk": 824163,
-          "opponent": "Texas Rangers",
-          "triples": 0,
-          "plate_appearances": 5,
-          "triple_game": false
-        }
-      ],
-      "rank": 33,
-      "sample_status": "Established"
-    },
-    {
-      "player": "Cedric Mullins",
-      "mlbam_id": 656775,
-      "team": "Tampa Bay Rays",
-      "team_id": 139,
-      "season_plate_appearances": 426,
-      "score": 0.05619047619047619,
-      "triple_games_l5": 0,
-      "triple_games_l7": 1,
-      "triple_games_l15": 1,
-      "triples_l15": 1,
-      "games_available": 15,
-      "provisional": false,
-      "recent_games": [
-        {
-          "date": "2026-08-22",
-          "game_pk": 824798,
-          "opponent": "Baltimore Orioles",
-          "triples": 0,
-          "plate_appearances": 4,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-21",
-          "game_pk": 824800,
-          "opponent": "Baltimore Orioles",
-          "triples": 0,
-          "plate_appearances": 1,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-20",
-          "game_pk": 822934,
-          "opponent": "Toronto Blue Jays",
-          "triples": 0,
-          "plate_appearances": 4,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-19",
-          "game_pk": 822937,
-          "opponent": "Toronto Blue Jays",
-          "triples": 0,
-          "plate_appearances": 4,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-18",
-          "game_pk": 822938,
-          "opponent": "Toronto Blue Jays",
-          "triples": 0,
-          "plate_appearances": 4,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-17",
-          "game_pk": 822939,
-          "opponent": "Baltimore Orioles",
-          "triples": 0,
-          "plate_appearances": 4,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-15",
-          "game_pk": 822941,
-          "opponent": "Baltimore Orioles",
-          "triples": 1,
-          "plate_appearances": 5,
-          "triple_game": true
-        },
-        {
-          "date": "2026-08-14",
-          "game_pk": 822942,
-          "opponent": "Baltimore Orioles",
-          "triples": 0,
-          "plate_appearances": 2,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-12",
-          "game_pk": 824967,
-          "opponent": "Athletics",
-          "triples": 0,
-          "plate_appearances": 5,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-11",
-          "game_pk": 824970,
-          "opponent": "Athletics",
-          "triples": 0,
-          "plate_appearances": 5,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-09",
-          "game_pk": 823104,
-          "opponent": "Seattle Mariners",
-          "triples": 0,
-          "plate_appearances": 5,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-08",
-          "game_pk": 823102,
-          "opponent": "Seattle Mariners",
-          "triples": 0,
-          "plate_appearances": 3,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-05",
-          "game_pk": 824322,
-          "opponent": "Colorado Rockies",
-          "triples": 0,
-          "plate_appearances": 4,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-04",
-          "game_pk": 824321,
-          "opponent": "Colorado Rockies",
-          "triples": 0,
-          "plate_appearances": 2,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-03",
-          "game_pk": 824324,
-          "opponent": "Colorado Rockies",
-          "triples": 0,
-          "plate_appearances": 5,
-          "triple_game": false
-        }
-      ],
-      "rank": 34,
+      "rank": 37,
       "sample_status": "Established"
     },
     {
@@ -4625,7 +5047,7 @@
           "triple_game": false
         }
       ],
-      "rank": 35,
+      "rank": 38,
       "sample_status": "Established"
     },
     {
@@ -4763,145 +5185,7 @@
           "triple_game": false
         }
       ],
-      "rank": 36,
-      "sample_status": "Established"
-    },
-    {
-      "player": "Jose Altuve",
-      "mlbam_id": 514888,
-      "team": "Houston Astros",
-      "team_id": 117,
-      "season_plate_appearances": 440,
-      "score": 0.05619047619047619,
-      "triple_games_l5": 0,
-      "triple_games_l7": 1,
-      "triple_games_l15": 1,
-      "triples_l15": 1,
-      "games_available": 15,
-      "provisional": false,
-      "recent_games": [
-        {
-          "date": "2026-08-22",
-          "game_pk": 824151,
-          "opponent": "Athletics",
-          "triples": 0,
-          "plate_appearances": 4,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-21",
-          "game_pk": 824152,
-          "opponent": "Athletics",
-          "triples": 0,
-          "plate_appearances": 4,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-20",
-          "game_pk": 824153,
-          "opponent": "Los Angeles Angels",
-          "triples": 0,
-          "plate_appearances": 2,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-19",
-          "game_pk": 824155,
-          "opponent": "Los Angeles Angels",
-          "triples": 0,
-          "plate_appearances": 4,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-18",
-          "game_pk": 824154,
-          "opponent": "Los Angeles Angels",
-          "triples": 0,
-          "plate_appearances": 4,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-16",
-          "game_pk": 824156,
-          "opponent": "Seattle Mariners",
-          "triples": 0,
-          "plate_appearances": 4,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-15",
-          "game_pk": 824157,
-          "opponent": "Seattle Mariners",
-          "triples": 1,
-          "plate_appearances": 4,
-          "triple_game": true
-        },
-        {
-          "date": "2026-08-14",
-          "game_pk": 824159,
-          "opponent": "Seattle Mariners",
-          "triples": 0,
-          "plate_appearances": 5,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-11",
-          "game_pk": 823186,
-          "opponent": "San Francisco Giants",
-          "triples": 0,
-          "plate_appearances": 1,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-10",
-          "game_pk": 823189,
-          "opponent": "San Francisco Giants",
-          "triples": 0,
-          "plate_appearances": 5,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-09",
-          "game_pk": 823268,
-          "opponent": "San Diego Padres",
-          "triples": 0,
-          "plate_appearances": 3,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-08",
-          "game_pk": 823267,
-          "opponent": "San Diego Padres",
-          "triples": 0,
-          "plate_appearances": 4,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-07",
-          "game_pk": 823266,
-          "opponent": "San Diego Padres",
-          "triples": 0,
-          "plate_appearances": 5,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-05",
-          "game_pk": 824158,
-          "opponent": "Toronto Blue Jays",
-          "triples": 0,
-          "plate_appearances": 5,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-04",
-          "game_pk": 824161,
-          "opponent": "Toronto Blue Jays",
-          "triples": 0,
-          "plate_appearances": 4,
-          "triple_game": false
-        }
-      ],
-      "rank": 37,
+      "rank": 39,
       "sample_status": "Established"
     },
     {
@@ -5039,145 +5323,7 @@
           "triple_game": false
         }
       ],
-      "rank": 38,
-      "sample_status": "Established"
-    },
-    {
-      "player": "Shohei Ohtani",
-      "mlbam_id": 660271,
-      "team": "Los Angeles Dodgers",
-      "team_id": 119,
-      "season_plate_appearances": 550,
-      "score": 0.05619047619047619,
-      "triple_games_l5": 0,
-      "triple_games_l7": 1,
-      "triple_games_l15": 1,
-      "triples_l15": 1,
-      "games_available": 15,
-      "provisional": false,
-      "recent_games": [
-        {
-          "date": "2026-08-22",
-          "game_pk": 823910,
-          "opponent": "Pittsburgh Pirates",
-          "triples": 0,
-          "plate_appearances": 5,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-21",
-          "game_pk": 823911,
-          "opponent": "Pittsburgh Pirates",
-          "triples": 0,
-          "plate_appearances": 5,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-19",
-          "game_pk": 824318,
-          "opponent": "Colorado Rockies",
-          "triples": 0,
-          "plate_appearances": 5,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-18",
-          "game_pk": 824319,
-          "opponent": "Colorado Rockies",
-          "triples": 0,
-          "plate_appearances": 5,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-17",
-          "game_pk": 824320,
-          "opponent": "Colorado Rockies",
-          "triples": 0,
-          "plate_appearances": 5,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-16",
-          "game_pk": 823912,
-          "opponent": "Milwaukee Brewers",
-          "triples": 0,
-          "plate_appearances": 4,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-15",
-          "game_pk": 823914,
-          "opponent": "Milwaukee Brewers",
-          "triples": 1,
-          "plate_appearances": 4,
-          "triple_game": true
-        },
-        {
-          "date": "2026-08-14",
-          "game_pk": 823913,
-          "opponent": "Milwaukee Brewers",
-          "triples": 0,
-          "plate_appearances": 4,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-13",
-          "game_pk": 823915,
-          "opponent": "Milwaukee Brewers",
-          "triples": 0,
-          "plate_appearances": 4,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-12",
-          "game_pk": 823916,
-          "opponent": "Kansas City Royals",
-          "triples": 0,
-          "plate_appearances": 4,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-11",
-          "game_pk": 823917,
-          "opponent": "Kansas City Royals",
-          "triples": 0,
-          "plate_appearances": 5,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-10",
-          "game_pk": 823918,
-          "opponent": "Kansas City Royals",
-          "triples": 0,
-          "plate_appearances": 4,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-09",
-          "game_pk": 825050,
-          "opponent": "Arizona Diamondbacks",
-          "triples": 0,
-          "plate_appearances": 4,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-08",
-          "game_pk": 825049,
-          "opponent": "Arizona Diamondbacks",
-          "triples": 0,
-          "plate_appearances": 5,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-07",
-          "game_pk": 825051,
-          "opponent": "Arizona Diamondbacks",
-          "triples": 0,
-          "plate_appearances": 4,
-          "triple_game": false
-        }
-      ],
-      "rank": 39,
+      "rank": 40,
       "sample_status": "Established"
     },
     {
@@ -5315,7 +5461,7 @@
           "triple_game": false
         }
       ],
-      "rank": 40,
+      "rank": 41,
       "sample_status": "Established"
     },
     {
@@ -5453,7 +5599,7 @@
           "triple_game": false
         }
       ],
-      "rank": 41,
+      "rank": 42,
       "sample_status": "Established"
     },
     {
@@ -5567,7 +5713,7 @@
           "triple_game": false
         }
       ],
-      "rank": 42,
+      "rank": 43,
       "sample_status": "Provisional"
     },
     {
@@ -5575,15 +5721,23 @@
       "mlbam_id": 814430,
       "team": "Detroit Tigers",
       "team_id": 116,
-      "season_plate_appearances": 17,
+      "season_plate_appearances": 20,
       "score": 0.05619047619047619,
       "triple_games_l5": 0,
       "triple_games_l7": 1,
       "triple_games_l15": 1,
       "triples_l15": 1,
-      "games_available": 6,
+      "games_available": 7,
       "provisional": true,
       "recent_games": [
+        {
+          "date": "2026-08-23",
+          "game_pk": 824071,
+          "opponent": "Kansas City Royals",
+          "triples": 0,
+          "plate_appearances": 3,
+          "triple_game": false
+        },
         {
           "date": "2026-08-22",
           "game_pk": 824073,
@@ -5633,7 +5787,7 @@
           "triple_game": true
         }
       ],
-      "rank": 43,
+      "rank": 44,
       "sample_status": "Provisional"
     },
     {
@@ -5641,7 +5795,7 @@
       "mlbam_id": 672695,
       "team": "Arizona Diamondbacks",
       "team_id": 109,
-      "season_plate_appearances": 543,
+      "season_plate_appearances": 547,
       "score": 0.02666666666666667,
       "triple_games_l5": 0,
       "triple_games_l7": 0,
@@ -5650,6 +5804,14 @@
       "games_available": 15,
       "provisional": false,
       "recent_games": [
+        {
+          "date": "2026-08-23",
+          "game_pk": 825043,
+          "opponent": "Cincinnati Reds",
+          "triples": 0,
+          "plate_appearances": 4,
+          "triple_game": false
+        },
         {
           "date": "2026-08-22",
           "game_pk": 825044,
@@ -5761,152 +5923,6 @@
           "triples": 0,
           "plate_appearances": 4,
           "triple_game": false
-        },
-        {
-          "date": "2026-08-05",
-          "game_pk": 825052,
-          "opponent": "San Diego Padres",
-          "triples": 0,
-          "plate_appearances": 5,
-          "triple_game": false
-        }
-      ],
-      "rank": 44,
-      "sample_status": "Established"
-    },
-    {
-      "player": "Jared Young",
-      "mlbam_id": 676724,
-      "team": "New York Mets",
-      "team_id": 121,
-      "season_plate_appearances": 261,
-      "score": 0.02666666666666667,
-      "triple_games_l5": 0,
-      "triple_games_l7": 0,
-      "triple_games_l15": 2,
-      "triples_l15": 2,
-      "games_available": 15,
-      "provisional": false,
-      "recent_games": [
-        {
-          "date": "2026-08-22",
-          "game_pk": 824560,
-          "opponent": "Chicago White Sox",
-          "triples": 0,
-          "plate_appearances": 5,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-21",
-          "game_pk": 824559,
-          "opponent": "Chicago White Sox",
-          "triples": 0,
-          "plate_appearances": 4,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-19",
-          "game_pk": 823587,
-          "opponent": "San Diego Padres",
-          "triples": 0,
-          "plate_appearances": 4,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-18",
-          "game_pk": 823586,
-          "opponent": "San Diego Padres",
-          "triples": 0,
-          "plate_appearances": 1,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-17",
-          "game_pk": 823589,
-          "opponent": "San Diego Padres",
-          "triples": 0,
-          "plate_appearances": 3,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-16",
-          "game_pk": 823590,
-          "opponent": "Washington Nationals",
-          "triples": 0,
-          "plate_appearances": 4,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-15",
-          "game_pk": 823588,
-          "opponent": "Washington Nationals",
-          "triples": 0,
-          "plate_appearances": 4,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-14",
-          "game_pk": 823591,
-          "opponent": "Washington Nationals",
-          "triples": 0,
-          "plate_appearances": 4,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-12",
-          "game_pk": 824883,
-          "opponent": "Atlanta Braves",
-          "triples": 0,
-          "plate_appearances": 4,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-10",
-          "game_pk": 824887,
-          "opponent": "Atlanta Braves",
-          "triples": 0,
-          "plate_appearances": 5,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-09",
-          "game_pk": 823345,
-          "opponent": "Pittsburgh Pirates",
-          "triples": 1,
-          "plate_appearances": 5,
-          "triple_game": true
-        },
-        {
-          "date": "2026-08-08",
-          "game_pk": 823348,
-          "opponent": "Pittsburgh Pirates",
-          "triples": 0,
-          "plate_appearances": 3,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-07",
-          "game_pk": 823349,
-          "opponent": "Pittsburgh Pirates",
-          "triples": 0,
-          "plate_appearances": 4,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-06",
-          "game_pk": 824401,
-          "opponent": "Cleveland Guardians",
-          "triples": 0,
-          "plate_appearances": 3,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-05",
-          "game_pk": 824402,
-          "opponent": "Cleveland Guardians",
-          "triples": 1,
-          "plate_appearances": 5,
-          "triple_game": true
         }
       ],
       "rank": 45,
@@ -6055,7 +6071,7 @@
       "mlbam_id": 703601,
       "team": "Detroit Tigers",
       "team_id": 116,
-      "season_plate_appearances": 82,
+      "season_plate_appearances": 86,
       "score": 0.02666666666666667,
       "triple_games_l5": 0,
       "triple_games_l7": 0,
@@ -6064,6 +6080,14 @@
       "games_available": 15,
       "provisional": false,
       "recent_games": [
+        {
+          "date": "2026-08-23",
+          "game_pk": 824071,
+          "opponent": "Kansas City Royals",
+          "triples": 0,
+          "plate_appearances": 4,
+          "triple_game": false
+        },
         {
           "date": "2026-08-22",
           "game_pk": 824073,
@@ -6174,14 +6198,6 @@
           "opponent": "San Francisco Giants",
           "triples": 0,
           "plate_appearances": 4,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-06",
-          "game_pk": 823105,
-          "opponent": "Seattle Mariners",
-          "triples": 0,
-          "plate_appearances": 5,
           "triple_game": false
         }
       ],
@@ -6469,7 +6485,7 @@
       "mlbam_id": 695731,
       "team": "Chicago White Sox",
       "team_id": 145,
-      "season_plate_appearances": 252,
+      "season_plate_appearances": 256,
       "score": 0.013333333333333334,
       "triple_games_l5": 0,
       "triple_games_l7": 0,
@@ -6478,6 +6494,14 @@
       "games_available": 15,
       "provisional": false,
       "recent_games": [
+        {
+          "date": "2026-08-23",
+          "game_pk": 824558,
+          "opponent": "New York Mets",
+          "triples": 0,
+          "plate_appearances": 4,
+          "triple_game": false
+        },
         {
           "date": "2026-08-22",
           "game_pk": 824560,
@@ -6588,14 +6612,6 @@
           "opponent": "Cleveland Guardians",
           "triples": 0,
           "plate_appearances": 4,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-06",
-          "game_pk": 824729,
-          "opponent": "Boston Red Sox",
-          "triples": 0,
-          "plate_appearances": 6,
           "triple_game": false
         }
       ],
@@ -6741,11 +6757,11 @@
       "sample_status": "Established"
     },
     {
-      "player": "Carson Benge",
-      "mlbam_id": 701807,
-      "team": "New York Mets",
-      "team_id": 121,
-      "season_plate_appearances": 512,
+      "player": "Cam Smith",
+      "mlbam_id": 701358,
+      "team": "Houston Astros",
+      "team_id": 117,
+      "season_plate_appearances": 467,
       "score": 0.013333333333333334,
       "triple_games_l5": 0,
       "triple_games_l7": 0,
@@ -6754,6 +6770,152 @@
       "games_available": 15,
       "provisional": false,
       "recent_games": [
+        {
+          "date": "2026-08-23",
+          "game_pk": 824150,
+          "opponent": "Athletics",
+          "triples": 0,
+          "plate_appearances": 3,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-22",
+          "game_pk": 824151,
+          "opponent": "Athletics",
+          "triples": 0,
+          "plate_appearances": 4,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-21",
+          "game_pk": 824152,
+          "opponent": "Athletics",
+          "triples": 0,
+          "plate_appearances": 4,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-20",
+          "game_pk": 824153,
+          "opponent": "Los Angeles Angels",
+          "triples": 0,
+          "plate_appearances": 4,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-19",
+          "game_pk": 824155,
+          "opponent": "Los Angeles Angels",
+          "triples": 0,
+          "plate_appearances": 3,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-18",
+          "game_pk": 824154,
+          "opponent": "Los Angeles Angels",
+          "triples": 0,
+          "plate_appearances": 3,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-15",
+          "game_pk": 824157,
+          "opponent": "Seattle Mariners",
+          "triples": 0,
+          "plate_appearances": 4,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-14",
+          "game_pk": 824159,
+          "opponent": "Seattle Mariners",
+          "triples": 1,
+          "plate_appearances": 4,
+          "triple_game": true
+        },
+        {
+          "date": "2026-08-12",
+          "game_pk": 823187,
+          "opponent": "San Francisco Giants",
+          "triples": 0,
+          "plate_appearances": 3,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-11",
+          "game_pk": 823186,
+          "opponent": "San Francisco Giants",
+          "triples": 0,
+          "plate_appearances": 4,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-10",
+          "game_pk": 823189,
+          "opponent": "San Francisco Giants",
+          "triples": 0,
+          "plate_appearances": 4,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-08",
+          "game_pk": 823267,
+          "opponent": "San Diego Padres",
+          "triples": 0,
+          "plate_appearances": 4,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-07",
+          "game_pk": 823266,
+          "opponent": "San Diego Padres",
+          "triples": 0,
+          "plate_appearances": 4,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-04",
+          "game_pk": 824161,
+          "opponent": "Toronto Blue Jays",
+          "triples": 0,
+          "plate_appearances": 4,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-03",
+          "game_pk": 824160,
+          "opponent": "Toronto Blue Jays",
+          "triples": 0,
+          "plate_appearances": 4,
+          "triple_game": false
+        }
+      ],
+      "rank": 52,
+      "sample_status": "Established"
+    },
+    {
+      "player": "Carson Benge",
+      "mlbam_id": 701807,
+      "team": "New York Mets",
+      "team_id": 121,
+      "season_plate_appearances": 516,
+      "score": 0.013333333333333334,
+      "triple_games_l5": 0,
+      "triple_games_l7": 0,
+      "triple_games_l15": 1,
+      "triples_l15": 1,
+      "games_available": 15,
+      "provisional": false,
+      "recent_games": [
+        {
+          "date": "2026-08-23",
+          "game_pk": 824558,
+          "opponent": "Chicago White Sox",
+          "triples": 0,
+          "plate_appearances": 4,
+          "triple_game": false
+        },
         {
           "date": "2026-08-22",
           "game_pk": 824560,
@@ -6865,25 +7027,17 @@
           "triples": 1,
           "plate_appearances": 6,
           "triple_game": true
-        },
-        {
-          "date": "2026-08-05",
-          "game_pk": 824402,
-          "opponent": "Cleveland Guardians",
-          "triples": 0,
-          "plate_appearances": 5,
-          "triple_game": false
         }
       ],
-      "rank": 52,
+      "rank": 53,
       "sample_status": "Established"
     },
     {
-      "player": "Coby Mayo",
-      "mlbam_id": 691723,
-      "team": "Baltimore Orioles",
-      "team_id": 110,
-      "season_plate_appearances": 337,
+      "player": "Cedric Mullins",
+      "mlbam_id": 656775,
+      "team": "Tampa Bay Rays",
+      "team_id": 139,
+      "season_plate_appearances": 430,
       "score": 0.013333333333333334,
       "triple_games_l5": 0,
       "triple_games_l7": 0,
@@ -6892,6 +7046,152 @@
       "games_available": 15,
       "provisional": false,
       "recent_games": [
+        {
+          "date": "2026-08-23",
+          "game_pk": 824799,
+          "opponent": "Baltimore Orioles",
+          "triples": 0,
+          "plate_appearances": 4,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-22",
+          "game_pk": 824798,
+          "opponent": "Baltimore Orioles",
+          "triples": 0,
+          "plate_appearances": 4,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-21",
+          "game_pk": 824800,
+          "opponent": "Baltimore Orioles",
+          "triples": 0,
+          "plate_appearances": 1,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-20",
+          "game_pk": 822934,
+          "opponent": "Toronto Blue Jays",
+          "triples": 0,
+          "plate_appearances": 4,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-19",
+          "game_pk": 822937,
+          "opponent": "Toronto Blue Jays",
+          "triples": 0,
+          "plate_appearances": 4,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-18",
+          "game_pk": 822938,
+          "opponent": "Toronto Blue Jays",
+          "triples": 0,
+          "plate_appearances": 4,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-17",
+          "game_pk": 822939,
+          "opponent": "Baltimore Orioles",
+          "triples": 0,
+          "plate_appearances": 4,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-15",
+          "game_pk": 822941,
+          "opponent": "Baltimore Orioles",
+          "triples": 1,
+          "plate_appearances": 5,
+          "triple_game": true
+        },
+        {
+          "date": "2026-08-14",
+          "game_pk": 822942,
+          "opponent": "Baltimore Orioles",
+          "triples": 0,
+          "plate_appearances": 2,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-12",
+          "game_pk": 824967,
+          "opponent": "Athletics",
+          "triples": 0,
+          "plate_appearances": 5,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-11",
+          "game_pk": 824970,
+          "opponent": "Athletics",
+          "triples": 0,
+          "plate_appearances": 5,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-09",
+          "game_pk": 823104,
+          "opponent": "Seattle Mariners",
+          "triples": 0,
+          "plate_appearances": 5,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-08",
+          "game_pk": 823102,
+          "opponent": "Seattle Mariners",
+          "triples": 0,
+          "plate_appearances": 3,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-05",
+          "game_pk": 824322,
+          "opponent": "Colorado Rockies",
+          "triples": 0,
+          "plate_appearances": 4,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-04",
+          "game_pk": 824321,
+          "opponent": "Colorado Rockies",
+          "triples": 0,
+          "plate_appearances": 2,
+          "triple_game": false
+        }
+      ],
+      "rank": 54,
+      "sample_status": "Established"
+    },
+    {
+      "player": "Coby Mayo",
+      "mlbam_id": 691723,
+      "team": "Baltimore Orioles",
+      "team_id": 110,
+      "season_plate_appearances": 340,
+      "score": 0.013333333333333334,
+      "triple_games_l5": 0,
+      "triple_games_l7": 0,
+      "triple_games_l15": 1,
+      "triples_l15": 1,
+      "games_available": 15,
+      "provisional": false,
+      "recent_games": [
+        {
+          "date": "2026-08-23",
+          "game_pk": 824799,
+          "opponent": "Tampa Bay Rays",
+          "triples": 0,
+          "plate_appearances": 3,
+          "triple_game": false
+        },
         {
           "date": "2026-08-22",
           "game_pk": 824798,
@@ -7003,17 +7303,9 @@
           "triples": 0,
           "plate_appearances": 1,
           "triple_game": false
-        },
-        {
-          "date": "2026-08-05",
-          "game_pk": 824806,
-          "opponent": "Los Angeles Angels",
-          "triples": 0,
-          "plate_appearances": 4,
-          "triple_game": false
         }
       ],
-      "rank": 53,
+      "rank": 55,
       "sample_status": "Established"
     },
     {
@@ -7021,7 +7313,7 @@
       "mlbam_id": 687551,
       "team": "San Francisco Giants",
       "team_id": 137,
-      "season_plate_appearances": 313,
+      "season_plate_appearances": 315,
       "score": 0.013333333333333334,
       "triple_games_l5": 0,
       "triple_games_l7": 0,
@@ -7030,6 +7322,14 @@
       "games_available": 15,
       "provisional": false,
       "recent_games": [
+        {
+          "date": "2026-08-23",
+          "game_pk": 824720,
+          "opponent": "Boston Red Sox",
+          "triples": 0,
+          "plate_appearances": 2,
+          "triple_game": false
+        },
         {
           "date": "2026-08-22",
           "game_pk": 824718,
@@ -7141,17 +7441,9 @@
           "triples": 0,
           "plate_appearances": 1,
           "triple_game": false
-        },
-        {
-          "date": "2026-08-04",
-          "game_pk": 822865,
-          "opponent": "Texas Rangers",
-          "triples": 0,
-          "plate_appearances": 2,
-          "triple_game": false
         }
       ],
-      "rank": 54,
+      "rank": 56,
       "sample_status": "Established"
     },
     {
@@ -7289,7 +7581,7 @@
           "triple_game": true
         }
       ],
-      "rank": 55,
+      "rank": 57,
       "sample_status": "Established"
     },
     {
@@ -7297,7 +7589,7 @@
       "mlbam_id": 672515,
       "team": "Arizona Diamondbacks",
       "team_id": 109,
-      "season_plate_appearances": 423,
+      "season_plate_appearances": 427,
       "score": 0.013333333333333334,
       "triple_games_l5": 0,
       "triple_games_l7": 0,
@@ -7306,6 +7598,14 @@
       "games_available": 15,
       "provisional": false,
       "recent_games": [
+        {
+          "date": "2026-08-23",
+          "game_pk": 825043,
+          "opponent": "Cincinnati Reds",
+          "triples": 0,
+          "plate_appearances": 4,
+          "triple_game": false
+        },
         {
           "date": "2026-08-22",
           "game_pk": 825044,
@@ -7417,155 +7717,9 @@
           "triples": 0,
           "plate_appearances": 4,
           "triple_game": false
-        },
-        {
-          "date": "2026-08-06",
-          "game_pk": 825053,
-          "opponent": "San Diego Padres",
-          "triples": 0,
-          "plate_appearances": 4,
-          "triple_game": false
         }
       ],
-      "rank": 56,
-      "sample_status": "Established"
-    },
-    {
-      "player": "Ildemaro Vargas",
-      "mlbam_id": 545121,
-      "team": "Arizona Diamondbacks",
-      "team_id": 109,
-      "season_plate_appearances": 400,
-      "score": 0.013333333333333334,
-      "triple_games_l5": 0,
-      "triple_games_l7": 0,
-      "triple_games_l15": 1,
-      "triples_l15": 1,
-      "games_available": 15,
-      "provisional": false,
-      "recent_games": [
-        {
-          "date": "2026-08-22",
-          "game_pk": 825044,
-          "opponent": "Cincinnati Reds",
-          "triples": 0,
-          "plate_appearances": 4,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-21",
-          "game_pk": 825045,
-          "opponent": "Cincinnati Reds",
-          "triples": 0,
-          "plate_appearances": 5,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-19",
-          "game_pk": 824722,
-          "opponent": "Boston Red Sox",
-          "triples": 0,
-          "plate_appearances": 5,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-18",
-          "game_pk": 824723,
-          "opponent": "Boston Red Sox",
-          "triples": 0,
-          "plate_appearances": 4,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-17",
-          "game_pk": 824725,
-          "opponent": "Boston Red Sox",
-          "triples": 0,
-          "plate_appearances": 4,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-16",
-          "game_pk": 824880,
-          "opponent": "Atlanta Braves",
-          "triples": 0,
-          "plate_appearances": 2,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-15",
-          "game_pk": 824884,
-          "opponent": "Atlanta Braves",
-          "triples": 0,
-          "plate_appearances": 5,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-14",
-          "game_pk": 824882,
-          "opponent": "Atlanta Braves",
-          "triples": 0,
-          "plate_appearances": 4,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-12",
-          "game_pk": 825047,
-          "opponent": "Colorado Rockies",
-          "triples": 0,
-          "plate_appearances": 2,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-11",
-          "game_pk": 825046,
-          "opponent": "Colorado Rockies",
-          "triples": 0,
-          "plate_appearances": 3,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-10",
-          "game_pk": 825048,
-          "opponent": "Colorado Rockies",
-          "triples": 0,
-          "plate_appearances": 2,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-09",
-          "game_pk": 825050,
-          "opponent": "Los Angeles Dodgers",
-          "triples": 0,
-          "plate_appearances": 4,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-08",
-          "game_pk": 825049,
-          "opponent": "Los Angeles Dodgers",
-          "triples": 0,
-          "plate_appearances": 1,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-07",
-          "game_pk": 825051,
-          "opponent": "Los Angeles Dodgers",
-          "triples": 0,
-          "plate_appearances": 1,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-05",
-          "game_pk": 825052,
-          "opponent": "San Diego Padres",
-          "triples": 1,
-          "plate_appearances": 5,
-          "triple_game": true
-        }
-      ],
-      "rank": 57,
+      "rank": 58,
       "sample_status": "Established"
     },
     {
@@ -7573,7 +7727,7 @@
       "mlbam_id": 701538,
       "team": "San Diego Padres",
       "team_id": 135,
-      "season_plate_appearances": 531,
+      "season_plate_appearances": 536,
       "score": 0.013333333333333334,
       "triple_games_l5": 0,
       "triple_games_l7": 0,
@@ -7582,6 +7736,14 @@
       "games_available": 15,
       "provisional": false,
       "recent_games": [
+        {
+          "date": "2026-08-23",
+          "game_pk": 823258,
+          "opponent": "Minnesota Twins",
+          "triples": 0,
+          "plate_appearances": 5,
+          "triple_game": false
+        },
         {
           "date": "2026-08-22",
           "game_pk": 823261,
@@ -7693,17 +7855,9 @@
           "triples": 1,
           "plate_appearances": 4,
           "triple_game": true
-        },
-        {
-          "date": "2026-08-06",
-          "game_pk": 825053,
-          "opponent": "Arizona Diamondbacks",
-          "triples": 0,
-          "plate_appearances": 5,
-          "triple_game": false
         }
       ],
-      "rank": 58,
+      "rank": 59,
       "sample_status": "Established"
     },
     {
@@ -7711,7 +7865,7 @@
       "mlbam_id": 696285,
       "team": "Washington Nationals",
       "team_id": 120,
-      "season_plate_appearances": 389,
+      "season_plate_appearances": 393,
       "score": 0.013333333333333334,
       "triple_games_l5": 0,
       "triple_games_l7": 0,
@@ -7720,6 +7874,14 @@
       "games_available": 15,
       "provisional": false,
       "recent_games": [
+        {
+          "date": "2026-08-23",
+          "game_pk": 823827,
+          "opponent": "Miami Marlins",
+          "triples": 0,
+          "plate_appearances": 4,
+          "triple_game": false
+        },
         {
           "date": "2026-08-22",
           "game_pk": 823831,
@@ -7831,17 +7993,9 @@
           "triples": 0,
           "plate_appearances": 5,
           "triple_game": false
-        },
-        {
-          "date": "2026-08-04",
-          "game_pk": 823432,
-          "opponent": "Philadelphia Phillies",
-          "triples": 0,
-          "plate_appearances": 3,
-          "triple_game": false
         }
       ],
-      "rank": 59,
+      "rank": 60,
       "sample_status": "Established"
     },
     {
@@ -7979,7 +8133,7 @@
           "triple_game": false
         }
       ],
-      "rank": 60,
+      "rank": 61,
       "sample_status": "Established"
     },
     {
@@ -8117,15 +8271,15 @@
           "triple_game": true
         }
       ],
-      "rank": 61,
+      "rank": 62,
       "sample_status": "Established"
     },
     {
-      "player": "Joey Ortiz",
-      "mlbam_id": 687401,
-      "team": "Milwaukee Brewers",
-      "team_id": 158,
-      "season_plate_appearances": 323,
+      "player": "Jared Young",
+      "mlbam_id": 676724,
+      "team": "New York Mets",
+      "team_id": 121,
+      "season_plate_appearances": 264,
       "score": 0.013333333333333334,
       "triple_games_l5": 0,
       "triple_games_l7": 0,
@@ -8135,127 +8289,127 @@
       "provisional": false,
       "recent_games": [
         {
-          "date": "2026-08-22",
-          "game_pk": 823743,
-          "opponent": "Atlanta Braves",
-          "triples": 0,
-          "plate_appearances": 4,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-21",
-          "game_pk": 823746,
-          "opponent": "Atlanta Braves",
+          "date": "2026-08-23",
+          "game_pk": 824558,
+          "opponent": "Chicago White Sox",
           "triples": 0,
           "plate_appearances": 3,
           "triple_game": false
         },
         {
-          "date": "2026-08-20",
-          "game_pk": 823747,
-          "opponent": "Seattle Mariners",
+          "date": "2026-08-22",
+          "game_pk": 824560,
+          "opponent": "Chicago White Sox",
+          "triples": 0,
+          "plate_appearances": 5,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-21",
+          "game_pk": 824559,
+          "opponent": "Chicago White Sox",
           "triples": 0,
           "plate_appearances": 4,
           "triple_game": false
         },
         {
           "date": "2026-08-19",
-          "game_pk": 823748,
-          "opponent": "Seattle Mariners",
+          "game_pk": 823587,
+          "opponent": "San Diego Padres",
           "triples": 0,
           "plate_appearances": 4,
           "triple_game": false
         },
         {
           "date": "2026-08-18",
-          "game_pk": 823749,
-          "opponent": "Seattle Mariners",
+          "game_pk": 823586,
+          "opponent": "San Diego Padres",
           "triples": 0,
-          "plate_appearances": 5,
+          "plate_appearances": 1,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-17",
+          "game_pk": 823589,
+          "opponent": "San Diego Padres",
+          "triples": 0,
+          "plate_appearances": 3,
           "triple_game": false
         },
         {
           "date": "2026-08-16",
-          "game_pk": 823912,
-          "opponent": "Los Angeles Dodgers",
+          "game_pk": 823590,
+          "opponent": "Washington Nationals",
           "triples": 0,
           "plate_appearances": 4,
           "triple_game": false
         },
         {
           "date": "2026-08-15",
-          "game_pk": 823914,
-          "opponent": "Los Angeles Dodgers",
+          "game_pk": 823588,
+          "opponent": "Washington Nationals",
           "triples": 0,
           "plate_appearances": 4,
           "triple_game": false
         },
         {
           "date": "2026-08-14",
-          "game_pk": 823913,
-          "opponent": "Los Angeles Dodgers",
-          "triples": 0,
-          "plate_appearances": 4,
-          "triple_game": false
-        },
-        {
-          "date": "2026-08-13",
-          "game_pk": 823915,
-          "opponent": "Los Angeles Dodgers",
+          "game_pk": 823591,
+          "opponent": "Washington Nationals",
           "triples": 0,
           "plate_appearances": 4,
           "triple_game": false
         },
         {
           "date": "2026-08-12",
-          "game_pk": 823263,
-          "opponent": "San Diego Padres",
+          "game_pk": 824883,
+          "opponent": "Atlanta Braves",
+          "triples": 0,
+          "plate_appearances": 4,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-10",
+          "game_pk": 824887,
+          "opponent": "Atlanta Braves",
           "triples": 0,
           "plate_appearances": 5,
           "triple_game": false
         },
         {
+          "date": "2026-08-09",
+          "game_pk": 823345,
+          "opponent": "Pittsburgh Pirates",
+          "triples": 1,
+          "plate_appearances": 5,
+          "triple_game": true
+        },
+        {
           "date": "2026-08-08",
-          "game_pk": 823752,
-          "opponent": "Minnesota Twins",
+          "game_pk": 823348,
+          "opponent": "Pittsburgh Pirates",
           "triples": 0,
-          "plate_appearances": 1,
+          "plate_appearances": 3,
           "triple_game": false
         },
         {
-          "date": "2026-08-03",
-          "game_pk": 823757,
+          "date": "2026-08-07",
+          "game_pk": 823349,
           "opponent": "Pittsburgh Pirates",
           "triples": 0,
           "plate_appearances": 4,
           "triple_game": false
         },
         {
-          "date": "2026-08-01",
-          "game_pk": 824000,
-          "opponent": "Los Angeles Angels",
-          "triples": 0,
-          "plate_appearances": 4,
-          "triple_game": false
-        },
-        {
-          "date": "2026-07-27",
-          "game_pk": 823195,
-          "opponent": "San Francisco Giants",
+          "date": "2026-08-06",
+          "game_pk": 824401,
+          "opponent": "Cleveland Guardians",
           "triples": 0,
           "plate_appearances": 3,
           "triple_game": false
-        },
-        {
-          "date": "2026-07-26",
-          "game_pk": 823755,
-          "opponent": "Colorado Rockies",
-          "triples": 1,
-          "plate_appearances": 4,
-          "triple_game": true
         }
       ],
-      "rank": 62,
+      "rank": 63,
       "sample_status": "Established"
     },
     {
@@ -8263,7 +8417,7 @@
       "mlbam_id": 687597,
       "team": "Colorado Rockies",
       "team_id": 115,
-      "season_plate_appearances": 126,
+      "season_plate_appearances": 128,
       "score": 0.013333333333333334,
       "triple_games_l5": 0,
       "triple_games_l7": 0,
@@ -8272,6 +8426,14 @@
       "games_available": 15,
       "provisional": false,
       "recent_games": [
+        {
+          "date": "2026-08-23",
+          "game_pk": 824315,
+          "opponent": "Cleveland Guardians",
+          "triples": 0,
+          "plate_appearances": 2,
+          "triple_game": false
+        },
         {
           "date": "2026-08-21",
           "game_pk": 824317,
@@ -8383,25 +8545,17 @@
           "triples": 0,
           "plate_appearances": 3,
           "triple_game": false
-        },
-        {
-          "date": "2026-05-08",
-          "game_pk": 823466,
-          "opponent": "Philadelphia Phillies",
-          "triples": 0,
-          "plate_appearances": 5,
-          "triple_game": false
         }
       ],
-      "rank": 63,
+      "rank": 64,
       "sample_status": "Established"
     },
     {
-      "player": "Justin Crawford",
-      "mlbam_id": 702222,
-      "team": "Philadelphia Phillies",
-      "team_id": 143,
-      "season_plate_appearances": 379,
+      "player": "Jose Altuve",
+      "mlbam_id": 514888,
+      "team": "Houston Astros",
+      "team_id": 117,
+      "season_plate_appearances": 445,
       "score": 0.013333333333333334,
       "triple_games_l5": 0,
       "triple_games_l7": 0,
@@ -8410,6 +8564,152 @@
       "games_available": 15,
       "provisional": false,
       "recent_games": [
+        {
+          "date": "2026-08-23",
+          "game_pk": 824150,
+          "opponent": "Athletics",
+          "triples": 0,
+          "plate_appearances": 5,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-22",
+          "game_pk": 824151,
+          "opponent": "Athletics",
+          "triples": 0,
+          "plate_appearances": 4,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-21",
+          "game_pk": 824152,
+          "opponent": "Athletics",
+          "triples": 0,
+          "plate_appearances": 4,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-20",
+          "game_pk": 824153,
+          "opponent": "Los Angeles Angels",
+          "triples": 0,
+          "plate_appearances": 2,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-19",
+          "game_pk": 824155,
+          "opponent": "Los Angeles Angels",
+          "triples": 0,
+          "plate_appearances": 4,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-18",
+          "game_pk": 824154,
+          "opponent": "Los Angeles Angels",
+          "triples": 0,
+          "plate_appearances": 4,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-16",
+          "game_pk": 824156,
+          "opponent": "Seattle Mariners",
+          "triples": 0,
+          "plate_appearances": 4,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-15",
+          "game_pk": 824157,
+          "opponent": "Seattle Mariners",
+          "triples": 1,
+          "plate_appearances": 4,
+          "triple_game": true
+        },
+        {
+          "date": "2026-08-14",
+          "game_pk": 824159,
+          "opponent": "Seattle Mariners",
+          "triples": 0,
+          "plate_appearances": 5,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-11",
+          "game_pk": 823186,
+          "opponent": "San Francisco Giants",
+          "triples": 0,
+          "plate_appearances": 1,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-10",
+          "game_pk": 823189,
+          "opponent": "San Francisco Giants",
+          "triples": 0,
+          "plate_appearances": 5,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-09",
+          "game_pk": 823268,
+          "opponent": "San Diego Padres",
+          "triples": 0,
+          "plate_appearances": 3,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-08",
+          "game_pk": 823267,
+          "opponent": "San Diego Padres",
+          "triples": 0,
+          "plate_appearances": 4,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-07",
+          "game_pk": 823266,
+          "opponent": "San Diego Padres",
+          "triples": 0,
+          "plate_appearances": 5,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-05",
+          "game_pk": 824158,
+          "opponent": "Toronto Blue Jays",
+          "triples": 0,
+          "plate_appearances": 5,
+          "triple_game": false
+        }
+      ],
+      "rank": 65,
+      "sample_status": "Established"
+    },
+    {
+      "player": "Justin Crawford",
+      "mlbam_id": 702222,
+      "team": "Philadelphia Phillies",
+      "team_id": 143,
+      "season_plate_appearances": 383,
+      "score": 0.013333333333333334,
+      "triple_games_l5": 0,
+      "triple_games_l7": 0,
+      "triple_games_l15": 1,
+      "triples_l15": 1,
+      "games_available": 15,
+      "provisional": false,
+      "recent_games": [
+        {
+          "date": "2026-08-23",
+          "game_pk": 823421,
+          "opponent": "St. Louis Cardinals",
+          "triples": 0,
+          "plate_appearances": 4,
+          "triple_game": false
+        },
         {
           "date": "2026-08-22",
           "game_pk": 823422,
@@ -8521,17 +8821,9 @@
           "triples": 0,
           "plate_appearances": 4,
           "triple_game": false
-        },
-        {
-          "date": "2026-08-06",
-          "game_pk": 823430,
-          "opponent": "Washington Nationals",
-          "triples": 0,
-          "plate_appearances": 4,
-          "triple_game": false
         }
       ],
-      "rank": 64,
+      "rank": 66,
       "sample_status": "Established"
     },
     {
@@ -8539,7 +8831,7 @@
       "mlbam_id": 679822,
       "team": "Texas Rangers",
       "team_id": 140,
-      "season_plate_appearances": 175,
+      "season_plate_appearances": 179,
       "score": 0.013333333333333334,
       "triple_games_l5": 0,
       "triple_games_l7": 0,
@@ -8548,6 +8840,14 @@
       "games_available": 15,
       "provisional": false,
       "recent_games": [
+        {
+          "date": "2026-08-23",
+          "game_pk": 822856,
+          "opponent": "Los Angeles Angels",
+          "triples": 0,
+          "plate_appearances": 4,
+          "triple_game": false
+        },
         {
           "date": "2026-08-21",
           "game_pk": 822857,
@@ -8659,17 +8959,9 @@
           "triples": 0,
           "plate_appearances": 1,
           "triple_game": false
-        },
-        {
-          "date": "2026-08-01",
-          "game_pk": 824162,
-          "opponent": "Houston Astros",
-          "triples": 0,
-          "plate_appearances": 1,
-          "triple_game": false
         }
       ],
-      "rank": 65,
+      "rank": 67,
       "sample_status": "Established"
     },
     {
@@ -8677,7 +8969,7 @@
       "mlbam_id": 663656,
       "team": "Los Angeles Dodgers",
       "team_id": 119,
-      "season_plate_appearances": 502,
+      "season_plate_appearances": 506,
       "score": 0.013333333333333334,
       "triple_games_l5": 0,
       "triple_games_l7": 0,
@@ -8686,6 +8978,14 @@
       "games_available": 15,
       "provisional": false,
       "recent_games": [
+        {
+          "date": "2026-08-23",
+          "game_pk": 823909,
+          "opponent": "Pittsburgh Pirates",
+          "triples": 0,
+          "plate_appearances": 4,
+          "triple_game": false
+        },
         {
           "date": "2026-08-22",
           "game_pk": 823910,
@@ -8797,17 +9097,9 @@
           "triples": 0,
           "plate_appearances": 4,
           "triple_game": false
-        },
-        {
-          "date": "2026-08-05",
-          "game_pk": 824646,
-          "opponent": "Chicago Cubs",
-          "triples": 0,
-          "plate_appearances": 5,
-          "triple_game": false
         }
       ],
-      "rank": 66,
+      "rank": 68,
       "sample_status": "Established"
     },
     {
@@ -8815,7 +9107,7 @@
       "mlbam_id": 665750,
       "team": "Baltimore Orioles",
       "team_id": 110,
-      "season_plate_appearances": 398,
+      "season_plate_appearances": 401,
       "score": 0.013333333333333334,
       "triple_games_l5": 0,
       "triple_games_l7": 0,
@@ -8824,6 +9116,14 @@
       "games_available": 15,
       "provisional": false,
       "recent_games": [
+        {
+          "date": "2026-08-23",
+          "game_pk": 824799,
+          "opponent": "Tampa Bay Rays",
+          "triples": 0,
+          "plate_appearances": 3,
+          "triple_game": false
+        },
         {
           "date": "2026-08-22",
           "game_pk": 824798,
@@ -8935,17 +9235,9 @@
           "triples": 0,
           "plate_appearances": 4,
           "triple_game": false
-        },
-        {
-          "date": "2026-08-06",
-          "game_pk": 824804,
-          "opponent": "Los Angeles Angels",
-          "triples": 0,
-          "plate_appearances": 3,
-          "triple_game": false
         }
       ],
-      "rank": 67,
+      "rank": 69,
       "sample_status": "Established"
     },
     {
@@ -9083,7 +9375,7 @@
           "triple_game": false
         }
       ],
-      "rank": 68,
+      "rank": 70,
       "sample_status": "Established"
     },
     {
@@ -9221,7 +9513,7 @@
           "triple_game": false
         }
       ],
-      "rank": 69,
+      "rank": 71,
       "sample_status": "Established"
     },
     {
@@ -9229,7 +9521,7 @@
       "mlbam_id": 571448,
       "team": "Arizona Diamondbacks",
       "team_id": 109,
-      "season_plate_appearances": 473,
+      "season_plate_appearances": 477,
       "score": 0.013333333333333334,
       "triple_games_l5": 0,
       "triple_games_l7": 0,
@@ -9238,6 +9530,14 @@
       "games_available": 15,
       "provisional": false,
       "recent_games": [
+        {
+          "date": "2026-08-23",
+          "game_pk": 825043,
+          "opponent": "Cincinnati Reds",
+          "triples": 0,
+          "plate_appearances": 4,
+          "triple_game": false
+        },
         {
           "date": "2026-08-22",
           "game_pk": 825044,
@@ -9349,17 +9649,9 @@
           "triples": 0,
           "plate_appearances": 4,
           "triple_game": false
-        },
-        {
-          "date": "2026-08-03",
-          "game_pk": 825095,
-          "opponent": "San Diego Padres",
-          "triples": 0,
-          "plate_appearances": 4,
-          "triple_game": false
         }
       ],
-      "rank": 70,
+      "rank": 72,
       "sample_status": "Established"
     },
     {
@@ -9367,7 +9659,7 @@
       "mlbam_id": 668952,
       "team": "Minnesota Twins",
       "team_id": 142,
-      "season_plate_appearances": 217,
+      "season_plate_appearances": 218,
       "score": 0.013333333333333334,
       "triple_games_l5": 0,
       "triple_games_l7": 0,
@@ -9376,6 +9668,14 @@
       "games_available": 15,
       "provisional": false,
       "recent_games": [
+        {
+          "date": "2026-08-23",
+          "game_pk": 823258,
+          "opponent": "San Diego Padres",
+          "triples": 0,
+          "plate_appearances": 1,
+          "triple_game": false
+        },
         {
           "date": "2026-08-15",
           "game_pk": 823671,
@@ -9487,25 +9787,17 @@
           "triples": 1,
           "plate_appearances": 4,
           "triple_game": true
-        },
-        {
-          "date": "2026-07-25",
-          "game_pk": 823679,
-          "opponent": "Athletics",
-          "triples": 0,
-          "plate_appearances": 3,
-          "triple_game": false
         }
       ],
-      "rank": 71,
+      "rank": 73,
       "sample_status": "Established"
     },
     {
-      "player": "Spencer Jones",
-      "mlbam_id": 682987,
-      "team": "New York Yankees",
-      "team_id": 147,
-      "season_plate_appearances": 174,
+      "player": "Shohei Ohtani",
+      "mlbam_id": 660271,
+      "team": "Los Angeles Dodgers",
+      "team_id": 119,
+      "season_plate_appearances": 554,
       "score": 0.013333333333333334,
       "triple_games_l5": 0,
       "triple_games_l7": 0,
@@ -9514,6 +9806,152 @@
       "games_available": 15,
       "provisional": false,
       "recent_games": [
+        {
+          "date": "2026-08-23",
+          "game_pk": 823909,
+          "opponent": "Pittsburgh Pirates",
+          "triples": 0,
+          "plate_appearances": 4,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-22",
+          "game_pk": 823910,
+          "opponent": "Pittsburgh Pirates",
+          "triples": 0,
+          "plate_appearances": 5,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-21",
+          "game_pk": 823911,
+          "opponent": "Pittsburgh Pirates",
+          "triples": 0,
+          "plate_appearances": 5,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-19",
+          "game_pk": 824318,
+          "opponent": "Colorado Rockies",
+          "triples": 0,
+          "plate_appearances": 5,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-18",
+          "game_pk": 824319,
+          "opponent": "Colorado Rockies",
+          "triples": 0,
+          "plate_appearances": 5,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-17",
+          "game_pk": 824320,
+          "opponent": "Colorado Rockies",
+          "triples": 0,
+          "plate_appearances": 5,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-16",
+          "game_pk": 823912,
+          "opponent": "Milwaukee Brewers",
+          "triples": 0,
+          "plate_appearances": 4,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-15",
+          "game_pk": 823914,
+          "opponent": "Milwaukee Brewers",
+          "triples": 1,
+          "plate_appearances": 4,
+          "triple_game": true
+        },
+        {
+          "date": "2026-08-14",
+          "game_pk": 823913,
+          "opponent": "Milwaukee Brewers",
+          "triples": 0,
+          "plate_appearances": 4,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-13",
+          "game_pk": 823915,
+          "opponent": "Milwaukee Brewers",
+          "triples": 0,
+          "plate_appearances": 4,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-12",
+          "game_pk": 823916,
+          "opponent": "Kansas City Royals",
+          "triples": 0,
+          "plate_appearances": 4,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-11",
+          "game_pk": 823917,
+          "opponent": "Kansas City Royals",
+          "triples": 0,
+          "plate_appearances": 5,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-10",
+          "game_pk": 823918,
+          "opponent": "Kansas City Royals",
+          "triples": 0,
+          "plate_appearances": 4,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-09",
+          "game_pk": 825050,
+          "opponent": "Arizona Diamondbacks",
+          "triples": 0,
+          "plate_appearances": 4,
+          "triple_game": false
+        },
+        {
+          "date": "2026-08-08",
+          "game_pk": 825049,
+          "opponent": "Arizona Diamondbacks",
+          "triples": 0,
+          "plate_appearances": 5,
+          "triple_game": false
+        }
+      ],
+      "rank": 74,
+      "sample_status": "Established"
+    },
+    {
+      "player": "Spencer Jones",
+      "mlbam_id": 682987,
+      "team": "New York Yankees",
+      "team_id": 147,
+      "season_plate_appearances": 178,
+      "score": 0.013333333333333334,
+      "triple_games_l5": 0,
+      "triple_games_l7": 0,
+      "triple_games_l15": 1,
+      "triples_l15": 1,
+      "games_available": 15,
+      "provisional": false,
+      "recent_games": [
+        {
+          "date": "2026-08-23",
+          "game_pk": 823507,
+          "opponent": "Toronto Blue Jays",
+          "triples": 0,
+          "plate_appearances": 4,
+          "triple_game": false
+        },
         {
           "date": "2026-08-22",
           "game_pk": 823509,
@@ -9625,17 +10063,9 @@
           "triples": 0,
           "plate_appearances": 5,
           "triple_game": false
-        },
-        {
-          "date": "2026-08-05",
-          "game_pk": 823516,
-          "opponent": "St. Louis Cardinals",
-          "triples": 0,
-          "plate_appearances": 4,
-          "triple_game": false
         }
       ],
-      "rank": 72,
+      "rank": 75,
       "sample_status": "Established"
     },
     {
@@ -9643,7 +10073,7 @@
       "mlbam_id": 666211,
       "team": "Houston Astros",
       "team_id": 117,
-      "season_plate_appearances": 210,
+      "season_plate_appearances": 211,
       "score": 0.013333333333333334,
       "triple_games_l5": 0,
       "triple_games_l7": 0,
@@ -9652,6 +10082,14 @@
       "games_available": 15,
       "provisional": false,
       "recent_games": [
+        {
+          "date": "2026-08-23",
+          "game_pk": 824150,
+          "opponent": "Athletics",
+          "triples": 0,
+          "plate_appearances": 1,
+          "triple_game": false
+        },
         {
           "date": "2026-08-22",
           "game_pk": 824151,
@@ -9763,17 +10201,9 @@
           "triples": 0,
           "plate_appearances": 3,
           "triple_game": false
-        },
-        {
-          "date": "2026-08-02",
-          "game_pk": 824163,
-          "opponent": "Texas Rangers",
-          "triples": 0,
-          "plate_appearances": 5,
-          "triple_game": false
         }
       ],
-      "rank": 73,
+      "rank": 76,
       "sample_status": "Established"
     },
     {
@@ -9781,7 +10211,7 @@
       "mlbam_id": 623168,
       "team": "Los Angeles Angels",
       "team_id": 108,
-      "season_plate_appearances": 156,
+      "season_plate_appearances": 159,
       "score": 0.013333333333333334,
       "triple_games_l5": 0,
       "triple_games_l7": 0,
@@ -9790,6 +10220,14 @@
       "games_available": 15,
       "provisional": false,
       "recent_games": [
+        {
+          "date": "2026-08-23",
+          "game_pk": 822856,
+          "opponent": "Texas Rangers",
+          "triples": 0,
+          "plate_appearances": 3,
+          "triple_game": false
+        },
         {
           "date": "2026-08-21",
           "game_pk": 822857,
@@ -9901,17 +10339,9 @@
           "triples": 1,
           "plate_appearances": 4,
           "triple_game": true
-        },
-        {
-          "date": "2026-07-22",
-          "game_pk": 824004,
-          "opponent": "St. Louis Cardinals",
-          "triples": 0,
-          "plate_appearances": 3,
-          "triple_game": false
         }
       ],
-      "rank": 74,
+      "rank": 77,
       "sample_status": "Established"
     },
     {
@@ -10001,7 +10431,7 @@
           "triple_game": true
         }
       ],
-      "rank": 75,
+      "rank": 78,
       "sample_status": "Provisional"
     }
   ],
