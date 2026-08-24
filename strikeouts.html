@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>MLB Strikeouts Board</title>
+  <meta name="description" content="MLB pitcher strikeout form board with archived sportsbook lines and a separate model track." />
+  <link rel="stylesheet" href="/strikeouts.css" />
+</head>
+<body>
+  <main class="shell">
+    <header class="hero">
+      <div>
+        <div class="eyebrow">MLB PITCHER PROPS</div>
+        <h1>Strikeouts Board</h1>
+        <p class="sub">Form first. Model second. Every sportsbook quote stays attached to its actual strikeout line.</p>
+      </div>
+      <a class="back" href="/">HR Board ↗</a>
+    </header>
+
+    <section class="tabs" aria-label="Board views">
+      <button class="tab active" data-view="form">Form</button>
+      <button class="tab" data-view="discovery">Discovery</button>
+      <button class="tab" data-view="model">Model</button>
+    </section>
+
+    <section class="toolbar" id="form-toolbar">
+      <div class="date-wrap"><span>Slate</span><input id="slate-date" type="date" /></div>
+      <div class="checkpoint-wrap">
+        <span>Checkpoint</span>
+        <select id="checkpoint">
+          <option value="">Latest archived</option>
+          <option value="0817">8:17 AM</option>
+          <option value="1117">11:17 AM</option>
+          <option value="1717">5:17 PM</option>
+          <option value="2017">8:17 PM</option>
+        </select>
+      </div>
+      <button id="refresh">Refresh</button>
+    </section>
+
+    <section id="status" class="status-card">Loading today’s strikeout board…</section>
+    <section id="summary" class="summary-grid" hidden></section>
+    <section id="content"></section>
+  </main>
+  <script type="module" src="/strikeouts.js"></script>
+</body>
+</html>
