@@ -1,7 +1,6 @@
 const labState = {
   period: "rolling_14d",
-  basis: "benchmark",
-  checkpoint: "1117",
+  view: "1117",
 };
 
 let discoveryPayload = null;
@@ -70,7 +69,7 @@ function segmentTable(rows = [], title = "Segments", limit = 18) {
     .filter((row) => Number(row.settled || 0) > 0)
     .sort((a, b) => Number(b.net_units || 0) - Number(a.net_units || 0) || Number(b.settled || 0) - Number(a.settled || 0))
     .slice(0, limit);
-  if (!ordered.length) return `<div class="empty">No settled rows for this view yet.</div>`;
+  if (!ordered.length) return `<div class="empty">No settled rows for this checkpoint yet.</div>`;
   return `<div class="tablewrap"><table>
     <thead><tr><th>${esc(title)}</th><th>Bets</th><th>Record</th><th>Hit rate</th><th>Break-even</th><th>Edge</th><th>Avg odds</th><th>Net</th><th>ROI</th><th>Evidence</th></tr></thead>
     <tbody>${ordered.map((row) => `<tr>
@@ -91,7 +90,7 @@ function segmentTable(rows = [], title = "Segments", limit = 18) {
 function checkpointTable(rows = []) {
   return `<div class="tablewrap"><table>
     <thead><tr><th>Checkpoint</th><th>Bets</th><th>Slates</th><th>Record</th><th>Hit rate</th><th>Break-even</th><th>Edge</th><th>Net</th><th>ROI</th></tr></thead>
-    <tbody>${rows.map((row) => `<tr>
+    <tbody>${rows.map((row) => `<tr data-jump-checkpoint="${esc(row.label)}" class="checkpoint-jump-row">
       <td><b>${esc(checkpointLabels[row.label] || row.label)}</b></td>
       <td>${Number(row.settled || 0)}</td>
       <td>${Number(row.slates || 0)}</td>
@@ -106,11 +105,12 @@ function checkpointTable(rows = []) {
 }
 
 function edgeTable(report = {}) {
-  let rows = (report.edges || []).filter((row) => labState.basis === "benchmark"
+  const isBenchmark = labState.view === "best";
+  let rows = (report.edges || []).filter((row) => isBenchmark
     ? row.basis === "archive-best benchmark"
-    : row.basis === "fixed-checkpoint strategy" && String(row.rule || "").startsWith(labState.checkpoint));
+    : row.basis === "fixed-checkpoint strategy" && String(row.rule || "").startsWith(labState.view));
   rows = rows.slice(0, 20);
-  if (!rows.length) return `<div class="empty">No segment clears the evidence gate in this view yet. That is useful evidence too—do not force an edge.</div>`;
+  if (!rows.length) return `<div class="empty">No segment clears the evidence gate in this checkpoint view yet. That is useful evidence too—do not force an edge.</div>`;
   return `<div class="tablewrap"><table>
     <thead><tr><th>Dimension</th><th>Rule</th><th>Bets</th><th>Slates</th><th>Hit rate</th><th>Break-even</th><th>Net</th><th>ROI</th><th>Evidence</th></tr></thead>
     <tbody>${rows.map((row) => `<tr>
@@ -125,6 +125,16 @@ function tabButton(label, attr, value, active) {
   return `<button type="button" ${attr}="${esc(value)}" class="${active ? "active" : ""}">${esc(label)}</button>`;
 }
 
+function checkpointTabs() {
+  return `<div class="checkpoint-tab-wrap">
+    <div class="muted discovery-lab-label">Checkpoint</div>
+    <div class="tabs checkpoint-tabs">
+      ${tabButton("Best archived", "data-lab-view", "best", labState.view === "best")}
+      ${Object.entries(checkpointLabels).map(([value, label]) => tabButton(label, "data-lab-view", value, labState.view === value)).join("")}
+    </div>
+  </div>`;
+}
+
 function renderLab(root) {
   const report = discoveryPayload?.reports?.[labState.period];
   if (!report) {
@@ -132,62 +142,59 @@ function renderLab(root) {
     return;
   }
 
-  const detail = labState.basis === "benchmark"
-    ? report
-    : report.checkpoint_details?.[labState.checkpoint] || {};
-  const basisTitle = labState.basis === "benchmark"
-    ? "Archive-best benchmark"
-    : `${checkpointLabels[labState.checkpoint] || labState.checkpoint} fixed checkpoint`;
-  const basisNote = labState.basis === "benchmark"
-    ? "Best price seen across the day, once per player-game. Useful for finding structure, but it is a hindsight benchmark—not an executable timing rule."
-    : "Only the price available at this immutable checkpoint is used. This is the executable view to use when judging a repeatable betting rule.";
+  const isBenchmark = labState.view === "best";
+  const detail = isBenchmark ? report : report.checkpoint_details?.[labState.view] || {};
+  const viewTitle = isBenchmark ? "Best archived price" : `${checkpointLabels[labState.view] || labState.view} checkpoint`;
+  const viewNote = isBenchmark
+    ? "Best price seen across the day, once per player-game. This is a hindsight benchmark for discovering structure, not an executable timing rule."
+    : `Every metric and segment below now uses only the immutable ${checkpointLabels[labState.view] || labState.view} ET capture. Switching tabs re-runs the whole Discovery view on that checkpoint.`;
 
   root.innerHTML = `
-    <div class="eyebrow">Triples-style strategy lab</div>
-    <h2>Checkpoint-aware HR Discovery</h2>
-    <p class="muted">Switch between hindsight research and fixed-time execution, then inspect score × odds and sportsbook × odds × score intersections. Unfinished slates are excluded wholesale from ROI.</p>
+    <div class="eyebrow">Checkpoint Discovery</div>
+    <h2>HR Discovery by checkpoint</h2>
+    <p class="muted">Use the checkpoint tabs to compare the same score, price and sportsbook relationships at each daily capture.</p>
+
+    ${checkpointTabs()}
+
     <div class="discovery-lab-controls">
       <div><div class="muted discovery-lab-label">Period</div><div class="tabs">${Object.entries(periodLabels).map(([value, label]) => tabButton(label, "data-lab-period", value, labState.period === value)).join("")}</div></div>
-      <div><div class="muted discovery-lab-label">Price basis</div><div class="tabs">${tabButton("Best archived", "data-lab-basis", "benchmark", labState.basis === "benchmark")}${tabButton("Fixed checkpoint", "data-lab-basis", "fixed", labState.basis === "fixed")}</div></div>
-      ${labState.basis === "fixed" ? `<div><div class="muted discovery-lab-label">Checkpoint</div><div class="tabs">${Object.entries(checkpointLabels).map(([value, label]) => tabButton(label, "data-lab-checkpoint", value, labState.checkpoint === value)).join("")}</div></div>` : ""}
     </div>
-    <div class="notice"><b>${esc(basisTitle)}:</b> ${esc(basisNote)}</div>
+
+    <div class="notice"><b>${esc(viewTitle)}:</b> ${esc(viewNote)}</div>
     <p>${samplePill(detail.overall || {})}</p>
     ${summaryCards(detail.overall || {})}
 
-    <div class="discovery-lab-split">
-      <div>
-        <div class="eyebrow">Executable timing comparison</div><h3>Checkpoint performance</h3>
-        ${checkpointTable(report.checkpoint_strategies || [])}
-      </div>
-    </div>
-
     <div class="eyebrow">Intersection search</div><h3>Form score × odds</h3>
-    <p class="muted">This is the cleanest view for testing whether a specific form-score band only works at particular prices.</p>
+    <p class="muted">Shows whether a form-score band is profitable only inside particular price bands at the selected checkpoint.</p>
     ${segmentTable(detail.score_odds || [], "Score × odds")}
 
     <div class="eyebrow">Sportsbook attribution</div><h3>Best book × odds × form score</h3>
-    <p class="muted">Shows whether the edge clusters when FanDuel, DraftKings, or BetMGM is the book offering the best archived price.</p>
+    <p class="muted">Shows whether FanDuel, DraftKings, or BetMGM offering the best price matters at this specific checkpoint.</p>
     ${segmentTable(detail.book_odds_score || [], "Book × odds × score")}
 
     <div class="eyebrow">Evidence-gated candidates</div><h3>Segments worth following prospectively</h3>
     <p class="muted">Gate: at least 40 settled bets, 4 wins, 5 slates, and positive net units. These are exploratory candidates, not proof of a durable edge.</p>
     ${edgeTable(report)}
 
-    <div class="notice discovery-lab-warning"><b>No fake fair odds:</b> HR Form Score is a recency/form index, not a calibrated home-run probability. Fair odds and expected EV are intentionally withheld here until probability calibration is validated out of sample.</div>
+    <div class="eyebrow">Cross-check</div><h3>All checkpoint performance</h3>
+    <p class="muted">Click any row to jump directly to that checkpoint tab.</p>
+    ${checkpointTable(report.checkpoint_strategies || [])}
+
+    <div class="notice discovery-lab-warning"><b>No fake fair odds:</b> HR Form Score is a recency/form index, not a calibrated home-run probability. Fair odds and expected EV are intentionally withheld until probability calibration is validated out of sample.</div>
   `;
 
   root.querySelectorAll("[data-lab-period]").forEach((button) => button.addEventListener("click", () => {
     labState.period = button.dataset.labPeriod;
     renderLab(root);
   }));
-  root.querySelectorAll("[data-lab-basis]").forEach((button) => button.addEventListener("click", () => {
-    labState.basis = button.dataset.labBasis;
+  root.querySelectorAll("[data-lab-view]").forEach((button) => button.addEventListener("click", () => {
+    labState.view = button.dataset.labView;
     renderLab(root);
   }));
-  root.querySelectorAll("[data-lab-checkpoint]").forEach((button) => button.addEventListener("click", () => {
-    labState.checkpoint = button.dataset.labCheckpoint;
+  root.querySelectorAll("[data-jump-checkpoint]").forEach((row) => row.addEventListener("click", () => {
+    labState.view = row.dataset.jumpCheckpoint;
     renderLab(root);
+    root.scrollIntoView({ behavior: "smooth", block: "start" });
   }));
 }
 
@@ -225,14 +232,24 @@ async function enhanceDiscovery() {
 
 const style = document.createElement("style");
 style.textContent = `
-  .discovery-lab-controls{display:flex;flex-wrap:wrap;gap:16px;align-items:flex-end;margin:16px 0}
+  .checkpoint-tab-wrap{margin:18px 0 8px;padding-bottom:14px;border-bottom:1px solid var(--line,#e5e7eb)}
+  .checkpoint-tabs{display:flex;flex-wrap:wrap;gap:8px}
+  .checkpoint-tabs button{font-weight:700}
+  .discovery-lab-controls{display:flex;flex-wrap:wrap;gap:16px;align-items:flex-end;margin:12px 0 16px}
   .discovery-lab-label{font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px}
   .discovery-lab-metrics{margin:14px 0 24px}
   .discovery-lab h3{margin:8px 0 10px}
   .discovery-lab .eyebrow{margin-top:24px}
   .discovery-lab .eyebrow:first-child{margin-top:0}
   .discovery-lab-warning{margin-top:22px}
-  @media (max-width:700px){.discovery-lab-controls{display:block}.discovery-lab-controls>div{margin:12px 0}.discovery-lab .tabs{overflow-x:auto;flex-wrap:nowrap}.discovery-lab .tabs button{white-space:nowrap}}
+  .checkpoint-jump-row{cursor:pointer}
+  .checkpoint-jump-row:hover td{background:rgba(127,127,127,.08)}
+  @media (max-width:700px){
+    .discovery-lab-controls{display:block}
+    .discovery-lab-controls>div{margin:12px 0}
+    .checkpoint-tabs,.discovery-lab .tabs{overflow-x:auto;flex-wrap:nowrap;padding-bottom:4px}
+    .checkpoint-tabs button,.discovery-lab .tabs button{white-space:nowrap}
+  }
 `;
 document.head.appendChild(style);
 
