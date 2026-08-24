@@ -6,8 +6,26 @@ from statistics import mean
 from typing import Any, Callable, Iterable
 
 
+ODDS_ORDER = [
+    "Below +400",
+    "+400 to +499",
+    "+500 to +599",
+    "+600 to +799",
+    "+800 to +999",
+    "+1000 or longer",
+]
+SCORE_ORDER = ["0.400+", "0.300–0.399", "0.200–0.299", "0.100–0.199", "Below 0.100"]
+RANK_ORDER = ["Ranks 1–10", "Ranks 11–25", "Ranks 26–50", "Ranks 51–100"]
+BOOK_ORDER = ["FanDuel", "DraftKings", "BetMGM"]
+CHECKPOINT_ORDER = ["0817", "1117", "1717", "2017"]
+
+
 def decimal_odds(american: int) -> float:
     return 1.0 + (american / 100.0 if american > 0 else 100.0 / abs(american))
+
+
+def implied_probability(american: int) -> float:
+    return 100.0 / (american + 100.0) if american > 0 else abs(american) / (abs(american) + 100.0)
 
 
 def best_price(prices: Iterable[dict[str, Any]]) -> dict[str, Any] | None:
@@ -62,7 +80,7 @@ def rank_band(rank: int) -> str:
 
 
 def collapse_best_player_games(entries: Iterable[dict[str, Any]]) -> list[dict[str, Any]]:
-    """Use the best archived price once per player per slate for ROI analysis."""
+    """Use the best archived price once per player per slate for hindsight benchmark analysis."""
     selected: dict[tuple[str, int], dict[str, Any]] = {}
     for row in entries:
         if row.get("best_odds") is None:
@@ -74,6 +92,22 @@ def collapse_best_player_games(entries: Iterable[dict[str, Any]]) -> list[dict[s
     return sorted(selected.values(), key=lambda row: (row.get("slate_date", ""), row.get("rank", 999), row.get("player", "")))
 
 
+def complete_slate_partition(entries: Iterable[dict[str, Any]]) -> tuple[list[dict[str, Any]], list[str], list[str]]:
+    """Exclude a slate wholesale while any priced player-game on that slate is still pending."""
+    rows = [row for row in entries if row.get("best_odds") is not None]
+    by_slate: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for row in rows:
+        by_slate[str(row.get("slate_date"))].append(row)
+    complete = sorted(
+        slate
+        for slate, slate_rows in by_slate.items()
+        if not any(row.get("result") in {None, "PENDING"} for row in slate_rows)
+    )
+    incomplete = sorted(set(by_slate) - set(complete))
+    complete_set = set(complete)
+    return [row for row in rows if str(row.get("slate_date")) in complete_set], complete, incomplete
+
+
 def summary(rows: Iterable[dict[str, Any]]) -> dict[str, Any]:
     rows = list(rows)
     settled = [row for row in rows if row.get("result") in {"WIN", "LOSS"}]
@@ -81,31 +115,41 @@ def summary(rows: Iterable[dict[str, Any]]) -> dict[str, Any]:
     losses = sum(row.get("result") == "LOSS" for row in settled)
     voids = sum(row.get("result") == "VOID" for row in rows)
     net = sum(float(row.get("profit_units") or 0.0) for row in settled)
+    probabilities = [implied_probability(int(row["best_odds"])) for row in settled if row.get("best_odds") is not None]
+    hit_rate = wins / len(settled) if settled else None
+    break_even = mean(probabilities) if probabilities else None
+    slates = len({str(row.get("slate_date")) for row in settled})
+    if len(settled) >= 100 and wins >= 10 and slates >= 7:
+        sample_status = "larger sample"
+    elif len(settled) >= 40 and wins >= 4 and slates >= 5:
+        sample_status = "provisional"
+    else:
+        sample_status = "small sample"
     return {
         "captures": len(rows),
         "settled": len(settled),
+        "slates": slates,
         "wins": wins,
         "losses": losses,
         "voids": voids,
         "pending": sum(row.get("result") in {None, "PENDING"} for row in rows),
-        "hit_rate": wins / len(settled) if settled else None,
+        "hit_rate": hit_rate,
+        "market_break_even_hit_rate": break_even,
+        "hit_rate_edge": hit_rate - break_even if hit_rate is not None and break_even is not None else None,
         "net_units": net,
         "roi": net / len(settled) if settled else None,
-        "average_odds": mean(int(row["best_odds"]) for row in rows if row.get("best_odds") is not None) if rows else None,
-        "average_score": mean(float(row.get("score") or 0.0) for row in rows) if rows else None,
+        "average_odds": mean(int(row["best_odds"]) for row in settled if row.get("best_odds") is not None) if settled else None,
+        "average_score": mean(float(row.get("score") or 0.0) for row in settled) if settled else None,
+        "sample_status": sample_status,
     }
 
 
-def grouped(rows: Iterable[dict[str, Any]], key_fn: Callable[[dict[str, Any]], str], order: list[str]) -> list[dict[str, Any]]:
+def grouped(rows: Iterable[dict[str, Any]], key_fn: Callable[[dict[str, Any]], str], order: list[str] | None = None) -> list[dict[str, Any]]:
     buckets: dict[str, list[dict[str, Any]]] = defaultdict(list)
     for row in rows:
         buckets[key_fn(row)].append(row)
-    result = []
-    for label in order:
-        if label not in buckets:
-            continue
-        result.append({"label": label, **summary(buckets[label])})
-    return result
+    labels = order or sorted(buckets)
+    return [{"label": label, **summary(buckets[label])} for label in labels if label in buckets]
 
 
 def _streaks(rows: list[dict[str, Any]]) -> tuple[str, int, int]:
@@ -151,18 +195,76 @@ def player_summaries(rows: Iterable[dict[str, Any]], limit: int = 30) -> list[di
     return output[:limit]
 
 
+def _edge_rows(rows: list[dict[str, Any]], dimension: str, key_fn: Callable[[dict[str, Any]], str]) -> list[dict[str, Any]]:
+    buckets: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for row in rows:
+        buckets[key_fn(row)].append(row)
+    output: list[dict[str, Any]] = []
+    for label, values in buckets.items():
+        stats = summary(values)
+        if stats["settled"] >= 40 and stats["wins"] >= 4 and stats["slates"] >= 5 and stats["net_units"] > 0:
+            output.append({"dimension": dimension, "rule": label, **stats})
+    return output
+
+
+def edge_candidates(best_rows: list[dict[str, Any]], checkpoint_rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    output: list[dict[str, Any]] = []
+    benchmark_dimensions = [
+        ("Best-price book", lambda row: str(row.get("best_book") or "unknown")),
+        ("Odds", lambda row: odds_band(int(row["best_odds"]))),
+        ("Form score", lambda row: score_band(float(row.get("score") or 0.0))),
+        ("Top-100 rank", lambda row: rank_band(int(row.get("rank") or 999))),
+        ("Book × odds", lambda row: f"{row.get('best_book') or 'unknown'} · {odds_band(int(row['best_odds']))}"),
+        ("Score × odds", lambda row: f"{score_band(float(row.get('score') or 0.0))} · {odds_band(int(row['best_odds']))}"),
+        ("Book × score", lambda row: f"{row.get('best_book') or 'unknown'} · {score_band(float(row.get('score') or 0.0))}"),
+        ("Book × odds × score", lambda row: f"{row.get('best_book') or 'unknown'} · {odds_band(int(row['best_odds']))} · {score_band(float(row.get('score') or 0.0))}"),
+    ]
+    for dimension, key_fn in benchmark_dimensions:
+        output.extend({**row, "basis": "archive-best benchmark"} for row in _edge_rows(best_rows, dimension, key_fn))
+
+    fixed_dimensions = [
+        ("Checkpoint", lambda row: str(row.get("checkpoint") or "unknown")),
+        ("Checkpoint × odds", lambda row: f"{row.get('checkpoint')} · {odds_band(int(row['best_odds']))}"),
+        ("Checkpoint × book", lambda row: f"{row.get('checkpoint')} · {row.get('best_book') or 'unknown'}"),
+        ("Checkpoint × score", lambda row: f"{row.get('checkpoint')} · {score_band(float(row.get('score') or 0.0))}"),
+        ("Checkpoint × score × odds", lambda row: f"{row.get('checkpoint')} · {score_band(float(row.get('score') or 0.0))} · {odds_band(int(row['best_odds']))}"),
+        ("Checkpoint × book × odds × score", lambda row: f"{row.get('checkpoint')} · {row.get('best_book') or 'unknown'} · {odds_band(int(row['best_odds']))} · {score_band(float(row.get('score') or 0.0))}"),
+    ]
+    for dimension, key_fn in fixed_dimensions:
+        output.extend({**row, "basis": "fixed-checkpoint strategy"} for row in _edge_rows(checkpoint_rows, dimension, key_fn))
+    output.sort(key=lambda row: (-float(row.get("net_units") or 0.0), -int(row.get("settled") or 0), -float(row.get("roi") or 0.0), row.get("dimension") or "", row.get("rule") or ""))
+    return output
+
+
 def period_report(rows: Iterable[dict[str, Any]], start: date, end: date) -> dict[str, Any]:
-    filtered = [row for row in rows if start <= date.fromisoformat(row["slate_date"]) <= end]
+    window = [row for row in rows if start <= date.fromisoformat(row["slate_date"]) <= end and row.get("best_odds") is not None]
+    filtered, complete_slates, incomplete_slates = complete_slate_partition(window)
+    by_checkpoint = {
+        checkpoint: collapse_best_player_games(row for row in filtered if str(row.get("checkpoint")) == checkpoint)
+        for checkpoint in CHECKPOINT_ORDER
+    }
+    checkpoint_rows = [row for checkpoint in CHECKPOINT_ORDER for row in by_checkpoint[checkpoint]]
     unique = collapse_best_player_games(filtered)
     return {
         "start": start.isoformat(),
         "end": end.isoformat(),
-        "raw_checkpoint_captures": len(filtered),
+        "raw_checkpoint_captures": len(window),
+        "analyzed_checkpoint_rows": len(filtered),
+        "complete_slates": len(complete_slates),
+        "latest_complete_slate": complete_slates[-1] if complete_slates else None,
+        "excluded_incomplete_slates": incomplete_slates,
         "unique_player_games": len(unique),
         "overall": summary(unique),
-        "odds_bands": grouped(unique, lambda row: odds_band(int(row["best_odds"])), ["Below +400", "+400 to +499", "+500 to +599", "+600 to +799", "+800 to +999", "+1000 or longer"]),
-        "score_bands": grouped(unique, lambda row: score_band(float(row.get("score") or 0.0)), ["0.400+", "0.300–0.399", "0.200–0.299", "0.100–0.199", "Below 0.100"]),
-        "rank_bands": grouped(unique, lambda row: rank_band(int(row.get("rank") or 999)), ["Ranks 1–10", "Ranks 11–25", "Ranks 26–50", "Ranks 51–100"]),
+        "checkpoint_strategies": [{"label": checkpoint, **summary(by_checkpoint[checkpoint])} for checkpoint in CHECKPOINT_ORDER],
+        "best_price_books": grouped(unique, lambda row: str(row.get("best_book") or "unknown"), BOOK_ORDER),
+        "odds_bands": grouped(unique, lambda row: odds_band(int(row["best_odds"])), ODDS_ORDER),
+        "score_bands": grouped(unique, lambda row: score_band(float(row.get("score") or 0.0)), SCORE_ORDER),
+        "rank_bands": grouped(unique, lambda row: rank_band(int(row.get("rank") or 999)), RANK_ORDER),
+        "book_odds": grouped(unique, lambda row: f"{row.get('best_book') or 'unknown'} · {odds_band(int(row['best_odds']))}"),
+        "score_odds": grouped(unique, lambda row: f"{score_band(float(row.get('score') or 0.0))} · {odds_band(int(row['best_odds']))}"),
+        "book_score": grouped(unique, lambda row: f"{row.get('best_book') or 'unknown'} · {score_band(float(row.get('score') or 0.0))}"),
+        "book_odds_score": grouped(unique, lambda row: f"{row.get('best_book') or 'unknown'} · {odds_band(int(row['best_odds']))} · {score_band(float(row.get('score') or 0.0))}"),
+        "edges": edge_candidates(unique, checkpoint_rows),
         "players": player_summaries(unique),
     }
 
