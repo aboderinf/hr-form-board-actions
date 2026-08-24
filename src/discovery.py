@@ -195,6 +195,20 @@ def player_summaries(rows: Iterable[dict[str, Any]], limit: int = 30) -> list[di
     return output[:limit]
 
 
+def segment_tables(rows: list[dict[str, Any]]) -> dict[str, Any]:
+    return {
+        "overall": summary(rows),
+        "best_price_books": grouped(rows, lambda row: str(row.get("best_book") or "unknown"), BOOK_ORDER),
+        "odds_bands": grouped(rows, lambda row: odds_band(int(row["best_odds"])), ODDS_ORDER),
+        "score_bands": grouped(rows, lambda row: score_band(float(row.get("score") or 0.0)), SCORE_ORDER),
+        "rank_bands": grouped(rows, lambda row: rank_band(int(row.get("rank") or 999)), RANK_ORDER),
+        "book_odds": grouped(rows, lambda row: f"{row.get('best_book') or 'unknown'} · {odds_band(int(row['best_odds']))}"),
+        "score_odds": grouped(rows, lambda row: f"{score_band(float(row.get('score') or 0.0))} · {odds_band(int(row['best_odds']))}"),
+        "book_score": grouped(rows, lambda row: f"{row.get('best_book') or 'unknown'} · {score_band(float(row.get('score') or 0.0))}"),
+        "book_odds_score": grouped(rows, lambda row: f"{row.get('best_book') or 'unknown'} · {odds_band(int(row['best_odds']))} · {score_band(float(row.get('score') or 0.0))}"),
+    }
+
+
 def _edge_rows(rows: list[dict[str, Any]], dimension: str, key_fn: Callable[[dict[str, Any]], str]) -> list[dict[str, Any]]:
     buckets: dict[str, list[dict[str, Any]]] = defaultdict(list)
     for row in rows:
@@ -245,6 +259,8 @@ def period_report(rows: Iterable[dict[str, Any]], start: date, end: date) -> dic
     }
     checkpoint_rows = [row for checkpoint in CHECKPOINT_ORDER for row in by_checkpoint[checkpoint]]
     unique = collapse_best_player_games(filtered)
+    benchmark = segment_tables(unique)
+    checkpoint_details = {checkpoint: segment_tables(by_checkpoint[checkpoint]) for checkpoint in CHECKPOINT_ORDER}
     return {
         "start": start.isoformat(),
         "end": end.isoformat(),
@@ -254,16 +270,9 @@ def period_report(rows: Iterable[dict[str, Any]], start: date, end: date) -> dic
         "latest_complete_slate": complete_slates[-1] if complete_slates else None,
         "excluded_incomplete_slates": incomplete_slates,
         "unique_player_games": len(unique),
-        "overall": summary(unique),
+        **benchmark,
         "checkpoint_strategies": [{"label": checkpoint, **summary(by_checkpoint[checkpoint])} for checkpoint in CHECKPOINT_ORDER],
-        "best_price_books": grouped(unique, lambda row: str(row.get("best_book") or "unknown"), BOOK_ORDER),
-        "odds_bands": grouped(unique, lambda row: odds_band(int(row["best_odds"])), ODDS_ORDER),
-        "score_bands": grouped(unique, lambda row: score_band(float(row.get("score") or 0.0)), SCORE_ORDER),
-        "rank_bands": grouped(unique, lambda row: rank_band(int(row.get("rank") or 999)), RANK_ORDER),
-        "book_odds": grouped(unique, lambda row: f"{row.get('best_book') or 'unknown'} · {odds_band(int(row['best_odds']))}"),
-        "score_odds": grouped(unique, lambda row: f"{score_band(float(row.get('score') or 0.0))} · {odds_band(int(row['best_odds']))}"),
-        "book_score": grouped(unique, lambda row: f"{row.get('best_book') or 'unknown'} · {score_band(float(row.get('score') or 0.0))}"),
-        "book_odds_score": grouped(unique, lambda row: f"{row.get('best_book') or 'unknown'} · {odds_band(int(row['best_odds']))} · {score_band(float(row.get('score') or 0.0))}"),
+        "checkpoint_details": checkpoint_details,
         "edges": edge_candidates(unique, checkpoint_rows),
         "players": player_summaries(unique),
     }
