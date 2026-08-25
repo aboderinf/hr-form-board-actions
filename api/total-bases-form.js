@@ -1,4 +1,4 @@
-const { normalizeCheckpoint, redisCommand } = require('../lib/checkpoint-runtime');
+const { normalizeCheckpoint, playerKey, redisCommand } = require('../lib/checkpoint-runtime');
 const { readTotalBasesCheckpoint, TARGET_LINE } = require('../lib/total-bases-runtime');
 
 const MLB = 'https://statsapi.mlb.com/api/v1';
@@ -36,6 +36,55 @@ async function resolveCheckpoint(date, requested) {
     if (payload?.status === 'ready') return { checkpoint: cp, payload };
   }
   return null;
+}
+
+async function playerDirectory(season) {
+  const cacheKey = `mlbtb2:player-directory:${season}`;
+  try {
+    const cached = await redisCommand(['GET', cacheKey]);
+    if (cached) return JSON.parse(cached);
+  } catch (_) {
+    // A directory cache miss is safe; MLB remains the source of truth.
+  }
+  const payload = await fetchJson(`${MLB}/sports/1/players?season=${season}&gameType=R`);
+  const rawRows = payload?.people || payload?.players || [];
+  const rows = rawRows
+    .map((row) => row?.person || row)
+    .filter((row) => Number.isFinite(Number(row?.id)) && row?.fullName)
+    .map((row) => ({
+      id: Number(row.id),
+      fullName: String(row.fullName),
+      playerKey: playerKey(row.fullName),
+      currentTeam: row?.currentTeam?.abbreviation || row?.currentTeam?.name || null,
+    }));
+  try {
+    await redisCommand(['SET', cacheKey, JSON.stringify(rows), 'EX', 21600]);
+  } catch (_) {
+    // Directory caching is an optimization only.
+  }
+  return rows;
+}
+
+function hydrateBatters(oddsRows, directory) {
+  const byKey = new Map();
+  for (const player of directory) {
+    if (!byKey.has(player.playerKey)) byKey.set(player.playerKey, []);
+    byKey.get(player.playerKey).push(player);
+  }
+  const rows = [];
+  const missing = [];
+  const ambiguous = [];
+  for (const row of oddsRows) {
+    const matches = byKey.get(row.playerKey) || [];
+    if (matches.length === 1) {
+      rows.push({ ...row, batterId: matches[0].id, batterTeam: matches[0].currentTeam });
+    } else if (matches.length > 1) {
+      ambiguous.push({ batterName: row.batterName, candidateIds: matches.map((item) => item.id) });
+    } else {
+      missing.push(row.batterName);
+    }
+  }
+  return { rows, missing, ambiguous };
 }
 
 async function batterGameLog(batterId, season, slateDate) {
@@ -200,9 +249,10 @@ module.exports = async function handler(request, response) {
       });
     }
 
-    const oddsRows = (resolved.payload.rows || []).filter((row) => Number.isFinite(Number(row.batterId)));
-    const uniqueBatters = [...new Map(oddsRows.map((row) => [Number(row.batterId), row])).values()];
     const season = Number(date.slice(0, 4));
+    const directory = await playerDirectory(season);
+    const hydrated = hydrateBatters(resolved.payload.rows || [], directory);
+    const uniqueBatters = [...new Map(hydrated.rows.map((row) => [Number(row.batterId), row])).values()];
     const histories = new Map();
     const diagnostics = [];
     let cursor = 0;
@@ -223,7 +273,7 @@ module.exports = async function handler(request, response) {
 
     const prior = slatePrior(histories);
     const allRows = [];
-    for (const oddsRow of oddsRows) {
+    for (const oddsRow of hydrated.rows) {
       const starts = histories.get(Number(oddsRow.batterId)) || [];
       if (!starts.length) continue;
       const quote = quoteSummary(oddsRow.odds);
@@ -231,6 +281,7 @@ module.exports = async function handler(request, response) {
       allRows.push({
         batterId: Number(oddsRow.batterId),
         batterName: oddsRow.batterName,
+        batterTeam: oddsRow.batterTeam || null,
         playerKey: oddsRow.playerKey,
         matchup: oddsRow.matchup || null,
         gameStartAt: oddsRow.gameStartAt || null,
@@ -270,13 +321,15 @@ module.exports = async function handler(request, response) {
       },
       dataQuality: {
         archivedPropRows: resolved.payload.rows?.length || 0,
-        rowsWithMlbamId: oddsRows.length,
+        playerDirectoryRows: directory.length,
+        hydratedPropRows: hydrated.rows.length,
         uniqueBattersFetched: uniqueBatters.length,
         rankedBeforeLimit: allRows.length,
         rankedRows: rows.length,
         formLimit: FORM_LIMIT,
         slatePriorTb2Rate: Number(prior.toFixed(4)),
-        missingMlbamIds: (resolved.payload.rows || []).filter((row) => !Number.isFinite(Number(row.batterId))).map((row) => row.batterName),
+        unmatchedArchivedNames: hydrated.missing,
+        ambiguousArchivedNames: hydrated.ambiguous,
         diagnostics,
       },
       rows,
