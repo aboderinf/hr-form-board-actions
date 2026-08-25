@@ -104,15 +104,28 @@ test('projects only pregame 2+ total-bases prices from existing events payload',
   assert.equal(payload.rows[0].odds.betmgm, undefined);
 });
 
-test('total bases public routes have no provider credential or direct provider request', () => {
-  for (const file of ['total-bases-odds.js', 'total-bases-form.js']) {
-    const source = fs.readFileSync(path.join(__dirname, '..', 'api', file), 'utf8');
+test('total bases dispatches through existing functions with no direct provider request', () => {
+  const formSource = fs.readFileSync(path.join(__dirname, '..', 'api', 'strikeouts-form.js'), 'utf8');
+  const oddsSource = fs.readFileSync(path.join(__dirname, '..', 'api', 'strikeouts-odds.js'), 'utf8');
+  const tbFormSource = fs.readFileSync(path.join(__dirname, '..', 'lib', 'total-bases-form-handler.js'), 'utf8');
+  for (const source of [formSource, oddsSource, tbFormSource]) {
     assert.doesNotMatch(source, /SPORTSGAMEODDS_API_KEY/);
     assert.doesNotMatch(source, /api\.sportsgameodds\.com/);
   }
-  const oddsSource = fs.readFileSync(
-    path.join(__dirname, '..', 'api', 'total-bases-odds.js'),
-    'utf8',
-  );
+  assert.match(formSource, /market.*total-bases/);
+  assert.match(formSource, /totalBasesFormHandler/);
+  assert.match(oddsSource, /market.*total-bases/);
   assert.match(oddsSource, /readTotalBasesCheckpoint/);
+});
+
+test('market-specific public URLs are rewrites, not extra Hobby functions', () => {
+  const config = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'vercel.json'), 'utf8'));
+  const rewriteMap = new Map((config.rewrites || []).map((row) => [row.source, row.destination]));
+  assert.equal(rewriteMap.get('/api/total-bases-form'), '/api/strikeouts-form?market=total-bases');
+  assert.equal(rewriteMap.get('/api/total-bases-odds'), '/api/strikeouts-odds?market=total-bases');
+
+  const apiFiles = fs.readdirSync(path.join(__dirname, '..', 'api')).filter((name) => name.endsWith('.js'));
+  assert.ok(apiFiles.length <= 12, `Vercel Hobby function count is ${apiFiles.length}, expected <= 12`);
+  assert.equal(apiFiles.includes('total-bases-form.js'), false);
+  assert.equal(apiFiles.includes('total-bases-odds.js'), false);
 });
