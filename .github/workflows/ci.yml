@@ -34,5 +34,7 @@ jobs:
         run: node --test tests/test_triples_runtime.js
       - name: Test archived total-bases projection and consolidation
         run: node --test tests/test_total_bases_runtime.js
-      - name: Check total-bases API and client syntax
-        run: node --check lib/total-bases-runtime.js && node --check lib/total-bases-form-handler.js && node --check api/strikeouts-odds.js && node --check api/strikeouts-form.js && node --check total-bases.js
+      - name: Test standalone total-bases site separation
+        run: node --test tests/test_total_bases_site.js
+      - name: Check total-bases API and standalone client syntax
+        run: node --check lib/total-bases-runtime.js && node --check lib/total-bases-form-handler.js && node --check lib/total-bases-form-handler-v2.js && node --check api/strikeouts-odds.js && node --check api/strikeouts-form.js && node --check sites/total-bases/app.js
