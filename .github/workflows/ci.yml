@@ -32,3 +32,7 @@ jobs:
         run: python -m unittest discover -s tests -v
       - name: Test archived triples projection
         run: node --test tests/test_triples_runtime.js
+      - name: Test archived total-bases projection
+        run: node --test tests/test_total_bases_runtime.js
+      - name: Check total-bases API syntax
+        run: node --check lib/total-bases-runtime.js && node --check api/total-bases-odds.js && node --check api/total-bases-form.js
