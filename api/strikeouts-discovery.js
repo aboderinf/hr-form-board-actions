@@ -18,9 +18,14 @@ const {
   teamHittingGameLog,
   teamKRateBefore,
 } = require('../lib/strikeouts-analysis');
+const { repriceCandidate, walkForwardCalibration } = require('../lib/strikeouts-market-anchor');
 
 const ARCHIVE_START = '2026-08-07';
 const CHECKPOINTS = ['0817', '1117', '1717'];
+const V2_FIT_OPTIONS = { minRows: 120, minDates: 5, ridge: 0.0005 };
+const V2_MIN_SAMPLE_STARTS = 8;
+const V2_MIN_EDGE = 0.015;
+const V2_MIN_EV = 0.02;
 
 function etDate(now = new Date()) {
   const parts = Object.fromEntries(
@@ -44,7 +49,7 @@ function dateRange(start, end) {
 }
 
 function mean(values) {
-  const rows = values.filter(Number.isFinite);
+  const rows = values.map(Number).filter(Number.isFinite);
   return rows.length ? rows.reduce((sum, value) => sum + value, 0) / rows.length : null;
 }
 
@@ -105,9 +110,11 @@ function summary(rows) {
     hitRate: decisive.length ? wins / decisive.length : null,
     netUnits: Number(netUnits.toFixed(3)),
     roi: resolved.length ? Number((netUnits / resolved.length).toFixed(4)) : null,
-    averageOdds: mean(resolved.map((row) => Number(row.odds))),
-    averageLine: mean(resolved.map((row) => Number(row.line))),
-    averageFormScore: mean(resolved.map((row) => Number(row.formScore))),
+    averageOdds: mean(resolved.map((row) => row.odds)),
+    averageLine: mean(resolved.map((row) => row.line)),
+    averageFormScore: mean(resolved.map((row) => row.formScore)),
+    averageBeta: mean(resolved.map((row) => row.v2Beta)),
+    averageEdge: mean(resolved.map((row) => row.v2ProbabilityEdge)),
   };
 }
 
@@ -141,7 +148,7 @@ function calibration(rows, probabilityField) {
     n: usable.length,
     brier: Number((brier / usable.length).toFixed(4)),
     logLoss: Number((logLoss / usable.length).toFixed(4)),
-    averageProbability: Number(mean(usable.map((row) => Number(row[probabilityField]))).toFixed(4)),
+    averageProbability: Number(mean(usable.map((row) => row[probabilityField])).toFixed(4)),
     hitRate: Number((wins / usable.length).toFixed(4)),
   };
 }
@@ -175,6 +182,18 @@ function edgeCandidates(rows) {
   return output.sort((a, b) => b.netUnits - a.netUnits || b.bets - a.bets || b.roi - a.roi).slice(0, 40);
 }
 
+function compactFit(fit) {
+  return {
+    ready: Boolean(fit?.ready),
+    beta: Number(fit?.beta || 0),
+    n: Number(fit?.n || 0),
+    dates: Number(fit?.dates || 0),
+    marketBrier: fit?.marketBrier == null ? null : Number(Number(fit.marketBrier).toFixed(5)),
+    structuralBrier: fit?.structuralBrier == null ? null : Number(Number(fit.structuralBrier).toFixed(5)),
+    anchoredBrier: fit?.anchoredBrier == null ? null : Number(Number(fit.anchoredBrier).toFixed(5)),
+  };
+}
+
 function publicEntry(row) {
   return {
     date: row.date,
@@ -197,6 +216,27 @@ function publicEntry(row) {
   };
 }
 
+function v2PublicEntry(row) {
+  return {
+    date: row.date,
+    checkpoint: row.checkpoint,
+    pitcherName: row.pitcherName,
+    matchup: row.matchup,
+    book: row.book,
+    side: row.side,
+    line: row.line,
+    odds: row.odds,
+    actualKs: row.actualKs,
+    result: row.result,
+    profitUnits: row.profitUnits,
+    v2Beta: row.v2Beta,
+    v2Probability: row.v2Probability,
+    marketProbability: row.marketProbability,
+    v2ProbabilityEdge: row.v2ProbabilityEdge,
+    v2ExpectedValue: row.v2ExpectedValue,
+  };
+}
+
 module.exports = async function handler(request, response) {
   if (request.method !== 'GET' && request.method !== 'HEAD') {
     response.setHeader('Allow', 'GET, HEAD');
@@ -210,7 +250,7 @@ module.exports = async function handler(request, response) {
     return response.status(400).json({ status: 'error', message: `through must be between ${ARCHIVE_START} and ${defaultThrough}` });
   }
 
-  const cacheKey = `mlbstrikeouts:discovery:v2:${through}`;
+  const cacheKey = `mlbstrikeouts:discovery:v3:${through}`;
   try {
     const cached = await redisCommand(['GET', cacheKey]);
     if (cached) {
@@ -278,6 +318,8 @@ module.exports = async function handler(request, response) {
 
     const referenceEntries = [];
     const modelSelections = [];
+    const v2CalibrationRows = [];
+    const v2CandidateSnapshots = [];
     const diagnostics = [];
 
     for (const { capture, oddsRow, probable } of matches) {
@@ -336,6 +378,7 @@ module.exports = async function handler(request, response) {
         const under = sides?.under && Number(sides.under.line) === line ? sides.under : null;
         const probabilities = outcomeProbabilities(projection.expectedKs, projection.variance, line);
         const market = noVigProbabilities(over, under);
+        const form = formMetrics(starts, line);
         const overEv = expectedValue(probabilities, over, 'over');
         candidates.push({
           book, side: 'over', line, quote: over,
@@ -356,7 +399,50 @@ module.exports = async function handler(request, response) {
             probabilities,
           });
         }
+
+        if (under && market.method === 'two-way de-vig') {
+          const common = {
+            date: capture.date,
+            checkpoint: capture.checkpoint,
+            pitcherName: probable.pitcherName,
+            mlbamId: probable.mlbamId,
+            matchup: oddsRow.matchup,
+            book,
+            line,
+            actualKs: actual.strikeouts,
+            formScore: form.formScore,
+            expectedKs: projection.expectedKs,
+            sampleStarts: projection.sampleStarts,
+            pushProbability: probabilities.push,
+            marketMethod: market.method,
+          };
+          const settled = settleSide(actual.strikeouts, line, over.americanOdds, 'over');
+          v2CalibrationRows.push({
+            ...common,
+            side: 'over',
+            odds: Number(over.americanOdds),
+            result: settled.result,
+            profitUnits: settled.profitUnits,
+            modelProbability: probabilities.fairOver,
+            marketProbability: market.over,
+          });
+          v2CandidateSnapshots.push({
+            ...common,
+            side: 'over',
+            odds: Number(over.americanOdds),
+            modelProbability: probabilities.fairOver,
+            marketProbability: market.over,
+          });
+          v2CandidateSnapshots.push({
+            ...common,
+            side: 'under',
+            odds: Number(under.americanOdds),
+            modelProbability: probabilities.fairUnder,
+            marketProbability: market.under,
+          });
+        }
       }
+
       candidates.sort((a, b) => Number(b.modelEV ?? -999) - Number(a.modelEV ?? -999));
       const bestModel = candidates[0];
       if (
@@ -391,11 +477,54 @@ module.exports = async function handler(request, response) {
       }
     }
 
+    const walkForward = walkForwardCalibration(v2CalibrationRows, V2_FIT_OPTIONS);
+    const fitByDate = new Map(walkForward.dailyFits.map((fit) => [fit.date, fit]));
+    const v2Groups = new Map();
+    for (const candidate of v2CandidateSnapshots) {
+      const fit = fitByDate.get(candidate.date);
+      if (!fit?.ready || candidate.sampleStarts < V2_MIN_SAMPLE_STARTS) continue;
+      const repriced = repriceCandidate(candidate, fit.beta);
+      if (!repriced) continue;
+      const key = `${candidate.date}|${candidate.checkpoint}|${candidate.mlbamId}`;
+      if (!v2Groups.has(key)) v2Groups.set(key, []);
+      v2Groups.get(key).push(repriced);
+    }
+    const v2Selections = [];
+    for (const values of v2Groups.values()) {
+      values.sort((a, b) => Number(b.v2ExpectedValue ?? -999) - Number(a.v2ExpectedValue ?? -999));
+      const best = values[0];
+      if (!best || Number(best.v2ExpectedValue) < V2_MIN_EV || Number(best.v2ProbabilityEdge) < V2_MIN_EDGE) continue;
+      const settled = settleSide(best.actualKs, best.line, best.odds, best.side);
+      v2Selections.push({ ...best, result: settled.result, profitUnits: settled.profitUnits });
+    }
+
+    const v2Calibration = {
+      n: walkForward.n,
+      slates: walkForward.dates,
+      firstEvaluatedDate: walkForward.firstEvaluatedDate,
+      marketBrier: walkForward.marketBrier == null ? null : Number(walkForward.marketBrier.toFixed(5)),
+      structuralBrier: walkForward.structuralBrier == null ? null : Number(walkForward.structuralBrier.toFixed(5)),
+      anchoredBrier: walkForward.anchoredBrier == null ? null : Number(walkForward.anchoredBrier.toFixed(5)),
+      marketLogLoss: walkForward.marketLogLoss == null ? null : Number(walkForward.marketLogLoss.toFixed(5)),
+      structuralLogLoss: walkForward.structuralLogLoss == null ? null : Number(walkForward.structuralLogLoss.toFixed(5)),
+      anchoredLogLoss: walkForward.anchoredLogLoss == null ? null : Number(walkForward.anchoredLogLoss.toFixed(5)),
+    };
+    const v2Strategy = summary(v2Selections);
+    const v2Promoted = (
+      v2Calibration.n >= 300
+      && v2Calibration.slates >= 7
+      && v2Calibration.anchoredBrier != null
+      && v2Calibration.marketBrier != null
+      && v2Calibration.anchoredBrier < v2Calibration.marketBrier
+      && v2Strategy.bets >= 50
+      && Number(v2Strategy.roi) > 0
+    );
+
     const formScoreOrder = ['75+', '60–74.9', '45–59.9', 'Below 45'];
     const oddsOrder = ['≤ -150', '-149 to -120', '-119 to +100', '+101 to +130', '+131 or longer'];
     const modelEdgeOrder = ['10%+', '5–9.9%', '2–4.9%', '0–1.9%', 'Negative'];
     const output = {
-      schemaVersion: 2,
+      schemaVersion: 3,
       kind: 'pitcher_strikeouts_historical_discovery',
       status: referenceEntries.length ? 'ready' : 'no_rows',
       generatedAt: new Date().toISOString(),
@@ -413,6 +542,8 @@ module.exports = async function handler(request, response) {
         formScore: '50% L3 + 30% L5 + 20% L10 over-rate using only starts before the slate and the exact selected line.',
         model: 'k-count-v1.0 uses pregame-only pitcher K/BF, projected batters faced, opponent K tendency, rest, and a Poisson/negative-binomial count distribution.',
         modelStrategy: 'One highest-EV side/book/line per pitcher/checkpoint only when model EV ≥4%, probability edge ≥2.5 points, and at least five prior starts.',
+        modelV2: 'k-market-anchor-v2.0 begins at each exact two-way de-vigged market probability and lets v1 move log-odds only by beta learned from earlier slates.',
+        modelV2Strategy: `Strict walk-forward; ≥${V2_MIN_SAMPLE_STARTS} prior starts; v2 edge ≥${(V2_MIN_EDGE * 100).toFixed(1)} points; EV ≥${(V2_MIN_EV * 100).toFixed(1)}%; one best exact book/line/side per pitcher/checkpoint.`,
         warning: 'The archive is still short. Positive slices are hypothesis-generating until they persist over materially larger forward samples.',
       },
       dataQuality: {
@@ -422,6 +553,9 @@ module.exports = async function handler(request, response) {
         unmatchedRows: unmatched.length,
         settledReferenceBets: referenceEntries.length,
         modelSelections: modelSelections.length,
+        v2ExactTwoWayRows: v2CalibrationRows.length,
+        v2CandidateSnapshots: v2CandidateSnapshots.length,
+        v2Selections: v2Selections.length,
         unmatchedNames: unmatched.slice(0, 50),
         diagnostics: [...new Set(diagnostics)].slice(0, 50),
       },
@@ -442,6 +576,32 @@ module.exports = async function handler(request, response) {
         bySide: grouped(modelSelections, (row) => row.side, ['over', 'under']),
         byBook: grouped(modelSelections, (row) => row.book, ['fanduel', 'draftkings', 'betmgm']),
         byCheckpoint: grouped(modelSelections, (row) => row.checkpoint, CHECKPOINTS),
+      },
+      modelV2: {
+        modelVersion: 'k-market-anchor-v2.0',
+        calibration: v2Calibration,
+        finalFit: compactFit(walkForward.finalFit),
+        strategy: v2Strategy,
+        bySide: grouped(v2Selections, (row) => row.side, ['over', 'under']),
+        byBook: grouped(v2Selections, (row) => row.book, ['fanduel', 'draftkings', 'betmgm']),
+        byCheckpoint: grouped(v2Selections, (row) => row.checkpoint, CHECKPOINTS),
+        promoted: v2Promoted,
+        promotionReason: v2Promoted
+          ? 'PASS: walk-forward calibration and executable ROI both beat the required gate.'
+          : 'HOLD: v2 remains research-only until both calibration and executable walk-forward ROI pass the promotion gate.',
+        dailyFits: walkForward.dailyFits.map((fit) => ({
+          date: fit.date,
+          ready: fit.ready,
+          beta: fit.beta,
+          trainingRows: fit.n,
+          trainingDates: fit.dates,
+          testRows: fit.testRows,
+        })),
+        recentSelections: v2Selections
+          .slice()
+          .sort((a, b) => b.date.localeCompare(a.date) || Number(b.v2ExpectedValue) - Number(a.v2ExpectedValue))
+          .slice(0, 40)
+          .map(v2PublicEntry),
       },
       recentReferenceBets: referenceEntries
         .slice()
