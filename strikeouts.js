@@ -108,10 +108,11 @@ function statTable(title, rows, extra = '') {
   </table></div></div></section>`;
 }
 
-function renderDiscovery(data, v2 = null) {
+function renderDiscovery(data) {
   status.hidden = true;
   const overall = data.form?.overall || {};
   const model = data.model?.selectedStrategy || {};
+  const v2 = data.modelV2 || null;
   renderMetrics([
     ['Archive bets', overall.bets ?? 0],
     ['Form ROI', pct(overall.roi,1), valueClass(overall.roi)],
@@ -145,7 +146,7 @@ function renderDiscovery(data, v2 = null) {
       <div class="validation-card"><span>Anchored v2 Brier</span><strong>${v2Calibration.anchoredBrier ?? '—'}</strong><small>first evaluated ${esc(v2Calibration.firstEvaluatedDate || '—')}</small></div>
       <div class="validation-card"><span>Executable v2</span><strong>${esc(v2Strategy.bets || 0)} bets</strong><small>${units(v2Strategy.netUnits)} · ${pct(v2Strategy.roi,1)} ROI</small></div>
     </div>
-    <div class="method"><strong>${v2.promoted ? 'PASS' : 'HOLD'}:</strong> ${esc(v2.promotionReason || '')} β is fitted separately for every historical date using only earlier slates; the final β shown above is trained through ${esc(v2.archive?.through || '—')} for the next live slate.</div>
+    <div class="method"><strong>${v2.promoted ? 'PASS' : 'HOLD'}:</strong> ${esc(v2.promotionReason || '')} β is fitted separately for every historical date using only earlier slates; the final β shown above is trained through ${esc(data.archive?.through || '—')} for the next live slate.</div>
   </section>` : '';
 
   const edges = edgeRows ? `<section class="report-section"><div class="section-head"><h2>Positive historical slices</h2><span class="pill">min 20 bets · 5 slates</span></div><div class="table-card compact"><div class="table-scroll"><table>
@@ -163,7 +164,6 @@ function renderDiscovery(data, v2 = null) {
 function renderModel(data) {
   status.hidden = true;
   const displayRows = data.candidates?.length ? data.candidates : (data.researchCandidates?.length ? data.researchCandidates : data.bets || []);
-  const top = displayRows[0];
   const validation = data.validation?.calibration || {};
   const strategy = data.validation?.strategy || {};
   renderMetrics([
@@ -226,15 +226,10 @@ async function loadDiscovery() {
   summary.hidden = true;
   content.innerHTML = '';
   try {
-    const [baseResponse, v2Response] = await Promise.all([
-      fetch('/api/strikeouts-discovery', { cache: 'no-store' }),
-      fetch('/api/strikeouts-v2-validation', { cache: 'no-store' }),
-    ]);
-    const data = await baseResponse.json();
-    if (!baseResponse.ok) throw new Error(data.message || `HTTP ${baseResponse.status}`);
-    let v2 = null;
-    if (v2Response.ok) v2 = await v2Response.json();
-    renderDiscovery(data, v2);
+    const response = await fetch('/api/strikeouts-discovery', { cache: 'no-store' });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message || `HTTP ${response.status}`);
+    renderDiscovery(data);
   } catch (error) {
     status.textContent = error instanceof Error ? error.message : String(error);
     content.innerHTML = '<div class="placeholder"><h2>Discovery unavailable</h2><p>The archive analysis did not complete. This path adds zero SportsGameOdds calls; it only reads stored checkpoints and official MLB results.</p></div>';
@@ -247,7 +242,7 @@ async function loadModel() {
   summary.hidden = true;
   content.innerHTML = '';
   try {
-    const response = await fetch(`/api/strikeouts-model-v2?${formParams()}`, { cache: 'no-store' });
+    const response = await fetch(`/api/strikeouts-model?${formParams()}`, { cache: 'no-store' });
     const data = await response.json();
     if (!response.ok) throw new Error(data.message || `HTTP ${response.status}`);
     renderModel(data);
