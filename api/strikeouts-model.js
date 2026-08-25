@@ -1,8 +1,7 @@
-const { normalizeCheckpoint } = require('../lib/checkpoint-runtime');
+const { normalizeCheckpoint, redisCommand } = require('../lib/checkpoint-runtime');
 const { readStrikeoutsCheckpoint } = require('../lib/strikeouts-runtime');
 const {
   LEAGUE_K_PA_FALLBACK,
-  expectedValue,
   fairAmerican,
   fetchSchedule,
   formMetrics,
@@ -16,8 +15,12 @@ const {
   teamHittingGameLog,
   teamKRateBefore,
 } = require('../lib/strikeouts-analysis');
+const { repriceCandidate } = require('../lib/strikeouts-market-anchor');
 
 const CHECKPOINTS = ['2017', '1717', '1117', '0817'];
+const MIN_SAMPLE_STARTS = 8;
+const MIN_V2_EDGE = 0.015;
+const MIN_V2_EV = 0.02;
 
 function etDate(now = new Date()) {
   const parts = Object.fromEntries(
@@ -26,6 +29,12 @@ function etDate(now = new Date()) {
     }).formatToParts(now).filter((part) => part.type !== 'literal').map((part) => [part.type, part.value]),
   );
   return `${parts.year}-${parts.month}-${parts.day}`;
+}
+
+function addDays(iso, days) {
+  const date = new Date(`${iso}T12:00:00Z`);
+  date.setUTCDate(date.getUTCDate() + days);
+  return date.toISOString().slice(0, 10);
 }
 
 async function resolveCheckpoint(date, requested) {
@@ -42,8 +51,43 @@ async function resolveCheckpoint(date, requested) {
 
 function confidence(sampleStarts) {
   if (sampleStarts >= 12) return 'higher';
-  if (sampleStarts >= 6) return 'medium';
+  if (sampleStarts >= 8) return 'medium';
   return 'limited';
+}
+
+async function readValidationFromCache(request) {
+  const through = addDays(etDate(), -1);
+  const cacheKey = `mlbstrikeouts:discovery:v3:${through}`;
+  try {
+    const cached = await redisCommand(['GET', cacheKey]);
+    if (cached) return JSON.parse(cached)?.modelV2 || null;
+  } catch {
+    // Fall through to the read-only Discovery endpoint.
+  }
+
+  const host = request.headers?.host;
+  if (!host) return null;
+  const proto = String(request.headers?.['x-forwarded-proto'] || 'https').split(',')[0].trim();
+  try {
+    const result = await fetch(`${proto}://${host}/api/strikeouts-discovery`, {
+      headers: { Accept: 'application/json' },
+      cache: 'no-store',
+      signal: AbortSignal.timeout(55000),
+    });
+    if (!result.ok) return null;
+    const payload = await result.json();
+    return payload?.modelV2 || null;
+  } catch {
+    return null;
+  }
+}
+
+function isPregame(row, now = Date.now()) {
+  if (!row?.gameStartAt) return false;
+  const start = Date.parse(row.gameStartAt);
+  if (!Number.isFinite(start) || start <= now) return false;
+  const state = String(row.gameStatus || '').toLowerCase();
+  return !state.includes('final') && !state.includes('progress') && !state.includes('review');
 }
 
 module.exports = async function handler(request, response) {
@@ -58,7 +102,10 @@ module.exports = async function handler(request, response) {
   }
 
   try {
-    const resolved = await resolveCheckpoint(date, request.query?.checkpoint);
+    const [resolved, validation] = await Promise.all([
+      resolveCheckpoint(date, request.query?.checkpoint),
+      readValidationFromCache(request),
+    ]);
     if (!resolved?.payload) {
       response.setHeader('Cache-Control', 'public, s-maxage=20, stale-while-revalidate=60');
       return response.status(404).json({
@@ -68,6 +115,9 @@ module.exports = async function handler(request, response) {
       });
     }
 
+    const finalFit = validation?.finalFit || null;
+    const beta = finalFit?.ready ? Number(finalFit.beta || 0) : 0;
+    const promoted = Boolean(validation?.promoted);
     const schedule = await fetchSchedule(date);
     const probables = probablePitchers(schedule);
     const probableByKey = new Map(probables.map((row) => [row.playerKey, row]));
@@ -115,14 +165,14 @@ module.exports = async function handler(request, response) {
       const pitcherBets = [];
       for (const [book, sides] of Object.entries(oddsRow.odds || {})) {
         const over = sides?.over;
+        const under = sides?.under;
         if (!over || !Number.isFinite(Number(over.line))) continue;
-        const under = sides?.under && Number(sides.under.line) === Number(over.line) ? sides.under : null;
         const line = Number(over.line);
+        const pairedUnder = under && Number(under.line) === line ? under : null;
         const probabilities = outcomeProbabilities(projection.expectedKs, projection.variance, line);
-        const market = noVigProbabilities(over, under);
+        const market = noVigProbabilities(over, pairedUnder);
         const form = formMetrics(starts, line);
-        const overEv = expectedValue(probabilities, over, 'over');
-        const overBet = {
+        const common = {
           pitcherName: probable.pitcherName,
           mlbamId: probable.mlbamId,
           team: probable.team,
@@ -132,42 +182,59 @@ module.exports = async function handler(request, response) {
           gameStartAt: probable.gameStartAt,
           gameStatus: probable.gameStatus,
           book,
-          side: 'over',
           line,
-          odds: Number(over.americanOdds),
-          modelProbability: Number(probabilities.fairOver.toFixed(4)),
-          fairOdds: fairAmerican(probabilities.fairOver),
-          marketNoVigProbability: market.over == null ? null : Number(market.over.toFixed(4)),
-          probabilityEdge: market.over == null ? null : Number((probabilities.fairOver - market.over).toFixed(4)),
-          expectedValue: overEv == null ? null : Number(overEv.toFixed(4)),
-          pushProbability: Number(probabilities.push.toFixed(4)),
           formScore: form.formScore,
           expectedKs: projection.expectedKs,
           projection,
           confidence: confidence(projection.sampleStarts),
           marketMethod: market.method,
+          pushProbability: Number(probabilities.push.toFixed(4)),
+        };
+
+        const rawOver = {
+          ...common,
+          side: 'over',
+          odds: Number(over.americanOdds),
+          modelProbability: Number(probabilities.fairOver.toFixed(4)),
+          marketProbability: market.over == null ? null : Number(market.over.toFixed(4)),
+        };
+        const v2Over = repriceCandidate(rawOver, beta);
+        const overBet = {
+          ...rawOver,
+          v1Probability: rawOver.modelProbability,
+          v2Beta: v2Over?.v2Beta ?? beta,
+          v2Probability: v2Over ? Number(v2Over.v2Probability.toFixed(4)) : null,
+          v2FairOdds: v2Over ? fairAmerican(v2Over.v2Probability) : null,
+          v2ProbabilityEdge: v2Over ? Number(v2Over.v2ProbabilityEdge.toFixed(4)) : null,
+          v2ExpectedValue: v2Over?.v2ExpectedValue == null ? null : Number(v2Over.v2ExpectedValue.toFixed(4)),
         };
         bets.push(overBet);
         pitcherBets.push(overBet);
 
-        if (under) {
-          const underEv = expectedValue(probabilities, under, 'under');
-          const underBet = {
-            ...overBet,
+        if (pairedUnder) {
+          const rawUnder = {
+            ...common,
             side: 'under',
-            odds: Number(under.americanOdds),
+            odds: Number(pairedUnder.americanOdds),
             modelProbability: Number(probabilities.fairUnder.toFixed(4)),
-            fairOdds: fairAmerican(probabilities.fairUnder),
-            marketNoVigProbability: market.under == null ? null : Number(market.under.toFixed(4)),
-            probabilityEdge: market.under == null ? null : Number((probabilities.fairUnder - market.under).toFixed(4)),
-            expectedValue: underEv == null ? null : Number(underEv.toFixed(4)),
+            marketProbability: market.under == null ? null : Number(market.under.toFixed(4)),
+          };
+          const v2Under = repriceCandidate(rawUnder, beta);
+          const underBet = {
+            ...rawUnder,
+            v1Probability: rawUnder.modelProbability,
+            v2Beta: v2Under?.v2Beta ?? beta,
+            v2Probability: v2Under ? Number(v2Under.v2Probability.toFixed(4)) : null,
+            v2FairOdds: v2Under ? fairAmerican(v2Under.v2Probability) : null,
+            v2ProbabilityEdge: v2Under ? Number(v2Under.v2ProbabilityEdge.toFixed(4)) : null,
+            v2ExpectedValue: v2Under?.v2ExpectedValue == null ? null : Number(v2Under.v2ExpectedValue.toFixed(4)),
           };
           bets.push(underBet);
           pitcherBets.push(underBet);
         }
       }
 
-      pitcherBets.sort((a, b) => Number(b.expectedValue ?? -999) - Number(a.expectedValue ?? -999));
+      pitcherBets.sort((a, b) => Number(b.v2ExpectedValue ?? -999) - Number(a.v2ExpectedValue ?? -999));
       pitcherRows.push({
         pitcherName: probable.pitcherName,
         mlbamId: probable.mlbamId,
@@ -183,20 +250,23 @@ module.exports = async function handler(request, response) {
       });
     }
 
-    bets.sort((a, b) => Number(b.expectedValue ?? -999) - Number(a.expectedValue ?? -999));
-    pitcherRows.sort((a, b) => Number(b.bestBet?.expectedValue ?? -999) - Number(a.bestBet?.expectedValue ?? -999));
-    const candidates = bets.filter((row) =>
-      row.expectedValue != null
-      && row.expectedValue >= 0.04
-      && row.probabilityEdge != null
-      && row.probabilityEdge >= 0.025
-      && row.projection.sampleStarts >= 5
+    bets.sort((a, b) => Number(b.v2ExpectedValue ?? -999) - Number(a.v2ExpectedValue ?? -999));
+    pitcherRows.sort((a, b) => Number(b.bestBet?.v2ExpectedValue ?? -999) - Number(a.bestBet?.v2ExpectedValue ?? -999));
+    const researchCandidates = bets.filter((row) =>
+      row.marketMethod === 'two-way de-vig'
+      && row.v2ExpectedValue != null
+      && row.v2ExpectedValue >= MIN_V2_EV
+      && row.v2ProbabilityEdge != null
+      && row.v2ProbabilityEdge >= MIN_V2_EDGE
+      && row.projection.sampleStarts >= MIN_SAMPLE_STARTS
+      && isPregame(row)
     );
+    const candidates = promoted ? researchCandidates : [];
 
     const output = {
-      schemaVersion: 1,
-      kind: 'pitcher_strikeouts_count_model',
-      modelVersion: 'k-count-v1.0',
+      schemaVersion: 2,
+      kind: 'pitcher_strikeouts_market_anchored_model',
+      modelVersion: 'k-market-anchor-v2.0',
       status: pitcherRows.length ? 'ready' : 'no_rows',
       generatedAt: new Date().toISOString(),
       date,
@@ -204,14 +274,20 @@ module.exports = async function handler(request, response) {
       checkpointAsOf: resolved.payload.asOf,
       providerRequests: 0,
       quotaObjectsAdded: 0,
+      promoted,
+      promotionReason: validation?.promotionReason || 'Validation unavailable; v2 cannot be promoted.',
+      validation: validation ? {
+        calibration: validation.calibration || null,
+        finalFit,
+        strategy: validation.strategy || null,
+      } : null,
       methodology: {
-        target: 'Full-game starting-pitcher strikeout count, evaluated against each exact sportsbook line.',
-        pitcherRate: '55% recent-five K per batter faced + 45% longer rolling K per batter faced.',
-        workload: 'Projected batters faced = 50% L3 + 30% L5 + 20% L10 recent-start depth.',
-        opponent: 'Opponent batting strikeout rate, 65% season + 35% recent 10 games, relative to a 22.5% league baseline and capped to ±15%.',
-        distribution: 'Poisson when dispersion is low; moment-matched negative binomial when recent strikeout variance exceeds the mean.',
-        market: 'Two-way de-vig when the same book posts both over and under at the same line; one-sided implied probability otherwise.',
-        warning: 'v1 is a transparent structural count model, not yet a trained gradient-boosting model. Discovery is used to validate it before promotion.',
+        target: 'Full-game starting-pitcher strikeout count against each exact sportsbook line.',
+        prior: 'Each paired book/line begins at its two-way de-vigged market probability.',
+        structuralModel: 'v1 pitcher K/BF + projected batters faced + opponent K tendency + rest count distribution.',
+        anchor: 'v2 blends market and structural log-odds using beta fitted only from settled historical dates. beta=0 is market-only; beta=1 is full v1.',
+        candidateGate: `Two-way de-vig only, at least ${MIN_SAMPLE_STARTS} prior starts, v2 edge >= ${(MIN_V2_EDGE * 100).toFixed(1)} points, EV >= ${(MIN_V2_EV * 100).toFixed(1)}%, and game not yet started.`,
+        promotion: 'Research candidates become promoted candidates only after the independent walk-forward validator passes calibration and ROI gates.',
       },
       dataQuality: {
         probablePitchers: probables.length,
@@ -219,10 +295,12 @@ module.exports = async function handler(request, response) {
         matchedPitchers: matched.length,
         modeledPitchers: pitcherRows.length,
         modeledQuotes: bets.length,
-        candidateQuotes: candidates.length,
+        researchCandidateQuotes: researchCandidates.length,
+        promotedCandidateQuotes: candidates.length,
         diagnostics,
       },
       candidates: candidates.slice(0, 40),
+      researchCandidates: researchCandidates.slice(0, 40),
       pitchers: pitcherRows,
       bets: bets.slice(0, 120),
     };
