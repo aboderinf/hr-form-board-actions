@@ -30,6 +30,12 @@ function units(value) {
   return `${n > 0 ? '+' : ''}${n.toFixed(2)}u`;
 }
 
+function signed(value, digits = 1) {
+  const n = Number(value);
+  if (!Number.isFinite(n)) return '—';
+  return `${n > 0 ? '+' : ''}${n.toFixed(digits)}`;
+}
+
 function esc(value) {
   return String(value ?? '').replace(/[&<>'"]/g, (ch) => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[ch]));
 }
@@ -111,13 +117,14 @@ function statTable(title, rows, extra = '') {
 function renderDiscovery(data) {
   status.hidden = true;
   const overall = data.form?.overall || {};
-  const model = data.model?.selectedStrategy || {};
+  const v1 = data.model?.selectedStrategy || {};
   const v2 = data.modelV2 || null;
+  const v3 = data.modelV3 || null;
   renderMetrics([
     ['Archive bets', overall.bets ?? 0],
     ['Form ROI', pct(overall.roi,1), valueClass(overall.roi)],
-    ['v1 ROI', pct(model.roi,1), valueClass(model.roi)],
-    ['v2 status', v2 ? (v2.promoted ? 'PROMOTED' : 'HOLD') : '—', v2?.promoted ? 'positive' : 'negative'],
+    ['v3 walk-forward ROI', pct(v3?.strategy?.roi,2), valueClass(v3?.strategy?.roi)],
+    ['v3 status', v3 ? (v3.promoted ? 'PROMOTED' : 'HOLD') : '—', v3?.promoted ? 'positive' : 'negative'],
   ]);
 
   const edgeRows = (data.form?.edgeCandidates || []).map((row) => `<tr>
@@ -126,39 +133,65 @@ function renderDiscovery(data) {
     <td class="${valueClass(row.netUnits)}">${units(row.netUnits)}</td><td class="${valueClass(row.roi)}">${pct(row.roi,1)}</td>
   </tr>`).join('');
 
-  const calibration = data.model?.referenceLineCalibration || {};
+  const v1Calibration = data.model?.referenceLineCalibration || {};
   const marketCalibration = data.model?.marketCalibration || {};
-  const modelPanel = `<section class="report-section"><div class="section-head"><h2>v1 validation</h2><span class="pill">${esc(data.methodology?.model || 'k-count-v1')}</span></div>
+  const v1Panel = `<section class="report-section"><div class="section-head"><h2>v1 structural benchmark</h2><span class="pill">${esc(data.methodology?.model || 'k-count-v1')}</span></div>
     <div class="validation-grid">
-      <div class="validation-card"><span>v1 Brier</span><strong>${calibration.brier ?? '—'}</strong><small>${esc(calibration.n || 0)} decisive reference-line bets</small></div>
-      <div class="validation-card"><span>Market Brier</span><strong>${marketCalibration.brier ?? '—'}</strong><small>de-vig where both sides existed</small></div>
-      <div class="validation-card"><span>v1 selected bets</span><strong>${esc(model.bets || 0)}</strong><small>${units(model.netUnits)} · ${pct(model.roi,1)} ROI</small></div>
+      <div class="validation-card"><span>v1 Brier</span><strong>${v1Calibration.brier ?? '—'}</strong><small>${esc(v1Calibration.n || 0)} reference-line outcomes</small></div>
+      <div class="validation-card"><span>Market Brier</span><strong>${marketCalibration.brier ?? '—'}</strong><small>same historical reference rows</small></div>
+      <div class="validation-card"><span>v1 strategy</span><strong>${esc(v1.bets || 0)} bets</strong><small>${units(v1.netUnits)} · ${pct(v1.roi,1)} ROI</small></div>
       <div class="validation-card"><span>Archive through</span><strong>${esc(data.archive?.through || '—')}</strong><small>${esc(data.archive?.checkpointFiles || 0)} checkpoint files</small></div>
     </div>
   </section>`;
 
   const v2Calibration = v2?.calibration || {};
   const v2Strategy = v2?.strategy || {};
-  const v2Panel = v2 ? `<section class="report-section"><div class="section-head"><h2>v2 walk-forward validation</h2><span class="pill">market anchored · β ${esc(v2.finalFit?.beta ?? 0)}</span></div>
+  const v2Panel = v2 ? `<section class="report-section"><div class="section-head"><h2>v2 market anchor</h2><span class="pill">β ${esc(v2.finalFit?.beta ?? 0)}</span></div>
     <div class="validation-grid">
-      <div class="validation-card"><span>Market Brier</span><strong>${v2Calibration.marketBrier ?? '—'}</strong><small>${esc(v2Calibration.n || 0)} strict OOS exact-line rows</small></div>
+      <div class="validation-card"><span>Market Brier</span><strong>${v2Calibration.marketBrier ?? '—'}</strong><small>${esc(v2Calibration.n || 0)} strict OOS rows</small></div>
       <div class="validation-card"><span>Raw v1 Brier</span><strong>${v2Calibration.structuralBrier ?? '—'}</strong><small>same walk-forward rows</small></div>
-      <div class="validation-card"><span>Anchored v2 Brier</span><strong>${v2Calibration.anchoredBrier ?? '—'}</strong><small>first evaluated ${esc(v2Calibration.firstEvaluatedDate || '—')}</small></div>
+      <div class="validation-card"><span>v2 Brier</span><strong>${v2Calibration.anchoredBrier ?? '—'}</strong><small>market + learned v1 weight</small></div>
       <div class="validation-card"><span>Executable v2</span><strong>${esc(v2Strategy.bets || 0)} bets</strong><small>${units(v2Strategy.netUnits)} · ${pct(v2Strategy.roi,1)} ROI</small></div>
     </div>
-    <div class="method"><strong>${v2.promoted ? 'PASS' : 'HOLD'}:</strong> ${esc(v2.promotionReason || '')} β is fitted separately for every historical date using only earlier slates; the final β shown above is trained through ${esc(data.archive?.through || '—')} for the next live slate.</div>
+    <div class="method"><strong>${v2.promoted ? 'PASS' : 'HOLD'}:</strong> ${esc(v2.promotionReason || '')} The learned β of ${esc(v2.finalFit?.beta ?? 0)} means the current structural v1 adds no validated information beyond the market prior.</div>
   </section>` : '';
 
-  const edges = edgeRows ? `<section class="report-section"><div class="section-head"><h2>Positive historical slices</h2><span class="pill">min 20 bets · 5 slates</span></div><div class="table-card compact"><div class="table-scroll"><table>
+  const v3Calibration = v3?.calibration || {};
+  const v3Strategy = v3?.strategy || {};
+  const v3Panel = v3 ? `<section class="report-section"><div class="section-head"><h2>v3 residual-market validation</h2><span class="pill">ridge λ ${esc(v3.finalFit?.lambda ?? '—')}</span></div>
+    <div class="validation-grid">
+      <div class="validation-card"><span>Market Brier</span><strong>${v3Calibration.marketBrier ?? '—'}</strong><small>${esc(v3Calibration.n || 0)} group-weighted OOS rows</small></div>
+      <div class="validation-card"><span>Residual v3 Brier</span><strong>${v3Calibration.residualBrier ?? '—'}</strong><small>required gain ≥ 0.00050</small></div>
+      <div class="validation-card"><span>Market → v3 log loss</span><strong>${v3Calibration.marketLogLoss ?? '—'} → ${v3Calibration.residualLogLoss ?? '—'}</strong><small>first evaluated ${esc(v3Calibration.firstEvaluatedDate || '—')}</small></div>
+      <div class="validation-card"><span>v3 research strategy</span><strong>${esc(v3Strategy.bets || 0)} bets</strong><small>${units(v3Strategy.netUnits)} · ${pct(v3Strategy.roi,2)} ROI</small></div>
+    </div>
+    <div class="method"><strong>${v3.promoted ? 'PASS' : 'HOLD'}:</strong> ${esc(v3.promotionReason || '')} The current Brier gain is ${v3Calibration.marketBrier != null && v3Calibration.residualBrier != null ? (Number(v3Calibration.marketBrier) - Number(v3Calibration.residualBrier)).toFixed(5) : '—'}, so v3 is still below the preset promotion margin even though both Brier and log loss improved slightly.</div>
+    ${statTable('v3 research strategy by side', v3.bySide)}
+    ${statTable('v3 research strategy by book', v3.byBook)}
+    ${statTable('v3 research strategy by checkpoint', v3.byCheckpoint)}
+  </section>` : '';
+
+  const edges = edgeRows ? `<section class="report-section"><div class="section-head"><h2>Positive historical Form slices</h2><span class="pill">hypothesis-generating</span></div><div class="table-card compact"><div class="table-scroll"><table>
     <thead><tr><th>Rule</th><th>Bets</th><th>Slates</th><th>Hit</th><th>Net</th><th>ROI</th></tr></thead><tbody>${edgeRows}</tbody></table></div></div></section>` : '';
 
-  content.innerHTML = `<div class="method"><strong>Executable form benchmark:</strong> at each 8:17 / 11:17 / 5:17 checkpoint, take the lower median FD/DK/MGM over line and the best price at that exact line. Settlement uses official MLB strikeouts; integer ties push. No extra SportsGameOdds calls are made.</div>
+  content.innerHTML = `<div class="method"><strong>Validation hierarchy:</strong> Form is descriptive; v1 is an independent structural benchmark; v2 tested whether v1 adds signal to the sportsbook prior; v3 directly models residual market error with strict date walk-forward and strong shrinkage. No Discovery calculation adds a SportsGameOdds call.</div>
     ${statTable('Form score bands', data.form?.byFormScore)}
     ${statTable('Price bands', data.form?.byOdds)}
     ${statTable('Checkpoint timing', data.form?.byCheckpoint)}
     ${edges}
-    ${modelPanel}
-    ${v2Panel}`;
+    ${v1Panel}
+    ${v2Panel}
+    ${v3Panel}`;
+}
+
+function movementLabel(row) {
+  const move = row.marketFeatures || {};
+  if (!move.hasPrior) return '<span class="muted">first snapshot</span>';
+  const line = Number(move.lineMove || 0);
+  const probability = Number(move.probabilityMoveSameLine || 0);
+  if (line !== 0) return `<strong>${signed(line,1)} K line</strong><div class="muted">vs prior checkpoint</div>`;
+  if (move.priorSameLine) return `<strong>${signed(probability * 100,1)} pp</strong><div class="muted">same-line market P</div>`;
+  return '<span class="muted">prior line changed</span>';
 }
 
 function renderModel(data) {
@@ -166,11 +199,12 @@ function renderModel(data) {
   const displayRows = data.candidates?.length ? data.candidates : (data.researchCandidates?.length ? data.researchCandidates : data.bets || []);
   const validation = data.validation?.calibration || {};
   const strategy = data.validation?.strategy || {};
+  const topResearch = data.researchCandidates?.[0] || null;
   renderMetrics([
-    ['β market→v1', data.validation?.finalFit?.beta ?? 0],
-    ['v2 Brier', validation.anchoredBrier ?? '—'],
+    ['Modeled pitchers', data.dataQuality?.modeledPitchers ?? 0],
     ['Research candidates', data.dataQuality?.researchCandidateQuotes ?? 0],
     ['Promoted bets', data.dataQuality?.promotedCandidateQuotes ?? 0, data.promoted ? 'positive' : 'negative'],
+    ['Top research EV', topResearch ? pct(topResearch.v3ExpectedValue,1) : '—', topResearch ? valueClass(topResearch.v3ExpectedValue) : ''],
   ]);
 
   const rows = displayRows.slice(0,60).map((row, i) => `<tr>
@@ -181,27 +215,30 @@ function renderModel(data) {
     <td><strong>${Number(row.expectedKs).toFixed(2)}</strong></td>
     <td>${pct(row.v1Probability,1)}</td>
     <td>${pct(row.marketProbability,1)}</td>
-    <td><strong>${pct(row.v2Probability,1)}</strong><div class="muted">fair ${american(row.v2FairOdds)}</div></td>
-    <td class="${valueClass(row.v2ProbabilityEdge)}"><strong>${pct(row.v2ProbabilityEdge,1)}</strong></td>
-    <td class="${valueClass(row.v2ExpectedValue)}"><strong>${pct(row.v2ExpectedValue,1)}</strong></td>
-    <td>${Number(row.formScore).toFixed(1)}</td>
-    <td>${esc(row.confidence)}</td>
+    <td><strong>${pct(row.v3Probability,1)}</strong><div class="muted">fair ${american(row.v3FairOdds)}</div></td>
+    <td class="${valueClass(row.v3ProbabilityEdge)}"><strong>${pct(row.v3ProbabilityEdge,1)}</strong></td>
+    <td class="${valueClass(row.v3ExpectedValue)}"><strong>${pct(row.v3ExpectedValue,1)}</strong></td>
+    <td>${movementLabel(row)}</td>
+    <td>${Number(row.formScore).toFixed(1)}<div class="muted">${esc(row.sampleStarts)} starts</div></td>
   </tr>`).join('');
 
-  const badge = data.promoted ? 'PROMOTED v2' : 'RESEARCH v2';
-  const title = data.promoted ? 'Market-anchored strikeout model' : 'Market-anchored model — promotion held';
-  content.innerHTML = `<div class="model-callout"><div><span>${esc(badge)}</span><strong>${esc(title)}</strong></div><p>${esc(data.promotionReason || '')}</p></div>
+  const badge = data.promoted ? 'PROMOTED v3' : 'RESEARCH v3';
+  const title = data.promoted ? 'Residual market strikeout model' : 'Residual market model — promotion held';
+  const checkpointNote = data.checkpointValidated === false
+    ? ' This checkpoint itself is not in the historical validation set, so promotion is blocked regardless of global model status.'
+    : '';
+  content.innerHTML = `<div class="model-callout"><div><span>${esc(badge)}</span><strong>${esc(title)}</strong></div><p>${esc(data.promotionReason || '')}${esc(checkpointNote)}</p></div>
     <section class="report-section"><div class="validation-grid">
-      <div class="validation-card"><span>Market Brier</span><strong>${validation.marketBrier ?? '—'}</strong><small>strict walk-forward rows</small></div>
-      <div class="validation-card"><span>Raw v1 Brier</span><strong>${validation.structuralBrier ?? '—'}</strong><small>same rows</small></div>
-      <div class="validation-card"><span>Anchored v2 Brier</span><strong>${validation.anchoredBrier ?? '—'}</strong><small>β ${esc(data.validation?.finalFit?.beta ?? 0)}</small></div>
-      <div class="validation-card"><span>v2 strategy</span><strong>${esc(strategy.bets || 0)} bets</strong><small>${units(strategy.netUnits)} · ${pct(strategy.roi,1)} ROI</small></div>
+      <div class="validation-card"><span>Market Brier</span><strong>${validation.marketBrier ?? '—'}</strong><small>strict group-weighted walk-forward</small></div>
+      <div class="validation-card"><span>Residual v3 Brier</span><strong>${validation.residualBrier ?? '—'}</strong><small>${esc(validation.n || 0)} OOS quote rows</small></div>
+      <div class="validation-card"><span>Market → v3 log loss</span><strong>${validation.marketLogLoss ?? '—'} → ${validation.residualLogLoss ?? '—'}</strong><small>lower is better</small></div>
+      <div class="validation-card"><span>Research strategy</span><strong>${esc(strategy.bets || 0)} bets</strong><small>${units(strategy.netUnits)} · ${pct(strategy.roi,2)} ROI</small></div>
     </div></section>
     <div class="table-card"><div class="table-scroll"><table>
-      <thead><tr><th>#</th><th>Pitcher</th><th>Bet</th><th>Book</th><th>Exp K</th><th>Raw v1 P</th><th>Market P</th><th>v2 P</th><th>v2 edge</th><th>v2 EV</th><th>Form</th><th>Sample</th></tr></thead>
-      <tbody>${rows || '<tr><td colspan="12">No two-way de-vigged v2 research candidates at this checkpoint.</td></tr>'}</tbody>
+      <thead><tr><th>#</th><th>Pitcher</th><th>Bet</th><th>Book</th><th>Exp K</th><th>Raw v1 P</th><th>Market P</th><th>v3 P</th><th>Residual edge</th><th>v3 EV</th><th>Market move</th><th>Form / sample</th></tr></thead>
+      <tbody>${rows || '<tr><td colspan="12">No two-way v3 research rows at this checkpoint.</td></tr>'}</tbody>
     </table></div></div>
-    <div class="method"><strong>v2 rule:</strong> every exact sportsbook line begins at the book’s two-way de-vigged probability. The structural baseball model can move that probability only by learned β. β is fitted from settled prior slates only. Research rows require ≥8 prior starts, ≥1.5 percentage-point v2 edge, ≥2% EV, and a game that has not started; they are promoted only if the historical gate passes.</div>`;
+    <div class="method"><strong>v3 rule:</strong> sportsbook no-vig probability is the starting point. The model learns only a ridge-shrunk residual correction using pre-checkpoint information: structural disagreement, Form/workload/opponent context, cross-book disagreement, exact-line dispersion, and earlier same-day line/price movement. Research rows require ≥8 starts, ≥1.25 percentage-point residual edge and ≥1.5% EV. They are not picks unless the promotion gate passes. SportsGameOdds calls from this view: ${esc(data.providerRequests ?? 0)}.</div>`;
 }
 
 async function loadForm() {
@@ -222,7 +259,7 @@ async function loadForm() {
 
 async function loadDiscovery() {
   status.hidden = false;
-  status.textContent = 'Building historical Discovery and strict walk-forward v2 validation…';
+  status.textContent = 'Building historical Discovery with v1, v2 and residual v3 walk-forward validation…';
   summary.hidden = true;
   content.innerHTML = '';
   try {
@@ -238,7 +275,7 @@ async function loadDiscovery() {
 
 async function loadModel() {
   status.hidden = false;
-  status.textContent = 'Pricing exact strikeout lines with market-anchored v2…';
+  status.textContent = 'Applying residual v3 to the exact archived strikeout market…';
   summary.hidden = true;
   content.innerHTML = '';
   try {
@@ -248,7 +285,7 @@ async function loadModel() {
     renderModel(data);
   } catch (error) {
     status.textContent = error instanceof Error ? error.message : String(error);
-    content.innerHTML = '<div class="placeholder"><h2>Model not ready</h2><p>No usable archived strikeout market, validation history, or starter data was available for this checkpoint.</p></div>';
+    content.innerHTML = '<div class="placeholder"><h2>Model not ready</h2><p>No usable archived strikeout market, residual validation history, or starter data was available for this checkpoint.</p></div>';
   }
 }
 

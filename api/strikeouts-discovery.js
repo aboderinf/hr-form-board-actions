@@ -19,6 +19,12 @@ const {
   teamKRateBefore,
 } = require('../lib/strikeouts-analysis');
 const { repriceCandidate, walkForwardCalibration } = require('../lib/strikeouts-market-anchor');
+const {
+  candidateSidesFromOver,
+  compactResidualFit,
+  decorateOverRows,
+  walkForwardResidual,
+} = require('../lib/strikeouts-market-residual');
 
 const ARCHIVE_START = '2026-08-07';
 const CHECKPOINTS = ['0817', '1117', '1717'];
@@ -26,6 +32,10 @@ const V2_FIT_OPTIONS = { minRows: 120, minDates: 5, ridge: 0.0005 };
 const V2_MIN_SAMPLE_STARTS = 8;
 const V2_MIN_EDGE = 0.015;
 const V2_MIN_EV = 0.02;
+const V3_FIT_OPTIONS = { minRows: 600, minDates: 5, defaultLambda: 100, lambdas: [10, 30, 100, 300] };
+const V3_MIN_SAMPLE_STARTS = 8;
+const V3_MIN_EDGE = 0.0125;
+const V3_MIN_EV = 0.015;
 
 function etDate(now = new Date()) {
   const parts = Object.fromEntries(
@@ -114,7 +124,7 @@ function summary(rows) {
     averageLine: mean(resolved.map((row) => row.line)),
     averageFormScore: mean(resolved.map((row) => row.formScore)),
     averageBeta: mean(resolved.map((row) => row.v2Beta)),
-    averageEdge: mean(resolved.map((row) => row.v2ProbabilityEdge)),
+    averageEdge: mean(resolved.map((row) => row.v3ProbabilityEdge ?? row.v2ProbabilityEdge)),
   };
 }
 
@@ -237,6 +247,31 @@ function v2PublicEntry(row) {
   };
 }
 
+function v3PublicEntry(row) {
+  return {
+    date: row.date,
+    checkpoint: row.checkpoint,
+    pitcherName: row.pitcherName,
+    matchup: row.matchup,
+    book: row.book,
+    side: row.side,
+    line: row.line,
+    odds: row.odds,
+    actualKs: row.actualKs,
+    result: row.result,
+    profitUnits: row.profitUnits,
+    marketProbability: row.marketProbability,
+    modelProbability: row.modelProbability,
+    v3Probability: row.v3Probability,
+    v3ProbabilityEdge: row.v3ProbabilityEdge,
+    v3ExpectedValue: row.v3ExpectedValue,
+    v3Lambda: row.v3Lambda,
+    consensusGap: row.consensusGap,
+    lineMove: row.lineMove,
+    probMoveSameLine: row.probMoveSameLine,
+  };
+}
+
 module.exports = async function handler(request, response) {
   if (request.method !== 'GET' && request.method !== 'HEAD') {
     response.setHeader('Allow', 'GET, HEAD');
@@ -250,7 +285,7 @@ module.exports = async function handler(request, response) {
     return response.status(400).json({ status: 'error', message: `through must be between ${ARCHIVE_START} and ${defaultThrough}` });
   }
 
-  const cacheKey = `mlbstrikeouts:discovery:v3:${through}`;
+  const cacheKey = `mlbstrikeouts:discovery:v4:${through}`;
   try {
     const cached = await redisCommand(['GET', cacheKey]);
     if (cached) {
@@ -320,6 +355,7 @@ module.exports = async function handler(request, response) {
     const modelSelections = [];
     const v2CalibrationRows = [];
     const v2CandidateSnapshots = [];
+    const v3OverRows = [];
     const diagnostics = [];
 
     for (const { capture, oddsRow, probable } of matches) {
@@ -415,6 +451,10 @@ module.exports = async function handler(request, response) {
             sampleStarts: projection.sampleStarts,
             pushProbability: probabilities.push,
             marketMethod: market.method,
+            opponentFactor: projection.opponentFactor,
+            projectedBF: projection.projectedBF,
+            pitcherKRate: projection.pitcherKRate,
+            restDays: projection.restDays,
           };
           const settled = settleSide(actual.strikeouts, line, over.americanOdds, 'over');
           v2CalibrationRows.push({
@@ -439,6 +479,15 @@ module.exports = async function handler(request, response) {
             odds: Number(under.americanOdds),
             modelProbability: probabilities.fairUnder,
             marketProbability: market.under,
+          });
+          v3OverRows.push({
+            ...common,
+            overOdds: Number(over.americanOdds),
+            underOdds: Number(under.americanOdds),
+            result: settled.result,
+            profitUnits: settled.profitUnits,
+            modelProbability: probabilities.fairOver,
+            marketProbability: market.over,
           });
         }
       }
@@ -520,11 +569,54 @@ module.exports = async function handler(request, response) {
       && Number(v2Strategy.roi) > 0
     );
 
+    const decoratedV3Rows = decorateOverRows(v3OverRows);
+    const v3WalkForward = walkForwardResidual(decoratedV3Rows, V3_FIT_OPTIONS);
+    const v3Groups = new Map();
+    for (const row of v3WalkForward.evaluated) {
+      if (Number(row.sampleStarts) < V3_MIN_SAMPLE_STARTS) continue;
+      const sides = candidateSidesFromOver(row, row.v3Probability);
+      const key = `${row.date}|${row.checkpoint}|${row.mlbamId}`;
+      if (!v3Groups.has(key)) v3Groups.set(key, []);
+      v3Groups.get(key).push(...sides);
+    }
+    const v3Selections = [];
+    for (const values of v3Groups.values()) {
+      values.sort((a, b) => Number(b.v3ExpectedValue ?? -999) - Number(a.v3ExpectedValue ?? -999));
+      const best = values[0];
+      if (!best || Number(best.v3ExpectedValue) < V3_MIN_EV || Number(best.v3ProbabilityEdge) < V3_MIN_EDGE) continue;
+      const settled = settleSide(best.actualKs, best.line, best.odds, best.side);
+      v3Selections.push({ ...best, result: settled.result, profitUnits: settled.profitUnits });
+    }
+    const v3Calibration = {
+      n: v3WalkForward.n,
+      slates: v3WalkForward.dates,
+      firstEvaluatedDate: v3WalkForward.firstEvaluatedDate,
+      marketBrier: v3WalkForward.marketBrier == null ? null : Number(v3WalkForward.marketBrier.toFixed(5)),
+      structuralBrier: v3WalkForward.structuralBrier == null ? null : Number(v3WalkForward.structuralBrier.toFixed(5)),
+      residualBrier: v3WalkForward.residualBrier == null ? null : Number(v3WalkForward.residualBrier.toFixed(5)),
+      marketLogLoss: v3WalkForward.marketLogLoss == null ? null : Number(v3WalkForward.marketLogLoss.toFixed(5)),
+      structuralLogLoss: v3WalkForward.structuralLogLoss == null ? null : Number(v3WalkForward.structuralLogLoss.toFixed(5)),
+      residualLogLoss: v3WalkForward.residualLogLoss == null ? null : Number(v3WalkForward.residualLogLoss.toFixed(5)),
+    };
+    const v3Strategy = summary(v3Selections);
+    const v3Promoted = (
+      v3Calibration.n >= 500
+      && v3Calibration.slates >= 8
+      && v3Calibration.residualBrier != null
+      && v3Calibration.marketBrier != null
+      && v3Calibration.residualLogLoss != null
+      && v3Calibration.marketLogLoss != null
+      && v3Calibration.residualBrier <= v3Calibration.marketBrier - 0.0005
+      && v3Calibration.residualLogLoss < v3Calibration.marketLogLoss
+      && v3Strategy.bets >= 50
+      && Number(v3Strategy.roi) > 0
+    );
+
     const formScoreOrder = ['75+', '60–74.9', '45–59.9', 'Below 45'];
     const oddsOrder = ['≤ -150', '-149 to -120', '-119 to +100', '+101 to +130', '+131 or longer'];
     const modelEdgeOrder = ['10%+', '5–9.9%', '2–4.9%', '0–1.9%', 'Negative'];
     const output = {
-      schemaVersion: 3,
+      schemaVersion: 4,
       kind: 'pitcher_strikeouts_historical_discovery',
       status: referenceEntries.length ? 'ready' : 'no_rows',
       generatedAt: new Date().toISOString(),
@@ -544,7 +636,9 @@ module.exports = async function handler(request, response) {
         modelStrategy: 'One highest-EV side/book/line per pitcher/checkpoint only when model EV ≥4%, probability edge ≥2.5 points, and at least five prior starts.',
         modelV2: 'k-market-anchor-v2.0 begins at each exact two-way de-vigged market probability and lets v1 move log-odds only by beta learned from earlier slates.',
         modelV2Strategy: `Strict walk-forward; ≥${V2_MIN_SAMPLE_STARTS} prior starts; v2 edge ≥${(V2_MIN_EDGE * 100).toFixed(1)} points; EV ≥${(V2_MIN_EV * 100).toFixed(1)}%; one best exact book/line/side per pitcher/checkpoint.`,
-        warning: 'The archive is still short. Positive slices are hypothesis-generating until they persist over materially larger forward samples.',
+        modelV3: 'k-market-residual-v3.0 fits only a ridge-regularized correction to de-vigged market log-odds. Features are structural-model disagreement, form/workload/opponent context, cross-book disagreement, exact-line dispersion, and earlier same-day checkpoint movement. Multiple books for the same pitcher/checkpoint are group-weighted rather than treated as independent outcomes.',
+        modelV3Strategy: `Strict outer walk-forward by date with inner past-only lambda selection; ≥${V3_MIN_SAMPLE_STARTS} prior starts; v3 edge ≥${(V3_MIN_EDGE * 100).toFixed(2)} points; EV ≥${(V3_MIN_EV * 100).toFixed(1)}%; one best exact book/line/side per pitcher/checkpoint.`,
+        warning: 'The archive is still short. Positive slices and model improvements remain research findings until they persist over materially larger forward samples.',
       },
       dataQuality: {
         capturedDates: capturedDates.length,
@@ -556,6 +650,8 @@ module.exports = async function handler(request, response) {
         v2ExactTwoWayRows: v2CalibrationRows.length,
         v2CandidateSnapshots: v2CandidateSnapshots.length,
         v2Selections: v2Selections.length,
+        v3ExactTwoWayRows: decoratedV3Rows.length,
+        v3Selections: v3Selections.length,
         unmatchedNames: unmatched.slice(0, 50),
         diagnostics: [...new Set(diagnostics)].slice(0, 50),
       },
@@ -602,6 +698,25 @@ module.exports = async function handler(request, response) {
           .sort((a, b) => b.date.localeCompare(a.date) || Number(b.v2ExpectedValue) - Number(a.v2ExpectedValue))
           .slice(0, 40)
           .map(v2PublicEntry),
+      },
+      modelV3: {
+        modelVersion: 'k-market-residual-v3.0',
+        calibration: v3Calibration,
+        finalFit: compactResidualFit(v3WalkForward.finalFit),
+        strategy: v3Strategy,
+        bySide: grouped(v3Selections, (row) => row.side, ['over', 'under']),
+        byBook: grouped(v3Selections, (row) => row.book, ['fanduel', 'draftkings', 'betmgm']),
+        byCheckpoint: grouped(v3Selections, (row) => row.checkpoint, CHECKPOINTS),
+        promoted: v3Promoted,
+        promotionReason: v3Promoted
+          ? 'PASS: residual model beat the market on both walk-forward calibration metrics and produced positive executable ROI.'
+          : 'HOLD: v3 stays research-only until it beats the market by the calibration margin and has positive walk-forward ROI with enough bets.',
+        dailyFits: v3WalkForward.dailyFits,
+        recentSelections: v3Selections
+          .slice()
+          .sort((a, b) => b.date.localeCompare(a.date) || Number(b.v3ExpectedValue) - Number(a.v3ExpectedValue))
+          .slice(0, 40)
+          .map(v3PublicEntry),
       },
       recentReferenceBets: referenceEntries
         .slice()

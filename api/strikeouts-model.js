@@ -15,12 +15,19 @@ const {
   teamHittingGameLog,
   teamKRateBefore,
 } = require('../lib/strikeouts-analysis');
-const { repriceCandidate } = require('../lib/strikeouts-market-anchor');
+const {
+  candidateSidesFromOver,
+  decorateOverRows,
+  predictResidualProbability,
+  rawFeatureObject,
+} = require('../lib/strikeouts-market-residual');
 
 const CHECKPOINTS = ['2017', '1717', '1117', '0817'];
+const CHECKPOINT_ORDER = ['0817', '1117', '1717', '2017'];
+const VALIDATED_CHECKPOINTS = new Set(['0817', '1117', '1717']);
 const MIN_SAMPLE_STARTS = 8;
-const MIN_V2_EDGE = 0.015;
-const MIN_V2_EV = 0.02;
+const MIN_V3_EDGE = 0.0125;
+const MIN_V3_EV = 0.015;
 
 function etDate(now = new Date()) {
   const parts = Object.fromEntries(
@@ -49,6 +56,11 @@ async function resolveCheckpoint(date, requested) {
   return null;
 }
 
+function earlierCheckpoints(checkpoint) {
+  const index = CHECKPOINT_ORDER.indexOf(String(checkpoint));
+  return index > 0 ? CHECKPOINT_ORDER.slice(0, index) : [];
+}
+
 function confidence(sampleStarts) {
   if (sampleStarts >= 12) return 'higher';
   if (sampleStarts >= 8) return 'medium';
@@ -57,10 +69,10 @@ function confidence(sampleStarts) {
 
 async function readValidationFromCache(request) {
   const through = addDays(etDate(), -1);
-  const cacheKey = `mlbstrikeouts:discovery:v3:${through}`;
+  const cacheKey = `mlbstrikeouts:discovery:v4:${through}`;
   try {
     const cached = await redisCommand(['GET', cacheKey]);
-    if (cached) return JSON.parse(cached)?.modelV2 || null;
+    if (cached) return JSON.parse(cached)?.modelV3 || null;
   } catch {
     // Fall through to the read-only Discovery endpoint.
   }
@@ -76,7 +88,7 @@ async function readValidationFromCache(request) {
     });
     if (!result.ok) return null;
     const payload = await result.json();
-    return payload?.modelV2 || null;
+    return payload?.modelV3 || null;
   } catch {
     return null;
   }
@@ -88,6 +100,46 @@ function isPregame(row, now = Date.now()) {
   if (!Number.isFinite(start) || start <= now) return false;
   const state = String(row.gameStatus || '').toLowerCase();
   return !state.includes('final') && !state.includes('progress') && !state.includes('review');
+}
+
+function priorMarketRows(payload, checkpoint, date, probableByKey) {
+  const rows = [];
+  if (payload?.status !== 'ready') return rows;
+  for (const oddsRow of payload.rows || []) {
+    const probable = probableByKey.get(oddsRow.playerKey);
+    if (!probable) continue;
+    for (const [book, sides] of Object.entries(oddsRow.odds || {})) {
+      const over = sides?.over;
+      const under = sides?.under;
+      if (!over || !under || Number(over.line) !== Number(under.line)) continue;
+      const market = noVigProbabilities(over, under);
+      if (market.method !== 'two-way de-vig' || !Number.isFinite(Number(market.over))) continue;
+      rows.push({
+        date,
+        checkpoint,
+        mlbamId: probable.mlbamId,
+        book,
+        line: Number(over.line),
+        marketProbability: Number(market.over),
+      });
+    }
+  }
+  return rows;
+}
+
+function orientCandidate(candidate) {
+  if (candidate.side !== 'under') {
+    return {
+      ...candidate,
+      marketProbability: Number(candidate.marketProbability),
+      v1Probability: Number(candidate.modelProbability),
+    };
+  }
+  return {
+    ...candidate,
+    marketProbability: 1 - Number(candidate.marketProbability),
+    v1Probability: Number.isFinite(Number(candidate.modelProbability)) ? 1 - Number(candidate.modelProbability) : null,
+  };
 }
 
 module.exports = async function handler(request, response) {
@@ -116,8 +168,10 @@ module.exports = async function handler(request, response) {
     }
 
     const finalFit = validation?.finalFit || null;
-    const beta = finalFit?.ready ? Number(finalFit.beta || 0) : 0;
-    const promoted = Boolean(validation?.promoted);
+    const fitReady = Boolean(finalFit?.ready && Array.isArray(finalFit.coefficients));
+    const checkpointValidated = VALIDATED_CHECKPOINTS.has(resolved.checkpoint);
+    const promoted = Boolean(validation?.promoted && fitReady && checkpointValidated);
+
     const schedule = await fetchSchedule(date);
     const probables = probablePitchers(schedule);
     const probableByKey = new Map(probables.map((row) => [row.playerKey, row]));
@@ -128,27 +182,34 @@ module.exports = async function handler(request, response) {
     const uniquePitchers = [...new Map(matched.map((row) => [row.probable.mlbamId, row.probable])).values()];
     const opponentIds = [...new Set(uniquePitchers.map((row) => row.opponentId).filter(Boolean))];
 
-    const pitcherResults = await mapWithConcurrency(uniquePitchers, 12, async (pitcher) => {
-      try {
-        return [pitcher.mlbamId, await pitcherGameLog(pitcher.mlbamId, season)];
-      } catch (error) {
-        return [pitcher.mlbamId, { error: error instanceof Error ? error.message : String(error) }];
-      }
-    });
-    const teamResults = await mapWithConcurrency(opponentIds, 10, async (teamId) => {
-      try {
-        return [teamId, await teamHittingGameLog(teamId, season)];
-      } catch (error) {
-        return [teamId, { error: error instanceof Error ? error.message : String(error) }];
-      }
-    });
+    const [pitcherResults, teamResults, priorPayloads] = await Promise.all([
+      mapWithConcurrency(uniquePitchers, 12, async (pitcher) => {
+        try {
+          return [pitcher.mlbamId, await pitcherGameLog(pitcher.mlbamId, season)];
+        } catch (error) {
+          return [pitcher.mlbamId, { error: error instanceof Error ? error.message : String(error) }];
+        }
+      }),
+      mapWithConcurrency(opponentIds, 10, async (teamId) => {
+        try {
+          return [teamId, await teamHittingGameLog(teamId, season)];
+        } catch (error) {
+          return [teamId, { error: error instanceof Error ? error.message : String(error) }];
+        }
+      }),
+      Promise.all(earlierCheckpoints(resolved.checkpoint).map(async (checkpoint) => {
+        try {
+          return [checkpoint, await readStrikeoutsCheckpoint(date, checkpoint)];
+        } catch {
+          return [checkpoint, null];
+        }
+      })),
+    ]);
     const pitcherLogs = new Map(pitcherResults);
     const teamLogs = new Map(teamResults);
 
-    const bets = [];
-    const pitcherRows = [];
+    const currentOverRows = [];
     const diagnostics = [];
-
     for (const { oddsRow, probable } of matched) {
       const rawPitcherLog = pitcherLogs.get(probable.mlbamId);
       if (rawPitcherLog?.error) {
@@ -162,17 +223,18 @@ module.exports = async function handler(request, response) {
       const projection = pitcherProjection(starts, opponentKRate, LEAGUE_K_PA_FALLBACK, date);
       if (!projection) continue;
 
-      const pitcherBets = [];
       for (const [book, sides] of Object.entries(oddsRow.odds || {})) {
         const over = sides?.over;
         const under = sides?.under;
-        if (!over || !Number.isFinite(Number(over.line))) continue;
+        if (!over || !under || !Number.isFinite(Number(over.line)) || Number(under.line) !== Number(over.line)) continue;
         const line = Number(over.line);
-        const pairedUnder = under && Number(under.line) === line ? under : null;
+        const market = noVigProbabilities(over, under);
+        if (market.method !== 'two-way de-vig' || !Number.isFinite(Number(market.over))) continue;
         const probabilities = outcomeProbabilities(projection.expectedKs, projection.variance, line);
-        const market = noVigProbabilities(over, pairedUnder);
         const form = formMetrics(starts, line);
-        const common = {
+        currentOverRows.push({
+          date,
+          checkpoint: resolved.checkpoint,
           pitcherName: probable.pitcherName,
           mlbamId: probable.mlbamId,
           team: probable.team,
@@ -183,90 +245,105 @@ module.exports = async function handler(request, response) {
           gameStatus: probable.gameStatus,
           book,
           line,
+          overOdds: Number(over.americanOdds),
+          underOdds: Number(under.americanOdds),
+          modelProbability: Number(probabilities.fairOver),
+          marketProbability: Number(market.over),
+          pushProbability: Number(probabilities.push),
           formScore: form.formScore,
           expectedKs: projection.expectedKs,
+          sampleStarts: projection.sampleStarts,
+          opponentFactor: projection.opponentFactor,
+          projectedBF: projection.projectedBF,
+          pitcherKRate: projection.pitcherKRate,
+          restDays: projection.restDays,
           projection,
           confidence: confidence(projection.sampleStarts),
           marketMethod: market.method,
-          pushProbability: Number(probabilities.push.toFixed(4)),
-        };
-
-        const rawOver = {
-          ...common,
-          side: 'over',
-          odds: Number(over.americanOdds),
-          modelProbability: Number(probabilities.fairOver.toFixed(4)),
-          marketProbability: market.over == null ? null : Number(market.over.toFixed(4)),
-        };
-        const v2Over = repriceCandidate(rawOver, beta);
-        const overBet = {
-          ...rawOver,
-          v1Probability: rawOver.modelProbability,
-          v2Beta: v2Over?.v2Beta ?? beta,
-          v2Probability: v2Over ? Number(v2Over.v2Probability.toFixed(4)) : null,
-          v2FairOdds: v2Over ? fairAmerican(v2Over.v2Probability) : null,
-          v2ProbabilityEdge: v2Over ? Number(v2Over.v2ProbabilityEdge.toFixed(4)) : null,
-          v2ExpectedValue: v2Over?.v2ExpectedValue == null ? null : Number(v2Over.v2ExpectedValue.toFixed(4)),
-        };
-        bets.push(overBet);
-        pitcherBets.push(overBet);
-
-        if (pairedUnder) {
-          const rawUnder = {
-            ...common,
-            side: 'under',
-            odds: Number(pairedUnder.americanOdds),
-            modelProbability: Number(probabilities.fairUnder.toFixed(4)),
-            marketProbability: market.under == null ? null : Number(market.under.toFixed(4)),
-          };
-          const v2Under = repriceCandidate(rawUnder, beta);
-          const underBet = {
-            ...rawUnder,
-            v1Probability: rawUnder.modelProbability,
-            v2Beta: v2Under?.v2Beta ?? beta,
-            v2Probability: v2Under ? Number(v2Under.v2Probability.toFixed(4)) : null,
-            v2FairOdds: v2Under ? fairAmerican(v2Under.v2Probability) : null,
-            v2ProbabilityEdge: v2Under ? Number(v2Under.v2ProbabilityEdge.toFixed(4)) : null,
-            v2ExpectedValue: v2Under?.v2ExpectedValue == null ? null : Number(v2Under.v2ExpectedValue.toFixed(4)),
-          };
-          bets.push(underBet);
-          pitcherBets.push(underBet);
-        }
+        });
       }
-
-      pitcherBets.sort((a, b) => Number(b.v2ExpectedValue ?? -999) - Number(a.v2ExpectedValue ?? -999));
-      pitcherRows.push({
-        pitcherName: probable.pitcherName,
-        mlbamId: probable.mlbamId,
-        team: probable.team,
-        opponent: probable.opponent,
-        matchup: oddsRow.matchup,
-        gameStartAt: probable.gameStartAt,
-        gameStatus: probable.gameStatus,
-        expectedKs: projection.expectedKs,
-        projection,
-        bestBet: pitcherBets[0] || null,
-        availableBets: pitcherBets.length,
-      });
     }
 
-    bets.sort((a, b) => Number(b.v2ExpectedValue ?? -999) - Number(a.v2ExpectedValue ?? -999));
-    pitcherRows.sort((a, b) => Number(b.bestBet?.v2ExpectedValue ?? -999) - Number(a.bestBet?.v2ExpectedValue ?? -999));
+    const priorRows = priorPayloads.flatMap(([checkpoint, payload]) =>
+      priorMarketRows(payload, checkpoint, date, probableByKey)
+    );
+    const decorated = decorateOverRows([...priorRows, ...currentOverRows], CHECKPOINT_ORDER)
+      .filter((row) => row.checkpoint === resolved.checkpoint && row.pitcherName);
+
+    const bets = [];
+    for (const row of decorated) {
+      const probability = fitReady ? predictResidualProbability(row, finalFit) : null;
+      if (probability == null) continue;
+      for (const rawCandidate of candidateSidesFromOver(row, probability)) {
+        const candidate = orientCandidate(rawCandidate);
+        bets.push({
+          ...candidate,
+          v3Probability: Number(candidate.v3Probability.toFixed(4)),
+          v3FairOdds: fairAmerican(candidate.v3Probability),
+          marketProbability: Number(candidate.marketProbability.toFixed(4)),
+          v1Probability: candidate.v1Probability == null ? null : Number(candidate.v1Probability.toFixed(4)),
+          v3ProbabilityEdge: Number(candidate.v3ProbabilityEdge.toFixed(4)),
+          v3ExpectedValue: candidate.v3ExpectedValue == null ? null : Number(candidate.v3ExpectedValue.toFixed(4)),
+          marketFeatures: {
+            consensusProbability: row.consensusProbability == null ? null : Number(row.consensusProbability.toFixed(4)),
+            consensusGap: Number((row.consensusGap || 0).toFixed(4)),
+            consensusSpread: Number((row.consensusSpread || 0).toFixed(4)),
+            lineGap: Number((row.lineGap || 0).toFixed(2)),
+            lineSpan: Number((row.lineSpan || 0).toFixed(2)),
+            lineMove: Number((row.lineMove || 0).toFixed(2)),
+            probabilityMoveSameLine: Number((row.probMoveSameLine || 0).toFixed(4)),
+            hasPrior: Boolean(row.hasPrior),
+            priorSameLine: Boolean(row.priorSameLine),
+          },
+          featureVector: rawFeatureObject(row),
+        });
+      }
+    }
+
+    bets.sort((a, b) => Number(b.v3ExpectedValue ?? -999) - Number(a.v3ExpectedValue ?? -999));
+    const byPitcher = new Map();
+    for (const bet of bets) {
+      if (!byPitcher.has(bet.mlbamId)) byPitcher.set(bet.mlbamId, []);
+      byPitcher.get(bet.mlbamId).push(bet);
+    }
+    const pitcherRows = [...byPitcher.values()].map((values) => {
+      values.sort((a, b) => Number(b.v3ExpectedValue ?? -999) - Number(a.v3ExpectedValue ?? -999));
+      const best = values[0];
+      return {
+        pitcherName: best.pitcherName,
+        mlbamId: best.mlbamId,
+        team: best.team,
+        opponent: best.opponent,
+        matchup: best.matchup,
+        gameStartAt: best.gameStartAt,
+        gameStatus: best.gameStatus,
+        expectedKs: best.expectedKs,
+        projection: best.projection,
+        bestBet: best,
+        availableBets: values.length,
+      };
+    }).sort((a, b) => Number(b.bestBet?.v3ExpectedValue ?? -999) - Number(a.bestBet?.v3ExpectedValue ?? -999));
+
     const researchCandidates = bets.filter((row) =>
       row.marketMethod === 'two-way de-vig'
-      && row.v2ExpectedValue != null
-      && row.v2ExpectedValue >= MIN_V2_EV
-      && row.v2ProbabilityEdge != null
-      && row.v2ProbabilityEdge >= MIN_V2_EDGE
-      && row.projection.sampleStarts >= MIN_SAMPLE_STARTS
+      && row.v3ExpectedValue != null
+      && row.v3ExpectedValue >= MIN_V3_EV
+      && row.v3ProbabilityEdge != null
+      && row.v3ProbabilityEdge >= MIN_V3_EDGE
+      && row.sampleStarts >= MIN_SAMPLE_STARTS
       && isPregame(row)
     );
     const candidates = promoted ? researchCandidates : [];
+    const promotionReason = !fitReady
+      ? 'Validation fit unavailable; v3 cannot be promoted.'
+      : !checkpointValidated
+        ? `${resolved.checkpoint} is research-only because that checkpoint is not included in the historical v3 validation set.`
+        : (validation?.promotionReason || 'v3 validation has not passed the promotion gate.');
 
     const output = {
-      schemaVersion: 2,
-      kind: 'pitcher_strikeouts_market_anchored_model',
-      modelVersion: 'k-market-anchor-v2.0',
+      schemaVersion: 3,
+      kind: 'pitcher_strikeouts_market_residual_model',
+      modelVersion: 'k-market-residual-v3.0',
       status: pitcherRows.length ? 'ready' : 'no_rows',
       generatedAt: new Date().toISOString(),
       date,
@@ -275,19 +352,20 @@ module.exports = async function handler(request, response) {
       providerRequests: 0,
       quotaObjectsAdded: 0,
       promoted,
-      promotionReason: validation?.promotionReason || 'Validation unavailable; v2 cannot be promoted.',
+      checkpointValidated,
+      promotionReason,
       validation: validation ? {
         calibration: validation.calibration || null,
         finalFit,
         strategy: validation.strategy || null,
       } : null,
       methodology: {
-        target: 'Full-game starting-pitcher strikeout count against each exact sportsbook line.',
-        prior: 'Each paired book/line begins at its two-way de-vigged market probability.',
-        structuralModel: 'v1 pitcher K/BF + projected batters faced + opponent K tendency + rest count distribution.',
-        anchor: 'v2 blends market and structural log-odds using beta fitted only from settled historical dates. beta=0 is market-only; beta=1 is full v1.',
-        candidateGate: `Two-way de-vig only, at least ${MIN_SAMPLE_STARTS} prior starts, v2 edge >= ${(MIN_V2_EDGE * 100).toFixed(1)} points, EV >= ${(MIN_V2_EV * 100).toFixed(1)}%, and game not yet started.`,
-        promotion: 'Research candidates become promoted candidates only after the independent walk-forward validator passes calibration and ROI gates.',
+        target: 'Residual correction to each exact two-way de-vigged sportsbook strikeout probability.',
+        prior: 'Sportsbook no-vig probability is the offset. v3 cannot discard the market and rebuild probability from scratch.',
+        residualFeatures: 'Structural-model disagreement, form, workload, opponent context, cross-book probability/line dispersion, book identity, and earlier same-day checkpoint movement.',
+        fitting: 'Ridge-regularized logistic residual with strict date walk-forward and past-only inner lambda selection. Multiple books on the same pitcher/checkpoint are group-weighted during training.',
+        candidateGate: `Two-way de-vig only, at least ${MIN_SAMPLE_STARTS} prior starts, v3 edge >= ${(MIN_V3_EDGE * 100).toFixed(2)} points, EV >= ${(MIN_V3_EV * 100).toFixed(1)}%, and game not yet started.`,
+        promotion: 'Research candidates become promoted only after v3 beats the market by the preset calibration margin and has positive walk-forward executable ROI. 8:17 PM remains research-only until that checkpoint has historical validation.',
       },
       dataQuality: {
         probablePitchers: probables.length,
@@ -295,6 +373,7 @@ module.exports = async function handler(request, response) {
         matchedPitchers: matched.length,
         modeledPitchers: pitcherRows.length,
         modeledQuotes: bets.length,
+        priorCheckpointFiles: priorPayloads.filter(([, payload]) => payload?.status === 'ready').length,
         researchCandidateQuotes: researchCandidates.length,
         promotedCandidateQuotes: candidates.length,
         diagnostics,
