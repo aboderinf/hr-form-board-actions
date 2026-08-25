@@ -96,7 +96,8 @@ test('projects only pregame 2+ total-bases prices from existing events payload',
   assert.equal(payload.excludedWrongLineQuoteCount, 1);
   assert.equal(payload.excludedLiveOrPostStartQuoteCount, 1);
   assert.equal(payload.rows[0].batterName, 'Jose Ramirez');
-  assert.equal(payload.rows[0].batterId, 608070);
+  assert.equal(payload.rows[0].batterId, null);
+  assert.equal(payload.identityMapping, 'provider-name-awaiting-mlbam-hydration');
   assert.equal(payload.rows[0].odds.fanduel.over.americanOdds, 115);
   assert.equal(payload.rows[0].odds.fanduel.under.americanOdds, -140);
   assert.equal(payload.rows[0].odds.draftkings, undefined);
