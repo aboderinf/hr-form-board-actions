@@ -1,5 +1,6 @@
 const { normalizeCheckpoint, playerKey } = require('../lib/checkpoint-runtime');
 const { readStrikeoutsCheckpoint } = require('../lib/strikeouts-runtime');
+const totalBasesFormHandler = require('../lib/total-bases-form-handler');
 
 const MLB = 'https://statsapi.mlb.com/api/v1';
 const CHECKPOINTS = ['2017', '1717', '1117', '0817'];
@@ -155,6 +156,9 @@ function quoteSummary(odds) {
 }
 
 module.exports = async function handler(request, response) {
+  if (String(request.query?.market || '').toLowerCase() === 'total-bases') {
+    return totalBasesFormHandler(request, response);
+  }
   if (request.method !== 'GET' && request.method !== 'HEAD') {
     response.setHeader('Allow', 'GET, HEAD');
     return response.status(405).json({ status: 'error', message: 'Method not allowed' });
