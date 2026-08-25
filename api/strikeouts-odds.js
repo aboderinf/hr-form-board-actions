@@ -1,5 +1,6 @@
 const { normalizeCheckpoint } = require('../lib/checkpoint-runtime');
 const { readStrikeoutsCheckpoint } = require('../lib/strikeouts-runtime');
+const { readTotalBasesCheckpoint } = require('../lib/total-bases-runtime');
 
 module.exports = async function handler(request, response) {
   if (request.method !== 'GET' && request.method !== 'HEAD') {
@@ -13,13 +14,17 @@ module.exports = async function handler(request, response) {
     return response.status(400).json({ status: 'error', message: 'A valid date and checkpoint are required' });
   }
 
+  const isTotalBases = String(request.query?.market || '').toLowerCase() === 'total-bases';
   try {
-    const payload = await readStrikeoutsCheckpoint(date, checkpoint);
+    const payload = isTotalBases
+      ? await readTotalBasesCheckpoint(date, checkpoint)
+      : await readStrikeoutsCheckpoint(date, checkpoint);
     response.setHeader('Access-Control-Allow-Origin', '*');
     if (!payload) {
       response.setHeader('Cache-Control', 'public, s-maxage=15, stale-while-revalidate=45');
       return response.status(404).json({
         status: 'pending', date, checkpoint,
+        market: isTotalBases ? 'batter-total-bases-ou-1.5' : 'pitcher-strikeouts-ou',
         source: 'archived-sportsgameodds-events',
         delivery: 'existing-archive-readonly',
         providerRequests: 0,
