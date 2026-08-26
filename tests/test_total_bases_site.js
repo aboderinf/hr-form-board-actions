@@ -30,13 +30,18 @@ test('form hydration is bulk rather than one MLB request per batter', () => {
   assert.doesNotMatch(handler, /people\/\$\{batterId\}\/stats/);
 });
 
-test('discovery mines archived checkpoints without new odds-provider requests', () => {
-  const discovery = fs.readFileSync(path.join(root, 'api', 'total-bases-discovery.js'), 'utf8');
+test('discovery mines archived checkpoints without a thirteenth serverless function', () => {
+  const discovery = fs.readFileSync(path.join(root, 'lib', 'total-bases-discovery-handler.js'), 'utf8');
+  const oddsApi = fs.readFileSync(path.join(root, 'api', 'strikeouts-odds.js'), 'utf8');
+  const vercel = fs.readFileSync(path.join(root, 'vercel.json'), 'utf8');
+  assert.equal(fs.existsSync(path.join(root, 'api', 'total-bases-discovery.js')), false);
   assert.match(discovery, /readTotalBasesCheckpoint/);
   assert.match(discovery, /providerRequests: 0/);
   assert.match(discovery, /holdoutStart/);
   assert.match(discovery, /ambiguousDoubleheaders/);
   assert.match(discovery, /String\(split\?\.date \|\| ''\) < slateDate/);
+  assert.match(oddsApi, /total-bases-discovery/);
+  assert.match(vercel, /\/api\/total-bases-discovery/);
   assert.doesNotMatch(discovery, /SPORTSGAMEODDS_API_KEY/);
   assert.doesNotMatch(discovery, /api\.sportsgameodds\.com/);
 });
