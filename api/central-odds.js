@@ -4,6 +4,9 @@ const {
   readCheckpoint,
   redisCommand,
 } = require("../lib/checkpoint-runtime");
+const {
+  ensureDiscoveryArchive,
+} = require("../lib/discovery-runtime");
 
 const EDGE_BASE_URL = "https://mlb-hr-edge.feranmi.chatgpt.site";
 const ALLOWED_QUERY_KEYS = new Set(["date", "checkpoint", "asOf", "latest"]);
@@ -114,16 +117,51 @@ module.exports = async function handler(request, response) {
   }
 
   const summaryRequested = String(request.query?.summary || "") === "1";
+  const discoveryRequested = String(request.query?.discovery || "") === "1";
   const query = new URLSearchParams();
   for (const [key, rawValue] of Object.entries(request.query || {})) {
     if (!ALLOWED_QUERY_KEYS.has(key)) continue;
     const value = Array.isArray(rawValue) ? rawValue[0] : rawValue;
     if (value != null && String(value).trim()) query.set(key, String(value).trim());
   }
-  if (![...query.keys()].length) query.set("latest", "1");
+  if (![...query.keys()].length && !discoveryRequested) query.set("latest", "1");
 
   const requestedCheckpoint = normalizeCheckpoint(query.get("checkpoint"));
   const slateDate = query.get("date");
+
+  if (discoveryRequested) {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(String(slateDate || "")) || !requestedCheckpoint) {
+      return response.status(400).json({
+        status: "error",
+        message: "Discovery reads require date=YYYY-MM-DD and checkpoint=0817|1117|1717|2017",
+      });
+    }
+    try {
+      const archive = await ensureDiscoveryArchive(slateDate, requestedCheckpoint);
+      response.setHeader("Cache-Control", "no-store");
+      response.setHeader("Access-Control-Allow-Origin", "*");
+      response.setHeader("X-Discovery-Source", "upstash-checkpoint-projection");
+      if (!archive) {
+        return response.status(404).json({
+          status: "not_ready",
+          date: slateDate,
+          checkpoint: requestedCheckpoint,
+          message: "Exact Redis checkpoint is not available yet",
+        });
+      }
+      if (request.method === "HEAD") return response.status(200).end();
+      return response.status(200).json(archive);
+    } catch (error) {
+      response.setHeader("Cache-Control", "no-store");
+      return response.status(503).json({
+        status: "projection_error",
+        date: slateDate,
+        checkpoint: requestedCheckpoint,
+        message: error instanceof Error ? error.message : String(error),
+      });
+    }
+  }
+
   const errors = [];
   let payload = null;
   let selectedUrl = null;
