@@ -1,4 +1,5 @@
-const API = 'https://hr-form-board-actions.vercel.app/api/total-bases-form';
+const FORM_API = 'https://hr-form-board-actions.vercel.app/api/total-bases-form';
+const DISCOVERY_API = 'https://hr-form-board-actions.vercel.app/api/total-bases-discovery';
 const $ = (id) => document.getElementById(id);
 const content = $('content');
 const status = $('status');
@@ -14,10 +15,22 @@ function etToday() {
   }).format(new Date());
 }
 function esc(value) { return String(value ?? '').replace(/[&<>'"]/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c])); }
-function pct(value) { return value == null ? '—' : `${(Number(value) * 100).toFixed(0)}%`; }
+function pct(value, digits = 0) { return value == null ? '—' : `${(Number(value) * 100).toFixed(digits)}%`; }
 function american(value) { const n = Number(value); return Number.isFinite(n) ? (n > 0 ? `+${n}` : String(n)) : '—'; }
-function book(book) { return ({draftkings:'DK',fanduel:'FD',betmgm:'MGM'})[book] || String(book || '').toUpperCase(); }
+function units(value) { const n = Number(value); return Number.isFinite(n) ? `${n > 0 ? '+' : ''}${n.toFixed(1)}u` : '—'; }
+function book(bookName) { return ({draftkings:'DK',fanduel:'FD',betmgm:'MGM'})[bookName] || String(bookName || '').toUpperCase(); }
 function cpLabel(value) { return value ? `${value.slice(0,2)}:${value.slice(2)}` : '—'; }
+function humanDate(value) {
+  if (!value) return '—';
+  const [year, month, day] = String(value).split('-').map(Number);
+  return new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric' }).format(new Date(Date.UTC(year, month - 1, day)));
+}
+function displayRule(value) {
+  return String(value || '')
+    .replaceAll('draftkings', 'DK')
+    .replaceAll('fanduel', 'FD')
+    .replaceAll('betmgm', 'MGM');
+}
 
 function metrics(items) {
   summary.innerHTML = items.map(([label, value]) => `<div class="metric"><strong>${esc(value)}</strong><span>${esc(label)}</span></div>`).join('');
@@ -68,20 +81,98 @@ function renderForm(data) {
     <section class="note"><strong>Form score</strong> = 50% L5 + 30% L10 + 20% L15 empirical-Bayes 2+ TB hit rate. Price is excluded from the score; only actual Over 1.5 total-bases quotes are treated as 2+ TB.</section>`;
 }
 
-function renderDiscovery() {
+function confidenceBadge(value) {
+  const label = value === 'validated' ? 'Validated' : value === 'promising' ? 'Promising' : 'Exploratory';
+  return `<span class="confidence ${esc(value)}">${label}</span>`;
+}
+
+function breakdownTable(title, rows) {
+  const usable = (rows || []).filter((row) => row.bets >= 10).slice(0, 8);
+  if (!usable.length) return '';
+  return `<section class="breakdown-card"><h3>${esc(title)}</h3><div class="table-scroll compact-table"><table>
+    <thead><tr><th>Segment</th><th>N</th><th>Hit</th><th>BE</th><th>ROI</th><th>Net</th></tr></thead>
+    <tbody>${usable.map((row) => `<tr>
+      <td><strong>${esc(displayRule(row.label))}</strong></td>
+      <td>${row.bets}<small>${row.slates} slates</small></td>
+      <td>${pct(row.hitRate, 1)}</td>
+      <td>${pct(row.averageBreakEven, 1)}</td>
+      <td class="${Number(row.roi) > 0 ? 'positive' : Number(row.roi) < 0 ? 'negative' : ''}">${pct(row.roi, 1)}</td>
+      <td>${units(row.netUnits)}</td>
+    </tr>`).join('')}</tbody>
+  </table></div></section>`;
+}
+
+function renderDiscovery(data) {
   status.hidden = true;
-  metrics([['Market','O1.5 TB'],['Books','DK · FD · MGM'],['Odds source','Shared archive'],['Provider calls','0 extra']]);
-  content.innerHTML = `<section class="panel"><h2>Discovery</h2><div class="cards">
-    <article><span>Outcome</span><strong>TB ≥ 2</strong><p>Official game result.</p></article>
-    <article><span>Checkpoints</span><strong>08:17 → 20:17</strong><p>Archived price snapshots.</p></article>
-    <article><span>Features</span><strong>L5 / L10 / L15</strong><p>Hit rate, TB/game, XBH rate, PA/game, trend.</p></article>
-    <article><span>Status</span><strong>UNPROMOTED</strong><p>No ROI rule until it survives date-split validation.</p></article>
-  </div><div class="note">Discovery will test score bands, odds bands, book attribution, checkpoint timing, streak shape and intersections. No rule is promoted from in-sample results alone.</div></section>`;
+  const counts = data.validationCounts || {};
+  const coverage = data.coverage || {};
+  metrics([
+    ['Settled snapshots', coverage.settledBestPriceObservations || 0],
+    ['Settled slates', coverage.settledDates || 0],
+    ['Validated edges', counts.validated || 0],
+    ['Promising edges', counts.promising || 0],
+  ]);
+
+  const edges = data.edges || [];
+  const edgeRows = edges.length ? `<section class="table-card edge-table"><div class="table-scroll"><table>
+    <thead><tr><th>Confidence</th><th>Rule</th><th>Execution</th><th>Sample</th><th>Hit vs BE</th><th>Full ROI</th><th>Train ROI</th><th>Holdout ROI</th><th>Net</th></tr></thead>
+    <tbody>${edges.map((edge) => `<tr>
+      <td>${confidenceBadge(edge.confidence)}</td>
+      <td class="edge-rule"><strong>${esc(displayRule(edge.rule))}</strong><small>${esc(edge.dimension)}</small></td>
+      <td>${esc(edge.execution)}</td>
+      <td><strong>${edge.total.bets}</strong><small>${edge.total.slates} slates</small></td>
+      <td><strong>${pct(edge.total.hitRate, 1)}</strong><small>BE ${pct(edge.total.averageBreakEven, 1)} · edge ${pct(edge.total.empiricalProbabilityEdge, 1)}</small></td>
+      <td class="${Number(edge.total.roi) > 0 ? 'positive' : 'negative'}"><strong>${pct(edge.total.roi, 1)}</strong></td>
+      <td class="${Number(edge.train.roi) > 0 ? 'positive' : Number(edge.train.roi) < 0 ? 'negative' : ''}">${pct(edge.train.roi, 1)}<small>${edge.train.bets} bets</small></td>
+      <td class="${Number(edge.holdout.roi) > 0 ? 'positive' : Number(edge.holdout.roi) < 0 ? 'negative' : ''}"><strong>${pct(edge.holdout.roi, 1)}</strong><small>${edge.holdout.bets} bets</small></td>
+      <td>${units(edge.total.netUnits)}</td>
+    </tr>`).join('')}</tbody>
+  </table></div></section>` : `<section class="empty"><h2>No durable profitable segment yet</h2><p>Nothing currently clears the minimum sample plus positive holdout requirements. Discovery will keep updating as August settlements accumulate.</p></section>`;
+
+  const breakdowns = data.breakdowns || {};
+  content.innerHTML = `<section class="edge-hero">
+    <div>
+      <div class="eyebrow">MONTH-TO-DATE BACKTEST</div>
+      <h2>Profitable edge discovery</h2>
+      <p>Archived O1.5 Total Bases prices from ${esc(humanDate(data.start))} through ${esc(humanDate(data.through))}. The holdout begins ${esc(humanDate(data.holdoutStart))}; the form score for every historical bet only sees games before that slate.</p>
+    </div>
+    <div class="edge-meta">
+      <span>${coverage.readyCaptures || 0}/${coverage.requestedCaptures || 0} checkpoints recovered</span>
+      <span>${coverage.settledBookQuoteObservations || 0} exact-book observations</span>
+      <span>${data.providerRequests ?? 0} extra odds calls</span>
+    </div>
+  </section>
+  <section class="section-heading"><div><span>Edges</span><h2>Segments profitable in the holdout</h2></div><p>Validated is the strongest label. Promising requires positive training and holdout ROI with minimum sample. Exploratory passed the basic profitable holdout filter but remains thin.</p></section>
+  ${edgeRows}
+  <section class="section-heading secondary"><div><span>Diagnostics</span><h2>Where the returns came from</h2></div><p>These tables include all sufficiently populated segments, including losing ones, so the edge list is not viewed without context.</p></section>
+  <div class="breakdown-grid">
+    ${breakdownTable('Checkpoint', breakdowns.checkpoint)}
+    ${breakdownTable('Checkpoint × best book', breakdowns.bestBook)}
+    ${breakdownTable('Checkpoint × form', breakdowns.form)}
+    ${breakdownTable('Checkpoint × odds', breakdowns.odds)}
+  </div>
+  <section class="note"><strong>Validation guardrails.</strong> ${esc(data.methodology?.validation || '')} ${esc(data.methodology?.settlement || '')} ${esc(data.methodology?.caution || '')}</section>`;
+}
+
+async function loadDiscovery() {
+  status.hidden = false;
+  status.textContent = 'Mining August archived prices and settled MLB results…';
+  summary.hidden = true;
+  content.innerHTML = '';
+  try {
+    const response = await fetch(DISCOVERY_API, { cache: 'no-store' });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message || `HTTP ${response.status}`);
+    renderDiscovery(data);
+  } catch (error) {
+    status.hidden = false;
+    status.textContent = `Unable to load discovery: ${error.message || error}`;
+  }
 }
 
 function renderModel() {
   status.hidden = true;
-  metrics([['Target','P(TB ≥ 2)'],['Validation','Walk-forward'],['Price feature','Excluded'],['Status','SCaffold']]);
+  metrics([['Target','P(TB ≥ 2)'],['Validation','Walk-forward'],['Price feature','Excluded'],['Status','Scaffold']]);
   content.innerHTML = `<section class="panel"><h2>Predictive model path</h2><div class="cards">
     <article><span>Batter</span><strong>Contact quality</strong><p>TB, hits, XBH, xSLG, barrels, hard-hit.</p></article>
     <article><span>Matchup</span><strong>Pitcher + arsenal</strong><p>Handedness, pitch mix and contact allowed.</p></article>
@@ -96,7 +187,7 @@ async function loadForm() {
   summary.hidden = true;
   content.innerHTML = '';
   try {
-    const response = await fetch(`${API}?${params()}`, { cache: 'no-store' });
+    const response = await fetch(`${FORM_API}?${params()}`, { cache: 'no-store' });
     const data = await response.json();
     if (!response.ok) throw new Error(data.message || `HTTP ${response.status}`);
     renderForm(data);
@@ -110,7 +201,7 @@ function render() {
   toolbar.hidden = activeView !== 'form';
   summary.hidden = true;
   if (activeView === 'form') return loadForm();
-  if (activeView === 'discovery') return renderDiscovery();
+  if (activeView === 'discovery') return loadDiscovery();
   return renderModel();
 }
 
