@@ -1,6 +1,6 @@
 const FORM_API = 'https://hr-form-board-actions.vercel.app/api/total-bases-form';
 const DISCOVERY_API = 'https://hr-form-board-actions.vercel.app/api/total-bases-discovery';
-const MODEL_API = 'https://hr-form-board-actions.vercel.app/api/total-bases-model';
+const MODEL_API = 'https://hr-form-board-actions.vercel.app/api/total-bases-model-v2';
 const $ = (id) => document.getElementById(id);
 const content = $('content');
 const status = $('status');
@@ -178,84 +178,117 @@ function featureName(value) {
     .replace(/^./, (c) => c.toUpperCase());
 }
 
+function modelMetricCard(label, value, detail, state = '') {
+  return `<article class="model-stat ${esc(state)}"><span>${esc(label)}</span><strong>${esc(value)}</strong><small>${esc(detail)}</small></article>`;
+}
+
 function renderModel(data) {
   status.hidden = true;
+  if (data.modelStatus === 'TRAINING' || data.status === 'training') {
+    summary.hidden = true;
+    content.innerHTML = `<section class="model-hero model-hold"><div><div class="eyebrow">STATCAST MODEL V2</div><h2>Building frozen model artifacts</h2><p>${esc(data.message || 'The Statcast model artifacts are being generated and validated.')}</p></div><div class="edge-meta"><span>0 extra odds calls</span><span>Aug 17+ reserved holdout</span></div></section>`;
+    return;
+  }
+
   const validation = data.validation || {};
-  const model = validation.modelProbability || {};
-  const form = validation.formBaseline || {};
+  const v2 = validation.v2 || {};
+  const v1 = validation.v1 || {};
+  const form = validation.form || {};
   const strategy = validation.holdoutStrategy || {};
+  const calibration = validation.calibrationStrategy || {};
+  const out2025 = validation.outOfTime2025 || {};
   const dq = data.dataQuality || {};
+  const sameSplit = Boolean(validation.sameHoldoutAsV1);
+  const probabilityPass = Boolean(validation.probabilityPass);
+  const bettingPass = Boolean(validation.bettingPass);
+  const strategyRule = validation.strategyRule || {};
+
   metrics([
     ['Model status', data.modelStatus || 'UNPROMOTED'],
-    ['Holdout Brier', decimal(model.brier, 5)],
-    ['Form Brier', decimal(form.brier, 5)],
+    ['V2 holdout Brier', decimal(v2.brier, 5)],
+    ['V1 holdout Brier', decimal(v1.brier, 5)],
     ['Holdout strategy ROI', pct(strategy.roi, 1)],
   ]);
 
-  const betterBrier = Number(model.brier) < Number(form.brier);
-  const betterLogLoss = Number(model.logLoss) < Number(form.logLoss);
-  const probabilityPass = betterBrier && betterLogLoss;
-  const strategyPass = Boolean(validation.strategyReady && Number(strategy.roi) > 0);
-  const coefficients = (data.fit?.coefficients || []).slice(0, 12);
   const liveRows = data.rows || [];
-
   const liveTable = liveRows.length ? `<section class="table-card model-table"><div class="table-scroll"><table>
-    <thead><tr><th>#</th><th>Batter</th><th>Model P</th><th>Form P</th><th>Fair</th><th>Best O1.5</th><th>Edge</th><th>EV</th><th>Starter sample</th><th>Status</th></tr></thead>
+    <thead><tr><th>#</th><th>Batter</th><th>V2 P</th><th>V1 P</th><th>Form P</th><th>Fair</th><th>Best O1.5</th><th>Edge</th><th>EV</th><th>Status</th></tr></thead>
     <tbody>${liveRows.map((row, i) => `<tr>
       <td class="rank">${i + 1}</td>
       <td class="player"><strong>${esc(row.batterName)}</strong><small>${esc(row.matchup || '')}</small></td>
-      <td><strong>${pct(row.modelProbability, 1)}</strong></td>
+      <td><strong>${pct(row.v2Probability ?? row.modelProbability, 1)}</strong></td>
+      <td>${pct(row.v1Probability, 1)}</td>
       <td>${pct(row.formProbability, 1)}</td>
       <td>${american(row.fairAmerican)}</td>
       <td><strong>${american(row.bestOver?.americanOdds)}</strong><small>${esc(book(row.bestOver?.book))}</small></td>
       <td class="${Number(row.probabilityEdge) > 0 ? 'positive' : 'negative'}">${pct(row.probabilityEdge, 1)}</td>
       <td class="${Number(row.expectedValue) > 0 ? 'positive' : 'negative'}">${pct(row.expectedValue, 1)}</td>
-      <td>${row.starterGames || 0}</td>
-      <td><span class="confidence exploratory">Research only</span></td>
+      <td>${row.qualifies ? '<span class="confidence validated">Qualified</span>' : '<span class="confidence exploratory">Research only</span>'}</td>
     </tr>`).join('')}</tbody>
-  </table></div></section>` : `<section class="empty model-empty"><h2>Live model rows withheld</h2><p>${dq.withheldLiveRowsMissingStarter || 0} current projections were blocked because the live batter → team → opposing-starter join is not complete. The historical model validation below is still valid; no live bet is being promoted from fallback starter inputs.</p></section>`;
+  </table></div></section>` : `<section class="empty model-empty"><h2>No v2 live rows yet</h2><p>The frozen Statcast state could not match a complete batter + opposing-starter context for this checkpoint.</p></section>`;
+
+  const ruleText = strategyRule.ready === false || strategyRule.minProbabilityEdge == null
+    ? 'No profitable calibration rule survived.'
+    : `${strategyRule.checkpoint ? cpLabel(strategyRule.checkpoint) + ' · ' : ''}edge ≥ ${pct(strategyRule.minProbabilityEdge, 1)} · EV ≥ ${pct(strategyRule.minExpectedValue, 1)}`;
 
   content.innerHTML = `<section class="model-hero ${data.promoted ? 'model-pass' : 'model-hold'}">
     <div>
-      <div class="eyebrow">MARKET-INDEPENDENT MODEL V1</div>
-      <h2>${data.promoted ? 'Promoted model' : 'Research model · not promoted'}</h2>
-      <p>${probabilityPass ? 'The baseball-only model beats the calibrated form baseline on both holdout scoring metrics.' : 'The model has not beaten the form baseline on both holdout scoring metrics.'} ${strategyPass ? 'Its separately tuned betting rule is also profitable in holdout.' : 'The betting layer fails validation, so model EV is not actionable yet.'}</p>
+      <div class="eyebrow">STATCAST MODEL V2</div>
+      <h2>${data.promoted ? 'V2 promoted' : 'V2 research model · not promoted'}</h2>
+      <p>${probabilityPass ? 'V2 beats both v1 and form on the frozen untouched holdout.' : 'V2 has not cleared the probability gate against both v1 and form.'} ${bettingPass ? 'The frozen price rule also remains profitable in holdout.' : 'The executable betting gate has not passed.'}</p>
     </div>
     <div class="edge-meta">
-      <span>${dq.baseRows || 0} pre-August fit rows</span>
-      <span>${model.n || 0} untouched holdout outcomes</span>
+      <span>${dq.observations || 0} Statcast game examples</span>
+      <span>Holdout ${esc(humanDate(data.split?.holdoutStart))}–${esc(humanDate(data.split?.through))}</span>
       <span>${data.providerRequests ?? 0} extra odds calls</span>
     </div>
   </section>
 
-  <section class="section-heading"><div><span>Probability validation</span><h2>Does context beat form?</h2></div><p>Lower Brier and log loss are better. Sportsbook price is excluded from both probability models.</p></section>
+  <section class="section-heading"><div><span>Probability gate</span><h2>V2 vs v1 vs form</h2></div><p>All three are evaluated from the same Aug. 17 holdout boundary. Lower Brier and log loss are better; sportsbook price is excluded from the probability fit.</p></section>
   <div class="model-compare-grid">
-    <article class="model-stat ${betterBrier ? 'pass' : 'fail'}"><span>Brier score</span><strong>${decimal(model.brier, 5)}</strong><small>Form ${decimal(form.brier, 5)} · improvement ${decimal(validation.improvement?.brier, 5)}</small></article>
-    <article class="model-stat ${betterLogLoss ? 'pass' : 'fail'}"><span>Log loss</span><strong>${decimal(model.logLoss, 5)}</strong><small>Form ${decimal(form.logLoss, 5)} · improvement ${decimal(validation.improvement?.logLoss, 5)}</small></article>
-    <article class="model-stat"><span>Holdout hit rate</span><strong>${pct(model.hitRate, 1)}</strong><small>Average model P ${pct(model.averageProbability, 1)}</small></article>
-    <article class="model-stat fail"><span>Betting holdout</span><strong>${pct(strategy.roi, 1)}</strong><small>${strategy.bets || 0} bets · ${units(strategy.netUnits)}</small></article>
+    ${modelMetricCard('V2 Brier', decimal(v2.brier, 5), `V1 ${decimal(v1.brier, 5)} · Form ${decimal(form.brier, 5)}`, probabilityPass ? 'pass' : 'fail')}
+    ${modelMetricCard('V2 log loss', decimal(v2.log_loss, 5), `V1 ${decimal(v1.logLoss, 5)} · Form ${decimal(form.log_loss, 5)}`, probabilityPass ? 'pass' : 'fail')}
+    ${modelMetricCard('2025 out-of-time Brier', decimal(out2025.brier, 5), `${out2025.rows || 0} game outcomes`, '')}
+    ${modelMetricCard('Same holdout', sameSplit ? 'YES' : 'NO', `${humanDate(data.split?.holdoutStart)} start`, sameSplit ? 'pass' : 'fail')}
   </div>
 
-  <section class="model-warning"><strong>Why it is unpromoted:</strong> the probability model improved discrimination/calibration versus form, but the early-August EV threshold was not profitable and the same research threshold returned ${pct(strategy.roi, 1)} in the ${esc(humanDate(data.split?.holdoutStart))}–${esc(humanDate(data.split?.through))} holdout. Positive-looking model edges are therefore not treated as bets.</section>
+  <section class="section-heading secondary"><div><span>Betting gate</span><h2>Frozen price rule</h2></div><p>The threshold is selected only on Aug. 2–16 archived prices, then frozen before Aug. 17+ outcomes are scored.</p></section>
+  <div class="model-compare-grid">
+    ${modelMetricCard('Calibration ROI', pct(calibration.roi, 1), `${calibration.bets || 0} bets · ${units(calibration.netUnits)}`, Number(calibration.roi) > 0 ? 'pass' : 'fail')}
+    ${modelMetricCard('Holdout ROI', pct(strategy.roi, 1), `${strategy.bets || 0} bets · ${units(strategy.netUnits)}`, bettingPass ? 'pass' : 'fail')}
+    ${modelMetricCard('Holdout hit rate', pct(strategy.hitRate, 1), `${strategy.wins || 0}-${strategy.losses || 0}`, bettingPass ? 'pass' : '')}
+    ${modelMetricCard('Frozen rule', ruleText, `${strategy.slates || 0} holdout slates`, bettingPass ? 'pass' : 'fail')}
+  </div>
 
-  <section class="section-heading secondary"><div><span>Current slate</span><h2>Research projections</h2></div><p>Rows are shown only when an opposing probable starter is matched with usable prior history. No row is labeled actionable while the model is unpromoted.</p></section>
+  <section class="model-warning"><strong>Promotion requires both gates.</strong> V2 must beat v1 and form on both Brier and log loss on the untouched holdout, and a rule chosen only before the holdout must stay profitable with adequate sample. Until then, positive-looking live EV is research-only.</section>
+
+  <section class="section-heading secondary"><div><span>Current slate</span><h2>V2 research projections</h2></div><p>V2 uses leakage-safe Savant contact-quality state, opponent starter context, opportunity, park/environment, and handedness. Price is applied only after probability estimation.</p></section>
   ${liveTable}
 
-  <section class="section-heading secondary"><div><span>What the model learned</span><h2>Largest standardized coefficients</h2></div><p>Magnitude is conditional on the other features and should not be read as causal importance.</p></section>
-  <div class="coefficient-grid">${coefficients.map((row) => `<article><span>${esc(featureName(row.name))}</span><strong class="${Number(row.standardizedCoefficient) >= 0 ? 'positive' : 'negative'}">${Number(row.standardizedCoefficient) > 0 ? '+' : ''}${Number(row.standardizedCoefficient).toFixed(3)}</strong></article>`).join('')}</div>
+  <section class="section-heading secondary"><div><span>Feature architecture</span><h2>What changed beyond v1</h2></div><p>This is nonlinear gradient boosting, so individual coefficients are not presented as causal effects.</p></section>
+  <div class="coefficient-grid">
+    <article><span>Contact quality</span><strong>xBA · xSLG · EV · Hard-hit</strong></article>
+    <article><span>Outcome shape</span><strong>1B · 2B · 3B · HR · TB/PA</strong></article>
+    <article><span>Opportunity</span><strong>Lineup slot · PA/game · Rest</strong></article>
+    <article><span>Starter matchup</span><strong>Contact · TB allowed · Hand</strong></article>
+    <article><span>Opponent</span><strong>Hit/TB allowed profile</strong></article>
+    <article><span>Park</span><strong>1B · 2B · HR factors · Dimensions</strong></article>
+    <article><span>Environment</span><strong>Temp · Wind · Roof · Elevation</strong></article>
+    <article><span>Validation</span><strong>2025 OOT + Aug. 17 holdout</strong></article>
+  </div>
 
-  <section class="note"><strong>Model design.</strong> ${esc(data.methodology?.marketIndependent || '')} ${esc(data.methodology?.context || '')} ${esc(data.methodology?.validation || '')} ${esc(data.methodology?.liveGuard || '')}</section>`;
+  <section class="note"><strong>Model design.</strong> ${esc(data.methodology?.probabilityFit || '')} ${esc(data.methodology?.features || '')} ${esc(data.methodology?.marketValidation || '')}</section>`;
 }
 
 async function loadModel() {
   status.hidden = false;
-  status.textContent = 'Fitting and validating the market-independent 2+ TB model…';
+  status.textContent = 'Loading Statcast v2 and frozen holdout validation…';
   summary.hidden = true;
   content.innerHTML = '';
   try {
     const response = await fetch(`${MODEL_API}?${params()}`, { cache: 'no-store' });
     const data = await response.json();
-    if (!response.ok) throw new Error(data.message || `HTTP ${response.status}`);
+    if (!response.ok && data.status !== 'training') throw new Error(data.message || `HTTP ${response.status}`);
     renderModel(data);
   } catch (error) {
     status.hidden = false;
