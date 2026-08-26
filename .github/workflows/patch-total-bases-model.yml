@@ -1,4 +1,4 @@
-name: Patch total bases v2 serving
+name: Freeze total bases v1 holdout
 
 on:
   push:
@@ -15,27 +15,28 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: main
-      - name: Patch v2 archived identity and compatibility
+      - name: Freeze v1 validation split at August 17
         run: |
           python - <<'PY'
           from pathlib import Path
-          path = Path('lib/total-bases-v2-handler.js')
+          path = Path('lib/total-bases-model-handler.js')
           text = path.read_text()
           replacements = {
-              "compactName(row.player || row.player_key)": "compactName(row.player_key || row.player)",
-              "v2Probability: Number(probability.toFixed(4)), v1Probability: row.modelProbability, formProbability: row.formProbability,": "v2Probability: Number(probability.toFixed(4)), modelProbability: Number(probability.toFixed(4)), v1Probability: row.modelProbability, formProbability: row.formProbability,",
+              "const MODEL_VERSION = 'v1.1';": "const MODEL_VERSION = 'v1.2';",
+              "    const splitIndex = settledDates.length >= 2 ? Math.max(1, Math.min(settledDates.length - 1, Math.floor(settledDates.length * 0.60))) : null;\n    const holdoutStart = splitIndex == null ? null : settledDates[splitIndex];": "    const fixedHoldoutStart = '2026-08-17';\n    const splitIndex = settledDates.length >= 2 ? Math.max(1, Math.min(settledDates.length - 1, Math.floor(settledDates.length * 0.60))) : null;\n    const holdoutStart = settledDates.some((value) => value >= fixedHoldoutStart)\n      ? fixedHoldoutStart\n      : (splitIndex == null ? null : settledDates[splitIndex]);",
+              "      kind: 'batter_two_plus_total_bases_model_v1_1',": "      kind: 'batter_two_plus_total_bases_model_v1_2',",
           }
           for old, new in replacements.items():
               if old not in text:
-                  raise SystemExit(f'Expected patch target missing: {old}')
+                  raise SystemExit(f'Expected patch target missing: {old[:120]}')
               text = text.replace(old, new, 1)
           path.write_text(text)
           PY
-          node --check lib/total-bases-v2-handler.js
+          node --check lib/total-bases-model-handler.js
       - name: Commit patch
         run: |
           git config user.name "hr-form-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add lib/total-bases-v2-handler.js
-          git commit -m "Fix Total Bases v2 archived identity matching"
+          git add lib/total-bases-model-handler.js
+          git commit -m "Freeze Total Bases v1 holdout at Aug 17"
           git push origin HEAD:main
