@@ -1,4 +1,4 @@
-name: Patch total bases model live join
+name: Patch total bases v2 serving
 
 on:
   push:
@@ -15,33 +15,27 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: main
-      - name: Patch model safeguards and live team join
+      - name: Patch v2 archived identity and compatibility
         run: |
           python - <<'PY'
           from pathlib import Path
-          path = Path('lib/total-bases-model-handler.js')
+          path = Path('lib/total-bases-v2-handler.js')
           text = path.read_text()
           replacements = {
-              "const MODEL_VERSION = 'v1';": "const MODEL_VERSION = 'v1.1';",
-              "return best || { minEdge: 0.04, minEv: 0.05, score: null, stats: strategySummary(rows.filter((row) => row.modelEdge >= 0.04 && row.modelEv >= 0.05)) };": "return best ? { ...best, ready: true } : { ready: false, minEdge: null, minEv: null, score: null, stats: strategySummary([]) };",
-              "  const teamId = playerInfoRow?.currentTeamId || null;\n  const matchup = starterForGame(game, teamId);": "  const recentTeamId = prior.at(-1)?.teamId || null;\n  const directoryTeamId = playerInfoRow?.currentTeamId || null;\n  const teamId = [recentTeamId, directoryTeamId].find((id) =>\n    Number(id) === Number(game?.homeTeamId) || Number(id) === Number(game?.awayTeamId)\n  ) || recentTeamId || directoryTeamId || null;\n  const matchup = starterForGame(game, teamId);",
-              "    const selectRule = (rows) => rows.filter((row) => Number(row.modelEdge) >= strategy.minEdge && Number(row.modelEv) >= strategy.minEv);": "    const selectRule = (rows) => strategy.ready ? rows.filter((row) => Number(row.modelEdge) >= strategy.minEdge && Number(row.modelEv) >= strategy.minEv) : [];",
-              "        qualifies: Number(modelProbability - implied) >= strategy.minEdge && Number(ev) >= strategy.minEv,": "        qualifies: Boolean(strategy.ready && Number(modelProbability - implied) >= strategy.minEdge && Number(ev) >= strategy.minEv),",
-              "      holdoutStart\n      && modelHoldoutMetrics.n >= 500": "      holdoutStart\n      && strategy.ready\n      && modelHoldoutMetrics.n >= 500",
-              "      kind: 'batter_two_plus_total_bases_model_v1',": "      kind: 'batter_two_plus_total_bases_model_v1_1',",
-              "        strategyRule: { minProbabilityEdge: strategy.minEdge, minExpectedValue: strategy.minEv, tunedOn: 'calibration archive only' },": "        strategyRule: { ready: strategy.ready, minProbabilityEdge: strategy.minEdge, minExpectedValue: strategy.minEv, tunedOn: 'calibration archive only' },",
+              "compactName(row.player || row.player_key)": "compactName(row.player_key || row.player)",
+              "v2Probability: Number(probability.toFixed(4)), v1Probability: row.modelProbability, formProbability: row.formProbability,": "v2Probability: Number(probability.toFixed(4)), modelProbability: Number(probability.toFixed(4)), v1Probability: row.modelProbability, formProbability: row.formProbability,",
           }
           for old, new in replacements.items():
               if old not in text:
-                  raise SystemExit(f'Expected patch target missing: {old[:100]}')
+                  raise SystemExit(f'Expected patch target missing: {old}')
               text = text.replace(old, new, 1)
           path.write_text(text)
           PY
-          node --check lib/total-bases-model-handler.js
+          node --check lib/total-bases-v2-handler.js
       - name: Commit patch
         run: |
           git config user.name "hr-form-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add lib/total-bases-model-handler.js
-          git commit -m "Fix total bases live starter join and strategy gate"
+          git add lib/total-bases-v2-handler.js
+          git commit -m "Fix Total Bases v2 archived identity matching"
           git push origin HEAD:main
