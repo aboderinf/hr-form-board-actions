@@ -8,6 +8,9 @@ const {
   redisConfig,
   safeEqual,
 } = require("../lib/checkpoint-runtime");
+const {
+  ensureDiscoveryArchive,
+} = require("../lib/discovery-runtime");
 
 module.exports = async function handler(request, response) {
   if (request.method !== "POST") {
@@ -56,6 +59,25 @@ module.exports = async function handler(request, response) {
   try {
     const result = await captureCheckpoint({ slateDate, checkpoint, now });
     const payload = result.payload || null;
+    let discoveryArchive = null;
+    let discoveryArchiveError = null;
+
+    if (payload && ["captured", "reused"].includes(result.outcome)) {
+      try {
+        const projected = await ensureDiscoveryArchive(slateDate, checkpoint);
+        discoveryArchive = projected ? {
+          status: "ready",
+          top100Rows: Number(projected.top100_rows || 0),
+          pricedRows: Number(projected.priced_rows || 0),
+          pregamePricedRows: Number(projected.pregame_priced_rows || 0),
+          providerCallId: projected.source?.provider_call_id || null,
+        } : { status: "not_ready" };
+      } catch (error) {
+        discoveryArchive = { status: "projection_error" };
+        discoveryArchiveError = error instanceof Error ? error.message : String(error);
+      }
+    }
+
     const terminal = [
       "captured",
       "reused",
@@ -73,6 +95,8 @@ module.exports = async function handler(request, response) {
       quoteCount: payload ? Number(payload.quoteCount || 0) : null,
       providerCallId: payload?.providerCallId || null,
       providerResponseSha256: payload?.providerResponseSha256 || null,
+      discoveryArchive,
+      discoveryArchiveError,
       targetAt: result.targetAt || null,
       observedAt: result.observedAt || now.toISOString(),
       error: result.error || null,
