@@ -16,7 +16,7 @@ from src.sources import HttpClient
 from src.storage import write_json
 
 ET = ZoneInfo("America/New_York")
-ARCHIVE_API = "https://hr-form-board-actions.vercel.app/api/discovery-archive"
+CENTRAL_ODDS_API = "https://hr-form-board-actions.vercel.app/api/central-odds"
 VALID_CHECKPOINTS = {"0817", "1117", "1717", "2017"}
 
 
@@ -36,8 +36,8 @@ def main() -> int:
     now_et = datetime.now(ET)
     slate_date = args.date or now_et.date().isoformat()
     checkpoint = normalize_checkpoint(args.checkpoint)
-    query = urlencode({"date": slate_date, "checkpoint": checkpoint})
-    url = f"{ARCHIVE_API}?{query}"
+    query = urlencode({"date": slate_date, "checkpoint": checkpoint, "discovery": "1"})
+    url = f"{CENTRAL_ODDS_API}?{query}"
 
     payload = HttpClient().json(url)
     if payload.get("slate_date") != slate_date:
