@@ -29,6 +29,14 @@
     {
       "source": "/api/doubles-odds",
       "destination": "/api/triples-odds?market=doubles-odds"
+    },
+    {
+      "source": "/doubles",
+      "destination": "/sites/doubles/index.html"
+    },
+    {
+      "source": "/doubles/:path*",
+      "destination": "/sites/doubles/:path*"
     }
   ],
   "headers": [
