@@ -1,8 +1,12 @@
 const { normalizeCheckpoint } = require('../lib/checkpoint-runtime');
 const { readStrikeoutsCheckpoint } = require('../lib/strikeouts-runtime');
 const { readTotalBasesCheckpoint } = require('../lib/total-bases-runtime');
+const totalBasesDiscoveryHandler = require('../lib/total-bases-discovery-handler');
 
 module.exports = async function handler(request, response) {
+  const market = String(request.query?.market || '').toLowerCase();
+  if (market === 'total-bases-discovery') return totalBasesDiscoveryHandler(request, response);
+
   if (request.method !== 'GET' && request.method !== 'HEAD') {
     response.setHeader('Allow', 'GET, HEAD');
     return response.status(405).json({ status: 'error', message: 'Method not allowed' });
@@ -14,7 +18,7 @@ module.exports = async function handler(request, response) {
     return response.status(400).json({ status: 'error', message: 'A valid date and checkpoint are required' });
   }
 
-  const isTotalBases = String(request.query?.market || '').toLowerCase() === 'total-bases';
+  const isTotalBases = market === 'total-bases';
   try {
     const payload = isTotalBases
       ? await readTotalBasesCheckpoint(date, checkpoint)
