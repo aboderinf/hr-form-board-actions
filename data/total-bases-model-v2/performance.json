@@ -1,0 +1,160 @@
+{
+  "schema_version": 2,
+  "generated_at": "2026-08-26T23:17:09.355615+00:00",
+  "model_status": "research_ready",
+  "observations": 143008,
+  "two_plus_total_bases": 50366,
+  "candidate_trials": [
+    {
+      "params": {
+        "learning_rate": 0.05,
+        "max_iter": 180,
+        "max_leaf_nodes": 15,
+        "min_samples_leaf": 120,
+        "l2_regularization": 3.0
+      },
+      "validation": {
+        "rows": 37406,
+        "positives": 13046,
+        "prevalence": 0.34876757739400094,
+        "average_probability": 0.3625197099093855,
+        "calibration_gap": 0.01375213251538454,
+        "log_loss": 0.6413065655031165,
+        "brier": 0.22473575894479925,
+        "average_precision": 0.3984952534309025,
+        "roc_auc": 0.5653777702594357,
+        "top5_hit_rate": 0.4356687898089172,
+        "top5_hits": 342,
+        "top5_bets": 785,
+        "top10_hit_rate": 0.4407643312101911,
+        "top10_hits": 692,
+        "top10_bets": 1570
+      },
+      "selection_score": -0.8062680364332804
+    },
+    {
+      "params": {
+        "learning_rate": 0.04,
+        "max_iter": 230,
+        "max_leaf_nodes": 15,
+        "min_samples_leaf": 180,
+        "l2_regularization": 5.0
+      },
+      "validation": {
+        "rows": 37406,
+        "positives": 13046,
+        "prevalence": 0.34876757739400094,
+        "average_probability": 0.3628163686293411,
+        "calibration_gap": 0.014048791235340141,
+        "log_loss": 0.6409341777337751,
+        "brier": 0.22456022316748486,
+        "average_precision": 0.4011112281145145,
+        "roc_auc": 0.5670392588357931,
+        "top5_hit_rate": 0.45095541401273886,
+        "top5_hits": 354,
+        "top5_bets": 785,
+        "top10_hit_rate": 0.4464968152866242,
+        "top10_hits": 701,
+        "top10_bets": 1570
+      },
+      "selection_score": -0.8053277166840828
+    },
+    {
+      "params": {
+        "learning_rate": 0.035,
+        "max_iter": 260,
+        "max_leaf_nodes": 23,
+        "min_samples_leaf": 220,
+        "l2_regularization": 7.0
+      },
+      "validation": {
+        "rows": 37406,
+        "positives": 13046,
+        "prevalence": 0.34876757739400094,
+        "average_probability": 0.36274729009531526,
+        "calibration_gap": 0.013979712701314317,
+        "log_loss": 0.6417776190785791,
+        "brier": 0.22495901249411582,
+        "average_precision": 0.39823325235416634,
+        "roc_auc": 0.5640309255590992,
+        "top5_hit_rate": 0.4547770700636943,
+        "top5_hits": 357,
+        "top5_bets": 785,
+        "top10_hit_rate": 0.4369426751592357,
+        "top10_hits": 686,
+        "top10_bets": 1570
+      },
+      "selection_score": -0.8070016437195701
+    }
+  ],
+  "out_of_time_2025": {
+    "rows": 37453,
+    "positives": 13161,
+    "prevalence": 0.3514004218620671,
+    "average_probability": 0.35246780805602507,
+    "calibration_gap": 0.0010673861939579643,
+    "log_loss": 0.6433941590389367,
+    "brier": 0.22564937714463187,
+    "average_precision": 0.3917720706351524,
+    "roc_auc": 0.5610463917507071,
+    "top5_hit_rate": 0.4289308176100629,
+    "top5_hits": 341,
+    "top5_bets": 795,
+    "top10_hit_rate": 0.41823899371069184,
+    "top10_hits": 665,
+    "top10_bets": 1590
+  },
+  "holdout": {
+    "start": "2026-08-17",
+    "end": "2026-08-25",
+    "v2": {
+      "rows": 2160,
+      "positives": 722,
+      "prevalence": 0.33425925925925926,
+      "average_probability": 0.35164025725018044,
+      "calibration_gap": 0.017380997990921188,
+      "log_loss": 0.6306266949095323,
+      "brier": 0.21953267714773134,
+      "average_precision": 0.3948208057968672,
+      "roc_auc": 0.5734500633767274,
+      "top5_hit_rate": 0.5111111111111111,
+      "top5_hits": 23,
+      "top5_bets": 45,
+      "top10_hit_rate": 0.5,
+      "top10_hits": 45,
+      "top10_bets": 90
+    },
+    "form": {
+      "rows": 2160,
+      "positives": 722,
+      "prevalence": 0.33425925925925926,
+      "average_probability": 0.3430625775197934,
+      "calibration_gap": 0.008803318260534154,
+      "log_loss": 0.6362227188979555,
+      "brier": 0.22215896724133244,
+      "average_precision": 0.3558554777940306,
+      "roc_auc": 0.5278530122245809,
+      "top5_hit_rate": 0.4222222222222222,
+      "top5_hits": 19,
+      "top5_bets": 45,
+      "top10_hit_rate": 0.37777777777777777,
+      "top10_hits": 34,
+      "top10_bets": 90
+    },
+    "improvement_vs_form": {
+      "brier": 0.0026262900936011024,
+      "log_loss": 0.005596023988423182,
+      "average_precision": 0.038965328002836586,
+      "roc_auc": 0.04559705115214652
+    }
+  },
+  "export_max_probability_difference": 0.0,
+  "sources": [
+    "MLB Baseball Savant Statcast PA-level CSV",
+    "MLB Stats API schedules, probable pitchers, venues, and recorded weather",
+    "Baseball Savant Statcast park-factor leaderboard",
+    "Pregame rolling batter, pitcher, and opponent state"
+  ],
+  "leakage_policy": "Every Statcast and context feature is calculated from dates before the target slate. Same-day doubleheader outcomes are not fed into one another. Sportsbook odds are excluded from model fitting, calibration, and hyperparameter selection.",
+  "promotion_policy": "V2 must beat both v1 and the calibrated form baseline on untouched holdout Brier and log loss, then a betting threshold chosen only on pre-holdout archived prices must remain profitable on holdout prices with adequate sample."
+}
