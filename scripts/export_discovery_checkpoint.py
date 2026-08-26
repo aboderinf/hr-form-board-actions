@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import subprocess
 import sys
 from datetime import datetime
@@ -25,6 +26,13 @@ def normalize_checkpoint(value: str) -> str:
     if digits not in VALID_CHECKPOINTS:
         raise SystemExit(f"Invalid checkpoint: {value}")
     return digits
+
+
+def existing_payload(path: Path) -> dict:
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except (FileNotFoundError, json.JSONDecodeError):
+        return {}
 
 
 def main() -> int:
@@ -57,13 +65,23 @@ def main() -> int:
     archive_dir = ROOT / "data" / "discovery" / "archive"
     archive_dir.mkdir(parents=True, exist_ok=True)
     path = archive_dir / f"{slate_date}_{checkpoint}.json"
-    if path.exists():
-        print(f"Immutable archive already exists: {path.name}")
+    current = existing_payload(path)
+    incoming_schema = int(payload.get("schema_version") or 0)
+    current_schema = int(current.get("schema_version") or 0)
+    same_call = (
+        (current.get("source") or {}).get("provider_call_id")
+        == source.get("provider_call_id")
+    )
+
+    if current and current_schema >= incoming_schema and same_call:
+        print(f"Immutable archive already current: {path.name}")
     else:
         write_json(path, payload)
+        action = "Upgraded" if current else "Exported"
         print(
-            f"Exported {path.name}: top100={payload.get('top100_rows')} "
-            f"priced={payload.get('priced_rows')} call={source.get('provider_call_id')}"
+            f"{action} {path.name}: schema={incoming_schema} "
+            f"top100={payload.get('top100_rows')} priced={payload.get('priced_rows')} "
+            f"call={source.get('provider_call_id')}"
         )
 
     subprocess.run(
