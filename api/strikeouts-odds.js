@@ -2,10 +2,13 @@ const { normalizeCheckpoint } = require('../lib/checkpoint-runtime');
 const { readStrikeoutsCheckpoint } = require('../lib/strikeouts-runtime');
 const { readTotalBasesCheckpoint } = require('../lib/total-bases-runtime');
 const totalBasesDiscoveryHandler = require('../lib/total-bases-discovery-handler');
+const totalBasesModelHandler = require('../lib/total-bases-model-handler');
 
 module.exports = async function handler(request, response) {
   const market = String(request.query?.market || '').toLowerCase();
+  const mode = String(request.query?.mode || '').toLowerCase();
   if (market === 'total-bases-discovery') return totalBasesDiscoveryHandler(request, response);
+  if (market === 'total-bases' && mode === 'model') return totalBasesModelHandler(request, response);
 
   if (request.method !== 'GET' && request.method !== 'HEAD') {
     response.setHeader('Allow', 'GET, HEAD');
@@ -45,9 +48,10 @@ module.exports = async function handler(request, response) {
     response.setHeader('Access-Control-Allow-Origin', '*');
     return response.status(500).json({
       status: 'error', date, checkpoint,
-      providerRequests: 0,
-      quotaObjectsAdded: 0,
+      providerRequests: 0, quotaObjectsAdded: 0,
       message: error instanceof Error ? error.message : String(error),
     });
   }
 };
+
+module.exports.config = { maxDuration: 60 };
