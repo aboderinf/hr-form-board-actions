@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MLB Doubles</title>
+  <meta name="description" content="MLB batter doubles form board, archived prices, discovery, and model lab." />
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <main class="shell">
+    <header class="hero">
+      <div>
+        <div class="eyebrow">MLB BATTER PROPS</div>
+        <h1>Doubles Lab</h1>
+        <p>Form first. Price discovery next. Model only after the archived sample earns it.</p>
+      </div>
+      <div class="live-pill">Shared archive · 0 extra odds calls</div>
+    </header>
+
+    <nav class="tabs" aria-label="Views">
+      <button class="tab active" data-view="form">Form</button>
+      <button class="tab" data-view="discovery">Discovery</button>
+      <button class="tab" data-view="model">Model</button>
+    </nav>
+
+    <section class="toolbar" id="toolbar">
+      <label>Slate <input id="slate-date" type="date" /></label>
+      <label>Checkpoint
+        <select id="checkpoint">
+          <option value="">Latest archived</option>
+          <option value="0817">8:17 AM</option>
+          <option value="1117">11:17 AM</option>
+          <option value="1717">5:17 PM</option>
+          <option value="2017">8:17 PM</option>
+        </select>
+      </label>
+      <button id="refresh">Refresh</button>
+    </section>
+
+    <section id="status" class="status">Loading doubles board…</section>
+    <section id="summary" class="summary" hidden></section>
+    <section id="content"></section>
+  </main>
+  <script type="module" src="/app.js"></script>
+</body>
+</html>
