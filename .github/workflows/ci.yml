@@ -37,4 +37,4 @@ jobs:
       - name: Test standalone total-bases site separation
         run: node --test tests/test_total_bases_site.js
       - name: Check total-bases API and standalone client syntax
-        run: node --check lib/total-bases-runtime.js && node --check lib/total-bases-form-handler.js && node --check lib/total-bases-form-handler-v2.js && node --check lib/total-bases-discovery-handler.js && node --check lib/total-bases-model-handler.js && node --check lib/total-bases-model-safe-handler.js && node --check api/strikeouts-odds.js && node --check api/strikeouts-form.js && node --check sites/total-bases/app.js
+        run: node --check lib/total-bases-runtime.js && node --check lib/total-bases-form-handler.js && node --check lib/total-bases-form-handler-v2.js && node --check lib/total-bases-discovery-handler.js && node --check lib/total-bases-model-handler.js && node --check lib/total-bases-model-safe-handler.js && node --check lib/total-bases-v2-handler.js && node --check api/strikeouts-odds.js && node --check api/strikeouts-form.js && node --check sites/total-bases/app.js
