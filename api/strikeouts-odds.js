@@ -2,7 +2,7 @@ const { normalizeCheckpoint } = require('../lib/checkpoint-runtime');
 const { readStrikeoutsCheckpoint } = require('../lib/strikeouts-runtime');
 const { readTotalBasesCheckpoint } = require('../lib/total-bases-runtime');
 const totalBasesDiscoveryHandler = require('../lib/total-bases-discovery-handler');
-const totalBasesModelHandler = require('../lib/total-bases-model-handler');
+const totalBasesModelHandler = require('../lib/total-bases-model-safe-handler');
 
 module.exports = async function handler(request, response) {
   const market = String(request.query?.market || '').toLowerCase();
