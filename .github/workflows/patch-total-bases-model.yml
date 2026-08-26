@@ -1,4 +1,4 @@
-name: Freeze total bases v1 holdout
+name: Patch total bases v2 site
 
 on:
   push:
@@ -15,28 +15,146 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: main
-      - name: Freeze v1 validation split at August 17
+      - name: Replace v1 Model tab with v2 comparison
         run: |
           python - <<'PY'
           from pathlib import Path
-          path = Path('lib/total-bases-model-handler.js')
+          path = Path('sites/total-bases/app.js')
           text = path.read_text()
-          replacements = {
-              "const MODEL_VERSION = 'v1.1';": "const MODEL_VERSION = 'v1.2';",
-              "    const splitIndex = settledDates.length >= 2 ? Math.max(1, Math.min(settledDates.length - 1, Math.floor(settledDates.length * 0.60))) : null;\n    const holdoutStart = splitIndex == null ? null : settledDates[splitIndex];": "    const fixedHoldoutStart = '2026-08-17';\n    const splitIndex = settledDates.length >= 2 ? Math.max(1, Math.min(settledDates.length - 1, Math.floor(settledDates.length * 0.60))) : null;\n    const holdoutStart = settledDates.some((value) => value >= fixedHoldoutStart)\n      ? fixedHoldoutStart\n      : (splitIndex == null ? null : settledDates[splitIndex]);",
-              "      kind: 'batter_two_plus_total_bases_model_v1_1',": "      kind: 'batter_two_plus_total_bases_model_v1_2',",
+          text = text.replace(
+              "const MODEL_API = 'https://hr-form-board-actions.vercel.app/api/total-bases-model';",
+              "const MODEL_API = 'https://hr-form-board-actions.vercel.app/api/total-bases-model-v2';",
+              1,
+          )
+          start = text.index('function renderModel(data) {')
+          end = text.index('async function loadForm() {', start)
+          replacement = r'''function modelMetricCard(label, value, detail, state = '') {
+            return `<article class="model-stat ${esc(state)}"><span>${esc(label)}</span><strong>${esc(value)}</strong><small>${esc(detail)}</small></article>`;
           }
-          for old, new in replacements.items():
-              if old not in text:
-                  raise SystemExit(f'Expected patch target missing: {old[:120]}')
-              text = text.replace(old, new, 1)
+
+          function renderModel(data) {
+            status.hidden = true;
+            if (data.modelStatus === 'TRAINING' || data.status === 'training') {
+              summary.hidden = true;
+              content.innerHTML = `<section class="model-hero model-hold"><div><div class="eyebrow">STATCAST MODEL V2</div><h2>Building frozen model artifacts</h2><p>${esc(data.message || 'The Statcast model artifacts are being generated and validated.')}</p></div><div class="edge-meta"><span>0 extra odds calls</span><span>Aug 17+ reserved holdout</span></div></section>`;
+              return;
+            }
+
+            const validation = data.validation || {};
+            const v2 = validation.v2 || {};
+            const v1 = validation.v1 || {};
+            const form = validation.form || {};
+            const strategy = validation.holdoutStrategy || {};
+            const calibration = validation.calibrationStrategy || {};
+            const out2025 = validation.outOfTime2025 || {};
+            const dq = data.dataQuality || {};
+            const sameSplit = Boolean(validation.sameHoldoutAsV1);
+            const probabilityPass = Boolean(validation.probabilityPass);
+            const bettingPass = Boolean(validation.bettingPass);
+            const strategyRule = validation.strategyRule || {};
+
+            metrics([
+              ['Model status', data.modelStatus || 'UNPROMOTED'],
+              ['V2 holdout Brier', decimal(v2.brier, 5)],
+              ['V1 holdout Brier', decimal(v1.brier, 5)],
+              ['Holdout strategy ROI', pct(strategy.roi, 1)],
+            ]);
+
+            const liveRows = data.rows || [];
+            const liveTable = liveRows.length ? `<section class="table-card model-table"><div class="table-scroll"><table>
+              <thead><tr><th>#</th><th>Batter</th><th>V2 P</th><th>V1 P</th><th>Form P</th><th>Fair</th><th>Best O1.5</th><th>Edge</th><th>EV</th><th>Status</th></tr></thead>
+              <tbody>${liveRows.map((row, i) => `<tr>
+                <td class="rank">${i + 1}</td>
+                <td class="player"><strong>${esc(row.batterName)}</strong><small>${esc(row.matchup || '')}</small></td>
+                <td><strong>${pct(row.v2Probability ?? row.modelProbability, 1)}</strong></td>
+                <td>${pct(row.v1Probability, 1)}</td>
+                <td>${pct(row.formProbability, 1)}</td>
+                <td>${american(row.fairAmerican)}</td>
+                <td><strong>${american(row.bestOver?.americanOdds)}</strong><small>${esc(book(row.bestOver?.book))}</small></td>
+                <td class="${Number(row.probabilityEdge) > 0 ? 'positive' : 'negative'}">${pct(row.probabilityEdge, 1)}</td>
+                <td class="${Number(row.expectedValue) > 0 ? 'positive' : 'negative'}">${pct(row.expectedValue, 1)}</td>
+                <td>${row.qualifies ? '<span class="confidence validated">Qualified</span>' : '<span class="confidence exploratory">Research only</span>'}</td>
+              </tr>`).join('')}</tbody>
+            </table></div></section>` : `<section class="empty model-empty"><h2>No v2 live rows yet</h2><p>The frozen Statcast state could not match a complete batter + opposing-starter context for this checkpoint.</p></section>`;
+
+            const ruleText = strategyRule.ready === false || strategyRule.minProbabilityEdge == null
+              ? 'No profitable calibration rule survived.'
+              : `${strategyRule.checkpoint ? cpLabel(strategyRule.checkpoint) + ' · ' : ''}edge ≥ ${pct(strategyRule.minProbabilityEdge, 1)} · EV ≥ ${pct(strategyRule.minExpectedValue, 1)}`;
+
+            content.innerHTML = `<section class="model-hero ${data.promoted ? 'model-pass' : 'model-hold'}">
+              <div>
+                <div class="eyebrow">STATCAST MODEL V2</div>
+                <h2>${data.promoted ? 'V2 promoted' : 'V2 research model · not promoted'}</h2>
+                <p>${probabilityPass ? 'V2 beats both v1 and form on the frozen untouched holdout.' : 'V2 has not cleared the probability gate against both v1 and form.'} ${bettingPass ? 'The frozen price rule also remains profitable in holdout.' : 'The executable betting gate has not passed.'}</p>
+              </div>
+              <div class="edge-meta">
+                <span>${dq.observations || 0} Statcast game examples</span>
+                <span>Holdout ${esc(humanDate(data.split?.holdoutStart))}–${esc(humanDate(data.split?.through))}</span>
+                <span>${data.providerRequests ?? 0} extra odds calls</span>
+              </div>
+            </section>
+
+            <section class="section-heading"><div><span>Probability gate</span><h2>V2 vs v1 vs form</h2></div><p>All three are evaluated from the same Aug. 17 holdout boundary. Lower Brier and log loss are better; sportsbook price is excluded from the probability fit.</p></section>
+            <div class="model-compare-grid">
+              ${modelMetricCard('V2 Brier', decimal(v2.brier, 5), `V1 ${decimal(v1.brier, 5)} · Form ${decimal(form.brier, 5)}`, probabilityPass ? 'pass' : 'fail')}
+              ${modelMetricCard('V2 log loss', decimal(v2.log_loss, 5), `V1 ${decimal(v1.logLoss, 5)} · Form ${decimal(form.log_loss, 5)}`, probabilityPass ? 'pass' : 'fail')}
+              ${modelMetricCard('2025 out-of-time Brier', decimal(out2025.brier, 5), `${out2025.rows || 0} game outcomes`, '')}
+              ${modelMetricCard('Same holdout', sameSplit ? 'YES' : 'NO', `${humanDate(data.split?.holdoutStart)} start`, sameSplit ? 'pass' : 'fail')}
+            </div>
+
+            <section class="section-heading secondary"><div><span>Betting gate</span><h2>Frozen price rule</h2></div><p>The threshold is selected only on Aug. 2–16 archived prices, then frozen before Aug. 17+ outcomes are scored.</p></section>
+            <div class="model-compare-grid">
+              ${modelMetricCard('Calibration ROI', pct(calibration.roi, 1), `${calibration.bets || 0} bets · ${units(calibration.netUnits)}`, Number(calibration.roi) > 0 ? 'pass' : 'fail')}
+              ${modelMetricCard('Holdout ROI', pct(strategy.roi, 1), `${strategy.bets || 0} bets · ${units(strategy.netUnits)}`, bettingPass ? 'pass' : 'fail')}
+              ${modelMetricCard('Holdout hit rate', pct(strategy.hitRate, 1), `${strategy.wins || 0}-${strategy.losses || 0}`, bettingPass ? 'pass' : '')}
+              ${modelMetricCard('Frozen rule', ruleText, `${strategy.slates || 0} holdout slates`, bettingPass ? 'pass' : 'fail')}
+            </div>
+
+            <section class="model-warning"><strong>Promotion requires both gates.</strong> V2 must beat v1 and form on both Brier and log loss on the untouched holdout, and a rule chosen only before the holdout must stay profitable with adequate sample. Until then, positive-looking live EV is research-only.</section>
+
+            <section class="section-heading secondary"><div><span>Current slate</span><h2>V2 research projections</h2></div><p>V2 uses leakage-safe Savant contact-quality state, opponent starter context, opportunity, park/environment, and handedness. Price is applied only after probability estimation.</p></section>
+            ${liveTable}
+
+            <section class="section-heading secondary"><div><span>Feature architecture</span><h2>What changed beyond v1</h2></div><p>This is nonlinear gradient boosting, so individual coefficients are not presented as causal effects.</p></section>
+            <div class="coefficient-grid">
+              <article><span>Contact quality</span><strong>xBA · xSLG · EV · Hard-hit</strong></article>
+              <article><span>Outcome shape</span><strong>1B · 2B · 3B · HR · TB/PA</strong></article>
+              <article><span>Opportunity</span><strong>Lineup slot · PA/game · Rest</strong></article>
+              <article><span>Starter matchup</span><strong>Contact · TB allowed · Hand</strong></article>
+              <article><span>Opponent</span><strong>Hit/TB allowed profile</strong></article>
+              <article><span>Park</span><strong>1B · 2B · HR factors · Dimensions</strong></article>
+              <article><span>Environment</span><strong>Temp · Wind · Roof · Elevation</strong></article>
+              <article><span>Validation</span><strong>2025 OOT + Aug. 17 holdout</strong></article>
+            </div>
+
+            <section class="note"><strong>Model design.</strong> ${esc(data.methodology?.probabilityFit || '')} ${esc(data.methodology?.features || '')} ${esc(data.methodology?.marketValidation || '')}</section>`;
+          }
+
+          async function loadModel() {
+            status.hidden = false;
+            status.textContent = 'Loading Statcast v2 and frozen holdout validation…';
+            summary.hidden = true;
+            content.innerHTML = '';
+            try {
+              const response = await fetch(`${MODEL_API}?${params()}`, { cache: 'no-store' });
+              const data = await response.json();
+              if (!response.ok && data.status !== 'training') throw new Error(data.message || `HTTP ${response.status}`);
+              renderModel(data);
+            } catch (error) {
+              status.hidden = false;
+              status.textContent = `Unable to load model: ${error.message || error}`;
+            }
+          }
+
+          '''
+          text = text[:start] + replacement + text[end:]
           path.write_text(text)
           PY
-          node --check lib/total-bases-model-handler.js
+          node --check sites/total-bases/app.js
       - name: Commit patch
         run: |
           git config user.name "hr-form-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add lib/total-bases-model-handler.js
-          git commit -m "Freeze Total Bases v1 holdout at Aug 17"
+          git add sites/total-bases/app.js
+          git commit -m "Show Total Bases Statcast v2 validation on site"
           git push origin HEAD:main
