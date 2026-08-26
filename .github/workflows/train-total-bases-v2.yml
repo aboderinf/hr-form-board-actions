@@ -1,0 +1,84 @@
+name: Train Total Bases V2
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/train-total-bases-v2.yml"
+      - "src/total_bases_model.py"
+      - "scripts/train_total_bases_v2.py"
+      - "tests/test_total_bases_model_v2.py"
+      - "data/triggers/train-total-bases-v2.txt"
+  schedule:
+    # Refresh rolling state after the prior MLB slate. The model parameters are
+    # selected from frozen historical years; August remains out-of-sample.
+    - cron: "20 10 * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: total-bases-v2-training
+  cancel-in-progress: false
+
+jobs:
+  train:
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Restore Savant cache
+        uses: actions/cache@v4
+        with:
+          path: /tmp/mlb-total-bases-v2-cache
+          key: total-bases-v2-statcast-${{ runner.os }}-v1-${{ github.run_id }}
+          restore-keys: |
+            total-bases-v2-statcast-${{ runner.os }}-v1-
+
+      - name: Install model runtime
+        run: pip install -r requirements.txt numpy==2.1.3 scikit-learn==1.7.2
+
+      - name: Compile and test v2 contracts
+        run: |
+          python -m py_compile src/total_bases_model.py scripts/train_total_bases_v2.py
+          python -m unittest discover -s tests -p 'test_total_bases_model_v2.py' -v
+
+      - name: Resolve settled through date
+        id: window
+        run: |
+          python - <<'PY' >> "$GITHUB_OUTPUT"
+          from datetime import datetime, timedelta
+          from zoneinfo import ZoneInfo
+          today = datetime.now(ZoneInfo("America/New_York")).date()
+          print(f"through={(today - timedelta(days=1)).isoformat()}")
+          PY
+
+      - name: Train and validate Total Bases v2
+        run: >-
+          python scripts/train_total_bases_v2.py
+          --start 2023-03-20
+          --end "${{ steps.window.outputs.through }}"
+          --holdout-start 2026-08-17
+
+      - name: Commit Total Bases v2 artifacts
+        shell: bash
+        run: |
+          if git diff --quiet && [ -z "$(git status --porcelain data/total-bases-model-v2)" ]; then
+            echo "No Total Bases v2 artifact changes."
+            exit 0
+          fi
+          git config user.name "hr-form-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/total-bases-model-v2
+          git commit -m "Update Total Bases v2 model artifacts"
+          git pull --rebase origin main
+          git push
