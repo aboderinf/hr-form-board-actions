@@ -2,20 +2,35 @@ name: Archive Top 100 Discovery
 
 on:
   workflow_dispatch:
+    inputs:
+      slate_date:
+        description: Optional YYYY-MM-DD slate date
+        required: false
+      checkpoint:
+        description: Optional exact checkpoint (0817, 1117, 1717, 2017)
+        required: false
   push:
     branches: [main]
     paths:
       - ".github/workflows/discovery.yml"
-      - "app.js"
-      - "src/discovery.py"
+      - "api/capture-checkpoint.js"
+      - "api/discovery-archive.js"
+      - "lib/discovery-runtime.js"
+      - "scripts/export_discovery_checkpoint.py"
       - "scripts/build_discovery.py"
+      - "src/discovery.py"
       - "tests/test_discovery.py"
   schedule:
-    # Recovery-only fallback after the source-driven all-surface refresh.
-    - cron: "55 12,15,21 * 3-11 *"
-    - cron: "55 0 * 3-11 *"
-    - cron: "55 13,16,22 * 3-11 *"
-    - cron: "55 1 * 3-11 *"
+    # Reconciliation/export only. QStash/Vercel writes the canonical Redis
+    # Discovery snapshot immediately after each checkpoint capture.
+    - cron: '45 8 * * *'
+      timezone: 'America/New_York'
+    - cron: '45 11 * * *'
+      timezone: 'America/New_York'
+    - cron: '45 17 * * *'
+      timezone: 'America/New_York'
+    - cron: '45 20 * * *'
+      timezone: 'America/New_York'
 
 permissions:
   contents: write
@@ -33,24 +48,59 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Resolve valid ET archive window
+      - name: Resolve exact checkpoint independent of runner delay
         id: window
         shell: bash
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          SCHEDULE_EXPR: ${{ github.event.schedule }}
+          MANUAL_DATE: ${{ github.event.inputs.slate_date }}
+          MANUAL_CHECKPOINT: ${{ github.event.inputs.checkpoint }}
         run: |
           python - <<'PY' >> "$GITHUB_OUTPUT"
           import os
-          from datetime import datetime
+          import re
+          from datetime import datetime, time, timedelta
           from zoneinfo import ZoneInfo
 
-          now = datetime.now(ZoneInfo("America/New_York"))
-          manual = os.environ.get("GITHUB_EVENT_NAME") != "schedule"
-          labels = {8: "0817", 11: "1117", 17: "1717", 20: "2017"}
-          due = manual or now.hour in labels
-          checkpoint = labels.get(now.hour, f"manual-{now:%H%M}")
+          et = ZoneInfo("America/New_York")
+          now = datetime.now(et)
+          event = os.environ.get("EVENT_NAME", "")
+          schedule = os.environ.get("SCHEDULE_EXPR", "").strip()
+          manual_date = os.environ.get("MANUAL_DATE", "").strip()
+          manual_cp = re.sub(r"\D", "", os.environ.get("MANUAL_CHECKPOINT", "")).zfill(4)
+          valid = {"0817", "1117", "1717", "2017"}
+          checkpoint = None
+
+          if event == "schedule":
+              parts = schedule.split()
+              if len(parts) >= 2 and parts[1].isdigit():
+                  checkpoint = {8: "0817", 11: "1117", 17: "1717", 20: "2017"}.get(int(parts[1]))
+          elif manual_cp in valid:
+              checkpoint = manual_cp
+          else:
+              candidates = []
+              for cp in sorted(valid):
+                  hour, minute = int(cp[:2]), int(cp[2:])
+                  scheduled = datetime.combine(now.date(), time(hour, minute), et)
+                  delta = now - scheduled
+                  if timedelta(0) <= delta <= timedelta(hours=3):
+                      candidates.append((scheduled, cp))
+              if candidates:
+                  checkpoint = max(candidates)[1]
+
+          slate_date = manual_date or now.date().isoformat()
+          due = bool(checkpoint)
           print(f"due={'true' if due else 'false'}")
-          print(f"checkpoint={checkpoint}")
+          print(f"checkpoint={checkpoint or ''}")
+          print(f"slate_date={slate_date}")
           print(f"observed_et={now.isoformat()}")
+          print(f"schedule_expr={schedule}")
           PY
+
+      - name: Skip when no exact checkpoint is attributable
+        if: steps.window.outputs.due != 'true'
+        run: echo "No exact checkpoint attributable at ${{ steps.window.outputs.observed_et }}; skipping."
 
       - uses: actions/setup-python@v5
         if: steps.window.outputs.due == 'true'
@@ -61,15 +111,18 @@ jobs:
       - if: steps.window.outputs.due == 'true'
         run: pip install -r requirements.txt
 
-      - name: Archive Top 100 odds and rebuild discovery reports
+      - name: Export canonical Redis Discovery checkpoint and rebuild reports
         if: steps.window.outputs.due == 'true'
-        run: python scripts/build_discovery.py --checkpoint "${{ steps.window.outputs.checkpoint }}"
+        run: >-
+          python scripts/export_discovery_checkpoint.py
+          --date "${{ steps.window.outputs.slate_date }}"
+          --checkpoint "${{ steps.window.outputs.checkpoint }}"
 
       - name: Run only Discovery archive tests
         if: steps.window.outputs.due == 'true'
         run: python -m unittest discover -s tests -p 'test_discovery.py' -v
 
-      - name: Commit discovery archive
+      - name: Commit reconciled Discovery archive
         if: steps.window.outputs.due == 'true'
         shell: bash
         run: |
@@ -81,5 +134,9 @@ jobs:
           git config user.email "actions@users.noreply.github.com"
           git add data/discovery.json data/discovery/archive
           git commit -m "Archive Top 100 discovery checkpoint"
-          git pull --rebase origin main
-          git push
+          for attempt in 1 2 3; do
+            git pull --rebase origin main && git push && exit 0
+            git rebase --abort >/dev/null 2>&1 || true
+            sleep $((attempt * 2))
+          done
+          exit 1
