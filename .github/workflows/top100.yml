@@ -28,11 +28,11 @@ on:
       - "tests/test_triples.py"
       - "tests/test_triples_model.py"
   schedule:
-    # Full daily rebuild at 4:05 AM ET so the new slate is ready before 8:17.
-    # A 6:05 AM ET invocation is recovery-only and skips when today's board exists.
-    # EDT equivalents.
+    # Primary and recovery invocations. GitHub may start scheduled work hours late,
+    # so freshness checks below use the ET slate date instead of the runner hour.
+    # EDT equivalents (4:05 and 6:05 AM ET).
     - cron: "5 8,10 * 3-11 *"
-    # EST equivalents. ET-hour gating below rejects the duplicate offset run.
+    # EST equivalents. Duplicate-offset runs skip once all outputs are current.
     - cron: "5 9,11 * 3-11 *"
 
 permissions:
@@ -40,7 +40,8 @@ permissions:
 
 concurrency:
   group: refresh-top-100-scores
-  cancel-in-progress: true
+  # Never let a delayed duplicate cancel an active model build.
+  cancel-in-progress: false
 
 jobs:
   refresh:
@@ -51,47 +52,81 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Resolve ET daily or recovery run
+      - name: Resolve current-slate freshness
         id: window
         shell: bash
         run: |
           python - <<'PY' >> "$GITHUB_OUTPUT"
           import json
           import os
-          from datetime import datetime
+          from datetime import datetime, timedelta
           from pathlib import Path
           from zoneinfo import ZoneInfo
 
           now = datetime.now(ZoneInfo("America/New_York"))
+          expected_slate = now.date().isoformat()
+          expected_state = (now.date() - timedelta(days=1)).isoformat()
           event = os.environ.get("GITHUB_EVENT_NAME", "")
           manual_or_code_change = event != "schedule"
-          due = False
-          mode = "skip"
+
+          outputs = {
+              "top100": (
+                  Path("data/top100.json"),
+                  {"ready", "no_players_in_form"},
+              ),
+              "triples_top100": (
+                  Path("data/triples-top100.json"),
+                  {"ready", "no_players_in_form"},
+              ),
+              "triples_model": (
+                  Path("data/triples-model.json"),
+                  {"ready", "no_scheduled_players"},
+              ),
+          }
+          freshness = {}
+          stale_reasons = []
+
+          for label, (path, usable_statuses) in outputs.items():
+              try:
+                  payload = json.loads(path.read_text(encoding="utf-8"))
+              except Exception as exc:
+                  payload = {}
+                  stale_reasons.append(f"{label}:unreadable:{type(exc).__name__}")
+
+              slate_date = payload.get("slate_date")
+              status = payload.get("status")
+              freshness[label] = {
+                  "slate_date": slate_date,
+                  "status": status,
+                  "state_as_of": payload.get("state_as_of"),
+              }
+              if slate_date != expected_slate:
+                  stale_reasons.append(f"{label}:slate={slate_date}")
+              if status not in usable_statuses:
+                  stale_reasons.append(f"{label}:status={status}")
+
+          model_state = freshness["triples_model"].get("state_as_of")
+          if not model_state or str(model_state) < expected_state:
+              stale_reasons.append(
+                  f"triples_model:state_as_of={model_state};expected>={expected_state}"
+              )
 
           if manual_or_code_change:
               due = True
               mode = "manual_or_code_change"
-          elif now.hour == 4:
-              due = True
-              mode = "daily_0405"
-          elif now.hour == 6:
-              path = Path("data/top100.json")
-              current_slate = None
-              if path.exists():
-                  try:
-                      current_slate = json.loads(path.read_text(encoding="utf-8")).get("slate_date")
-                  except Exception:
-                      current_slate = None
-              due = current_slate != now.date().isoformat()
-              mode = "recovery_0605" if due else "recovery_not_needed"
+          else:
+              due = bool(stale_reasons)
+              mode = "scheduled_stale_recovery" if due else "scheduled_already_current"
 
           print(f"due={'true' if due else 'false'}")
           print(f"mode={mode}")
-          print(f"slate_date={now.date().isoformat()}")
+          print(f"slate_date={expected_slate}")
           print(f"observed_et={now.isoformat()}")
+          print(f"freshness={json.dumps(freshness, sort_keys=True, separators=(',', ':'))}")
+          print(f"stale_reasons={json.dumps(stale_reasons, separators=(',', ':'))}")
           PY
 
-      - name: Skip duplicate or unnecessary recovery run
+      - name: Skip already-current scheduled run
         if: steps.window.outputs.due != 'true'
         run: echo "Skipping ${{ steps.window.outputs.mode }} at ${{ steps.window.outputs.observed_et }}."
 
