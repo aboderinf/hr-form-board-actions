@@ -2,18 +2,30 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "functions": {
-    "api/top100-refresh.py": {
+    "api/capture-checkpoint.js": {
       "maxDuration": 300
     }
   },
   "rewrites": [
     {
+      "source": "/api/top100-refresh",
+      "destination": "/api/capture-checkpoint?action=top100-refresh"
+    },
+    {
+      "source": "/api/top100-current",
+      "destination": "/api/central-odds?view=top100"
+    },
+    {
+      "source": "/api/top100-schedule",
+      "destination": "/api/qstash-0817-diagnostic?action=ensure-top100-schedule"
+    },
+    {
       "source": "/data/top100.json",
-      "destination": "/api/top100-current"
+      "destination": "/api/central-odds?view=top100"
     },
     {
       "source": "/data/discovery/archive/:name",
-      "destination": "/api/discovery-archive?name=:name"
+      "destination": "/api/central-odds?view=discovery-archive&name=:name"
     },
     {
       "source": "/api/total-bases-form",
