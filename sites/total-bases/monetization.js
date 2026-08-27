@@ -22,7 +22,8 @@ function unitsMoney(value) {
 }
 function recordMoney(value) {
   if (!value) return '—';
-  return `${value.wins || 0}-${value.losses || 0}`;
+  const voids = Number(value.voids || 0);
+  return `${value.wins || 0}-${value.losses || 0}${voids ? `-${voids}V` : ''}`;
 }
 function shortDateMoney(value) {
   if (!value) return '—';
@@ -62,21 +63,33 @@ function periodCard(label, period, detail = '') {
   </article>`;
 }
 
+function selectionResult(pick) {
+  const result = String(pick?.result || '').toLowerCase();
+  if (result === 'win') return { cls: 'win', label: 'W' };
+  if (result === 'loss') return { cls: 'loss', label: 'L' };
+  if (result === 'void') return { cls: 'void', label: 'VOID' };
+  return { cls: 'void', label: result ? result.toUpperCase() : '—' };
+}
+
 function renderDailyLedger(forward) {
   const days = [...(forward?.daily || [])].reverse();
   if (!days.length) {
     return '<div class="money-none">No settled forward slates yet. Forward tracking begins Aug. 26.</div>';
   }
   const rows = days.map((day) => {
-    const unavailable = day.status !== 'settled';
+    const unavailable = !['settled', 'partial'].includes(day.status);
     const selections = unavailable
-      ? '<span class="money-muted">Archive/result unavailable</span>'
-      : day.bets === 0
+      ? '<span class="money-muted">Selection snapshot/result unavailable</span>'
+      : (day.selections || []).length === 0
         ? '<span class="money-muted">No qualified bets</span>'
-        : (day.selections || []).map((pick) => `<span class="money-selection ${pick.hit ? 'win' : 'loss'}"><b>${escMoney(pick.player)}</b> ${americanMoney(pick.odds)} ${escMoney(bookMoney(pick.book))} · ${pick.hit ? 'W' : 'L'} ${unitsMoney(pick.pnlUnits)}</span>`).join('');
+        : (day.selections || []).map((pick) => {
+          const result = selectionResult(pick);
+          const actual = pick.actualTb == null ? '' : ` · ${pick.actualTb} TB`;
+          return `<span class="money-selection ${result.cls}"><b>${escMoney(pick.batterName || pick.player)}</b> ${americanMoney(pick.odds)} ${escMoney(bookMoney(pick.book))} · ${result.label}${actual} · ${unitsMoney(pick.pnlUnits)}</span>`;
+        }).join('');
     return `<tr>
       <td><strong>${escMoney(shortDateMoney(day.date))}</strong><small>${escMoney(day.date)}</small></td>
-      <td>${unavailable ? '—' : `${day.wins || 0}-${day.losses || 0}`}</td>
+      <td>${unavailable ? '—' : recordMoney(day)}</td>
       <td class="${pnlClass(day.netUnits)}"><strong>${unavailable ? '—' : unitsMoney(day.netUnits)}</strong></td>
       <td class="${pnlClass(day.roi)}">${unavailable ? '—' : pctMoney(day.roi)}</td>
       <td class="${pnlClass(day.cumulative?.netUnits)}">${unitsMoney(day.cumulative?.netUnits)}</td>
@@ -133,7 +146,7 @@ function renderMonetization(data) {
       <article class="holdout"><span>Frozen holdout</span><strong>${pctMoney(holdout.roi)}</strong><small>${holdout.wins || 0}-${holdout.losses || 0} · ${unitsMoney(holdout.netUnits)}</small></article>
     </div>
 
-    <div class="money-heading forward-title"><div><span>Live profitability</span><h3>Forward results · Aug. 26 onward</h3></div><p>One unit per selection. Calibration is excluded from live performance.</p></div>
+    <div class="money-heading forward-title"><div><span>Live profitability</span><h3>Forward results · Aug. 26 onward</h3></div><p>One unit per graded selection. Voids return stake and do not enter ROI.</p></div>
     <div class="money-stats forward-stats">
       ${periodCard('Last 7 days', periods.last7Days)}
       ${periodCard('Last 14 days', periods.last14Days)}
@@ -141,12 +154,12 @@ function renderMonetization(data) {
       ${periodCard('All out-of-sample', overallOos, `${overallOos.profitableSlates || 0}/${overallOos.slates || 0} positive slates`)}
     </div>
 
-    <div class="money-heading"><div><span>Day by day</span><h3>Frozen-rule performance ledger</h3></div><p>Daily and cumulative profitability from archived 8:17 AM selections.</p></div>
+    <div class="money-heading"><div><span>Day by day</span><h3>Frozen-rule performance ledger</h3></div><p>Daily and cumulative profitability from immutable 8:17 AM selection snapshots.</p></div>
     ${renderDailyLedger(forward)}
 
     <div class="money-heading"><div><span>Today's execution</span><h3>Qualified 8:17 AM bets</h3></div><p>Later checkpoints do not replace these selections.</p></div>
     ${picks}
-    <div class="money-footnote"><strong>Important:</strong> the broad raw-v2 EV strategy below remains separate. Promotion applies only to this frozen top-three execution layer. Forward outcomes update the ledger but never change the rule. Existing archived odds are reused, adding 0 SportsGameOdds calls.</div>`;
+    <div class="money-footnote"><strong>Important:</strong> each morning’s list is saved before results. Later outcomes only grade those saved names; DNP/no-appearance props are void and no replacement is promoted. The broad raw-v2 EV strategy below remains separate. Existing archived odds are reused, adding 0 SportsGameOdds calls.</div>`;
 }
 
 function showMoney(show) {
