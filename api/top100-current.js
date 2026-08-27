@@ -17,7 +17,7 @@ module.exports = async function handler(request, response) {
     return response.status(405).json({ status: "error", message: "Method not allowed" });
   }
 
-  const requested = String(request.query?.date || "").trim();
+  const requested = String(request.query?.date || request.query?.slate || "").trim();
   const date = requested || currentEtDate();
   if (!validDate(date)) {
     return response.status(400).json({ status: "error", message: "Invalid date" });
