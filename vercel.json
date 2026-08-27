@@ -1,7 +1,20 @@
 {
   "cleanUrls": true,
   "trailingSlash": false,
+  "functions": {
+    "api/top100-refresh.py": {
+      "maxDuration": 300
+    }
+  },
   "rewrites": [
+    {
+      "source": "/data/top100.json",
+      "destination": "/api/top100-current"
+    },
+    {
+      "source": "/data/discovery/archive/:name",
+      "destination": "/api/discovery-archive?name=:name"
+    },
     {
       "source": "/api/total-bases-form",
       "destination": "/api/strikeouts-form?market=total-bases"
