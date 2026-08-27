@@ -4,11 +4,13 @@ const { readTotalBasesCheckpoint } = require('../lib/total-bases-runtime');
 const totalBasesDiscoveryHandler = require('../lib/total-bases-discovery-handler');
 const totalBasesModelHandler = require('../lib/total-bases-model-safe-handler');
 const totalBasesV2Handler = require('../lib/total-bases-v2-handler');
+const totalBasesV2MonetizationHandler = require('../lib/total-bases-v2-monetization');
 
 module.exports = async function handler(request, response) {
   const market = String(request.query?.market || '').toLowerCase();
   const mode = String(request.query?.mode || '').toLowerCase();
   if (market === 'total-bases-discovery') return totalBasesDiscoveryHandler(request, response);
+  if (market === 'total-bases' && mode === 'monetization-v2') return totalBasesV2MonetizationHandler(request, response);
   if (market === 'total-bases' && mode === 'model-v2') return totalBasesV2Handler(request, response);
   if (market === 'total-bases' && mode === 'model') return totalBasesModelHandler(request, response);
 
