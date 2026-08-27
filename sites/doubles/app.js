@@ -1,4 +1,4 @@
-const FORM_API = 'https://hr-form-board-actions.vercel.app/api/doubles-form';
+const FORM_API = 'https://hr-form-board-actions.vercel.app/api/triples-odds';
 const $ = (id) => document.getElementById(id);
 const content = $('content');
 const status = $('status');
@@ -15,7 +15,11 @@ function etToday() {
 }
 function esc(value) { return String(value ?? '').replace(/[&<>'"]/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c])); }
 function pct(value) { return value == null ? '—' : `${(Number(value) * 100).toFixed(0)}%`; }
-function american(value) { const n = Number(value); return Number.isFinite(n) ? (n > 0 ? `+${n}` : String(n)) : '—'; }
+function american(value) {
+  if (value == null || value === '') return '—';
+  const n = Number(value);
+  return Number.isFinite(n) && n !== 0 ? (n > 0 ? `+${n}` : String(n)) : '—';
+}
 function book(value) { return ({draftkings:'DK',fanduel:'FD',betmgm:'MGM'})[value] || String(value || '').toUpperCase(); }
 function cpLabel(value) { return value ? `${value.slice(0,2)}:${value.slice(2)}` : '—'; }
 
@@ -25,7 +29,7 @@ function metrics(items) {
 }
 
 function params() {
-  const p = new URLSearchParams({ date: dateInput.value || etToday() });
+  const p = new URLSearchParams({ market: 'doubles-form', date: dateInput.value || etToday() });
   if (checkpoint.value) p.set('checkpoint', checkpoint.value);
   return p;
 }
@@ -33,20 +37,23 @@ function params() {
 function renderForm(data) {
   status.hidden = true;
   const top = data.rows?.[0];
+  const pricesReady = data.priceStatus === 'ready';
   metrics([
     ['Ranked batters', data.rows?.length || 0],
     ['Checkpoint', cpLabel(data.checkpoint)],
-    ['Top form score', top ? top.form.formScore.toFixed(1) : '—'],
+    ['Doubles prices', pricesReady ? 'Archived' : 'Awaiting archive'],
     ['Extra odds calls', data.providerRequests ?? 0],
   ]);
   if (!data.rows?.length) {
-    content.innerHTML = '<section class="empty"><h2>No doubles rows yet</h2><p>This checkpoint may not contain 1+ double prices, or no offered hitter has a double in the prior 15 games.</p></section>';
+    content.innerHTML = '<section class="empty"><h2>No doubles rows yet</h2><p>No eligible hitter with prior-game doubles form was found in this checkpoint.</p></section>';
     return;
   }
 
   const body = data.rows.map((row, i) => {
     const prices = (row.quotes || []).slice().sort((a,b) => Number(b.americanOdds)-Number(a.americanOdds));
-    const priceHtml = prices.map((q) => `<span class="quote"><b>${esc(book(q.book))}</b> ${esc(american(q.americanOdds))}</span>`).join('');
+    const priceHtml = prices.length
+      ? prices.map((q) => `<span class="quote"><b>${esc(book(q.book))}</b> ${esc(american(q.americanOdds))}</span>`).join('')
+      : '<span class="quote">No genuine doubles quote</span>';
     const recent = (row.form.recentDoubles || []).map((d) => `<span class="chip ${d > 0 ? 'hit' : ''}">${esc(d)}</span>`).join('');
     return `<tr>
       <td class="rank">${i + 1}</td>
@@ -62,10 +69,14 @@ function renderForm(data) {
     </tr>`;
   }).join('');
 
+  const priceNote = pricesReady
+    ? '<strong>Prices:</strong> genuine archived 1+ Double quotes from DK/FD/MGM are shown when available.'
+    : '<strong>Prices:</strong> this checkpoint does not contain a genuine doubles quote. Form remains live from the shared offered-hitter universe; no HR, triples, or other market price is substituted.';
+
   content.innerHTML = `<section class="table-card"><div class="table-scroll"><table>
     <thead><tr><th>#</th><th>Batter</th><th>Form</th><th>L5</th><th>L7</th><th>L15</th><th>2B L15</th><th>Recent 2B</th><th>Best 1+</th><th>Books</th></tr></thead>
     <tbody>${body}</tbody></table></div></section>
-    <section class="note"><strong>Form score:</strong> 50% L5 + 30% L7 + 20% L15 double-game rate with fixed denominators, matching the triples form-board convention. Sportsbook price is excluded from ranking.</section>`;
+    <section class="note"><strong>Form score:</strong> 50% L5 + 30% L7 + 20% L15 double-game rate with fixed denominators. Sportsbook price is excluded from ranking.<br>${priceNote}</section>`;
 }
 
 function renderDiscovery() {
@@ -97,7 +108,7 @@ function renderModel() {
 
 async function loadForm() {
   status.hidden = false;
-  status.textContent = 'Loading archived doubles prices and pre-slate form…';
+  status.textContent = 'Loading doubles form and archived prices…';
   summary.hidden = true;
   content.innerHTML = '';
   try {
