@@ -11,8 +11,71 @@ const {
 const {
   ensureDiscoveryArchive,
 } = require("../lib/discovery-runtime");
+const { refreshTop100 } = require("../lib/top100-build-runtime");
+
+async function handleTop100Refresh(request, response) {
+  if (!["GET", "POST"].includes(request.method)) {
+    response.setHeader("Allow", "GET, POST");
+    return response.status(405).json({ status: "error", message: "Method not allowed" });
+  }
+
+  const redis = redisConfig();
+  if (!redis.url || !redis.token) {
+    response.setHeader("Cache-Control", "no-store");
+    return response.status(503).json({ status: "configuration_missing", missing: ["Upstash Redis"] });
+  }
+
+  try {
+    const result = await refreshTop100();
+    const payload = result.payload || null;
+    const projections = {};
+    if (payload?.slate_date && ["built", "reused", "reused_after_race"].includes(result.outcome)) {
+      for (const checkpoint of ["0817", "1117", "1717", "2017"]) {
+        try {
+          const archive = await ensureDiscoveryArchive(payload.slate_date, checkpoint);
+          projections[checkpoint] = archive ? {
+            status: "ready",
+            top100Rows: Number(archive.top100_rows || 0),
+            pricedRows: Number(archive.priced_rows || 0),
+            providerCallId: archive.source?.provider_call_id || null,
+          } : { status: "checkpoint_not_captured" };
+        } catch (error) {
+          projections[checkpoint] = {
+            status: "projection_error",
+            message: error instanceof Error ? error.message : String(error),
+          };
+        }
+      }
+    }
+
+    response.setHeader("Cache-Control", "no-store");
+    return response.status(result.outcome === "build_in_progress" ? 202 : 200).json({
+      status: result.outcome,
+      slate_date: payload?.slate_date || null,
+      generated_at: payload?.generated_at || null,
+      player_pool_count: Number(payload?.player_pool_count || 0),
+      scored_player_count: Number(payload?.scored_player_count || 0),
+      published_count: Array.isArray(payload?.players) ? payload.players.length : 0,
+      delivery: payload?.delivery || "qstash-vercel-redis",
+      providerRequests: 0,
+      projections,
+      diagnostics: payload?.diagnostics || [],
+    });
+  } catch (error) {
+    response.setHeader("Cache-Control", "no-store");
+    return response.status(503).json({
+      status: "top100_refresh_error",
+      providerRequests: 0,
+      message: error instanceof Error ? error.message : String(error),
+    });
+  }
+}
 
 module.exports = async function handler(request, response) {
+  if (String(request.query?.action || "") === "top100-refresh") {
+    return handleTop100Refresh(request, response);
+  }
+
   if (request.method !== "POST") {
     response.setHeader("Allow", "POST");
     return response.status(405).json({ status: "error", message: "Method not allowed" });
