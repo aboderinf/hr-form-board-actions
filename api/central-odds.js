@@ -1,5 +1,8 @@
 const crypto = require("node:crypto");
+const fs = require("node:fs");
+const path = require("node:path");
 const {
+  currentEtDate,
   normalizeCheckpoint,
   readCheckpoint,
   redisCommand,
@@ -7,8 +10,10 @@ const {
 const {
   ensureDiscoveryArchive,
 } = require("../lib/discovery-runtime");
+const { readTop100 } = require("../lib/top100-build-runtime");
 
 const EDGE_BASE_URL = "https://mlb-hr-edge.feranmi.chatgpt.site";
+const RAW_DISCOVERY_BASE = "https://raw.githubusercontent.com/aboderinf/hr-form-board-actions/main/data/discovery/archive";
 const ALLOWED_QUERY_KEYS = new Set(["date", "checkpoint", "asOf", "latest"]);
 const ALLOWED_BOOKS = new Set(["fanduel", "draftkings", "betmgm"]);
 
@@ -25,6 +30,99 @@ async function fetchJson(url) {
   } catch {
     throw new Error(`Invalid JSON from ${url}`);
   }
+}
+
+function localTop100(date) {
+  try {
+    const payload = JSON.parse(fs.readFileSync(path.join(process.cwd(), "data", "top100.json"), "utf8"));
+    return payload?.slate_date === date && Array.isArray(payload?.players) ? payload : null;
+  } catch {
+    return null;
+  }
+}
+
+function parseDiscoveryName(value) {
+  const match = /^(\d{4}-\d{2}-\d{2})_(0817|1117|1717|2017)\.json$/.exec(String(value || ""));
+  return match ? { date: match[1], checkpoint: match[2], name: match[0] } : null;
+}
+
+async function discoveryStaticFallback(name) {
+  try {
+    return await fetchJson(`${RAW_DISCOVERY_BASE}/${encodeURIComponent(name)}?t=${Date.now()}`);
+  } catch {
+    return null;
+  }
+}
+
+async function handleTop100View(request, response) {
+  const requested = String(request.query?.date || request.query?.slate || "").trim();
+  const date = requested || currentEtDate();
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+    return response.status(400).json({ status: "error", message: "Invalid Top 100 date" });
+  }
+  try {
+    const redis = await readTop100(date);
+    const payload = redis || localTop100(date);
+    response.setHeader("Cache-Control", "no-store");
+    response.setHeader("Access-Control-Allow-Origin", "*");
+    if (!payload) return response.status(404).json({ status: "not_ready", slate_date: date });
+    response.setHeader("X-Top100-Source", redis ? "redis" : "static-fallback");
+    if (request.method === "HEAD") return response.status(200).end();
+    return response.status(200).json(payload);
+  } catch (error) {
+    const fallback = localTop100(date);
+    if (fallback) {
+      response.setHeader("X-Top100-Source", "static-fallback-after-redis-error");
+      return response.status(200).json(fallback);
+    }
+    return response.status(503).json({
+      status: "infrastructure_error",
+      slate_date: date,
+      message: error instanceof Error ? error.message : String(error),
+    });
+  }
+}
+
+async function handleDiscoveryArchiveView(request, response) {
+  const parsed = parseDiscoveryName(request.query?.name);
+  if (!parsed) {
+    return response.status(400).json({ status: "error", message: "Invalid Discovery archive name" });
+  }
+  response.setHeader("Cache-Control", "no-store");
+  response.setHeader("Access-Control-Allow-Origin", "*");
+  try {
+    const archive = await ensureDiscoveryArchive(parsed.date, parsed.checkpoint);
+    if (archive) {
+      response.setHeader("X-Discovery-Source", "redis");
+      if (request.method === "HEAD") return response.status(200).end();
+      return response.status(200).json(archive);
+    }
+  } catch (error) {
+    const fallback = await discoveryStaticFallback(parsed.name);
+    if (fallback) {
+      response.setHeader("X-Discovery-Source", "github-static-fallback-after-projection-error");
+      if (request.method === "HEAD") return response.status(200).end();
+      return response.status(200).json(fallback);
+    }
+    return response.status(409).json({
+      status: "projection_error",
+      slate_date: parsed.date,
+      checkpoint: parsed.checkpoint,
+      message: error instanceof Error ? error.message : String(error),
+    });
+  }
+
+  const fallback = await discoveryStaticFallback(parsed.name);
+  if (fallback) {
+    response.setHeader("X-Discovery-Source", "github-static-fallback");
+    if (request.method === "HEAD") return response.status(200).end();
+    return response.status(200).json(fallback);
+  }
+  return response.status(404).json({
+    status: "not_ready",
+    slate_date: parsed.date,
+    checkpoint: parsed.checkpoint,
+  });
 }
 
 function validTime(value) {
@@ -115,6 +213,10 @@ module.exports = async function handler(request, response) {
     response.setHeader("Allow", "GET, HEAD");
     return response.status(405).json({ status: "error", message: "Method not allowed" });
   }
+
+  const view = String(request.query?.view || "");
+  if (view === "top100") return handleTop100View(request, response);
+  if (view === "discovery-archive") return handleDiscoveryArchiveView(request, response);
 
   const summaryRequested = String(request.query?.summary || "") === "1";
   const discoveryRequested = String(request.query?.discovery || "") === "1";
