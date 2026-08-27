@@ -12,6 +12,7 @@ const {
   ensureDiscoveryArchive,
 } = require("../lib/discovery-runtime");
 const { refreshTop100 } = require("../lib/top100-build-runtime");
+const frozenTotalBasesExecution = require("../lib/total-bases-v2-frozen-monetization");
 
 async function handleTop100Refresh(request, response) {
   if (!["GET", "POST"].includes(request.method)) {
@@ -124,6 +125,8 @@ module.exports = async function handler(request, response) {
     const payload = result.payload || null;
     let discoveryArchive = null;
     let discoveryArchiveError = null;
+    let frozenTotalBasesSnapshot = null;
+    let frozenTotalBasesSnapshotError = null;
 
     if (payload && ["captured", "reused"].includes(result.outcome)) {
       try {
@@ -138,6 +141,22 @@ module.exports = async function handler(request, response) {
       } catch (error) {
         discoveryArchive = { status: "projection_error" };
         discoveryArchiveError = error instanceof Error ? error.message : String(error);
+      }
+
+      if (checkpoint === "0817") {
+        try {
+          const snapshot = await frozenTotalBasesExecution.snapshotFrozenSelectionsForDate(slateDate);
+          frozenTotalBasesSnapshot = snapshot ? {
+            status: "snapshotted",
+            date: snapshot.date,
+            checkpoint: snapshot.checkpoint,
+            selections: Array.isArray(snapshot.selections) ? snapshot.selections.length : 0,
+            capturedAt: snapshot.capturedAt || null,
+          } : { status: "not_ready" };
+        } catch (error) {
+          frozenTotalBasesSnapshot = { status: "snapshot_error" };
+          frozenTotalBasesSnapshotError = error instanceof Error ? error.message : String(error);
+        }
       }
     }
 
@@ -160,6 +179,8 @@ module.exports = async function handler(request, response) {
       providerResponseSha256: payload?.providerResponseSha256 || null,
       discoveryArchive,
       discoveryArchiveError,
+      frozenTotalBasesSnapshot,
+      frozenTotalBasesSnapshotError,
       targetAt: result.targetAt || null,
       observedAt: result.observedAt || now.toISOString(),
       error: result.error || null,
