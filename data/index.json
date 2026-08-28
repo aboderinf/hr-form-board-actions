@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-28T22:20:10.570752+00:00",
+  "generated_at": "2026-08-28T22:42:22.824437+00:00",
   "method": "0.50*L5 + 0.30*L7 + 0.20*L15 cumulative HR-game rates",
   "checkpoints_et": [
     "08:17",
@@ -20,13 +20,13 @@
     },
     "top20": {
       "selections": 1540,
-      "settled": 1445,
+      "settled": 1448,
       "wins": 126,
-      "losses": 1319,
+      "losses": 1322,
       "pushes": 0,
-      "hit_rate": 0.08719723183391004,
-      "net_units": -443.08,
-      "roi": -0.30662975778546714
+      "hit_rate": 0.08701657458563536,
+      "net_units": -446.08,
+      "roi": -0.3080662983425414
     }
   },
   "latest": {
@@ -167882,10 +167882,11 @@
               "batter_team": null,
               "lineup_position": null,
               "source_prediction_id": null,
-              "settled": false,
-              "result": "PENDING",
-              "home_runs": null,
-              "profit_units": null
+              "settled": true,
+              "result": "LOSS",
+              "home_runs": 0,
+              "profit_units": -1.0,
+              "settled_at": "2026-08-28T22:41:37.846670+00:00"
             },
             {
               "rank": 12,
@@ -168260,10 +168261,11 @@
               "batter_team": null,
               "lineup_position": null,
               "source_prediction_id": null,
-              "settled": false,
-              "result": "PENDING",
-              "home_runs": null,
-              "profit_units": null
+              "settled": true,
+              "result": "LOSS",
+              "home_runs": 0,
+              "profit_units": -1.0,
+              "settled_at": "2026-08-28T22:41:37.846670+00:00"
             },
             {
               "rank": 18,
@@ -168467,25 +168469,41 @@
               "batter_team": null,
               "lineup_position": null,
               "source_prediction_id": null,
-              "settled": false,
-              "result": "PENDING",
-              "home_runs": null,
-              "profit_units": null
+              "settled": true,
+              "result": "LOSS",
+              "home_runs": 0,
+              "profit_units": -1.0,
+              "settled_at": "2026-08-28T22:41:37.846670+00:00"
             }
           ],
           "summary": {
             "selections": 20,
-            "settled": 0,
+            "settled": 3,
             "wins": 0,
-            "losses": 0,
+            "losses": 3,
             "pushes": 0,
-            "hit_rate": null,
-            "net_units": 0,
-            "roi": null
+            "hit_rate": 0.0,
+            "net_units": -3.0,
+            "roi": -1.0
           }
         }
       },
       "eligible_candidates": 195
+    },
+    {
+      "schema_version": 2,
+      "snapshot_id": "2026-08-28_1717",
+      "slate_date": "2026-08-28",
+      "checkpoint_et": "17:17",
+      "scheduled_at_et": "2026-08-28T17:17:00-04:00",
+      "observed_at": "2026-08-28T22:41:37.846670+00:00",
+      "observed_at_et": "2026-08-28T18:41:37.846670-04:00",
+      "status": "shared_odds_source_unavailable",
+      "sources": {},
+      "diagnostics": [
+        "Shared MLB HR odds unavailable; odds API: GET failed https://mlb-hr-edge.feranmi.chatgpt.site/api/odds?date=2026-08-28&asOf=2026-08-28T17%3A32%3A00-04%3A00: 503 Server Error: Service Unavailable for url: https://mlb-hr-edge.feranmi.chatgpt.site/api/odds?date=2026-08-28&asOf=2026-08-28T17%3A32%3A00-04%3A00 | dashboard: no verified prices inside source window | public mirror https://hr-form-board-actions.vercel.app/data/shared-odds/archive/2026-08-28_1717.json: GET failed https://hr-form-board-actions.vercel.app/data/shared-odds/archive/2026-08-28_1717.json: 404 Client Error: Not Found for url: https://hr-form-board-actions.vercel.app/data/shared-odds/archive/2026-08-28_1717.json | public mirror https://aboderinf.github.io/mlb-hr-fair-odds-v1/archive/2026-08-28_1717.json: GET failed https://aboderinf.github.io/mlb-hr-fair-odds-v1/archive/2026-08-28_1717.json: 404 Client Error: Not Found for url: https://aboderinf.github.io/mlb-hr-fair-odds-v1/archive/2026-08-28_1717.json | durable archive: GET failed https://raw.githubusercontent.com/aboderinf/mlb-hr-fair-odds-v1/main/generated/shared/archive/2026-08-28_1717.json: 404 Client Error: Not Found for url: https://raw.githubusercontent.com/aboderinf/mlb-hr-fair-odds-v1/main/generated/shared/archive/2026-08-28_1717.json"
+      ],
+      "portfolios": {}
     }
   ]
 }
