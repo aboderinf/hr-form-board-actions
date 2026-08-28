@@ -76,14 +76,17 @@ def main(argv: list[str] | None = None) -> int:
         parser.error("--cache requires --date and --checkpoint")
 
     now = datetime.now(timezone.utc)
+    current_et_date = now.astimezone(ET).date()
     client = HttpClient()
     data_dir = ROOT / "data"
 
+    expected_slate_date = date.fromisoformat(args.date) if args.cache else current_et_date
     latest = {
         "schema_version": 1,
         "kind": "latest_shared_slate",
         "refreshed_at": now.isoformat(),
         "refreshed_at_et": now.astimezone(ET).isoformat(),
+        "slate_date": expected_slate_date.isoformat(),
         "status": "collecting",
         "sources": {},
         "diagnostics": [],
@@ -97,12 +100,18 @@ def main(argv: list[str] | None = None) -> int:
                 cache_path = ROOT / cache_path
             market = load_cached_market(
                 cache_path,
-                date.fromisoformat(args.date),
+                expected_slate_date,
                 args.checkpoint,
             )
         else:
             market = fetch_latest_edge_odds(client)
         slate_date = date.fromisoformat(market["source_date"])
+        if not args.cache and slate_date != current_et_date:
+            raise RuntimeError(
+                "Latest shared odds are for "
+                f"{slate_date.isoformat()}; awaiting current ET slate "
+                f"{current_et_date.isoformat()}"
+            )
         hydrate_mlbam_ids(client, market, slate_date.year)
         latest["sources"]["mlb_hr_edge"] = {
             key: value for key, value in market.items() if key != "players"
@@ -115,6 +124,7 @@ def main(argv: list[str] | None = None) -> int:
         latest["diagnostics"].append(str(exc))
         write_json(data_dir / "latest.json", latest)
         rebuild(data_dir, ROOT)
+        print("latest", latest["slate_date"], latest["status"], 0)
         return 0
 
     latest["slate_date"] = slate_date.isoformat()
