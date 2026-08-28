@@ -1,0 +1,58 @@
+name: Ensure QStash checkpoint schedules
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "api/capture-checkpoint.js"
+      - "api/qstash-0817-diagnostic.js"
+      - ".github/workflows/ensure-qstash-checkpoints.yml"
+  schedule:
+    # Daily preflight before the first 08:17 ET checkpoint. This does not call
+    # SportsGameOdds; it only upserts/resumes the QStash schedules.
+    - cron: '5 7 * * *'
+      timezone: 'America/New_York'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ensure-qstash-checkpoint-schedules
+  cancel-in-progress: true
+
+jobs:
+  ensure:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Wait for production deployment and upsert schedules
+        shell: bash
+        run: |
+          set -euo pipefail
+          url='https://hr-form-board-actions.vercel.app/api/qstash-0817-diagnostic?action=ensure-checkpoint-schedules'
+          for attempt in $(seq 1 24); do
+            body="$(curl -fsS --max-time 30 "$url" || true)"
+            echo "attempt=$attempt response=$body"
+            if printf '%s' "$body" | grep -q '"status":"configured"'; then
+              python - <<'PY' "$body"
+          import json, sys
+          payload = json.loads(sys.argv[1])
+          schedules = payload.get("schedules") or []
+          assert len(schedules) == 8, f"expected 8 schedules, got {len(schedules)}"
+          ids = {row.get("scheduleId") for row in schedules}
+          expected = {
+              f"mlb-hr-checkpoint-{cp}{suffix}"
+              for cp in ("0817", "1117", "1717", "2017")
+              for suffix in ("", "-recovery")
+          }
+          assert ids == expected, (ids, expected)
+          assert all(row.get("retries") == 2 for row in schedules)
+          print("Verified primary + recovery QStash schedules:", ", ".join(sorted(ids)))
+          PY
+              exit 0
+            fi
+            sleep 15
+          done
+          echo "Production route never reported configured schedules" >&2
+          exit 1
