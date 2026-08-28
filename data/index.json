@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-28T12:15:31.139989+00:00",
+  "generated_at": "2026-08-28T14:19:57.518159+00:00",
   "method": "0.50*L5 + 0.30*L7 + 0.20*L15 cumulative HR-game rates",
   "checkpoints_et": [
     "08:17",
@@ -32,70 +32,15 @@
   "latest": {
     "schema_version": 1,
     "kind": "latest_shared_slate",
-    "refreshed_at": "2026-08-28T12:15:17.501683+00:00",
-    "refreshed_at_et": "2026-08-28T08:15:17.501683-04:00",
-    "status": "no_current_eligible_players",
-    "sources": {
-      "mlb_hr_edge": {
-        "source": "MLB HR Edge",
-        "source_url": "https://hr-form-board-actions.vercel.app/data/shared-odds/latest.json",
-        "delivery": "qstash-vercel-redis",
-        "source_date": "2026-08-27",
-        "date_matches": true,
-        "as_of": "2026-08-28T00:17:00.000Z",
-        "status": "ready",
-        "generated_at": "2026-08-28T00:17:03.354Z",
-        "latest_ingest_at": "2026-08-28T00:17:03.354Z",
-        "provider_call_id": "2026-08-27:2017:2026-08-28T00:17:03.354Z:8229d0b41143",
-        "provider_response_sha256": "8229d0b411437a3e72d914beca5d9893af2c9a9d541ae3864cbf1ab404e21bf2",
-        "archived_call_count": 1,
-        "quote_count": 43,
-        "all_available_quote_count": 326,
-        "excluded_live_or_post_start_quote_count": 240,
-        "books": [
-          "FanDuel",
-          "DraftKings",
-          "BetMGM"
-        ],
-        "row_count": 15,
-        "compatibility_fallback": "public_form_board_mirror",
-        "mlbam_ids_hydrated": 15,
-        "mlbam_ids_added": 15,
-        "unresolved_player_names": []
-      }
-    },
-    "diagnostics": [],
-    "portfolios": {
-      "top10": {
-        "picks": [],
-        "summary": {
-          "selections": 0,
-          "settled": 0,
-          "wins": 0,
-          "losses": 0,
-          "pushes": 0,
-          "hit_rate": null,
-          "net_units": 0,
-          "roi": null
-        }
-      },
-      "top20": {
-        "picks": [],
-        "summary": {
-          "selections": 0,
-          "settled": 0,
-          "wins": 0,
-          "losses": 0,
-          "pushes": 0,
-          "hit_rate": null,
-          "net_units": 0,
-          "roi": null
-        }
-      }
-    },
-    "slate_date": "2026-08-27",
-    "source_generated_at": "2026-08-28T00:17:03.354Z",
-    "eligible_candidates": 0
+    "refreshed_at": "2026-08-28T14:19:45.763652+00:00",
+    "refreshed_at_et": "2026-08-28T10:19:45.763652-04:00",
+    "slate_date": "2026-08-28",
+    "status": "shared_odds_source_unavailable",
+    "sources": {},
+    "diagnostics": [
+      "Latest shared odds are for 2026-08-27; awaiting current ET slate 2026-08-28"
+    ],
+    "portfolios": {}
   },
   "snapshots": [
     {
