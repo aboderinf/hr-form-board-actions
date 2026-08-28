@@ -10,7 +10,7 @@ on:
       - ".github/workflows/ensure-qstash-checkpoints.yml"
   schedule:
     # Daily preflight before the first 08:17 ET checkpoint. This does not call
-    # SportsGameOdds; it only upserts/resumes the QStash schedules.
+    # SportsGameOdds; it only verifies/upserts the QStash schedules.
     - cron: '5 7 * * *'
       timezone: 'America/New_York'
 
@@ -24,9 +24,9 @@ concurrency:
 jobs:
   ensure:
     runs-on: ubuntu-latest
-    timeout-minutes: 8
+    timeout-minutes: 10
     steps:
-      - name: Wait for production deployment and upsert schedules
+      - name: Wait for production deployment and upsert checkpoint schedules
         shell: bash
         run: |
           set -euo pipefail
@@ -50,9 +50,36 @@ jobs:
           assert all(row.get("retries") == 2 for row in schedules)
           print("Verified primary + recovery QStash schedules:", ", ".join(sorted(ids)))
           PY
+              break
+            fi
+            if [ "$attempt" -eq 24 ]; then
+              echo "Production route never reported configured checkpoint schedules" >&2
+              exit 1
+            fi
+            sleep 15
+          done
+
+      - name: Verify Top 100 QStash schedule
+        shell: bash
+        run: |
+          set -euo pipefail
+          url='https://hr-form-board-actions.vercel.app/api/qstash-0817-diagnostic?action=ensure-top100-schedule'
+          for attempt in $(seq 1 12); do
+            body="$(curl -fsS --max-time 30 "$url" || true)"
+            echo "attempt=$attempt response=$body"
+            if printf '%s' "$body" | grep -Eq '"status":"(created|already_configured)"'; then
+              python - <<'PY' "$body"
+          import json, sys
+          payload = json.loads(sys.argv[1])
+          assert payload.get("destination") == "https://hr-form-board-actions.vercel.app/api/top100-refresh"
+          assert payload.get("cron") == "5 8,10 * * *"
+          if payload.get("status") == "already_configured":
+              assert payload.get("isPaused") is False, "Top 100 QStash schedule is paused"
+          print("Verified Top 100 QStash schedule", payload.get("scheduleId"))
+          PY
               exit 0
             fi
             sleep 15
           done
-          echo "Production route never reported configured schedules" >&2
+          echo "Top 100 QStash schedule never became healthy" >&2
           exit 1
