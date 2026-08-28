@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import importlib.util
+import json
 from datetime import datetime, timezone
 from pathlib import Path
 import unittest
@@ -73,6 +74,28 @@ class CheckpointReliabilityTests(unittest.TestCase):
         self.assertIn('"Upstash-Retries": "2"', source)
         self.assertIn('"Upstash-Retry-Delay": "60000 * (1 + retried)"', source)
         self.assertIn('configured.push(await upsertCheckpointSchedule(resolved, checkpoint, true));', source)
+
+    def test_top100_qstash_destination_rewrites_to_existing_function(self) -> None:
+        qstash_source = (ROOT / "api" / "qstash-0817-diagnostic.js").read_text(encoding="utf-8")
+        self.assertIn(
+            'const TOP100_DESTINATION = "https://hr-form-board-actions.vercel.app/api/top100-refresh";',
+            qstash_source,
+        )
+
+        vercel = json.loads((ROOT / "vercel.json").read_text(encoding="utf-8"))
+        rewrite = next(
+            (row for row in vercel.get("rewrites", []) if row.get("source") == "/api/top100-refresh"),
+            None,
+        )
+        self.assertIsNotNone(rewrite, "Top 100 QStash destination must remain routable")
+        self.assertEqual(
+            rewrite.get("destination"),
+            "/api/capture-checkpoint?action=top100-refresh",
+        )
+        self.assertFalse(
+            (ROOT / "api" / "top100-refresh.js").exists(),
+            "Do not consume a 13th Hobby-plan serverless function for Top 100",
+        )
 
 
 if __name__ == "__main__":
