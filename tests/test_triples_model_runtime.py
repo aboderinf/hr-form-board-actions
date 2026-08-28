@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import json
-import importlib.util
 import tempfile
 import unittest
 from datetime import date, datetime, timezone
@@ -19,15 +18,7 @@ from src.triples_model_runtime import (
 )
 
 
-API_PATH = Path(__file__).resolve().parents[1] / "api" / "qstash-0817-diagnostic.py"
-
-
-def load_qstash_api():
-    spec = importlib.util.spec_from_file_location("qstash_0817_diagnostic", API_PATH)
-    module = importlib.util.module_from_spec(spec)
-    assert spec.loader is not None
-    spec.loader.exec_module(module)
-    return module
+ROOT = Path(__file__).resolve().parents[1]
 
 
 class FakeRedis:
@@ -185,43 +176,42 @@ class TriplesModelRuntimeTests(unittest.TestCase):
             )
             self.assertEqual(result["status"], "build_in_progress")
 
-    def test_qstash_schedule_is_idempotent_when_exact_schedule_exists(self) -> None:
-        api = load_qstash_api()
-        config = api.SCHEDULES["ensure-triples-model-schedule"]
-        api.resolve_qstash = lambda: (
-            "https://qstash.example",
-            "secret",
-            [
-                {
-                    "scheduleId": "model-daily",
-                    "destination": config["destination"],
-                    "cron": config["cron"],
-                    "isPaused": False,
-                }
-            ],
+    def test_qstash_model_schedule_has_recovery_and_stable_identity(self) -> None:
+        source = (ROOT / "api" / "qstash-0817-diagnostic.js").read_text(encoding="utf-8")
+        self.assertIn(
+            'const TRIPLES_MODEL_DESTINATION = "https://hr-form-board-actions.vercel.app/api/triples-model-refresh";',
+            source,
         )
-        status, payload = api.ensure_schedule(config)
-        self.assertEqual(status, 200)
-        self.assertEqual(payload["status"], "already_configured")
-        self.assertEqual(payload["scheduleId"], "model-daily")
+        self.assertIn('const TRIPLES_MODEL_CRON = "5 8,9,10,11 * * *";', source)
+        self.assertIn('"Upstash-Schedule-Id": TRIPLES_MODEL_SCHEDULE_ID', source)
+        self.assertIn('"Upstash-Retries": "2"', source)
+        self.assertIn('"Upstash-Retry-Delay": "60000 * (1 + retried)"', source)
+        self.assertIn('"Upstash-Timeout": "5m"', source)
 
-    def test_qstash_schedule_creation_forwards_retries_and_timeout(self) -> None:
-        api = load_qstash_api()
-        config = api.SCHEDULES["ensure-triples-model-schedule"]
-        captured: dict = {}
-        api.resolve_qstash = lambda: ("https://qstash.example", "secret", [])
-
-        def fake_request(url, **kwargs):
-            captured.update({"url": url, **kwargs})
-            return 201, {"scheduleId": "new-model-daily"}
-
-        api._request_json = fake_request
-        status, payload = api.ensure_schedule(config)
-        self.assertEqual(status, 201)
-        self.assertEqual(payload["status"], "created")
-        self.assertEqual(captured["headers"]["Upstash-Cron"], "5 8,9,10,11 * * *")
-        self.assertEqual(captured["headers"]["Upstash-Retries"], "2")
-        self.assertEqual(captured["headers"]["Upstash-Timeout"], "5m")
+    def test_model_and_debug_routes_stay_within_function_limit(self) -> None:
+        config = json.loads((ROOT / "vercel.json").read_text(encoding="utf-8"))
+        rewrites = {row["source"]: row["destination"] for row in config.get("rewrites", [])}
+        self.assertEqual(
+            rewrites.get("/api/triples-model-refresh"),
+            "/api/triples_model_runtime?action=refresh",
+        )
+        self.assertEqual(
+            rewrites.get("/data/triples-model.json"),
+            "/api/triples_model_runtime",
+        )
+        self.assertEqual(
+            rewrites.get("/api/debug-raw-identity"),
+            "/api/checkpoint-health?action=raw-identity",
+        )
+        api_files = [
+            path for path in (ROOT / "api").iterdir()
+            if path.suffix in {".js", ".py"}
+        ]
+        self.assertLessEqual(len(api_files), 12)
+        self.assertFalse((ROOT / "api" / "debug-raw-identity.js").exists())
+        health_source = (ROOT / "api" / "checkpoint-health.js").read_text(encoding="utf-8")
+        self.assertIn("async function handleRawIdentity", health_source)
+        self.assertIn('action || "") === "raw-identity"', health_source)
 
 
 if __name__ == "__main__":

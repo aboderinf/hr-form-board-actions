@@ -5,7 +5,7 @@
     "api/capture-checkpoint.js": {
       "maxDuration": 300
     },
-    "api/qstash-0817-diagnostic.py": {
+    "api/triples_model_runtime.py": {
       "maxDuration": 300
     }
   },
@@ -24,15 +24,19 @@
     },
     {
       "source": "/api/triples-model-refresh",
-      "destination": "/api/qstash-0817-diagnostic?action=refresh-triples-model"
+      "destination": "/api/triples_model_runtime?action=refresh"
     },
     {
       "source": "/api/triples-model-current",
-      "destination": "/api/qstash-0817-diagnostic?action=triples-model-current"
+      "destination": "/api/triples_model_runtime"
     },
     {
       "source": "/api/triples-model-schedule",
       "destination": "/api/qstash-0817-diagnostic?action=ensure-triples-model-schedule"
+    },
+    {
+      "source": "/api/debug-raw-identity",
+      "destination": "/api/checkpoint-health?action=raw-identity"
     },
     {
       "source": "/data/top100.json",
@@ -40,7 +44,7 @@
     },
     {
       "source": "/data/triples-model.json",
-      "destination": "/api/qstash-0817-diagnostic?action=triples-model-current"
+      "destination": "/api/triples_model_runtime"
     },
     {
       "source": "/data/discovery/archive/:name",

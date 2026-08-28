@@ -27,7 +27,7 @@ jobs:
           node-version: "20"
       - run: python -m pip install -r requirements.txt
       - name: Compile tracker modules
-        run: python -m py_compile src/*.py scripts/*.py
+        run: python -m py_compile src/*.py scripts/*.py api/triples_model_runtime.py
       - name: Run deterministic tests
         run: python -m unittest discover -s tests -v
       - name: Test archived triples projection
@@ -37,6 +37,6 @@ jobs:
       - name: Test standalone total-bases site separation
         run: node --test tests/test_total_bases_site.js
       - name: Check checkpoint capture and QStash schedule syntax
-        run: node --check api/capture-checkpoint.js && node --check api/qstash-0817-diagnostic.js
+        run: node --check api/capture-checkpoint.js && node --check api/checkpoint-health.js && node --check api/qstash-0817-diagnostic.js
       - name: Check total-bases API and standalone client syntax
         run: node --check lib/total-bases-runtime.js && node --check lib/total-bases-form-handler.js && node --check lib/total-bases-form-handler-v2.js && node --check lib/total-bases-discovery-handler.js && node --check lib/total-bases-model-handler.js && node --check lib/total-bases-model-safe-handler.js && node --check lib/total-bases-v2-handler.js && node --check api/strikeouts-odds.js && node --check api/strikeouts-form.js && node --check sites/total-bases/app.js
