@@ -39,6 +39,13 @@ function checkpointCron(checkpoint, recovery = false) {
   return `CRON_TZ=America/New_York ${minute} ${hour} * * *`;
 }
 
+function qstashScheduleCreateUrl(base, destination) {
+  // QStash's REST API expects the full destination URL literally after
+  // /v2/schedules/. Percent-encoding the whole destination turns "https://"
+  // into "https%3A%2F%2F" and QStash rejects it as an invalid scheme.
+  return `${base}/v2/schedules/${destination}`;
+}
+
 async function upsertCheckpointSchedule(resolved, checkpoint, recovery = false) {
   const suffix = recovery ? "-recovery" : "";
   const scheduleId = `mlb-hr-checkpoint-${checkpoint}${suffix}`;
@@ -47,7 +54,7 @@ async function upsertCheckpointSchedule(resolved, checkpoint, recovery = false) 
   if (!auth) throw new Error("QSTASH_TOKEN is unavailable for checkpoint authentication");
 
   const create = await fetch(
-    `${resolved.base}/v2/schedules/${encodeURIComponent(CHECKPOINT_DESTINATION)}`,
+    qstashScheduleCreateUrl(resolved.base, CHECKPOINT_DESTINATION),
     {
       method: "POST",
       headers: {
@@ -146,7 +153,7 @@ async function ensureTop100Schedule(response) {
     });
   }
 
-  const create = await fetch(`${resolved.base}/v2/schedules/${encodeURIComponent(TOP100_DESTINATION)}`, {
+  const create = await fetch(qstashScheduleCreateUrl(resolved.base, TOP100_DESTINATION), {
     method: "POST",
     headers: {
       Authorization: `Bearer ${resolved.token}`,
