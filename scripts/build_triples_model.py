@@ -250,20 +250,20 @@ def prediction_drivers(features: dict[str, float]) -> list[str]:
     return [label for _, label in sorted(candidates, reverse=True)[:3]] or ["balanced pregame profile"]
 
 
-def main() -> int:
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--date", help="Slate date YYYY-MM-DD")
-    parser.add_argument("--state", type=Path, default=ROOT / "data" / "triples-model" / "state-parts")
-    parser.add_argument("--model", type=Path, default=ROOT / "data" / "triples-model" / "model.json")
-    parser.add_argument("--performance", type=Path, default=ROOT / "data" / "triples-model" / "performance.json")
-    parser.add_argument("--output", type=Path, default=ROOT / "data" / "triples-model.json")
-    args = parser.parse_args()
-    slate = date.fromisoformat(args.date) if args.date else datetime.now(ET).date()
-    now = datetime.now(timezone.utc)
+def build_board(
+    *,
+    slate: date,
+    state_path: Path,
+    model_path: Path,
+    performance_path: Path,
+    output_path: Path,
+    now: datetime | None = None,
+) -> dict[str, Any]:
+    now = now or datetime.now(timezone.utc)
     client = HttpClient()
-    state = read_state_parts(args.state)
-    artifact = read_json(args.model)
-    performance = read_json(args.performance)
+    state = read_state_parts(state_path)
+    artifact = read_json(model_path)
+    performance = read_json(performance_path)
     diagnostics = refresh_state(client, state, slate - timedelta(days=1))
 
     games = schedule_games(client, slate)
@@ -414,9 +414,32 @@ def main() -> int:
         "diagnostics": diagnostics[:50],
         "warning": "Triples are rare. Probabilities and ROI are estimates, not guarantees; archive ROI remains provisional.",
     }
-    write_state_parts(args.state, state)
-    write_json(args.output, output)
-    print(f"Triples model built: date={slate} players={len(predictions)} state_as_of={state.get('as_of')}")
+    write_state_parts(state_path, state)
+    write_json(output_path, output)
+    return output
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--date", help="Slate date YYYY-MM-DD")
+    parser.add_argument("--state", type=Path, default=ROOT / "data" / "triples-model" / "state-parts")
+    parser.add_argument("--model", type=Path, default=ROOT / "data" / "triples-model" / "model.json")
+    parser.add_argument("--performance", type=Path, default=ROOT / "data" / "triples-model" / "performance.json")
+    parser.add_argument("--output", type=Path, default=ROOT / "data" / "triples-model.json")
+    args = parser.parse_args()
+    slate = date.fromisoformat(args.date) if args.date else datetime.now(ET).date()
+    output = build_board(
+        slate=slate,
+        state_path=args.state,
+        model_path=args.model,
+        performance_path=args.performance,
+        output_path=args.output,
+    )
+    print(
+        "Triples model built: "
+        f"date={slate} players={len(output.get('players') or [])} "
+        f"state_as_of={output.get('state_as_of')}"
+    )
     return 0
 
 

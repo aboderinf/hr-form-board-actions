@@ -4,6 +4,9 @@
   "functions": {
     "api/capture-checkpoint.js": {
       "maxDuration": 300
+    },
+    "api/qstash-0817-diagnostic.py": {
+      "maxDuration": 300
     }
   },
   "rewrites": [
@@ -20,8 +23,24 @@
       "destination": "/api/qstash-0817-diagnostic?action=ensure-top100-schedule"
     },
     {
+      "source": "/api/triples-model-refresh",
+      "destination": "/api/qstash-0817-diagnostic?action=refresh-triples-model"
+    },
+    {
+      "source": "/api/triples-model-current",
+      "destination": "/api/qstash-0817-diagnostic?action=triples-model-current"
+    },
+    {
+      "source": "/api/triples-model-schedule",
+      "destination": "/api/qstash-0817-diagnostic?action=ensure-triples-model-schedule"
+    },
+    {
       "source": "/data/top100.json",
       "destination": "/api/central-odds?view=top100"
+    },
+    {
+      "source": "/data/triples-model.json",
+      "destination": "/api/qstash-0817-diagnostic?action=triples-model-current"
     },
     {
       "source": "/data/discovery/archive/:name",

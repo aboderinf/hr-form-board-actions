@@ -19,6 +19,9 @@ on:
       - "src/triples_model.py"
       - "scripts/build_top100.py"
       - "scripts/build_triples_model.py"
+      - "src/triples_model_runtime.py"
+      - "api/qstash-0817-diagnostic.py"
+      - "vercel.json"
       - "scripts/train_triples_model.py"
       - "data/triples-model/model.json"
       - "data/triples-model/performance.json"
@@ -27,6 +30,7 @@ on:
       - "tests/test_top100_view.py"
       - "tests/test_triples.py"
       - "tests/test_triples_model.py"
+      - "tests/test_triples_model_runtime.py"
   schedule:
     # Primary and recovery invocations. GitHub may start scheduled work hours late,
     # so freshness checks below use the ET slate date instead of the runner hour.
