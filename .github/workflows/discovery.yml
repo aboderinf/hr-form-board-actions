@@ -113,10 +113,22 @@ jobs:
 
       - name: Export canonical Redis Discovery checkpoint and rebuild reports
         if: steps.window.outputs.due == 'true'
-        run: >-
-          python scripts/export_discovery_checkpoint.py
-          --date "${{ steps.window.outputs.slate_date }}"
-          --checkpoint "${{ steps.window.outputs.checkpoint }}"
+        shell: bash
+        run: |
+          set -euo pipefail
+          for attempt in 1 2 3; do
+            if python scripts/export_discovery_checkpoint.py \
+              --date "${{ steps.window.outputs.slate_date }}" \
+              --checkpoint "${{ steps.window.outputs.checkpoint }}"; then
+              exit 0
+            fi
+            if [ "$attempt" -lt 3 ]; then
+              echo "Discovery export attempt $attempt failed; retrying canonical Redis projection."
+              sleep $((attempt * 20))
+            fi
+          done
+          echo "Discovery static archive reconciliation failed after 3 attempts" >&2
+          exit 1
 
       - name: Run only Discovery archive tests
         if: steps.window.outputs.due == 'true'
