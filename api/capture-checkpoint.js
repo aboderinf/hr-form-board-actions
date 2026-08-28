@@ -14,6 +14,23 @@ const {
 const { refreshTop100 } = require("../lib/top100-build-runtime");
 const frozenTotalBasesExecution = require("../lib/total-bases-v2-frozen-monetization");
 
+const RETRYABLE_CAPTURE_OUTCOMES = new Set([
+  "already_attempted",
+  "provider_failed_after_single_attempt",
+]);
+
+function attemptKey(date, checkpoint) {
+  return `mlbhr:attempt:${date}:${checkpoint}`;
+}
+
+async function releaseAttemptForRetry(date, checkpoint) {
+  try {
+    await redisCommand(["DEL", attemptKey(date, checkpoint)]);
+  } catch (error) {
+    console.error("Unable to release checkpoint attempt lock for retry", error);
+  }
+}
+
 async function handleTop100Refresh(request, response) {
   if (!["GET", "POST"].includes(request.method)) {
     response.setHeader("Allow", "GET, POST");
@@ -85,7 +102,8 @@ module.exports = async function handler(request, response) {
   const expected = checkpointAuth();
   const supplied = request.headers["x-checkpoint-auth"];
   if (!expected || !safeEqual(supplied, expected)) {
-    return response.status(401).json({ status: "error", message: "Unauthorized" });
+    response.setHeader("Upstash-NonRetryable-Error", "true");
+    return response.status(489).json({ status: "error", message: "Unauthorized" });
   }
 
   const redis = redisConfig();
@@ -105,6 +123,7 @@ module.exports = async function handler(request, response) {
 
   if (missing.length) {
     response.setHeader("Cache-Control", "no-store");
+    response.setHeader("Retry-After", "60");
     return response.status(503).json({
       status: "configuration_missing",
       providerRequests: 0,
@@ -115,7 +134,8 @@ module.exports = async function handler(request, response) {
   const body = request.body && typeof request.body === "object" ? request.body : {};
   const checkpoint = normalizeCheckpoint(body.checkpoint);
   if (!checkpoint) {
-    return response.status(400).json({ status: "error", message: "Invalid checkpoint" });
+    response.setHeader("Upstash-NonRetryable-Error", "true");
+    return response.status(489).json({ status: "error", message: "Invalid checkpoint" });
   }
 
   const now = new Date();
@@ -160,16 +180,25 @@ module.exports = async function handler(request, response) {
       }
     }
 
+    const retryable = RETRYABLE_CAPTURE_OUTCOMES.has(result.outcome);
+    if (retryable) {
+      // The old implementation held this lock for two days even after the
+      // one allowed provider request failed. Releasing it lets QStash perform
+      // its delivery retry without allowing overlapping requests: QStash only
+      // retries after this response, and the provider fetch itself times out
+      // after 30 seconds.
+      await releaseAttemptForRetry(slateDate, checkpoint);
+      response.setHeader("Retry-After", "60");
+    }
+
     const terminal = [
       "captured",
       "reused",
-      "already_attempted",
       "outside_window",
-      "provider_failed_after_single_attempt",
       "pagination_refused_second_call",
     ].includes(result.outcome);
     response.setHeader("Cache-Control", "no-store");
-    return response.status(terminal ? 200 : 500).json({
+    return response.status(retryable ? 503 : (terminal ? 200 : 500)).json({
       status: result.outcome,
       date: slateDate,
       checkpoint,
@@ -186,7 +215,9 @@ module.exports = async function handler(request, response) {
       error: result.error || null,
     });
   } catch (error) {
+    await releaseAttemptForRetry(slateDate, checkpoint);
     response.setHeader("Cache-Control", "no-store");
+    response.setHeader("Retry-After", "60");
     return response.status(503).json({
       status: "infrastructure_error",
       date: slateDate,
