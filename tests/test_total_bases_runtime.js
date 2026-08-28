@@ -124,7 +124,8 @@ test('market-specific public URLs are rewrites, not extra Hobby functions', () =
   assert.equal(rewriteMap.get('/api/total-bases-form'), '/api/strikeouts-form?market=total-bases');
   assert.equal(rewriteMap.get('/api/total-bases-odds'), '/api/strikeouts-odds?market=total-bases');
 
-  const apiFiles = fs.readdirSync(path.join(__dirname, '..', 'api')).filter((name) => name.endsWith('.js'));
+  const apiFiles = fs.readdirSync(path.join(__dirname, '..', 'api'))
+    .filter((name) => name.endsWith('.js') || name.endsWith('.py'));
   assert.ok(apiFiles.length <= 12, `Vercel Hobby function count is ${apiFiles.length}, expected <= 12`);
   assert.equal(apiFiles.includes('total-bases-form.js'), false);
   assert.equal(apiFiles.includes('total-bases-odds.js'), false);

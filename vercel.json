@@ -4,6 +4,9 @@
   "functions": {
     "api/capture-checkpoint.js": {
       "maxDuration": 300
+    },
+    "api/triples_model_runtime.py": {
+      "maxDuration": 300
     }
   },
   "rewrites": [
@@ -20,8 +23,28 @@
       "destination": "/api/qstash-0817-diagnostic?action=ensure-top100-schedule"
     },
     {
+      "source": "/api/triples-model-refresh",
+      "destination": "/api/triples_model_runtime?action=refresh"
+    },
+    {
+      "source": "/api/triples-model-current",
+      "destination": "/api/triples_model_runtime"
+    },
+    {
+      "source": "/api/triples-model-schedule",
+      "destination": "/api/qstash-0817-diagnostic?action=ensure-triples-model-schedule"
+    },
+    {
+      "source": "/api/debug-raw-identity",
+      "destination": "/api/checkpoint-health?action=raw-identity"
+    },
+    {
       "source": "/data/top100.json",
       "destination": "/api/central-odds?view=top100"
+    },
+    {
+      "source": "/data/triples-model.json",
+      "destination": "/api/triples_model_runtime"
     },
     {
       "source": "/data/discovery/archive/:name",

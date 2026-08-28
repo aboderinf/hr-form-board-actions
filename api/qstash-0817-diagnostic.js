@@ -8,6 +8,9 @@ const {
 
 const TOP100_DESTINATION = "https://hr-form-board-actions.vercel.app/api/top100-refresh";
 const TOP100_CRON = "5 8,10 * * *";
+const TRIPLES_MODEL_DESTINATION = "https://hr-form-board-actions.vercel.app/api/triples-model-refresh";
+const TRIPLES_MODEL_CRON = "5 8,9,10,11 * * *";
+const TRIPLES_MODEL_SCHEDULE_ID = "mlb-triples-model-daily";
 const CHECKPOINT_DESTINATION = "https://hr-form-board-actions.vercel.app/api/capture-checkpoint";
 const CHECKPOINTS = ["0817", "1117", "1717", "2017"];
 const RECOVERY_MINUTES = 5;
@@ -184,6 +187,62 @@ async function ensureTop100Schedule(response) {
   });
 }
 
+async function ensureTriplesModelSchedule(response) {
+  const resolved = await resolveQstash();
+  const create = await fetch(qstashScheduleCreateUrl(resolved.base, TRIPLES_MODEL_DESTINATION), {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${resolved.token}`,
+      "Content-Type": "application/json",
+      "Upstash-Cron": TRIPLES_MODEL_CRON,
+      "Upstash-Schedule-Id": TRIPLES_MODEL_SCHEDULE_ID,
+      "Upstash-Retries": "2",
+      "Upstash-Retry-Delay": "60000 * (1 + retried)",
+      "Upstash-Timeout": "5m",
+      "Upstash-Label": TRIPLES_MODEL_SCHEDULE_ID,
+    },
+    body: "{}",
+    cache: "no-store",
+  });
+  const payload = await create.json().catch(() => ({}));
+  if (!create.ok) {
+    return response.status(502).json({
+      status: "qstash_create_failed",
+      qstashStatus: create.status,
+      message: payload?.error || payload?.message || `HTTP ${create.status}`,
+    });
+  }
+
+  const resume = await fetch(
+    `${resolved.base}/v2/schedules/${TRIPLES_MODEL_SCHEDULE_ID}/resume`,
+    {
+      method: "POST",
+      headers: { Authorization: `Bearer ${resolved.token}` },
+      cache: "no-store",
+    },
+  );
+  if (!resume.ok) {
+    const resumePayload = await resume.json().catch(() => ({}));
+    return response.status(502).json({
+      status: "qstash_resume_failed",
+      qstashStatus: resume.status,
+      message: resumePayload?.error || resumePayload?.message || `HTTP ${resume.status}`,
+    });
+  }
+
+  response.setHeader("Cache-Control", "no-store");
+  return response.status(200).json({
+    status: "configured",
+    qstashApiBase: resolved.base,
+    scheduleId: TRIPLES_MODEL_SCHEDULE_ID,
+    cron: TRIPLES_MODEL_CRON,
+    destination: TRIPLES_MODEL_DESTINATION,
+    retries: 2,
+    retryDelayExpression: "60000 * (1 + retried)",
+    cadence: "4:05-6:05 AM ET across daylight and standard time; duplicate-offset deliveries are idempotent",
+  });
+}
+
 module.exports = async function handler(request, response) {
   if (request.method !== "GET") {
     response.setHeader("Allow", "GET");
@@ -195,6 +254,18 @@ module.exports = async function handler(request, response) {
       return await ensureTop100Schedule(response);
     } catch (error) {
       return response.status(500).json({ status: "error", message: error instanceof Error ? error.message : String(error) });
+    }
+  }
+
+  if (String(request.query?.action || "") === "ensure-triples-model-schedule") {
+    try {
+      return await ensureTriplesModelSchedule(response);
+    } catch (error) {
+      response.setHeader("Cache-Control", "no-store");
+      return response.status(500).json({
+        status: "triples_model_schedule_configuration_failed",
+        message: error instanceof Error ? error.message : String(error),
+      });
     }
   }
 
