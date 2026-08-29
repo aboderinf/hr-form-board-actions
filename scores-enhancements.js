@@ -47,6 +47,18 @@ function formatScore(value) {
   return value == null ? "—" : Number(value).toFixed(4);
 }
 
+function formatGameTime(value) {
+  if (!value) return "—";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "—";
+  return new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/New_York",
+    hour: "numeric",
+    minute: "2-digit",
+    timeZoneName: "short",
+  }).format(date);
+}
+
 function shortDate(value) {
   if (!value) return "Unknown date";
   const parts = String(value).split("-");
@@ -211,12 +223,13 @@ function renderEnhancedScores(section) {
       </div>
     </div>
     ${data.checkpoint_pending ? `<div class="empty">Pending ${escapeHtml(data.checkpoint_label || "checkpoint")}. This view will populate only when the exact immutable ${escapeHtml(data.slate_date || "slate")} archive exists; it will not substitute another checkpoint or stale date.</div>` : `
-      <div class="table-note">Click any labeled column to sort. The 15-game strip runs oldest to newest; a highlighted cell is an HR game and its number is total HRs in that game.</div>
+      <div class="table-note">Click any labeled column to sort. Game times are shown in Eastern Time. The 15-game strip runs oldest to newest; a highlighted cell is an HR game and its number is total HRs in that game.</div>
       ${players.length ? `<div class="tablewrap"><table class="scores-table">
         <thead><tr>
           ${sortHeader("rank", "Rank")}
           ${sortHeader("player", "Player")}
           ${sortHeader("team", "Team")}
+          ${sortHeader("game_start_at", "Game ET")}
           ${sortHeader("score", "Score")}
           ${sortHeader("hr_games_l5", "HR G L5")}
           ${sortHeader("hr_games_l7", "L7")}
@@ -231,6 +244,7 @@ function renderEnhancedScores(section) {
           <td>${escapeHtml(player.rank)}</td>
           <td><b>${escapeHtml(player.player)}</b>${player.matchup ? `<div class="muted">${escapeHtml(player.matchup)}</div>` : ""}</td>
           <td>${escapeHtml(player.team || "—")}</td>
+          <td><strong>${escapeHtml(formatGameTime(player.game_start_at))}</strong></td>
           <td class="plus">${formatScore(player.score)}</td>
           <td>${escapeHtml(player.hr_games_l5)}</td>
           <td>${escapeHtml(player.hr_games_l7)}</td>
