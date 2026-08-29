@@ -30,6 +30,14 @@ function shortDateMoney(value) {
   const [year, month, day] = String(value).split('-').map(Number);
   return new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric' }).format(new Date(Date.UTC(year, month - 1, day)));
 }
+function gameTimeMoney(value) {
+  if (!value) return '—';
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return '—';
+  return new Intl.DateTimeFormat('en-US', {
+    timeZone: 'America/New_York', hour: 'numeric', minute: '2-digit', timeZoneName: 'short',
+  }).format(date);
+}
 function pnlClass(value) {
   const n = Number(value);
   return n > 0 ? 'money-positive' : n < 0 ? 'money-negative' : '';
@@ -122,7 +130,7 @@ function renderMonetization(data) {
   const picks = rows.length ? `<div class="money-picks">${rows.map((row, i) => `
     <article class="money-pick">
       <div class="money-rank">${i + 1}</div>
-      <div class="money-player"><strong>${escMoney(row.batterName)}</strong><span>${escMoney(row.matchup || '')}</span></div>
+      <div class="money-player"><strong>${escMoney(row.batterName)}</strong><span>${escMoney(row.matchup || '')} · ${escMoney(gameTimeMoney(row.gameStartAt))}</span></div>
       <div><small>Best O1.5</small><strong>${americanMoney(row.bestOver?.americanOdds)} ${escMoney(bookMoney(row.bestOver?.book))}</strong></div>
       <div><small>Execution P</small><strong>${pctMoney(row.monetizedProbability)}</strong></div>
       <div><small>Edge</small><strong class="money-positive">${pctMoney(row.monetizedEdge)}</strong></div>
