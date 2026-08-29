@@ -27,6 +27,14 @@ function humanDate(value) {
   const [year, month, day] = String(value).split('-').map(Number);
   return new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric' }).format(new Date(Date.UTC(year, month - 1, day)));
 }
+function gameTime(value) {
+  if (!value) return '—';
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return '—';
+  return new Intl.DateTimeFormat('en-US', {
+    timeZone: 'America/New_York', hour: 'numeric', minute: '2-digit', timeZoneName: 'short',
+  }).format(date);
+}
 function displayRule(value) {
   return String(value || '')
     .replaceAll('draftkings', 'DK')
@@ -66,6 +74,7 @@ function renderForm(data) {
     return `<tr>
       <td class="rank">${i + 1}</td>
       <td class="player"><strong>${esc(row.batterName)}</strong><small>${esc([row.batterTeam,row.matchup].filter(Boolean).join(' · '))}</small></td>
+      <td><strong>${esc(gameTime(row.gameStartAt))}</strong></td>
       <td><span class="score">${row.form.formScore.toFixed(1)}</span><small>${row.form.gamesAvailable} starts</small></td>
       <td>${pct(row.form.l5.hitRate)}<small>${row.form.l5.hits2Plus}/${row.form.l5.games}</small></td>
       <td>${pct(row.form.l10.hitRate)}<small>${row.form.l10.hits2Plus}/${row.form.l10.games}</small></td>
@@ -78,7 +87,7 @@ function renderForm(data) {
   }).join('');
 
   content.innerHTML = `<section class="table-card"><div class="table-scroll"><table>
-    <thead><tr><th>#</th><th>Batter</th><th>Form</th><th>L5 2+</th><th>L10 2+</th><th>L15 2+</th><th>TB form</th><th>Recent TB</th><th>Best O1.5</th><th>Books</th></tr></thead>
+    <thead><tr><th>#</th><th>Batter</th><th>Game time</th><th>Form</th><th>L5 2+</th><th>L10 2+</th><th>L15 2+</th><th>TB form</th><th>Recent TB</th><th>Best O1.5</th><th>Books</th></tr></thead>
     <tbody>${body}</tbody></table></div></section>
     <section class="note"><strong>Form score</strong> = 50% L5 + 30% L10 + 20% L15 empirical-Bayes 2+ TB hit rate. Price is excluded from the score; only actual Over 1.5 total-bases quotes are treated as 2+ TB.</section>`;
 }
@@ -212,10 +221,11 @@ function renderModel(data) {
 
   const liveRows = data.rows || [];
   const liveTable = liveRows.length ? `<section class="table-card model-table"><div class="table-scroll"><table>
-    <thead><tr><th>#</th><th>Batter</th><th>V2 P</th><th>V1 P</th><th>Form P</th><th>Fair</th><th>Best O1.5</th><th>Edge</th><th>EV</th><th>Status</th></tr></thead>
+    <thead><tr><th>#</th><th>Batter</th><th>Game time</th><th>V2 P</th><th>V1 P</th><th>Form P</th><th>Fair</th><th>Best O1.5</th><th>Edge</th><th>EV</th><th>Status</th></tr></thead>
     <tbody>${liveRows.map((row, i) => `<tr>
       <td class="rank">${i + 1}</td>
       <td class="player"><strong>${esc(row.batterName)}</strong><small>${esc(row.matchup || '')}</small></td>
+      <td><strong>${esc(gameTime(row.gameStartAt))}</strong></td>
       <td><strong>${pct(row.v2Probability ?? row.modelProbability, 1)}</strong></td>
       <td>${pct(row.v1Probability, 1)}</td>
       <td>${pct(row.formProbability, 1)}</td>
