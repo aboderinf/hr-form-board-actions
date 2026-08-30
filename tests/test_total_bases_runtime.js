@@ -4,6 +4,47 @@ const path = require('node:path');
 const test = require('node:test');
 
 const { normalizeTotalBasesProviderPayload } = require('../lib/total-bases-runtime');
+const {
+  AUDIT_SOURCE,
+  AUDITED_SELECTION_SNAPSHOTS,
+  resolveSelectionSnapshot,
+} = require('../lib/total-bases-v2-frozen-audited-snapshots');
+
+test('audited 8:17 snapshots count every pick that qualified and override bad persisted snapshots', async () => {
+  const expected = {
+    '2026-08-26': [
+      [645277, 'Ozzie Albies', 171],
+      [696285, 'Jacob Young', 172],
+      [545361, 'Mike Trout', 167],
+    ],
+    '2026-08-27': [
+      [621566, 'Matt Olson', 166],
+      [676475, 'Alec Burleson', 155],
+      [646240, 'Rafael Devers', 130],
+    ],
+  };
+
+  for (const [date, picks] of Object.entries(expected)) {
+    const snapshot = AUDITED_SELECTION_SNAPSHOTS[date];
+    assert.equal(snapshot.source, AUDIT_SOURCE);
+    assert.equal(snapshot.audit.status, 'verified');
+    assert.equal(snapshot.capturedAt, `${date}T12:17:00.000Z`);
+    assert.deepEqual(snapshot.selections.map((pick) => [pick.batterId, pick.batterName, pick.odds]), picks);
+    for (const pick of snapshot.selections) {
+      const probability = 0.25 * pick.formProbability + 0.75 * pick.v2Probability;
+      const implied = 100 / (pick.odds + 100);
+      assert.equal(pick.executionProbability, Number(probability.toFixed(4)));
+      assert.equal(pick.edge, Number((probability - implied).toFixed(4)));
+      assert.equal(pick.ev, Number((probability * (pick.odds / 100) - (1 - probability)).toFixed(4)));
+    }
+
+    const resolved = await resolveSelectionSnapshot(date, async () => ({ source: 'incorrect-persisted-snapshot' }));
+    assert.strictEqual(resolved, snapshot);
+  }
+
+  const persisted = { source: 'valid-persisted-snapshot' };
+  assert.strictEqual(await resolveSelectionSnapshot('2026-08-28', async () => persisted), persisted);
+});
 
 test('projects only pregame 2+ total-bases prices from existing events payload', () => {
   const raw = {

@@ -96,12 +96,13 @@ function selectionResult(pick) {
 function selectionsDetails(day) {
   if (!['settled', 'partial'].includes(day.status)) return '<span class="money-muted">Snapshot unavailable</span>';
   if (!(day.selections || []).length) return '<span class="money-muted">No qualified bets</span>';
+  const auditLabel = day.snapshotAuditStatus === 'verified' ? ' · audited 8:17 replay' : '';
   const chips = (day.selections || []).map((pick) => {
     const result = selectionResult(pick);
     const actual = pick.actualTb == null ? '' : ` · ${pick.actualTb} TB`;
     return `<span class="money-selection ${result.cls}"><b>${escMoney(pick.batterName || pick.player)}</b> ${americanMoney(pick.odds)} ${escMoney(bookMoney(pick.book))} · ${result.label}${actual} · ${unitsMoney(pick.pnlUnits)}</span>`;
   }).join('');
-  return `<details class="money-day-details"><summary>${day.selections.length} selection${day.selections.length === 1 ? '' : 's'}</summary><div class="money-selections">${chips}</div></details>`;
+  return `<details class="money-day-details"><summary>${day.selections.length} selection${day.selections.length === 1 ? '' : 's'}${auditLabel}</summary><div class="money-selections">${chips}</div></details>`;
 }
 
 function renderDailyLedger(forward) {
@@ -149,7 +150,8 @@ function renderDailyLedger(forward) {
 function snapshotHealth(data) {
   const snapshot = data.selectionSnapshot || {};
   if (snapshot.status === 'saved') {
-    return `<div class="money-snapshot-ok"><strong>8:17 snapshot saved</strong><span>${snapshot.selections ?? 0} selection${snapshot.selections === 1 ? '' : 's'} · ${escMoney(timeMoney(snapshot.capturedAt))}</span></div>`;
+    const label = snapshot.auditStatus === 'verified' ? '8:17 slate audit verified' : '8:17 snapshot saved';
+    return `<div class="money-snapshot-ok"><strong>${label}</strong><span>${snapshot.selections ?? 0} selection${snapshot.selections === 1 ? '' : 's'} · ${escMoney(timeMoney(snapshot.capturedAt))}</span></div>`;
   }
   return `<div class="money-snapshot-missing"><strong>8:17 snapshot missing</strong><span>Today's displayed projections will not be added to the official ledger unless the checkpoint writer saved them.</span></div>`;
 }
@@ -206,7 +208,7 @@ function renderMonetization(data) {
       <div>
         <div class="money-eyebrow">EXECUTION LAYER · ${data.frozen ? 'FROZEN' : 'RESEARCH'}</div>
         <h2>${promoted ? 'Validated monetization rule' : 'Execution held by model gate'}</h2>
-        <p>${escMoney(ruleText)}. The rule is frozen; the ledger is read-only and updates from saved 8:17 snapshots.</p>
+        <p>${escMoney(ruleText)}. The rule is frozen; the ledger is read-only and updates from authoritative 8:17 snapshots.</p>
       </div>
       <div class="money-badge">${escMoney(data.monetizationStatus || (promoted ? 'PROMOTED' : 'HELD'))}</div>
     </section>
@@ -232,7 +234,7 @@ function renderMonetization(data) {
     <div class="money-heading"><div><span>Selected slate execution</span><h3>Qualified 8:17 AM bets</h3></div><p>The ledger above always stays current even when you browse another slate date.</p></div>
     ${snapshotHealth(data)}
     ${picks}
-    <div class="money-footnote"><strong>Important:</strong> the checkpoint workflow is now the only process allowed to create the official daily pick snapshot. Opening or refreshing this page cannot create or alter historical ledger selections. Existing archived odds are reused, adding 0 SportsGameOdds calls.</div>`;
+    <div class="money-footnote"><strong>Important:</strong> the checkpoint workflow creates the official daily pick snapshot. A versioned correction can only replay the frozen rule from an exact archived 8:17 checkpoint. Opening or refreshing this page cannot create or alter ledger selections. Existing archived odds are reused, adding 0 SportsGameOdds calls.</div>`;
   wireLedgerControls();
 }
 
