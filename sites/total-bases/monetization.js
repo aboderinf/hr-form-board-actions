@@ -31,7 +31,9 @@ function recordMoney(value) {
 function shortDateMoney(value) {
   if (!value) return '—';
   const [year, month, day] = String(value).split('-').map(Number);
-  return new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric' }).format(new Date(Date.UTC(year, month - 1, day)));
+  return new Intl.DateTimeFormat('en-US', {
+    timeZone: 'UTC', month: 'short', day: 'numeric',
+  }).format(new Date(Date.UTC(year, month - 1, day)));
 }
 function gameTimeMoney(value) {
   if (!value) return '—';

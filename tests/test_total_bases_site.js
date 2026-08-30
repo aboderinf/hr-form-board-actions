@@ -33,6 +33,7 @@ test('standalone site opens on actionable picks and keeps research separate', ()
   assert.match(client, /if \(activeView === 'picks'\)/);
   assert.match(execution, /querySelector\('\.tab\[data-view="picks"\]'\)/);
   assert.match(execution, /showMoney\(true\);\s*$/);
+  assert.match(execution, /timeZone: 'UTC', month: 'short', day: 'numeric'/);
 });
 
 test('form hydration is bulk rather than one MLB request per batter', () => {
