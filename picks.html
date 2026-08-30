@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Early + Late HR Picks — HR Form Board</title>
+  <meta name="description" content="Rule-based MLB home run picks for early and late games from archived HR Form Board checkpoints">
+  <link rel="stylesheet" href="/style.css">
+  <style>
+    .picks-toolbar{display:flex;gap:12px;align-items:end;justify-content:space-between;flex-wrap:wrap;margin:18px 0}.picks-toolbar label{display:grid;gap:6px;font-size:.82rem;color:var(--muted,#8a93a3)}.picks-toolbar select,.picks-toolbar button{min-height:42px;border:1px solid var(--border,#2b3340);border-radius:10px;background:var(--card,#151a22);color:inherit;padding:9px 12px}.picks-toolbar button{cursor:pointer;font-weight:700}.rule-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin:18px 0}.rule-card{min-width:0}.rule-card h2{margin-bottom:4px}.rule-line{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0}.rule-chip{display:inline-flex;align-items:center;min-height:28px;padding:4px 9px;border:1px solid var(--border,#2b3340);border-radius:999px;font-size:.78rem;font-weight:700}.pick-count{font-size:2.2rem;line-height:1;font-weight:800;margin:8px 0 4px}.pick-list{display:grid;gap:10px}.pick-item{display:grid;grid-template-columns:minmax(180px,1.2fr) minmax(145px,.8fr) minmax(125px,.65fr) minmax(165px,.85fr);gap:12px;align-items:center;padding:14px 0;border-top:1px solid var(--border,#2b3340)}.pick-item:first-child{border-top:0}.pick-player{font-size:1.05rem;font-weight:800}.pick-sub,.pick-market{font-size:.8rem;color:var(--muted,#8a93a3);margin-top:3px}.pick-bet{font-size:1.05rem;font-weight:800}.book-prices{display:flex;gap:6px;flex-wrap:wrap}.book-price{font-size:.76rem;border:1px solid var(--border,#2b3340);border-radius:8px;padding:4px 7px}.book-price.best{font-weight:800}.status-box{padding:18px;border:1px dashed var(--border,#2b3340);border-radius:12px;color:var(--muted,#8a93a3)}.picks-meta{font-size:.82rem;color:var(--muted,#8a93a3)}.rule-note{font-size:.84rem;color:var(--muted,#8a93a3);line-height:1.45}.rule-stat{margin-top:10px;font-size:.84rem;font-weight:700}.loading-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:currentColor;margin-right:7px}.error{color:#d76d6d}.picks-back{display:flex;gap:8px;flex-wrap:wrap}.picks-back .nav{display:inline-flex;align-items:center}.late-pending{font-weight:700}
+    @media(max-width:760px){.rule-grid{grid-template-columns:1fr}.pick-item{grid-template-columns:1fr 1fr}.pick-item>div:nth-child(4){grid-column:1/-1}}
+    @media(max-width:480px){.pick-item{grid-template-columns:1fr}.pick-item>div:nth-child(4){grid-column:auto}.picks-toolbar{align-items:stretch}.picks-toolbar>div,.picks-toolbar select,.picks-toolbar button{width:100%}}
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="top">
+      <div>
+        <div class="brand">HR <span>Form Board</span> <span class="pill">Rule picks</span></div>
+        <div class="muted">Early + late game decision board</div>
+      </div>
+      <nav class="picks-back"><a class="nav" href="/">Board</a><a class="nav active" href="/picks.html">Early + Late Picks</a></nav>
+    </header>
+
+    <section class="hero">
+      <div class="card">
+        <div class="eyebrow">Actionable rule board</div>
+        <h1>Early + late<br>HR picks.</h1>
+        <p class="muted">Two separate checkpoint strategies. Early picks use the 8:17 AM archive for afternoon games; late picks use the 5:17 PM archive for evening and late games.</p>
+        <div class="notice"><b>Flat staking:</b> 1 unit per qualifying player. A player appears only when the archived checkpoint price satisfies the rule.</div>
+      </div>
+      <div class="card">
+        <div class="eyebrow">Slate controls</div>
+        <div class="picks-toolbar">
+          <label>Slate date<select id="slateDate" aria-label="Slate date"></select></label>
+          <button id="refreshPicks" type="button">Refresh picks</button>
+        </div>
+        <div id="pageStatus" class="picks-meta"><span class="loading-dot"></span>Loading checkpoint archives…</div>
+      </div>
+    </section>
+
+    <div class="rule-grid">
+      <section class="card section rule-card" id="earlyCard">
+        <div class="eyebrow">Afternoon / early games</div>
+        <h2>8:17 AM rule</h2>
+        <div class="rule-line"><span class="rule-chip">Score 0.100–0.199</span><span class="rule-chip">DraftKings = best price</span><span class="rule-chip">&lt;+400 or +500–599</span></div>
+        <p class="rule-note">Only games scheduled before 5:17 PM ET are shown. DraftKings must be among the books offering the highest archived HR price.</p>
+        <div class="rule-stat">Reference sample: 57 bets · 13 HR · +8.73u · +15.3% ROI</div>
+        <div class="pick-count" id="earlyCount">—</div>
+        <div class="picks-meta" id="earlyMeta">Waiting for 8:17 archive</div>
+        <div id="earlyPicks" class="pick-list"></div>
+      </section>
+
+      <section class="card section rule-card" id="lateCard">
+        <div class="eyebrow">Evening / late games</div>
+        <h2>5:17 PM rule</h2>
+        <div class="rule-line"><span class="rule-chip">Score 0.100–0.199</span><span class="rule-chip">Best available book</span><span class="rule-chip">+600–799</span></div>
+        <p class="rule-note">Only games scheduled at or after 5:17 PM ET and still pregame at the checkpoint are shown. Bet the book displaying the highest captured price.</p>
+        <div class="rule-stat">Current discovery history: +62.7% ROI for the fixed 5:17 score × odds segment.</div>
+        <div class="pick-count" id="lateCount">—</div>
+        <div class="picks-meta" id="lateMeta">Waiting for 5:17 archive</div>
+        <div id="latePicks" class="pick-list"></div>
+      </section>
+    </div>
+
+    <section class="card section">
+      <div class="eyebrow">How the page behaves</div>
+      <h2>Checkpoint data stays immutable.</h2>
+      <p class="muted">The page reads <code>data/discovery/archive/YYYY-MM-DD_0817.json</code> and <code>..._1717.json</code>. It never substitutes a later price for the price that existed at the decision checkpoint. If the 5:17 capture has not happened yet, the late side remains pending.</p>
+    </section>
+
+    <footer class="footer">Odds come from the persisted MLB HR Edge captures used by Form Board. These are historical-rule selections, not guarantees of outcome.</footer>
+  </div>
+  <script type="module" src="/picks.js"></script>
+</body>
+</html>
