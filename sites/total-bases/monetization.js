@@ -1,7 +1,8 @@
 const MONEY_API = 'https://hr-form-board-actions.vercel.app/api/total-bases-monetization';
 const panel = document.getElementById('monetization-panel');
 const dateInput = document.getElementById('slate-date');
-const modelTab = document.querySelector('.tab[data-view="model"]');
+const picksTab = document.querySelector('.tab[data-view="picks"]');
+const refreshButton = document.getElementById('refresh');
 let latestMoneyData = null;
 const ledgerState = { page: 1, pageSize: 10, betOnly: false };
 
@@ -241,10 +242,14 @@ function showMoney(show) {
   if (show) loadMonetization();
 }
 
-modelTab?.addEventListener('click', () => showMoney(true));
+picksTab?.addEventListener('click', () => showMoney(true));
 document.querySelectorAll('.tab').forEach((tab) => {
-  if (tab !== modelTab) tab.addEventListener('click', () => showMoney(false));
+  if (tab !== picksTab) tab.addEventListener('click', () => showMoney(false));
 });
 dateInput?.addEventListener('change', () => {
   if (panel && !panel.hidden) loadMonetization();
 });
+refreshButton?.addEventListener('click', () => {
+  if (panel && !panel.hidden) loadMonetization();
+});
+showMoney(true);

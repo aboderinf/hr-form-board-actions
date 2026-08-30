@@ -22,6 +22,19 @@ test('standalone site uses shared read-only data APIs', () => {
   assert.doesNotMatch(client, /api\.sportsgameodds\.com/);
 });
 
+test('standalone site opens on actionable picks and keeps research separate', () => {
+  const html = fs.readFileSync(path.join(root, 'sites', 'total-bases', 'index.html'), 'utf8');
+  const client = fs.readFileSync(path.join(root, 'sites', 'total-bases', 'app.js'), 'utf8');
+  const execution = fs.readFileSync(path.join(root, 'sites', 'total-bases', 'monetization.js'), 'utf8');
+
+  assert.match(html, /class="tab active" data-view="picks">Today’s Picks/);
+  assert.match(html, /data-view="model">Model Research/);
+  assert.match(client, /let activeView = 'picks'/);
+  assert.match(client, /if \(activeView === 'picks'\)/);
+  assert.match(execution, /querySelector\('\.tab\[data-view="picks"\]'\)/);
+  assert.match(execution, /showMoney\(true\);\s*$/);
+});
+
 test('form hydration is bulk rather than one MLB request per batter', () => {
   const handler = fs.readFileSync(path.join(root, 'lib', 'total-bases-form-handler-v2.js'), 'utf8');
   assert.match(handler, /personIds/);

@@ -8,7 +8,8 @@ const summary = $('summary');
 const toolbar = $('toolbar');
 const dateInput = $('slate-date');
 const checkpoint = $('checkpoint');
-let activeView = 'form';
+const checkpointField = $('checkpoint-field');
+let activeView = 'picks';
 
 function etToday() {
   return new Intl.DateTimeFormat('en-CA', {
@@ -324,7 +325,13 @@ async function loadForm() {
 
 function render() {
   toolbar.hidden = activeView === 'discovery';
+  checkpointField.hidden = activeView === 'picks';
   summary.hidden = true;
+  if (activeView === 'picks') {
+    status.hidden = true;
+    content.innerHTML = '';
+    return;
+  }
   if (activeView === 'form') return loadForm();
   if (activeView === 'discovery') return loadDiscovery();
   return loadModel();

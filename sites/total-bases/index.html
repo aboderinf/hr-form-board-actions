@@ -20,14 +20,15 @@
     </header>
 
     <nav class="tabs" aria-label="Views">
-      <button class="tab active" data-view="form">Form</button>
+      <button class="tab active" data-view="picks">Today’s Picks</button>
+      <button class="tab" data-view="form">Form</button>
       <button class="tab" data-view="discovery">Discovery</button>
-      <button class="tab" data-view="model">Model + Execution</button>
+      <button class="tab" data-view="model">Model Research</button>
     </nav>
 
     <section class="toolbar" id="toolbar">
       <label>Slate <input id="slate-date" type="date" /></label>
-      <label>Checkpoint
+      <label id="checkpoint-field">Checkpoint
         <select id="checkpoint">
           <option value="">Latest archived</option>
           <option value="0817">8:17 AM</option>
