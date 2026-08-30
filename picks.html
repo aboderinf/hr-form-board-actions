@@ -27,6 +27,7 @@
         <div class="eyebrow">Actionable rule board</div>
         <h1>Early + late<br>HR picks.</h1>
         <p class="muted">Two separate checkpoint strategies. Early picks use the 8:17 AM archive for afternoon games; late picks use the 5:17 PM archive for evening and late games.</p>
+        <div class="notice"><b>Evidence standard:</b> production rules should be based on the entire available settled archive at the actual decision checkpoint. The early rule below remains provisional until its early-game-only full-history join is complete.</div>
         <div class="notice"><b>Flat staking:</b> 1 unit per qualifying player. A player appears only when the archived checkpoint price satisfies the rule.</div>
       </div>
       <div class="card">
@@ -42,10 +43,10 @@
     <div class="rule-grid">
       <section class="card section rule-card" id="earlyCard">
         <div class="eyebrow">Afternoon / early games</div>
-        <h2>8:17 AM rule</h2>
+        <h2>8:17 AM rule <span class="pill">Provisional</span></h2>
         <div class="rule-line"><span class="rule-chip">Score 0.100–0.199</span><span class="rule-chip">DraftKings = best price</span><span class="rule-chip">&lt;+400 or +500–599</span></div>
-        <p class="rule-note">Only games scheduled before 5:17 PM ET are shown. DraftKings must be among the books offering the highest archived HR price.</p>
-        <div class="rule-stat">Reference sample: 57 bets · 13 HR · +8.73u · +15.3% ROI</div>
+        <p class="rule-note">Only games scheduled before 5:17 PM ET are shown. DraftKings must be among the books offering the highest archived HR price. The filter remains live, but it is not being promoted as the final early rule until the entire settled archive is evaluated after the early-game start-time split.</p>
+        <div class="rule-stat">Provisional Aug. 11–23 sample only: 57 bets · 13 HR · +8.73u · +15.3% ROI. Not an all-history result.</div>
         <div class="pick-count" id="earlyCount">—</div>
         <div class="picks-meta" id="earlyMeta">Waiting for 8:17 archive</div>
         <div id="earlyPicks" class="pick-list"></div>
@@ -56,7 +57,7 @@
         <h2>5:17 PM rule</h2>
         <div class="rule-line"><span class="rule-chip">Score 0.100–0.199</span><span class="rule-chip">Best available book</span><span class="rule-chip">+600–799</span></div>
         <p class="rule-note">Only games scheduled at or after 5:17 PM ET and still pregame at the checkpoint are shown. Bet the book displaying the highest captured price.</p>
-        <div class="rule-stat">Current discovery history: +62.7% ROI for the fixed 5:17 score × odds segment.</div>
+        <div class="rule-stat">All-time fixed-checkpoint Discovery segment: 71 settled · 15 HR · +44.50u · +62.7% ROI.</div>
         <div class="pick-count" id="lateCount">—</div>
         <div class="picks-meta" id="lateMeta">Waiting for 5:17 archive</div>
         <div id="latePicks" class="pick-list"></div>
