@@ -1,14 +1,14 @@
 {
   "schema_version": 1,
   "kind": "latest_shared_slate",
-  "refreshed_at": "2026-08-30T23:30:18.078613+00:00",
-  "refreshed_at_et": "2026-08-30T19:30:18.078613-04:00",
+  "refreshed_at": "2026-08-31T00:53:35.414154+00:00",
+  "refreshed_at_et": "2026-08-30T20:53:35.414154-04:00",
   "slate_date": "2026-08-30",
   "status": "no_current_eligible_players",
   "sources": {
     "mlb_hr_edge": {
       "source": "MLB HR Edge",
-      "source_url": "/home/runner/work/hr-form-board-actions/hr-form-board-actions/data/shared-odds/latest.json",
+      "source_url": "https://hr-form-board-actions.vercel.app/data/shared-odds/latest.json",
       "delivery": "qstash-vercel-redis",
       "source_date": "2026-08-30",
       "date_matches": true,
@@ -28,8 +28,7 @@
         "BetMGM"
       ],
       "row_count": 17,
-      "compatibility_fallback": "exact_upstash_checkpoint_cache",
-      "checkpoint": "1717",
+      "compatibility_fallback": "public_form_board_mirror",
       "mlbam_ids_hydrated": 17,
       "mlbam_ids_added": 17,
       "unresolved_player_names": []
