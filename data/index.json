@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-31T00:53:49.913000+00:00",
+  "generated_at": "2026-08-31T05:38:33.344047+00:00",
   "method": "0.50*L5 + 0.30*L7 + 0.20*L15 cumulative HR-game rates",
   "checkpoints_et": [
     "08:17",
@@ -10,92 +10,65 @@
   "aggregate": {
     "top10": {
       "selections": 896,
-      "settled": 850,
+      "settled": 856,
       "wins": 83,
-      "losses": 767,
+      "losses": 773,
       "pushes": 0,
-      "hit_rate": 0.0976470588235294,
-      "net_units": -188.6,
-      "roi": -0.22188235294117648
+      "hit_rate": 0.0969626168224299,
+      "net_units": -194.6,
+      "roi": -0.22733644859813085
     },
     "top20": {
       "selections": 1705,
-      "settled": 1612,
+      "settled": 1620,
       "wins": 142,
-      "losses": 1470,
+      "losses": 1478,
       "pushes": 0,
-      "hit_rate": 0.0880893300248139,
-      "net_units": -480.07,
-      "roi": -0.2978101736972705
+      "hit_rate": 0.08765432098765433,
+      "net_units": -488.07,
+      "roi": -0.30127777777777776
     }
   },
   "latest": {
     "schema_version": 1,
     "kind": "latest_shared_slate",
-    "refreshed_at": "2026-08-31T00:53:35.414154+00:00",
-    "refreshed_at_et": "2026-08-30T20:53:35.414154-04:00",
+    "refreshed_at": "2026-08-31T05:38:33.312398+00:00",
+    "refreshed_at_et": "2026-08-31T01:38:33.312398-04:00",
     "slate_date": "2026-08-30",
-    "status": "no_current_eligible_players",
+    "status": "shared_odds_slate_empty",
     "sources": {
       "mlb_hr_edge": {
         "source": "MLB HR Edge",
-        "source_url": "https://hr-form-board-actions.vercel.app/data/shared-odds/latest.json",
+        "source_url": "/home/runner/work/hr-form-board-actions/hr-form-board-actions/data/shared-odds/latest.json",
         "delivery": "qstash-vercel-redis",
         "source_date": "2026-08-30",
         "date_matches": true,
-        "as_of": "2026-08-30T21:17:00.000Z",
-        "status": "ready",
-        "generated_at": "2026-08-30T21:17:02.207Z",
-        "latest_ingest_at": "2026-08-30T21:17:02.207Z",
-        "provider_call_id": "2026-08-30:1717:2026-08-30T21:17:02.207Z:b4fab5ecafa5",
-        "provider_response_sha256": "b4fab5ecafa5d1e2849740126c0b17e4f9673786f15684165f1a70376a0c4482",
+        "as_of": "2026-08-31T00:17:00.000Z",
+        "status": "pending",
+        "generated_at": "2026-08-31T00:17:01.583Z",
+        "latest_ingest_at": "2026-08-31T00:17:01.583Z",
+        "provider_call_id": "2026-08-30:2017:2026-08-31T00:17:01.583Z:d8db0af5ad6a",
+        "provider_response_sha256": "d8db0af5ad6a2383f133202670d908a438ff7c58814a0f980d74d10dc416a81a",
         "archived_call_count": 1,
-        "quote_count": 50,
-        "all_available_quote_count": 312,
-        "excluded_live_or_post_start_quote_count": 212,
+        "quote_count": 0,
+        "all_available_quote_count": 60,
+        "excluded_live_or_post_start_quote_count": 60,
         "books": [
           "FanDuel",
           "DraftKings",
           "BetMGM"
         ],
-        "row_count": 17,
-        "compatibility_fallback": "public_form_board_mirror",
-        "mlbam_ids_hydrated": 17,
-        "mlbam_ids_added": 17,
+        "row_count": 0,
+        "compatibility_fallback": "exact_upstash_checkpoint_cache",
+        "checkpoint": "2017",
+        "mlbam_ids_hydrated": 0,
+        "mlbam_ids_added": 0,
         "unresolved_player_names": []
       }
     },
     "diagnostics": [],
-    "portfolios": {
-      "top10": {
-        "picks": [],
-        "summary": {
-          "selections": 0,
-          "settled": 0,
-          "wins": 0,
-          "losses": 0,
-          "pushes": 0,
-          "hit_rate": null,
-          "net_units": 0,
-          "roi": null
-        }
-      },
-      "top20": {
-        "picks": [],
-        "summary": {
-          "selections": 0,
-          "settled": 0,
-          "wins": 0,
-          "losses": 0,
-          "pushes": 0,
-          "hit_rate": null,
-          "net_units": 0,
-          "roi": null
-        }
-      }
-    },
-    "source_generated_at": "2026-08-30T21:17:02.207Z",
-    "eligible_candidates": 0
+    "portfolios": {},
+    "source_generated_at": "2026-08-31T00:17:01.583Z"
   },
   "snapshots": [
     {
@@ -181814,10 +181787,11 @@
               "batter_team": null,
               "lineup_position": null,
               "source_prediction_id": null,
-              "settled": false,
-              "result": "PENDING",
-              "home_runs": null,
-              "profit_units": null
+              "settled": true,
+              "result": "LOSS",
+              "home_runs": 0,
+              "profit_units": -1.0,
+              "settled_at": "2026-08-31T05:38:21.911382+00:00"
             },
             {
               "rank": 6,
@@ -182147,13 +182121,13 @@
           ],
           "summary": {
             "selections": 10,
-            "settled": 8,
+            "settled": 9,
             "wins": 2,
-            "losses": 6,
+            "losses": 7,
             "pushes": 0,
-            "hit_rate": 0.25,
-            "net_units": 7.880000000000001,
-            "roi": 0.9850000000000001
+            "hit_rate": 0.2222222222222222,
+            "net_units": 6.880000000000001,
+            "roi": 0.7644444444444445
           }
         },
         "top20": {
@@ -182490,10 +182464,11 @@
               "batter_team": null,
               "lineup_position": null,
               "source_prediction_id": null,
-              "settled": false,
-              "result": "PENDING",
-              "home_runs": null,
-              "profit_units": null
+              "settled": true,
+              "result": "LOSS",
+              "home_runs": 0,
+              "profit_units": -1.0,
+              "settled_at": "2026-08-31T05:38:21.911382+00:00"
             },
             {
               "rank": 6,
@@ -183163,10 +183138,11 @@
               "batter_team": null,
               "lineup_position": null,
               "source_prediction_id": null,
-              "settled": false,
-              "result": "PENDING",
-              "home_runs": null,
-              "profit_units": null
+              "settled": true,
+              "result": "LOSS",
+              "home_runs": 0,
+              "profit_units": -1.0,
+              "settled_at": "2026-08-31T05:38:21.911382+00:00"
             },
             {
               "rank": 16,
@@ -183232,10 +183208,11 @@
               "batter_team": null,
               "lineup_position": null,
               "source_prediction_id": null,
-              "settled": false,
-              "result": "PENDING",
-              "home_runs": null,
-              "profit_units": null
+              "settled": true,
+              "result": "LOSS",
+              "home_runs": 0,
+              "profit_units": -1.0,
+              "settled_at": "2026-08-31T05:38:21.911382+00:00"
             },
             {
               "rank": 17,
@@ -183507,13 +183484,13 @@
           ],
           "summary": {
             "selections": 20,
-            "settled": 14,
+            "settled": 17,
             "wins": 2,
-            "losses": 12,
+            "losses": 15,
             "pushes": 0,
-            "hit_rate": 0.14285714285714285,
-            "net_units": 1.8800000000000008,
-            "roi": 0.13428571428571434
+            "hit_rate": 0.11764705882352941,
+            "net_units": -1.1199999999999992,
+            "roi": -0.06588235294117642
           }
         }
       },
@@ -183626,10 +183603,11 @@
               "batter_team": null,
               "lineup_position": null,
               "source_prediction_id": null,
-              "settled": false,
-              "result": "PENDING",
-              "home_runs": null,
-              "profit_units": null
+              "settled": true,
+              "result": "LOSS",
+              "home_runs": 0,
+              "profit_units": -1.0,
+              "settled_at": "2026-08-31T05:38:21.911382+00:00"
             },
             {
               "rank": 2,
@@ -183683,10 +183661,11 @@
               "batter_team": null,
               "lineup_position": null,
               "source_prediction_id": null,
-              "settled": false,
-              "result": "PENDING",
-              "home_runs": null,
-              "profit_units": null
+              "settled": true,
+              "result": "LOSS",
+              "home_runs": 0,
+              "profit_units": -1.0,
+              "settled_at": "2026-08-31T05:38:21.911382+00:00"
             },
             {
               "rank": 3,
@@ -183752,10 +183731,11 @@
               "batter_team": null,
               "lineup_position": null,
               "source_prediction_id": null,
-              "settled": false,
-              "result": "PENDING",
-              "home_runs": null,
-              "profit_units": null
+              "settled": true,
+              "result": "LOSS",
+              "home_runs": 0,
+              "profit_units": -1.0,
+              "settled_at": "2026-08-31T05:38:21.911382+00:00"
             },
             {
               "rank": 4,
@@ -183821,10 +183801,11 @@
               "batter_team": null,
               "lineup_position": null,
               "source_prediction_id": null,
-              "settled": false,
-              "result": "PENDING",
-              "home_runs": null,
-              "profit_units": null
+              "settled": true,
+              "result": "LOSS",
+              "home_runs": 0,
+              "profit_units": -1.0,
+              "settled_at": "2026-08-31T05:38:21.911382+00:00"
             },
             {
               "rank": 5,
@@ -183890,21 +183871,22 @@
               "batter_team": null,
               "lineup_position": null,
               "source_prediction_id": null,
-              "settled": false,
-              "result": "PENDING",
-              "home_runs": null,
-              "profit_units": null
+              "settled": true,
+              "result": "LOSS",
+              "home_runs": 0,
+              "profit_units": -1.0,
+              "settled_at": "2026-08-31T05:38:21.911382+00:00"
             }
           ],
           "summary": {
             "selections": 5,
-            "settled": 0,
+            "settled": 5,
             "wins": 0,
-            "losses": 0,
+            "losses": 5,
             "pushes": 0,
-            "hit_rate": null,
-            "net_units": 0,
-            "roi": null
+            "hit_rate": 0.0,
+            "net_units": -5.0,
+            "roi": -1.0
           }
         },
         "top20": {
@@ -183973,10 +183955,11 @@
               "batter_team": null,
               "lineup_position": null,
               "source_prediction_id": null,
-              "settled": false,
-              "result": "PENDING",
-              "home_runs": null,
-              "profit_units": null
+              "settled": true,
+              "result": "LOSS",
+              "home_runs": 0,
+              "profit_units": -1.0,
+              "settled_at": "2026-08-31T05:38:21.911382+00:00"
             },
             {
               "rank": 2,
@@ -184030,10 +184013,11 @@
               "batter_team": null,
               "lineup_position": null,
               "source_prediction_id": null,
-              "settled": false,
-              "result": "PENDING",
-              "home_runs": null,
-              "profit_units": null
+              "settled": true,
+              "result": "LOSS",
+              "home_runs": 0,
+              "profit_units": -1.0,
+              "settled_at": "2026-08-31T05:38:21.911382+00:00"
             },
             {
               "rank": 3,
@@ -184099,10 +184083,11 @@
               "batter_team": null,
               "lineup_position": null,
               "source_prediction_id": null,
-              "settled": false,
-              "result": "PENDING",
-              "home_runs": null,
-              "profit_units": null
+              "settled": true,
+              "result": "LOSS",
+              "home_runs": 0,
+              "profit_units": -1.0,
+              "settled_at": "2026-08-31T05:38:21.911382+00:00"
             },
             {
               "rank": 4,
@@ -184168,10 +184153,11 @@
               "batter_team": null,
               "lineup_position": null,
               "source_prediction_id": null,
-              "settled": false,
-              "result": "PENDING",
-              "home_runs": null,
-              "profit_units": null
+              "settled": true,
+              "result": "LOSS",
+              "home_runs": 0,
+              "profit_units": -1.0,
+              "settled_at": "2026-08-31T05:38:21.911382+00:00"
             },
             {
               "rank": 5,
@@ -184237,25 +184223,68 @@
               "batter_team": null,
               "lineup_position": null,
               "source_prediction_id": null,
-              "settled": false,
-              "result": "PENDING",
-              "home_runs": null,
-              "profit_units": null
+              "settled": true,
+              "result": "LOSS",
+              "home_runs": 0,
+              "profit_units": -1.0,
+              "settled_at": "2026-08-31T05:38:21.911382+00:00"
             }
           ],
           "summary": {
             "selections": 5,
-            "settled": 0,
+            "settled": 5,
             "wins": 0,
-            "losses": 0,
+            "losses": 5,
             "pushes": 0,
-            "hit_rate": null,
-            "net_units": 0,
-            "roi": null
+            "hit_rate": 0.0,
+            "net_units": -5.0,
+            "roi": -1.0
           }
         }
       },
       "eligible_candidates": 5
+    },
+    {
+      "schema_version": 2,
+      "snapshot_id": "2026-08-30_2017",
+      "slate_date": "2026-08-30",
+      "checkpoint_et": "20:17",
+      "scheduled_at_et": "2026-08-30T20:17:00-04:00",
+      "observed_at": "2026-08-31T05:38:21.911382+00:00",
+      "observed_at_et": "2026-08-31T01:38:21.911382-04:00",
+      "status": "shared_odds_not_available_at_checkpoint",
+      "sources": {
+        "mlb_hr_edge": {
+          "source": "MLB HR Edge",
+          "source_url": "data/shared-odds/latest.json",
+          "delivery": "qstash-vercel-redis",
+          "source_date": "2026-08-30",
+          "date_matches": true,
+          "as_of": "2026-08-31T00:17:00.000Z",
+          "status": "pending",
+          "generated_at": "2026-08-31T00:17:01.583Z",
+          "latest_ingest_at": "2026-08-31T00:17:01.583Z",
+          "provider_call_id": "2026-08-30:2017:2026-08-31T00:17:01.583Z:d8db0af5ad6a",
+          "provider_response_sha256": "d8db0af5ad6a2383f133202670d908a438ff7c58814a0f980d74d10dc416a81a",
+          "archived_call_count": 1,
+          "quote_count": 0,
+          "all_available_quote_count": 60,
+          "excluded_live_or_post_start_quote_count": 60,
+          "books": [
+            "FanDuel",
+            "DraftKings",
+            "BetMGM"
+          ],
+          "row_count": 0,
+          "mlbam_ids_hydrated": 0,
+          "mlbam_ids_added": 0,
+          "unresolved_player_names": [],
+          "compatibility_fallback": "exact_upstash_checkpoint_cache",
+          "checkpoint_at": "2026-08-30T20:17:00-04:00"
+        }
+      },
+      "diagnostics": [],
+      "portfolios": {}
     }
   ]
 }
