@@ -1,14 +1,15 @@
 {
-  "schema_version": 1,
+  "schema_version": 4,
   "kind": "top_100_odds_capture",
   "slate_date": "2026-09-01",
   "checkpoint": "1717",
-  "captured_at": "2026-09-01T23:18:41.807759+00:00",
-  "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
-  "top100_generated_at": "2026-09-01T23:18:41.636892+00:00",
+  "captured_at": "2026-09-01T21:17:04.458Z",
+  "captured_at_et": null,
+  "top100_generated_at": "2026-09-01T08:05:01.682Z",
   "top100_rows": 100,
-  "priced_rows": 61,
-  "odds_coverage": 0.61,
+  "priced_rows": 59,
+  "pregame_priced_rows": 59,
+  "odds_coverage": 0.59,
   "source": {
     "name": "MLB HR Edge",
     "status": "ready",
@@ -16,18 +17,23 @@
     "same_slate": true,
     "generated_at": "2026-09-01T21:17:04.458Z",
     "row_count": 268,
+    "quote_count": 744,
     "books": [
       "FanDuel",
       "DraftKings",
       "BetMGM"
-    ]
+    ],
+    "delivery": "qstash-vercel-redis",
+    "provider_call_id": "2026-09-01:1717:2026-09-01T21:17:04.458Z:8726a136fe92",
+    "provider_response_sha256": "8726a136fe92baa747de2d3bb572c6330445b69f2b19826c4a38803eb922e028",
+    "as_of": "2026-09-01T21:17:00.000Z"
   },
   "entries": [
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 1,
       "player": "Sal Stewart",
       "mlbam_id": 701398,
@@ -43,6 +49,7 @@
       "game_pk": null,
       "game_start_at": "2026-09-01T22:40:00.000Z",
       "matchup": "SD @ CIN",
+      "game_started_at_checkpoint": false,
       "all_prices": [
         {
           "book": "DraftKings",
@@ -82,6 +89,9 @@
         }
       ],
       "best_book": "DraftKings",
+      "best_books": [
+        "DraftKings"
+      ],
       "best_odds": 381,
       "best_odds_text": "+381",
       "best_price_captured_at": "2026-09-01T21:08:57.527Z",
@@ -91,8 +101,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 2,
       "player": "Carson Kelly",
       "mlbam_id": 608348,
@@ -108,12 +118,13 @@
       "game_pk": null,
       "game_start_at": "2026-09-01T23:40:00.000Z",
       "matchup": "MIL @ CHC",
+      "game_started_at_checkpoint": false,
       "all_prices": [
         {
-          "book": "FanDuel",
-          "book_id": "fanduel",
-          "odds": 570,
-          "captured_at": "2026-09-01T21:09:19.149Z",
+          "book": "DraftKings",
+          "book_id": "draftkings",
+          "odds": 580,
+          "captured_at": "2026-09-01T21:08:57.527Z",
           "source": "qstash-vercel-sportsgameodds",
           "source_event_id": "8CHFF3AD15ySXfiygC3B",
           "source_odd_id": "batting_homeRuns-CARSON_KELLY_1_MLB-game-yn-yes",
@@ -122,10 +133,10 @@
           "url": null
         },
         {
-          "book": "DraftKings",
-          "book_id": "draftkings",
-          "odds": 580,
-          "captured_at": "2026-09-01T21:08:57.527Z",
+          "book": "FanDuel",
+          "book_id": "fanduel",
+          "odds": 570,
+          "captured_at": "2026-09-01T21:09:19.149Z",
           "source": "qstash-vercel-sportsgameodds",
           "source_event_id": "8CHFF3AD15ySXfiygC3B",
           "source_odd_id": "batting_homeRuns-CARSON_KELLY_1_MLB-game-yn-yes",
@@ -147,6 +158,9 @@
         }
       ],
       "best_book": "DraftKings",
+      "best_books": [
+        "DraftKings"
+      ],
       "best_odds": 580,
       "best_odds_text": "+580",
       "best_price_captured_at": "2026-09-01T21:08:57.527Z",
@@ -156,8 +170,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 3,
       "player": "Cal Raleigh",
       "mlbam_id": 663728,
@@ -173,6 +187,7 @@
       "game_pk": null,
       "game_start_at": "2026-09-01T22:45:00.000Z",
       "matchup": "SEA @ BOS",
+      "game_started_at_checkpoint": false,
       "all_prices": [
         {
           "book": "DraftKings",
@@ -212,6 +227,9 @@
         }
       ],
       "best_book": "DraftKings",
+      "best_books": [
+        "DraftKings"
+      ],
       "best_odds": 377,
       "best_odds_text": "+377",
       "best_price_captured_at": "2026-09-01T21:08:57.527Z",
@@ -221,8 +239,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 4,
       "player": "Brian Serven",
       "mlbam_id": 661531,
@@ -238,8 +256,10 @@
       "game_pk": null,
       "game_start_at": null,
       "matchup": null,
+      "game_started_at_checkpoint": false,
       "all_prices": [],
       "best_book": null,
+      "best_books": [],
       "best_odds": null,
       "best_odds_text": null,
       "best_price_captured_at": null,
@@ -249,8 +269,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 5,
       "player": "Heriberto Hernández",
       "mlbam_id": 681715,
@@ -266,12 +286,13 @@
       "game_pk": null,
       "game_start_at": "2026-09-01T23:40:00.000Z",
       "matchup": "MIA @ KC",
+      "game_started_at_checkpoint": false,
       "all_prices": [
         {
-          "book": "FanDuel",
-          "book_id": "fanduel",
-          "odds": 370,
-          "captured_at": "2026-09-01T21:09:19.149Z",
+          "book": "DraftKings",
+          "book_id": "draftkings",
+          "odds": 406,
+          "captured_at": "2026-09-01T21:08:57.527Z",
           "source": "qstash-vercel-sportsgameodds",
           "source_event_id": "BMcuBbTFD1HAkrYTRpEe",
           "source_odd_id": "batting_homeRuns-HERIBERTO_HERNANDEZ_1_MLB-game-yn-yes",
@@ -280,10 +301,10 @@
           "url": null
         },
         {
-          "book": "DraftKings",
-          "book_id": "draftkings",
-          "odds": 406,
-          "captured_at": "2026-09-01T21:08:57.527Z",
+          "book": "FanDuel",
+          "book_id": "fanduel",
+          "odds": 370,
+          "captured_at": "2026-09-01T21:09:19.149Z",
           "source": "qstash-vercel-sportsgameodds",
           "source_event_id": "BMcuBbTFD1HAkrYTRpEe",
           "source_odd_id": "batting_homeRuns-HERIBERTO_HERNANDEZ_1_MLB-game-yn-yes",
@@ -305,6 +326,9 @@
         }
       ],
       "best_book": "DraftKings",
+      "best_books": [
+        "DraftKings"
+      ],
       "best_odds": 406,
       "best_odds_text": "+406",
       "best_price_captured_at": "2026-09-01T21:08:57.527Z",
@@ -314,8 +338,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 6,
       "player": "Daylen Lile",
       "mlbam_id": 695734,
@@ -331,7 +355,20 @@
       "game_pk": null,
       "game_start_at": "2026-09-01T22:45:00.000Z",
       "matchup": "ATL @ WSH",
+      "game_started_at_checkpoint": false,
       "all_prices": [
+        {
+          "book": "BetMGM",
+          "book_id": "betmgm",
+          "odds": 475,
+          "captured_at": "2026-09-01T21:09:07.057Z",
+          "source": "qstash-vercel-sportsgameodds",
+          "source_event_id": "8uTRSBEyYEfZ8tMMbOGn",
+          "source_odd_id": "batting_homeRuns-DAYLEN_LILE_1_MLB-game-yn-yes",
+          "provider_call_id": "2026-09-01:1717:2026-09-01T21:17:04.458Z:8726a136fe92",
+          "verified": true,
+          "url": null
+        },
         {
           "book": "DraftKings",
           "book_id": "draftkings",
@@ -355,21 +392,12 @@
           "provider_call_id": "2026-09-01:1717:2026-09-01T21:17:04.458Z:8726a136fe92",
           "verified": true,
           "url": null
-        },
-        {
-          "book": "BetMGM",
-          "book_id": "betmgm",
-          "odds": 475,
-          "captured_at": "2026-09-01T21:09:07.057Z",
-          "source": "qstash-vercel-sportsgameodds",
-          "source_event_id": "8uTRSBEyYEfZ8tMMbOGn",
-          "source_odd_id": "batting_homeRuns-DAYLEN_LILE_1_MLB-game-yn-yes",
-          "provider_call_id": "2026-09-01:1717:2026-09-01T21:17:04.458Z:8726a136fe92",
-          "verified": true,
-          "url": null
         }
       ],
       "best_book": "BetMGM",
+      "best_books": [
+        "BetMGM"
+      ],
       "best_odds": 475,
       "best_odds_text": "+475",
       "best_price_captured_at": "2026-09-01T21:09:07.057Z",
@@ -379,8 +407,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 7,
       "player": "Jeremy Peña",
       "mlbam_id": 665161,
@@ -396,6 +424,7 @@
       "game_pk": null,
       "game_start_at": "2026-09-02T00:10:00.000Z",
       "matchup": "CWS @ HOU",
+      "game_started_at_checkpoint": false,
       "all_prices": [
         {
           "book": "FanDuel",
@@ -435,6 +464,9 @@
         }
       ],
       "best_book": "FanDuel",
+      "best_books": [
+        "FanDuel"
+      ],
       "best_odds": 540,
       "best_odds_text": "+540",
       "best_price_captured_at": "2026-09-01T21:09:19.149Z",
@@ -444,8 +476,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 8,
       "player": "Michael Conforto",
       "mlbam_id": 624424,
@@ -461,8 +493,10 @@
       "game_pk": null,
       "game_start_at": null,
       "matchup": null,
+      "game_started_at_checkpoint": false,
       "all_prices": [],
       "best_book": null,
+      "best_books": [],
       "best_odds": null,
       "best_odds_text": null,
       "best_price_captured_at": null,
@@ -472,8 +506,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 9,
       "player": "Nathan Lukes",
       "mlbam_id": 664770,
@@ -489,12 +523,13 @@
       "game_pk": null,
       "game_start_at": "2026-09-01T22:40:00.000Z",
       "matchup": "TOR @ CLE",
+      "game_started_at_checkpoint": false,
       "all_prices": [
         {
-          "book": "FanDuel",
-          "book_id": "fanduel",
+          "book": "DraftKings",
+          "book_id": "draftkings",
           "odds": 1060,
-          "captured_at": "2026-09-01T21:09:19.149Z",
+          "captured_at": "2026-09-01T21:08:57.527Z",
           "source": "qstash-vercel-sportsgameodds",
           "source_event_id": "Thn5T2znEfkaMHb2EgBc",
           "source_odd_id": "batting_homeRuns-NATHAN_LUKES_1_MLB-game-yn-yes",
@@ -503,10 +538,10 @@
           "url": null
         },
         {
-          "book": "DraftKings",
-          "book_id": "draftkings",
+          "book": "FanDuel",
+          "book_id": "fanduel",
           "odds": 1060,
-          "captured_at": "2026-09-01T21:08:57.527Z",
+          "captured_at": "2026-09-01T21:09:19.149Z",
           "source": "qstash-vercel-sportsgameodds",
           "source_event_id": "Thn5T2znEfkaMHb2EgBc",
           "source_odd_id": "batting_homeRuns-NATHAN_LUKES_1_MLB-game-yn-yes",
@@ -527,18 +562,22 @@
           "url": null
         }
       ],
-      "best_book": "FanDuel",
+      "best_book": "DraftKings",
+      "best_books": [
+        "DraftKings",
+        "FanDuel"
+      ],
       "best_odds": 1060,
       "best_odds_text": "+1060",
-      "best_price_captured_at": "2026-09-01T21:09:19.149Z",
+      "best_price_captured_at": "2026-09-01T21:08:57.527Z",
       "source_event_id": "Thn5T2znEfkaMHb2EgBc",
       "source_odd_id": "batting_homeRuns-NATHAN_LUKES_1_MLB-game-yn-yes"
     },
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 10,
       "player": "Pete Crow-Armstrong",
       "mlbam_id": 691718,
@@ -552,58 +591,23 @@
       "games_available": 15,
       "sample_status": "Established",
       "game_pk": null,
-      "game_start_at": "2026-09-01T23:40:00.000Z",
-      "matchup": "MIL @ CHC",
-      "all_prices": [
-        {
-          "book": "FanDuel",
-          "book_id": "fanduel",
-          "odds": 285,
-          "captured_at": "2026-09-01T21:09:19.149Z",
-          "source": "qstash-vercel-sportsgameodds",
-          "source_event_id": "8CHFF3AD15ySXfiygC3B",
-          "source_odd_id": "batting_homeRuns-PETE_CROWARMSTRONG_1_MLB-game-yn-yes",
-          "provider_call_id": "2026-09-01:1717:2026-09-01T21:17:04.458Z:8726a136fe92",
-          "verified": true,
-          "url": null
-        },
-        {
-          "book": "DraftKings",
-          "book_id": "draftkings",
-          "odds": 280,
-          "captured_at": "2026-09-01T21:08:57.527Z",
-          "source": "qstash-vercel-sportsgameodds",
-          "source_event_id": "8CHFF3AD15ySXfiygC3B",
-          "source_odd_id": "batting_homeRuns-PETE_CROWARMSTRONG_1_MLB-game-yn-yes",
-          "provider_call_id": "2026-09-01:1717:2026-09-01T21:17:04.458Z:8726a136fe92",
-          "verified": true,
-          "url": null
-        },
-        {
-          "book": "BetMGM",
-          "book_id": "betmgm",
-          "odds": 210,
-          "captured_at": "2026-09-01T21:09:09.533Z",
-          "source": "qstash-vercel-sportsgameodds",
-          "source_event_id": "8CHFF3AD15ySXfiygC3B",
-          "source_odd_id": "batting_homeRuns-PETE_CROWARMSTRONG_1_MLB-game-yn-yes",
-          "provider_call_id": "2026-09-01:1717:2026-09-01T21:17:04.458Z:8726a136fe92",
-          "verified": true,
-          "url": null
-        }
-      ],
-      "best_book": "FanDuel",
-      "best_odds": 285,
-      "best_odds_text": "+285",
-      "best_price_captured_at": "2026-09-01T21:09:19.149Z",
-      "source_event_id": "8CHFF3AD15ySXfiygC3B",
-      "source_odd_id": "batting_homeRuns-PETE_CROWARMSTRONG_1_MLB-game-yn-yes"
+      "game_start_at": null,
+      "matchup": null,
+      "game_started_at_checkpoint": false,
+      "all_prices": [],
+      "best_book": null,
+      "best_books": [],
+      "best_odds": null,
+      "best_odds_text": null,
+      "best_price_captured_at": null,
+      "source_event_id": null,
+      "source_odd_id": null
     },
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 11,
       "player": "Mickey Gasper",
       "mlbam_id": 681508,
@@ -619,12 +623,13 @@
       "game_pk": null,
       "game_start_at": "2026-09-01T22:45:00.000Z",
       "matchup": "SEA @ BOS",
+      "game_started_at_checkpoint": false,
       "all_prices": [
         {
-          "book": "DraftKings",
-          "book_id": "draftkings",
-          "odds": 650,
-          "captured_at": "2026-09-01T21:08:57.527Z",
+          "book": "BetMGM",
+          "book_id": "betmgm",
+          "odds": 725,
+          "captured_at": "2026-09-01T21:09:08.218Z",
           "source": "qstash-vercel-sportsgameodds",
           "source_event_id": "Ri2TFbKH9xyQHAzcUPvH",
           "source_odd_id": "batting_homeRuns-MICKEY_GASPER_1_MLB-game-yn-yes",
@@ -633,10 +638,10 @@
           "url": null
         },
         {
-          "book": "BetMGM",
-          "book_id": "betmgm",
-          "odds": 725,
-          "captured_at": "2026-09-01T21:09:08.218Z",
+          "book": "DraftKings",
+          "book_id": "draftkings",
+          "odds": 650,
+          "captured_at": "2026-09-01T21:08:57.527Z",
           "source": "qstash-vercel-sportsgameodds",
           "source_event_id": "Ri2TFbKH9xyQHAzcUPvH",
           "source_odd_id": "batting_homeRuns-MICKEY_GASPER_1_MLB-game-yn-yes",
@@ -658,6 +663,9 @@
         }
       ],
       "best_book": "BetMGM",
+      "best_books": [
+        "BetMGM"
+      ],
       "best_odds": 725,
       "best_odds_text": "+725",
       "best_price_captured_at": "2026-09-01T21:09:08.218Z",
@@ -667,8 +675,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 12,
       "player": "Brooks Lee",
       "mlbam_id": 686797,
@@ -684,12 +692,13 @@
       "game_pk": null,
       "game_start_at": "2026-09-01T23:40:00.000Z",
       "matchup": "DET @ MIN",
+      "game_started_at_checkpoint": false,
       "all_prices": [
         {
-          "book": "DraftKings",
-          "book_id": "draftkings",
-          "odds": 557,
-          "captured_at": "2026-09-01T21:08:57.527Z",
+          "book": "FanDuel",
+          "book_id": "fanduel",
+          "odds": 570,
+          "captured_at": "2026-09-01T21:09:19.149Z",
           "source": "qstash-vercel-sportsgameodds",
           "source_event_id": "t9LQhHHDrrd01pE1Zuq2",
           "source_odd_id": "batting_homeRuns-BROOKS_LEE_1_MLB-game-yn-yes",
@@ -698,10 +707,10 @@
           "url": null
         },
         {
-          "book": "FanDuel",
-          "book_id": "fanduel",
-          "odds": 570,
-          "captured_at": "2026-09-01T21:09:19.149Z",
+          "book": "DraftKings",
+          "book_id": "draftkings",
+          "odds": 557,
+          "captured_at": "2026-09-01T21:08:57.527Z",
           "source": "qstash-vercel-sportsgameodds",
           "source_event_id": "t9LQhHHDrrd01pE1Zuq2",
           "source_odd_id": "batting_homeRuns-BROOKS_LEE_1_MLB-game-yn-yes",
@@ -723,6 +732,9 @@
         }
       ],
       "best_book": "FanDuel",
+      "best_books": [
+        "FanDuel"
+      ],
       "best_odds": 570,
       "best_odds_text": "+570",
       "best_price_captured_at": "2026-09-01T21:09:19.149Z",
@@ -732,8 +744,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 13,
       "player": "Mark Vientos",
       "mlbam_id": 668901,
@@ -749,8 +761,10 @@
       "game_pk": null,
       "game_start_at": null,
       "matchup": null,
+      "game_started_at_checkpoint": false,
       "all_prices": [],
       "best_book": null,
+      "best_books": [],
       "best_odds": null,
       "best_odds_text": null,
       "best_price_captured_at": null,
@@ -760,8 +774,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 14,
       "player": "Alex Bregman",
       "mlbam_id": 608324,
@@ -777,12 +791,13 @@
       "game_pk": null,
       "game_start_at": "2026-09-01T23:40:00.000Z",
       "matchup": "MIL @ CHC",
+      "game_started_at_checkpoint": false,
       "all_prices": [
         {
-          "book": "FanDuel",
-          "book_id": "fanduel",
-          "odds": 470,
-          "captured_at": "2026-09-01T21:09:19.149Z",
+          "book": "DraftKings",
+          "book_id": "draftkings",
+          "odds": 487,
+          "captured_at": "2026-09-01T21:08:57.527Z",
           "source": "qstash-vercel-sportsgameodds",
           "source_event_id": "8CHFF3AD15ySXfiygC3B",
           "source_odd_id": "batting_homeRuns-ALEX_BREGMAN_1_MLB-game-yn-yes",
@@ -791,10 +806,10 @@
           "url": null
         },
         {
-          "book": "DraftKings",
-          "book_id": "draftkings",
-          "odds": 487,
-          "captured_at": "2026-09-01T21:08:57.527Z",
+          "book": "FanDuel",
+          "book_id": "fanduel",
+          "odds": 470,
+          "captured_at": "2026-09-01T21:09:19.149Z",
           "source": "qstash-vercel-sportsgameodds",
           "source_event_id": "8CHFF3AD15ySXfiygC3B",
           "source_odd_id": "batting_homeRuns-ALEX_BREGMAN_1_MLB-game-yn-yes",
@@ -816,6 +831,9 @@
         }
       ],
       "best_book": "DraftKings",
+      "best_books": [
+        "DraftKings"
+      ],
       "best_odds": 487,
       "best_odds_text": "+487",
       "best_price_captured_at": "2026-09-01T21:08:57.527Z",
@@ -825,8 +843,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 15,
       "player": "Casey Schmitt",
       "mlbam_id": 669477,
@@ -842,8 +860,10 @@
       "game_pk": null,
       "game_start_at": null,
       "matchup": null,
+      "game_started_at_checkpoint": false,
       "all_prices": [],
       "best_book": null,
+      "best_books": [],
       "best_odds": null,
       "best_odds_text": null,
       "best_price_captured_at": null,
@@ -853,8 +873,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 16,
       "player": "Coby Mayo",
       "mlbam_id": 691723,
@@ -870,12 +890,13 @@
       "game_pk": null,
       "game_start_at": "2026-09-02T00:40:00.000Z",
       "matchup": "BAL @ COL",
+      "game_started_at_checkpoint": false,
       "all_prices": [
         {
-          "book": "FanDuel",
-          "book_id": "fanduel",
-          "odds": 310,
-          "captured_at": "2026-09-01T21:09:19.149Z",
+          "book": "BetMGM",
+          "book_id": "betmgm",
+          "odds": 400,
+          "captured_at": "2026-09-01T21:09:54.649Z",
           "source": "qstash-vercel-sportsgameodds",
           "source_event_id": "G5DkzNoLWs1F5TD5BKH3",
           "source_odd_id": "batting_homeRuns-COBY_MAYO_1_MLB-game-yn-yes",
@@ -896,10 +917,10 @@
           "url": null
         },
         {
-          "book": "BetMGM",
-          "book_id": "betmgm",
-          "odds": 400,
-          "captured_at": "2026-09-01T21:09:54.649Z",
+          "book": "FanDuel",
+          "book_id": "fanduel",
+          "odds": 310,
+          "captured_at": "2026-09-01T21:09:19.149Z",
           "source": "qstash-vercel-sportsgameodds",
           "source_event_id": "G5DkzNoLWs1F5TD5BKH3",
           "source_odd_id": "batting_homeRuns-COBY_MAYO_1_MLB-game-yn-yes",
@@ -909,6 +930,9 @@
         }
       ],
       "best_book": "BetMGM",
+      "best_books": [
+        "BetMGM"
+      ],
       "best_odds": 400,
       "best_odds_text": "+400",
       "best_price_captured_at": "2026-09-01T21:09:54.649Z",
@@ -918,8 +942,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 17,
       "player": "Endy Rodríguez",
       "mlbam_id": 682848,
@@ -935,8 +959,10 @@
       "game_pk": null,
       "game_start_at": null,
       "matchup": null,
+      "game_started_at_checkpoint": false,
       "all_prices": [],
       "best_book": null,
+      "best_books": [],
       "best_odds": null,
       "best_odds_text": null,
       "best_price_captured_at": null,
@@ -946,8 +972,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 18,
       "player": "Kazuma Okamoto",
       "mlbam_id": 672960,
@@ -963,6 +989,7 @@
       "game_pk": null,
       "game_start_at": "2026-09-01T22:40:00.000Z",
       "matchup": "TOR @ CLE",
+      "game_started_at_checkpoint": false,
       "all_prices": [
         {
           "book": "FanDuel",
@@ -1002,6 +1029,9 @@
         }
       ],
       "best_book": "FanDuel",
+      "best_books": [
+        "FanDuel"
+      ],
       "best_odds": 470,
       "best_odds_text": "+470",
       "best_price_captured_at": "2026-09-01T21:09:19.149Z",
@@ -1011,8 +1041,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 19,
       "player": "Héctor Rodríguez",
       "mlbam_id": 699302,
@@ -1028,8 +1058,10 @@
       "game_pk": null,
       "game_start_at": null,
       "matchup": null,
+      "game_started_at_checkpoint": false,
       "all_prices": [],
       "best_book": null,
+      "best_books": [],
       "best_odds": null,
       "best_odds_text": null,
       "best_price_captured_at": null,
@@ -1039,8 +1071,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 20,
       "player": "Brent Rooker",
       "mlbam_id": 667670,
@@ -1056,8 +1088,10 @@
       "game_pk": null,
       "game_start_at": null,
       "matchup": null,
+      "game_started_at_checkpoint": false,
       "all_prices": [],
       "best_book": null,
+      "best_books": [],
       "best_odds": null,
       "best_odds_text": null,
       "best_price_captured_at": null,
@@ -1067,8 +1101,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 21,
       "player": "Carter Jensen",
       "mlbam_id": 695600,
@@ -1084,12 +1118,13 @@
       "game_pk": null,
       "game_start_at": "2026-09-01T23:40:00.000Z",
       "matchup": "MIA @ KC",
+      "game_started_at_checkpoint": false,
       "all_prices": [
         {
-          "book": "FanDuel",
-          "book_id": "fanduel",
-          "odds": 410,
-          "captured_at": "2026-09-01T21:09:19.149Z",
+          "book": "DraftKings",
+          "book_id": "draftkings",
+          "odds": 415,
+          "captured_at": "2026-09-01T21:08:57.527Z",
           "source": "qstash-vercel-sportsgameodds",
           "source_event_id": "BMcuBbTFD1HAkrYTRpEe",
           "source_odd_id": "batting_homeRuns-CARTER_JENSEN_1_MLB-game-yn-yes",
@@ -1098,10 +1133,10 @@
           "url": null
         },
         {
-          "book": "DraftKings",
-          "book_id": "draftkings",
-          "odds": 415,
-          "captured_at": "2026-09-01T21:08:57.527Z",
+          "book": "FanDuel",
+          "book_id": "fanduel",
+          "odds": 410,
+          "captured_at": "2026-09-01T21:09:19.149Z",
           "source": "qstash-vercel-sportsgameodds",
           "source_event_id": "BMcuBbTFD1HAkrYTRpEe",
           "source_odd_id": "batting_homeRuns-CARTER_JENSEN_1_MLB-game-yn-yes",
@@ -1123,6 +1158,9 @@
         }
       ],
       "best_book": "DraftKings",
+      "best_books": [
+        "DraftKings"
+      ],
       "best_odds": 415,
       "best_odds_text": "+415",
       "best_price_captured_at": "2026-09-01T21:08:57.527Z",
@@ -1132,8 +1170,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 22,
       "player": "Colson Montgomery",
       "mlbam_id": 695657,
@@ -1149,12 +1187,13 @@
       "game_pk": null,
       "game_start_at": "2026-09-02T00:10:00.000Z",
       "matchup": "CWS @ HOU",
+      "game_started_at_checkpoint": false,
       "all_prices": [
         {
-          "book": "FanDuel",
-          "book_id": "fanduel",
-          "odds": 330,
-          "captured_at": "2026-09-01T21:09:19.149Z",
+          "book": "DraftKings",
+          "book_id": "draftkings",
+          "odds": 350,
+          "captured_at": "2026-09-01T21:08:57.527Z",
           "source": "qstash-vercel-sportsgameodds",
           "source_event_id": "zYJDf0ebLr8WAUOoamIn",
           "source_odd_id": "batting_homeRuns-COLSON_MONTGOMERY_1_MLB-game-yn-yes",
@@ -1163,10 +1202,10 @@
           "url": null
         },
         {
-          "book": "DraftKings",
-          "book_id": "draftkings",
-          "odds": 350,
-          "captured_at": "2026-09-01T21:08:57.527Z",
+          "book": "FanDuel",
+          "book_id": "fanduel",
+          "odds": 330,
+          "captured_at": "2026-09-01T21:09:19.149Z",
           "source": "qstash-vercel-sportsgameodds",
           "source_event_id": "zYJDf0ebLr8WAUOoamIn",
           "source_odd_id": "batting_homeRuns-COLSON_MONTGOMERY_1_MLB-game-yn-yes",
@@ -1188,6 +1227,9 @@
         }
       ],
       "best_book": "DraftKings",
+      "best_books": [
+        "DraftKings"
+      ],
       "best_odds": 350,
       "best_odds_text": "+350",
       "best_price_captured_at": "2026-09-01T21:08:57.527Z",
@@ -1197,8 +1239,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 23,
       "player": "Danny Jansen",
       "mlbam_id": 643376,
@@ -1214,6 +1256,7 @@
       "game_pk": null,
       "game_start_at": "2026-09-02T00:05:00.000Z",
       "matchup": "OAK @ TEX",
+      "game_started_at_checkpoint": false,
       "all_prices": [
         {
           "book": "FanDuel",
@@ -1229,6 +1272,9 @@
         }
       ],
       "best_book": "FanDuel",
+      "best_books": [
+        "FanDuel"
+      ],
       "best_odds": 760,
       "best_odds_text": "+760",
       "best_price_captured_at": "2026-09-01T21:10:03.801Z",
@@ -1238,8 +1284,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 24,
       "player": "Justin Foscue",
       "mlbam_id": 679822,
@@ -1255,6 +1301,7 @@
       "game_pk": null,
       "game_start_at": "2026-09-02T00:05:00.000Z",
       "matchup": "OAK @ TEX",
+      "game_started_at_checkpoint": false,
       "all_prices": [
         {
           "book": "FanDuel",
@@ -1282,6 +1329,9 @@
         }
       ],
       "best_book": "FanDuel",
+      "best_books": [
+        "FanDuel"
+      ],
       "best_odds": 710,
       "best_odds_text": "+710",
       "best_price_captured_at": "2026-09-01T21:09:19.149Z",
@@ -1291,8 +1341,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 25,
       "player": "Kody Clemens",
       "mlbam_id": 665019,
@@ -1308,12 +1358,13 @@
       "game_pk": null,
       "game_start_at": "2026-09-01T23:40:00.000Z",
       "matchup": "DET @ MIN",
+      "game_started_at_checkpoint": false,
       "all_prices": [
         {
-          "book": "DraftKings",
-          "book_id": "draftkings",
-          "odds": 413,
-          "captured_at": "2026-09-01T21:08:57.527Z",
+          "book": "FanDuel",
+          "book_id": "fanduel",
+          "odds": 420,
+          "captured_at": "2026-09-01T21:09:19.149Z",
           "source": "qstash-vercel-sportsgameodds",
           "source_event_id": "t9LQhHHDrrd01pE1Zuq2",
           "source_odd_id": "batting_homeRuns-KODY_CLEMENS_1_MLB-game-yn-yes",
@@ -1322,10 +1373,10 @@
           "url": null
         },
         {
-          "book": "FanDuel",
-          "book_id": "fanduel",
-          "odds": 420,
-          "captured_at": "2026-09-01T21:09:19.149Z",
+          "book": "DraftKings",
+          "book_id": "draftkings",
+          "odds": 413,
+          "captured_at": "2026-09-01T21:08:57.527Z",
           "source": "qstash-vercel-sportsgameodds",
           "source_event_id": "t9LQhHHDrrd01pE1Zuq2",
           "source_odd_id": "batting_homeRuns-KODY_CLEMENS_1_MLB-game-yn-yes",
@@ -1347,6 +1398,9 @@
         }
       ],
       "best_book": "FanDuel",
+      "best_books": [
+        "FanDuel"
+      ],
       "best_odds": 420,
       "best_odds_text": "+420",
       "best_price_captured_at": "2026-09-01T21:09:19.149Z",
@@ -1356,8 +1410,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 26,
       "player": "Kyle Manzardo",
       "mlbam_id": 700932,
@@ -1373,8 +1427,10 @@
       "game_pk": null,
       "game_start_at": null,
       "matchup": null,
+      "game_started_at_checkpoint": false,
       "all_prices": [],
       "best_book": null,
+      "best_books": [],
       "best_odds": null,
       "best_odds_text": null,
       "best_price_captured_at": null,
@@ -1384,8 +1440,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 27,
       "player": "Lars Nootbaar",
       "mlbam_id": 663457,
@@ -1401,8 +1457,10 @@
       "game_pk": null,
       "game_start_at": null,
       "matchup": null,
+      "game_started_at_checkpoint": false,
       "all_prices": [],
       "best_book": null,
+      "best_books": [],
       "best_odds": null,
       "best_odds_text": null,
       "best_price_captured_at": null,
@@ -1412,8 +1470,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 28,
       "player": "Michael Harris II",
       "mlbam_id": 671739,
@@ -1429,6 +1487,7 @@
       "game_pk": null,
       "game_start_at": "2026-09-01T22:45:00.000Z",
       "matchup": "ATL @ WSH",
+      "game_started_at_checkpoint": false,
       "all_prices": [
         {
           "book": "DraftKings",
@@ -1468,6 +1527,9 @@
         }
       ],
       "best_book": "DraftKings",
+      "best_books": [
+        "DraftKings"
+      ],
       "best_odds": 363,
       "best_odds_text": "+363",
       "best_price_captured_at": "2026-09-01T21:08:57.527Z",
@@ -1477,8 +1539,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 29,
       "player": "Seiya Suzuki",
       "mlbam_id": 673548,
@@ -1494,6 +1556,7 @@
       "game_pk": null,
       "game_start_at": "2026-09-01T23:40:00.000Z",
       "matchup": "MIL @ CHC",
+      "game_started_at_checkpoint": false,
       "all_prices": [
         {
           "book": "FanDuel",
@@ -1533,6 +1596,9 @@
         }
       ],
       "best_book": "FanDuel",
+      "best_books": [
+        "FanDuel"
+      ],
       "best_odds": 300,
       "best_odds_text": "+300",
       "best_price_captured_at": "2026-09-01T21:09:19.149Z",
@@ -1542,8 +1608,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 30,
       "player": "Tyler Stephenson",
       "mlbam_id": 663886,
@@ -1559,6 +1625,7 @@
       "game_pk": null,
       "game_start_at": "2026-09-01T22:40:00.000Z",
       "matchup": "SD @ CIN",
+      "game_started_at_checkpoint": false,
       "all_prices": [
         {
           "book": "FanDuel",
@@ -1574,6 +1641,9 @@
         }
       ],
       "best_book": "FanDuel",
+      "best_books": [
+        "FanDuel"
+      ],
       "best_odds": 470,
       "best_odds_text": "+470",
       "best_price_captured_at": "2026-09-01T21:10:03.801Z",
@@ -1583,8 +1653,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 31,
       "player": "Willy Adames",
       "mlbam_id": 642715,
@@ -1600,8 +1670,10 @@
       "game_pk": null,
       "game_start_at": null,
       "matchup": null,
+      "game_started_at_checkpoint": false,
       "all_prices": [],
       "best_book": null,
+      "best_books": [],
       "best_odds": null,
       "best_odds_text": null,
       "best_price_captured_at": null,
@@ -1611,8 +1683,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 32,
       "player": "Jackson Chourio",
       "mlbam_id": 694192,
@@ -1628,6 +1700,7 @@
       "game_pk": null,
       "game_start_at": "2026-09-01T23:40:00.000Z",
       "matchup": "MIL @ CHC",
+      "game_started_at_checkpoint": false,
       "all_prices": [
         {
           "book": "FanDuel",
@@ -1667,6 +1740,9 @@
         }
       ],
       "best_book": "FanDuel",
+      "best_books": [
+        "FanDuel"
+      ],
       "best_odds": 320,
       "best_odds_text": "+320",
       "best_price_captured_at": "2026-09-01T21:09:19.149Z",
@@ -1676,8 +1752,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 33,
       "player": "Edmundo Sosa",
       "mlbam_id": 624641,
@@ -1693,6 +1769,7 @@
       "game_pk": null,
       "game_start_at": "2026-09-02T01:40:00.000Z",
       "matchup": "PHI @ ARI",
+      "game_started_at_checkpoint": false,
       "all_prices": [
         {
           "book": "FanDuel",
@@ -1720,6 +1797,9 @@
         }
       ],
       "best_book": "FanDuel",
+      "best_books": [
+        "FanDuel"
+      ],
       "best_odds": 920,
       "best_odds_text": "+920",
       "best_price_captured_at": "2026-09-01T21:09:19.149Z",
@@ -1729,8 +1809,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 34,
       "player": "Esmerlyn Valdez",
       "mlbam_id": 699013,
@@ -1746,12 +1826,13 @@
       "game_pk": null,
       "game_start_at": "2026-09-01T22:40:00.000Z",
       "matchup": "SF @ PIT",
+      "game_started_at_checkpoint": false,
       "all_prices": [
         {
-          "book": "FanDuel",
-          "book_id": "fanduel",
-          "odds": 600,
-          "captured_at": "2026-09-01T21:09:19.149Z",
+          "book": "DraftKings",
+          "book_id": "draftkings",
+          "odds": 660,
+          "captured_at": "2026-09-01T21:08:57.527Z",
           "source": "qstash-vercel-sportsgameodds",
           "source_event_id": "hWDxBS7Sp16rBwaR3Gv6",
           "source_odd_id": "batting_homeRuns-ESMERLYN_VALDEZ_1_MLB-game-yn-yes",
@@ -1760,10 +1841,10 @@
           "url": null
         },
         {
-          "book": "DraftKings",
-          "book_id": "draftkings",
-          "odds": 660,
-          "captured_at": "2026-09-01T21:08:57.527Z",
+          "book": "FanDuel",
+          "book_id": "fanduel",
+          "odds": 600,
+          "captured_at": "2026-09-01T21:09:19.149Z",
           "source": "qstash-vercel-sportsgameodds",
           "source_event_id": "hWDxBS7Sp16rBwaR3Gv6",
           "source_odd_id": "batting_homeRuns-ESMERLYN_VALDEZ_1_MLB-game-yn-yes",
@@ -1785,6 +1866,9 @@
         }
       ],
       "best_book": "DraftKings",
+      "best_books": [
+        "DraftKings"
+      ],
       "best_odds": 660,
       "best_odds_text": "+660",
       "best_price_captured_at": "2026-09-01T21:08:57.527Z",
@@ -1794,8 +1878,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 35,
       "player": "Eugenio Suárez",
       "mlbam_id": 553993,
@@ -1811,8 +1895,10 @@
       "game_pk": null,
       "game_start_at": null,
       "matchup": null,
+      "game_started_at_checkpoint": false,
       "all_prices": [],
       "best_book": null,
+      "best_books": [],
       "best_odds": null,
       "best_odds_text": null,
       "best_price_captured_at": null,
@@ -1822,8 +1908,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 36,
       "player": "George Springer",
       "mlbam_id": 543807,
@@ -1839,6 +1925,7 @@
       "game_pk": null,
       "game_start_at": "2026-09-01T22:40:00.000Z",
       "matchup": "TOR @ CLE",
+      "game_started_at_checkpoint": false,
       "all_prices": [
         {
           "book": "FanDuel",
@@ -1878,6 +1965,9 @@
         }
       ],
       "best_book": "FanDuel",
+      "best_books": [
+        "FanDuel"
+      ],
       "best_odds": 630,
       "best_odds_text": "+630",
       "best_price_captured_at": "2026-09-01T21:09:19.149Z",
@@ -1887,8 +1977,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 37,
       "player": "J.T. Realmuto",
       "mlbam_id": 592663,
@@ -1902,58 +1992,23 @@
       "games_available": 15,
       "sample_status": "Established",
       "game_pk": null,
-      "game_start_at": "2026-09-02T01:40:00.000Z",
-      "matchup": "PHI @ ARI",
-      "all_prices": [
-        {
-          "book": "FanDuel",
-          "book_id": "fanduel",
-          "odds": 920,
-          "captured_at": "2026-09-01T21:09:19.149Z",
-          "source": "qstash-vercel-sportsgameodds",
-          "source_event_id": "QEg6NIn1dVnyrkDl4XUJ",
-          "source_odd_id": "batting_homeRuns-JT_REALMUTO_1_MLB-game-yn-yes",
-          "provider_call_id": "2026-09-01:1717:2026-09-01T21:17:04.458Z:8726a136fe92",
-          "verified": true,
-          "url": null
-        },
-        {
-          "book": "DraftKings",
-          "book_id": "draftkings",
-          "odds": 940,
-          "captured_at": "2026-09-01T21:08:57.527Z",
-          "source": "qstash-vercel-sportsgameodds",
-          "source_event_id": "QEg6NIn1dVnyrkDl4XUJ",
-          "source_odd_id": "batting_homeRuns-JT_REALMUTO_1_MLB-game-yn-yes",
-          "provider_call_id": "2026-09-01:1717:2026-09-01T21:17:04.458Z:8726a136fe92",
-          "verified": true,
-          "url": null
-        },
-        {
-          "book": "BetMGM",
-          "book_id": "betmgm",
-          "odds": 875,
-          "captured_at": "2026-09-01T21:08:53.093Z",
-          "source": "qstash-vercel-sportsgameodds",
-          "source_event_id": "QEg6NIn1dVnyrkDl4XUJ",
-          "source_odd_id": "batting_homeRuns-JT_REALMUTO_1_MLB-game-yn-yes",
-          "provider_call_id": "2026-09-01:1717:2026-09-01T21:17:04.458Z:8726a136fe92",
-          "verified": true,
-          "url": null
-        }
-      ],
-      "best_book": "DraftKings",
-      "best_odds": 940,
-      "best_odds_text": "+940",
-      "best_price_captured_at": "2026-09-01T21:08:57.527Z",
-      "source_event_id": "QEg6NIn1dVnyrkDl4XUJ",
-      "source_odd_id": "batting_homeRuns-JT_REALMUTO_1_MLB-game-yn-yes"
+      "game_start_at": null,
+      "matchup": null,
+      "game_started_at_checkpoint": false,
+      "all_prices": [],
+      "best_book": null,
+      "best_books": [],
+      "best_odds": null,
+      "best_odds_text": null,
+      "best_price_captured_at": null,
+      "source_event_id": null,
+      "source_odd_id": null
     },
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 38,
       "player": "Joc Pederson",
       "mlbam_id": 592626,
@@ -1969,6 +2024,7 @@
       "game_pk": null,
       "game_start_at": "2026-09-02T00:05:00.000Z",
       "matchup": "OAK @ TEX",
+      "game_started_at_checkpoint": false,
       "all_prices": [
         {
           "book": "FanDuel",
@@ -1984,6 +2040,9 @@
         }
       ],
       "best_book": "FanDuel",
+      "best_books": [
+        "FanDuel"
+      ],
       "best_odds": 470,
       "best_odds_text": "+470",
       "best_price_captured_at": "2026-09-01T21:10:03.801Z",
@@ -1993,8 +2052,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 39,
       "player": "Junior Caminero",
       "mlbam_id": 691406,
@@ -2010,6 +2069,7 @@
       "game_pk": null,
       "game_start_at": "2026-09-01T22:40:00.000Z",
       "matchup": "NYM @ TB",
+      "game_started_at_checkpoint": false,
       "all_prices": [
         {
           "book": "FanDuel",
@@ -2049,6 +2109,9 @@
         }
       ],
       "best_book": "FanDuel",
+      "best_books": [
+        "FanDuel"
+      ],
       "best_odds": 280,
       "best_odds_text": "+280",
       "best_price_captured_at": "2026-09-01T21:09:19.149Z",
@@ -2058,8 +2121,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 40,
       "player": "Paul Goldschmidt",
       "mlbam_id": 502671,
@@ -2075,8 +2138,10 @@
       "game_pk": null,
       "game_start_at": null,
       "matchup": null,
+      "game_started_at_checkpoint": false,
       "all_prices": [],
       "best_book": null,
+      "best_books": [],
       "best_odds": null,
       "best_odds_text": null,
       "best_price_captured_at": null,
@@ -2086,8 +2151,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 41,
       "player": "Sean Murphy",
       "mlbam_id": 669221,
@@ -2103,6 +2168,7 @@
       "game_pk": null,
       "game_start_at": "2026-09-01T22:45:00.000Z",
       "matchup": "ATL @ WSH",
+      "game_started_at_checkpoint": false,
       "all_prices": [
         {
           "book": "FanDuel",
@@ -2118,6 +2184,9 @@
         }
       ],
       "best_book": "FanDuel",
+      "best_books": [
+        "FanDuel"
+      ],
       "best_odds": 570,
       "best_odds_text": "+570",
       "best_price_captured_at": "2026-09-01T21:10:03.801Z",
@@ -2127,8 +2196,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 42,
       "player": "Rafael Devers",
       "mlbam_id": 646240,
@@ -2144,12 +2213,13 @@
       "game_pk": null,
       "game_start_at": "2026-09-01T22:40:00.000Z",
       "matchup": "SF @ PIT",
+      "game_started_at_checkpoint": false,
       "all_prices": [
         {
-          "book": "FanDuel",
-          "book_id": "fanduel",
-          "odds": 350,
-          "captured_at": "2026-09-01T21:09:19.149Z",
+          "book": "DraftKings",
+          "book_id": "draftkings",
+          "odds": 362,
+          "captured_at": "2026-09-01T21:08:57.527Z",
           "source": "qstash-vercel-sportsgameodds",
           "source_event_id": "hWDxBS7Sp16rBwaR3Gv6",
           "source_odd_id": "batting_homeRuns-RAFAEL_DEVERS_1_MLB-game-yn-yes",
@@ -2158,10 +2228,10 @@
           "url": null
         },
         {
-          "book": "DraftKings",
-          "book_id": "draftkings",
-          "odds": 362,
-          "captured_at": "2026-09-01T21:08:57.527Z",
+          "book": "FanDuel",
+          "book_id": "fanduel",
+          "odds": 350,
+          "captured_at": "2026-09-01T21:09:19.149Z",
           "source": "qstash-vercel-sportsgameodds",
           "source_event_id": "hWDxBS7Sp16rBwaR3Gv6",
           "source_odd_id": "batting_homeRuns-RAFAEL_DEVERS_1_MLB-game-yn-yes",
@@ -2183,6 +2253,9 @@
         }
       ],
       "best_book": "DraftKings",
+      "best_books": [
+        "DraftKings"
+      ],
       "best_odds": 362,
       "best_odds_text": "+362",
       "best_price_captured_at": "2026-09-01T21:08:57.527Z",
@@ -2192,8 +2265,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 43,
       "player": "Tristan Peters",
       "mlbam_id": 671976,
@@ -2209,6 +2282,7 @@
       "game_pk": null,
       "game_start_at": "2026-09-02T00:10:00.000Z",
       "matchup": "CWS @ HOU",
+      "game_started_at_checkpoint": false,
       "all_prices": [
         {
           "book": "FanDuel",
@@ -2248,6 +2322,9 @@
         }
       ],
       "best_book": "FanDuel",
+      "best_books": [
+        "FanDuel"
+      ],
       "best_odds": 920,
       "best_odds_text": "+920",
       "best_price_captured_at": "2026-09-01T21:09:19.149Z",
@@ -2257,8 +2334,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 44,
       "player": "Adolis García",
       "mlbam_id": 666969,
@@ -2274,8 +2351,10 @@
       "game_pk": null,
       "game_start_at": null,
       "matchup": null,
+      "game_started_at_checkpoint": false,
       "all_prices": [],
       "best_book": null,
+      "best_books": [],
       "best_odds": null,
       "best_odds_text": null,
       "best_price_captured_at": null,
@@ -2285,8 +2364,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 45,
       "player": "Luis Torrens",
       "mlbam_id": 620443,
@@ -2302,8 +2381,10 @@
       "game_pk": null,
       "game_start_at": null,
       "matchup": null,
+      "game_started_at_checkpoint": false,
       "all_prices": [],
       "best_book": null,
+      "best_books": [],
       "best_odds": null,
       "best_odds_text": null,
       "best_price_captured_at": null,
@@ -2313,8 +2394,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 46,
       "player": "Colton Cowser",
       "mlbam_id": 681297,
@@ -2330,6 +2411,7 @@
       "game_pk": null,
       "game_start_at": "2026-09-02T00:40:00.000Z",
       "matchup": "BAL @ COL",
+      "game_started_at_checkpoint": false,
       "all_prices": [
         {
           "book": "FanDuel",
@@ -2369,6 +2451,9 @@
         }
       ],
       "best_book": "FanDuel",
+      "best_books": [
+        "FanDuel"
+      ],
       "best_odds": 490,
       "best_odds_text": "+490",
       "best_price_captured_at": "2026-09-01T21:09:19.149Z",
@@ -2378,8 +2463,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 47,
       "player": "Shea Langeliers",
       "mlbam_id": 669127,
@@ -2395,8 +2480,10 @@
       "game_pk": null,
       "game_start_at": null,
       "matchup": null,
+      "game_started_at_checkpoint": false,
       "all_prices": [],
       "best_book": null,
+      "best_books": [],
       "best_odds": null,
       "best_odds_text": null,
       "best_price_captured_at": null,
@@ -2406,8 +2493,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 48,
       "player": "Andy Pages",
       "mlbam_id": 681624,
@@ -2423,8 +2510,10 @@
       "game_pk": null,
       "game_start_at": null,
       "matchup": null,
+      "game_started_at_checkpoint": false,
       "all_prices": [],
       "best_book": null,
+      "best_books": [],
       "best_odds": null,
       "best_odds_text": null,
       "best_price_captured_at": null,
@@ -2434,8 +2523,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 49,
       "player": "Ian Happ",
       "mlbam_id": 664023,
@@ -2451,8 +2540,10 @@
       "game_pk": null,
       "game_start_at": null,
       "matchup": null,
+      "game_started_at_checkpoint": false,
       "all_prices": [],
       "best_book": null,
+      "best_books": [],
       "best_odds": null,
       "best_odds_text": null,
       "best_price_captured_at": null,
@@ -2462,8 +2553,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 50,
       "player": "Jarren Duran",
       "mlbam_id": 680776,
@@ -2479,12 +2570,13 @@
       "game_pk": null,
       "game_start_at": "2026-09-01T22:45:00.000Z",
       "matchup": "SEA @ BOS",
+      "game_started_at_checkpoint": false,
       "all_prices": [
         {
-          "book": "DraftKings",
-          "book_id": "draftkings",
-          "odds": 610,
-          "captured_at": "2026-09-01T21:08:57.527Z",
+          "book": "BetMGM",
+          "book_id": "betmgm",
+          "odds": 675,
+          "captured_at": "2026-09-01T21:09:08.218Z",
           "source": "qstash-vercel-sportsgameodds",
           "source_event_id": "Ri2TFbKH9xyQHAzcUPvH",
           "source_odd_id": "batting_homeRuns-JARREN_DURAN_1_MLB-game-yn-yes",
@@ -2493,10 +2585,10 @@
           "url": null
         },
         {
-          "book": "BetMGM",
-          "book_id": "betmgm",
-          "odds": 675,
-          "captured_at": "2026-09-01T21:09:08.218Z",
+          "book": "DraftKings",
+          "book_id": "draftkings",
+          "odds": 610,
+          "captured_at": "2026-09-01T21:08:57.527Z",
           "source": "qstash-vercel-sportsgameodds",
           "source_event_id": "Ri2TFbKH9xyQHAzcUPvH",
           "source_odd_id": "batting_homeRuns-JARREN_DURAN_1_MLB-game-yn-yes",
@@ -2518,6 +2610,9 @@
         }
       ],
       "best_book": "BetMGM",
+      "best_books": [
+        "BetMGM"
+      ],
       "best_odds": 675,
       "best_odds_text": "+675",
       "best_price_captured_at": "2026-09-01T21:09:08.218Z",
@@ -2527,8 +2622,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 51,
       "player": "Jonah Cox",
       "mlbam_id": 813841,
@@ -2544,8 +2639,10 @@
       "game_pk": null,
       "game_start_at": null,
       "matchup": null,
+      "game_started_at_checkpoint": false,
       "all_prices": [],
       "best_book": null,
+      "best_books": [],
       "best_odds": null,
       "best_odds_text": null,
       "best_price_captured_at": null,
@@ -2555,8 +2652,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 52,
       "player": "Zach Neto",
       "mlbam_id": 687263,
@@ -2572,8 +2669,10 @@
       "game_pk": null,
       "game_start_at": null,
       "matchup": null,
+      "game_started_at_checkpoint": false,
       "all_prices": [],
       "best_book": null,
+      "best_books": [],
       "best_odds": null,
       "best_odds_text": null,
       "best_price_captured_at": null,
@@ -2583,8 +2682,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 53,
       "player": "Francisco Lindor",
       "mlbam_id": 596019,
@@ -2600,12 +2699,13 @@
       "game_pk": null,
       "game_start_at": "2026-09-01T22:40:00.000Z",
       "matchup": "NYM @ TB",
+      "game_started_at_checkpoint": false,
       "all_prices": [
         {
-          "book": "FanDuel",
-          "book_id": "fanduel",
-          "odds": 500,
-          "captured_at": "2026-09-01T21:09:19.149Z",
+          "book": "DraftKings",
+          "book_id": "draftkings",
+          "odds": 513,
+          "captured_at": "2026-09-01T21:08:57.527Z",
           "source": "qstash-vercel-sportsgameodds",
           "source_event_id": "28svyunb7aTRkuAMILIL",
           "source_odd_id": "batting_homeRuns-FRANCISCO_LINDOR_1_MLB-game-yn-yes",
@@ -2614,10 +2714,10 @@
           "url": null
         },
         {
-          "book": "DraftKings",
-          "book_id": "draftkings",
-          "odds": 513,
-          "captured_at": "2026-09-01T21:08:57.527Z",
+          "book": "FanDuel",
+          "book_id": "fanduel",
+          "odds": 500,
+          "captured_at": "2026-09-01T21:09:19.149Z",
           "source": "qstash-vercel-sportsgameodds",
           "source_event_id": "28svyunb7aTRkuAMILIL",
           "source_odd_id": "batting_homeRuns-FRANCISCO_LINDOR_1_MLB-game-yn-yes",
@@ -2639,6 +2739,9 @@
         }
       ],
       "best_book": "DraftKings",
+      "best_books": [
+        "DraftKings"
+      ],
       "best_odds": 513,
       "best_odds_text": "+513",
       "best_price_captured_at": "2026-09-01T21:08:57.527Z",
@@ -2648,8 +2751,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 54,
       "player": "Giancarlo Stanton",
       "mlbam_id": 519317,
@@ -2665,8 +2768,10 @@
       "game_pk": null,
       "game_start_at": null,
       "matchup": null,
+      "game_started_at_checkpoint": false,
       "all_prices": [],
       "best_book": null,
+      "best_books": [],
       "best_odds": null,
       "best_odds_text": null,
       "best_price_captured_at": null,
@@ -2676,8 +2781,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 55,
       "player": "Jonathan Aranda",
       "mlbam_id": 666018,
@@ -2693,6 +2798,7 @@
       "game_pk": null,
       "game_start_at": "2026-09-01T22:40:00.000Z",
       "matchup": "NYM @ TB",
+      "game_started_at_checkpoint": false,
       "all_prices": [
         {
           "book": "FanDuel",
@@ -2708,6 +2814,9 @@
         }
       ],
       "best_book": "FanDuel",
+      "best_books": [
+        "FanDuel"
+      ],
       "best_odds": 820,
       "best_odds_text": "+820",
       "best_price_captured_at": "2026-09-01T21:10:03.801Z",
@@ -2717,8 +2826,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 56,
       "player": "Keibert Ruiz",
       "mlbam_id": 660688,
@@ -2734,6 +2843,7 @@
       "game_pk": null,
       "game_start_at": "2026-09-01T22:45:00.000Z",
       "matchup": "ATL @ WSH",
+      "game_started_at_checkpoint": false,
       "all_prices": [
         {
           "book": "FanDuel",
@@ -2749,6 +2859,9 @@
         }
       ],
       "best_book": "FanDuel",
+      "best_books": [
+        "FanDuel"
+      ],
       "best_odds": 490,
       "best_odds_text": "+490",
       "best_price_captured_at": "2026-09-01T21:10:03.801Z",
@@ -2758,8 +2871,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 57,
       "player": "Ketel Marte",
       "mlbam_id": 606466,
@@ -2775,12 +2888,13 @@
       "game_pk": null,
       "game_start_at": "2026-09-02T01:40:00.000Z",
       "matchup": "PHI @ ARI",
+      "game_started_at_checkpoint": false,
       "all_prices": [
         {
-          "book": "FanDuel",
-          "book_id": "fanduel",
-          "odds": 490,
-          "captured_at": "2026-09-01T21:09:19.149Z",
+          "book": "DraftKings",
+          "book_id": "draftkings",
+          "odds": 521,
+          "captured_at": "2026-09-01T21:08:57.527Z",
           "source": "qstash-vercel-sportsgameodds",
           "source_event_id": "QEg6NIn1dVnyrkDl4XUJ",
           "source_odd_id": "batting_homeRuns-KETEL_MARTE_1_MLB-game-yn-yes",
@@ -2789,10 +2903,10 @@
           "url": null
         },
         {
-          "book": "DraftKings",
-          "book_id": "draftkings",
-          "odds": 521,
-          "captured_at": "2026-09-01T21:08:57.527Z",
+          "book": "FanDuel",
+          "book_id": "fanduel",
+          "odds": 490,
+          "captured_at": "2026-09-01T21:09:19.149Z",
           "source": "qstash-vercel-sportsgameodds",
           "source_event_id": "QEg6NIn1dVnyrkDl4XUJ",
           "source_odd_id": "batting_homeRuns-KETEL_MARTE_1_MLB-game-yn-yes",
@@ -2814,6 +2928,9 @@
         }
       ],
       "best_book": "DraftKings",
+      "best_books": [
+        "DraftKings"
+      ],
       "best_odds": 521,
       "best_odds_text": "+521",
       "best_price_captured_at": "2026-09-01T21:08:57.527Z",
@@ -2823,8 +2940,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 58,
       "player": "Kyle Higashioka",
       "mlbam_id": 543309,
@@ -2840,8 +2957,10 @@
       "game_pk": null,
       "game_start_at": null,
       "matchup": null,
+      "game_started_at_checkpoint": false,
       "all_prices": [],
       "best_book": null,
+      "best_books": [],
       "best_odds": null,
       "best_odds_text": null,
       "best_price_captured_at": null,
@@ -2851,8 +2970,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 59,
       "player": "Pedro Ramírez",
       "mlbam_id": 699393,
@@ -2868,8 +2987,10 @@
       "game_pk": null,
       "game_start_at": null,
       "matchup": null,
+      "game_started_at_checkpoint": false,
       "all_prices": [],
       "best_book": null,
+      "best_books": [],
       "best_odds": null,
       "best_odds_text": null,
       "best_price_captured_at": null,
@@ -2879,8 +3000,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 60,
       "player": "Ramón Laureano",
       "mlbam_id": 657656,
@@ -2896,8 +3017,10 @@
       "game_pk": null,
       "game_start_at": null,
       "matchup": null,
+      "game_started_at_checkpoint": false,
       "all_prices": [],
       "best_book": null,
+      "best_books": [],
       "best_odds": null,
       "best_odds_text": null,
       "best_price_captured_at": null,
@@ -2907,8 +3030,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 61,
       "player": "Tyler Soderstrom",
       "mlbam_id": 691016,
@@ -2924,8 +3047,10 @@
       "game_pk": null,
       "game_start_at": null,
       "matchup": null,
+      "game_started_at_checkpoint": false,
       "all_prices": [],
       "best_book": null,
+      "best_books": [],
       "best_odds": null,
       "best_odds_text": null,
       "best_price_captured_at": null,
@@ -2935,8 +3060,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 62,
       "player": "Victor Mesa Jr.",
       "mlbam_id": 683748,
@@ -2952,6 +3077,7 @@
       "game_pk": null,
       "game_start_at": "2026-09-01T22:40:00.000Z",
       "matchup": "NYM @ TB",
+      "game_started_at_checkpoint": false,
       "all_prices": [
         {
           "book": "DraftKings",
@@ -2991,6 +3117,9 @@
         }
       ],
       "best_book": "DraftKings",
+      "best_books": [
+        "DraftKings"
+      ],
       "best_odds": 740,
       "best_odds_text": "+740",
       "best_price_captured_at": "2026-09-01T21:08:57.527Z",
@@ -3000,8 +3129,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 63,
       "player": "Wenceel Pérez",
       "mlbam_id": 672761,
@@ -3017,8 +3146,10 @@
       "game_pk": null,
       "game_start_at": null,
       "matchup": null,
+      "game_started_at_checkpoint": false,
       "all_prices": [],
       "best_book": null,
+      "best_books": [],
       "best_odds": null,
       "best_odds_text": null,
       "best_price_captured_at": null,
@@ -3028,8 +3159,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 64,
       "player": "Randy Arozarena",
       "mlbam_id": 668227,
@@ -3045,12 +3176,25 @@
       "game_pk": null,
       "game_start_at": "2026-09-01T22:45:00.000Z",
       "matchup": "SEA @ BOS",
+      "game_started_at_checkpoint": false,
       "all_prices": [
         {
           "book": "DraftKings",
           "book_id": "draftkings",
           "odds": 600,
           "captured_at": "2026-09-01T21:08:57.527Z",
+          "source": "qstash-vercel-sportsgameodds",
+          "source_event_id": "Ri2TFbKH9xyQHAzcUPvH",
+          "source_odd_id": "batting_homeRuns-RANDY_AROZARENA_1_MLB-game-yn-yes",
+          "provider_call_id": "2026-09-01:1717:2026-09-01T21:17:04.458Z:8726a136fe92",
+          "verified": true,
+          "url": null
+        },
+        {
+          "book": "FanDuel",
+          "book_id": "fanduel",
+          "odds": 600,
+          "captured_at": "2026-09-01T21:09:19.149Z",
           "source": "qstash-vercel-sportsgameodds",
           "source_event_id": "Ri2TFbKH9xyQHAzcUPvH",
           "source_odd_id": "batting_homeRuns-RANDY_AROZARENA_1_MLB-game-yn-yes",
@@ -3069,32 +3213,24 @@
           "provider_call_id": "2026-09-01:1717:2026-09-01T21:17:04.458Z:8726a136fe92",
           "verified": true,
           "url": null
-        },
-        {
-          "book": "FanDuel",
-          "book_id": "fanduel",
-          "odds": 600,
-          "captured_at": "2026-09-01T21:09:19.149Z",
-          "source": "qstash-vercel-sportsgameodds",
-          "source_event_id": "Ri2TFbKH9xyQHAzcUPvH",
-          "source_odd_id": "batting_homeRuns-RANDY_AROZARENA_1_MLB-game-yn-yes",
-          "provider_call_id": "2026-09-01:1717:2026-09-01T21:17:04.458Z:8726a136fe92",
-          "verified": true,
-          "url": null
         }
       ],
-      "best_book": "FanDuel",
+      "best_book": "DraftKings",
+      "best_books": [
+        "DraftKings",
+        "FanDuel"
+      ],
       "best_odds": 600,
       "best_odds_text": "+600",
-      "best_price_captured_at": "2026-09-01T21:09:19.149Z",
+      "best_price_captured_at": "2026-09-01T21:08:57.527Z",
       "source_event_id": "Ri2TFbKH9xyQHAzcUPvH",
       "source_odd_id": "batting_homeRuns-RANDY_AROZARENA_1_MLB-game-yn-yes"
     },
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 65,
       "player": "Alejandro Kirk",
       "mlbam_id": 672386,
@@ -3110,12 +3246,13 @@
       "game_pk": null,
       "game_start_at": "2026-09-01T22:40:00.000Z",
       "matchup": "TOR @ CLE",
+      "game_started_at_checkpoint": false,
       "all_prices": [
         {
-          "book": "FanDuel",
-          "book_id": "fanduel",
-          "odds": 830,
-          "captured_at": "2026-09-01T21:09:19.149Z",
+          "book": "DraftKings",
+          "book_id": "draftkings",
+          "odds": 870,
+          "captured_at": "2026-09-01T21:08:57.527Z",
           "source": "qstash-vercel-sportsgameodds",
           "source_event_id": "Thn5T2znEfkaMHb2EgBc",
           "source_odd_id": "batting_homeRuns-ALEJANDRO_KIRK_1_MLB-game-yn-yes",
@@ -3124,10 +3261,10 @@
           "url": null
         },
         {
-          "book": "DraftKings",
-          "book_id": "draftkings",
-          "odds": 870,
-          "captured_at": "2026-09-01T21:08:57.527Z",
+          "book": "FanDuel",
+          "book_id": "fanduel",
+          "odds": 830,
+          "captured_at": "2026-09-01T21:09:19.149Z",
           "source": "qstash-vercel-sportsgameodds",
           "source_event_id": "Thn5T2znEfkaMHb2EgBc",
           "source_odd_id": "batting_homeRuns-ALEJANDRO_KIRK_1_MLB-game-yn-yes",
@@ -3149,6 +3286,9 @@
         }
       ],
       "best_book": "DraftKings",
+      "best_books": [
+        "DraftKings"
+      ],
       "best_odds": 870,
       "best_odds_text": "+870",
       "best_price_captured_at": "2026-09-01T21:08:57.527Z",
@@ -3158,8 +3298,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 66,
       "player": "Rafael Flores Jr.",
       "mlbam_id": 804668,
@@ -3175,8 +3315,10 @@
       "game_pk": null,
       "game_start_at": null,
       "matchup": null,
+      "game_started_at_checkpoint": false,
       "all_prices": [],
       "best_book": null,
+      "best_books": [],
       "best_odds": null,
       "best_odds_text": null,
       "best_price_captured_at": null,
@@ -3186,8 +3328,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 67,
       "player": "Andrés Chaparro",
       "mlbam_id": 665953,
@@ -3203,8 +3345,10 @@
       "game_pk": null,
       "game_start_at": null,
       "matchup": null,
+      "game_started_at_checkpoint": false,
       "all_prices": [],
       "best_book": null,
+      "best_books": [],
       "best_odds": null,
       "best_odds_text": null,
       "best_price_captured_at": null,
@@ -3214,8 +3358,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 68,
       "player": "Brandon Lowe",
       "mlbam_id": 664040,
@@ -3231,12 +3375,13 @@
       "game_pk": null,
       "game_start_at": "2026-09-01T22:40:00.000Z",
       "matchup": "SF @ PIT",
+      "game_started_at_checkpoint": false,
       "all_prices": [
         {
-          "book": "FanDuel",
-          "book_id": "fanduel",
-          "odds": 450,
-          "captured_at": "2026-09-01T21:09:19.149Z",
+          "book": "DraftKings",
+          "book_id": "draftkings",
+          "odds": 476,
+          "captured_at": "2026-09-01T21:08:57.527Z",
           "source": "qstash-vercel-sportsgameodds",
           "source_event_id": "hWDxBS7Sp16rBwaR3Gv6",
           "source_odd_id": "batting_homeRuns-BRANDON_LOWE_1_MLB-game-yn-yes",
@@ -3245,10 +3390,10 @@
           "url": null
         },
         {
-          "book": "DraftKings",
-          "book_id": "draftkings",
-          "odds": 476,
-          "captured_at": "2026-09-01T21:08:57.527Z",
+          "book": "FanDuel",
+          "book_id": "fanduel",
+          "odds": 450,
+          "captured_at": "2026-09-01T21:09:19.149Z",
           "source": "qstash-vercel-sportsgameodds",
           "source_event_id": "hWDxBS7Sp16rBwaR3Gv6",
           "source_odd_id": "batting_homeRuns-BRANDON_LOWE_1_MLB-game-yn-yes",
@@ -3270,6 +3415,9 @@
         }
       ],
       "best_book": "DraftKings",
+      "best_books": [
+        "DraftKings"
+      ],
       "best_odds": 476,
       "best_odds_text": "+476",
       "best_price_captured_at": "2026-09-01T21:08:57.527Z",
@@ -3279,8 +3427,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 69,
       "player": "Bryce Eldridge",
       "mlbam_id": 805811,
@@ -3296,12 +3444,13 @@
       "game_pk": null,
       "game_start_at": "2026-09-01T22:40:00.000Z",
       "matchup": "SF @ PIT",
+      "game_started_at_checkpoint": false,
       "all_prices": [
         {
-          "book": "FanDuel",
-          "book_id": "fanduel",
-          "odds": 470,
-          "captured_at": "2026-09-01T21:09:19.149Z",
+          "book": "BetMGM",
+          "book_id": "betmgm",
+          "odds": 550,
+          "captured_at": "2026-09-01T21:09:05.494Z",
           "source": "qstash-vercel-sportsgameodds",
           "source_event_id": "hWDxBS7Sp16rBwaR3Gv6",
           "source_odd_id": "batting_homeRuns-BRYCE_ELDRIDGE_1_MLB-game-yn-yes",
@@ -3322,10 +3471,10 @@
           "url": null
         },
         {
-          "book": "BetMGM",
-          "book_id": "betmgm",
-          "odds": 550,
-          "captured_at": "2026-09-01T21:09:05.494Z",
+          "book": "FanDuel",
+          "book_id": "fanduel",
+          "odds": 470,
+          "captured_at": "2026-09-01T21:09:19.149Z",
           "source": "qstash-vercel-sportsgameodds",
           "source_event_id": "hWDxBS7Sp16rBwaR3Gv6",
           "source_odd_id": "batting_homeRuns-BRYCE_ELDRIDGE_1_MLB-game-yn-yes",
@@ -3335,6 +3484,9 @@
         }
       ],
       "best_book": "BetMGM",
+      "best_books": [
+        "BetMGM"
+      ],
       "best_odds": 550,
       "best_odds_text": "+550",
       "best_price_captured_at": "2026-09-01T21:09:05.494Z",
@@ -3344,8 +3496,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 70,
       "player": "Dane Myers",
       "mlbam_id": 667472,
@@ -3361,8 +3513,10 @@
       "game_pk": null,
       "game_start_at": null,
       "matchup": null,
+      "game_started_at_checkpoint": false,
       "all_prices": [],
       "best_book": null,
+      "best_books": [],
       "best_odds": null,
       "best_odds_text": null,
       "best_price_captured_at": null,
@@ -3372,8 +3526,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 71,
       "player": "Gabriel Moreno",
       "mlbam_id": 672515,
@@ -3389,6 +3543,7 @@
       "game_pk": null,
       "game_start_at": "2026-09-02T01:40:00.000Z",
       "matchup": "PHI @ ARI",
+      "game_started_at_checkpoint": false,
       "all_prices": [
         {
           "book": "FanDuel",
@@ -3428,6 +3583,9 @@
         }
       ],
       "best_book": "FanDuel",
+      "best_books": [
+        "FanDuel"
+      ],
       "best_odds": 1120,
       "best_odds_text": "+1120",
       "best_price_captured_at": "2026-09-01T21:09:19.149Z",
@@ -3437,8 +3595,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 72,
       "player": "Jackson Merrill",
       "mlbam_id": 701538,
@@ -3454,6 +3612,7 @@
       "game_pk": null,
       "game_start_at": "2026-09-01T22:40:00.000Z",
       "matchup": "SD @ CIN",
+      "game_started_at_checkpoint": false,
       "all_prices": [
         {
           "book": "DraftKings",
@@ -3493,6 +3652,9 @@
         }
       ],
       "best_book": "DraftKings",
+      "best_books": [
+        "DraftKings"
+      ],
       "best_odds": 468,
       "best_odds_text": "+468",
       "best_price_captured_at": "2026-09-01T21:08:57.527Z",
@@ -3502,8 +3664,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 73,
       "player": "Juan Soto",
       "mlbam_id": 665742,
@@ -3519,6 +3681,7 @@
       "game_pk": null,
       "game_start_at": "2026-09-01T22:40:00.000Z",
       "matchup": "NYM @ TB",
+      "game_started_at_checkpoint": false,
       "all_prices": [
         {
           "book": "FanDuel",
@@ -3558,6 +3721,9 @@
         }
       ],
       "best_book": "FanDuel",
+      "best_books": [
+        "FanDuel"
+      ],
       "best_odds": 350,
       "best_odds_text": "+350",
       "best_price_captured_at": "2026-09-01T21:09:19.149Z",
@@ -3567,8 +3733,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 74,
       "player": "Junior Perez",
       "mlbam_id": 678577,
@@ -3584,8 +3750,10 @@
       "game_pk": null,
       "game_start_at": null,
       "matchup": null,
+      "game_started_at_checkpoint": false,
       "all_prices": [],
       "best_book": null,
+      "best_books": [],
       "best_odds": null,
       "best_odds_text": null,
       "best_price_captured_at": null,
@@ -3595,8 +3763,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 75,
       "player": "Kyle Schwarber",
       "mlbam_id": 656941,
@@ -3612,6 +3780,7 @@
       "game_pk": null,
       "game_start_at": "2026-09-02T01:40:00.000Z",
       "matchup": "PHI @ ARI",
+      "game_started_at_checkpoint": false,
       "all_prices": [
         {
           "book": "FanDuel",
@@ -3651,6 +3820,9 @@
         }
       ],
       "best_book": "FanDuel",
+      "best_books": [
+        "FanDuel"
+      ],
       "best_odds": 390,
       "best_odds_text": "+390",
       "best_price_captured_at": "2026-09-01T21:09:19.149Z",
@@ -3660,8 +3832,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 76,
       "player": "Michael Busch",
       "mlbam_id": 683737,
@@ -3677,8 +3849,10 @@
       "game_pk": null,
       "game_start_at": null,
       "matchup": null,
+      "game_started_at_checkpoint": false,
       "all_prices": [],
       "best_book": null,
+      "best_books": [],
       "best_odds": null,
       "best_odds_text": null,
       "best_price_captured_at": null,
@@ -3688,8 +3862,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 77,
       "player": "Nick Sogard",
       "mlbam_id": 686765,
@@ -3705,7 +3879,20 @@
       "game_pk": null,
       "game_start_at": "2026-09-01T22:45:00.000Z",
       "matchup": "SEA @ BOS",
+      "game_started_at_checkpoint": false,
       "all_prices": [
+        {
+          "book": "BetMGM",
+          "book_id": "betmgm",
+          "odds": 1200,
+          "captured_at": "2026-09-01T21:09:08.218Z",
+          "source": "qstash-vercel-sportsgameodds",
+          "source_event_id": "Ri2TFbKH9xyQHAzcUPvH",
+          "source_odd_id": "batting_homeRuns-NICK_SOGARD_1_MLB-game-yn-yes",
+          "provider_call_id": "2026-09-01:1717:2026-09-01T21:17:04.458Z:8726a136fe92",
+          "verified": true,
+          "url": null
+        },
         {
           "book": "DraftKings",
           "book_id": "draftkings",
@@ -3729,21 +3916,12 @@
           "provider_call_id": "2026-09-01:1717:2026-09-01T21:17:04.458Z:8726a136fe92",
           "verified": true,
           "url": null
-        },
-        {
-          "book": "BetMGM",
-          "book_id": "betmgm",
-          "odds": 1200,
-          "captured_at": "2026-09-01T21:09:08.218Z",
-          "source": "qstash-vercel-sportsgameodds",
-          "source_event_id": "Ri2TFbKH9xyQHAzcUPvH",
-          "source_odd_id": "batting_homeRuns-NICK_SOGARD_1_MLB-game-yn-yes",
-          "provider_call_id": "2026-09-01:1717:2026-09-01T21:17:04.458Z:8726a136fe92",
-          "verified": true,
-          "url": null
         }
       ],
       "best_book": "BetMGM",
+      "best_books": [
+        "BetMGM"
+      ],
       "best_odds": 1200,
       "best_odds_text": "+1200",
       "best_price_captured_at": "2026-09-01T21:09:08.218Z",
@@ -3753,8 +3931,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 78,
       "player": "Oneil Cruz",
       "mlbam_id": 665833,
@@ -3770,19 +3948,8 @@
       "game_pk": null,
       "game_start_at": "2026-09-01T22:40:00.000Z",
       "matchup": "SF @ PIT",
+      "game_started_at_checkpoint": false,
       "all_prices": [
-        {
-          "book": "FanDuel",
-          "book_id": "fanduel",
-          "odds": 400,
-          "captured_at": "2026-09-01T21:09:19.149Z",
-          "source": "qstash-vercel-sportsgameodds",
-          "source_event_id": "hWDxBS7Sp16rBwaR3Gv6",
-          "source_odd_id": "batting_homeRuns-ONEIL_CRUZ_1_MLB-game-yn-yes",
-          "provider_call_id": "2026-09-01:1717:2026-09-01T21:17:04.458Z:8726a136fe92",
-          "verified": true,
-          "url": null
-        },
         {
           "book": "DraftKings",
           "book_id": "draftkings",
@@ -3806,9 +3973,24 @@
           "provider_call_id": "2026-09-01:1717:2026-09-01T21:17:04.458Z:8726a136fe92",
           "verified": true,
           "url": null
+        },
+        {
+          "book": "FanDuel",
+          "book_id": "fanduel",
+          "odds": 400,
+          "captured_at": "2026-09-01T21:09:19.149Z",
+          "source": "qstash-vercel-sportsgameodds",
+          "source_event_id": "hWDxBS7Sp16rBwaR3Gv6",
+          "source_odd_id": "batting_homeRuns-ONEIL_CRUZ_1_MLB-game-yn-yes",
+          "provider_call_id": "2026-09-01:1717:2026-09-01T21:17:04.458Z:8726a136fe92",
+          "verified": true,
+          "url": null
         }
       ],
       "best_book": "DraftKings",
+      "best_books": [
+        "DraftKings"
+      ],
       "best_odds": 429,
       "best_odds_text": "+429",
       "best_price_captured_at": "2026-09-01T21:08:57.527Z",
@@ -3818,8 +4000,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 79,
       "player": "Spencer Jones",
       "mlbam_id": 682987,
@@ -3835,6 +4017,7 @@
       "game_pk": null,
       "game_start_at": "2026-09-02T01:38:00.000Z",
       "matchup": "NYY @ LAA",
+      "game_started_at_checkpoint": false,
       "all_prices": [
         {
           "book": "FanDuel",
@@ -3874,6 +4057,9 @@
         }
       ],
       "best_book": "FanDuel",
+      "best_books": [
+        "FanDuel"
+      ],
       "best_odds": 490,
       "best_odds_text": "+490",
       "best_price_captured_at": "2026-09-01T21:09:19.149Z",
@@ -3883,8 +4069,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 80,
       "player": "Vinnie Pasquantino",
       "mlbam_id": 686469,
@@ -3900,12 +4086,13 @@
       "game_pk": null,
       "game_start_at": "2026-09-01T23:40:00.000Z",
       "matchup": "MIA @ KC",
+      "game_started_at_checkpoint": false,
       "all_prices": [
         {
-          "book": "FanDuel",
-          "book_id": "fanduel",
-          "odds": 520,
-          "captured_at": "2026-09-01T21:09:19.149Z",
+          "book": "DraftKings",
+          "book_id": "draftkings",
+          "odds": 552,
+          "captured_at": "2026-09-01T21:08:57.527Z",
           "source": "qstash-vercel-sportsgameodds",
           "source_event_id": "BMcuBbTFD1HAkrYTRpEe",
           "source_odd_id": "batting_homeRuns-VINNIE_PASQUANTINO_1_MLB-game-yn-yes",
@@ -3914,10 +4101,10 @@
           "url": null
         },
         {
-          "book": "DraftKings",
-          "book_id": "draftkings",
-          "odds": 552,
-          "captured_at": "2026-09-01T21:08:57.527Z",
+          "book": "FanDuel",
+          "book_id": "fanduel",
+          "odds": 520,
+          "captured_at": "2026-09-01T21:09:19.149Z",
           "source": "qstash-vercel-sportsgameodds",
           "source_event_id": "BMcuBbTFD1HAkrYTRpEe",
           "source_odd_id": "batting_homeRuns-VINNIE_PASQUANTINO_1_MLB-game-yn-yes",
@@ -3939,6 +4126,9 @@
         }
       ],
       "best_book": "DraftKings",
+      "best_books": [
+        "DraftKings"
+      ],
       "best_odds": 552,
       "best_odds_text": "+552",
       "best_price_captured_at": "2026-09-01T21:08:57.527Z",
@@ -3948,8 +4138,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 81,
       "player": "Yandy Díaz",
       "mlbam_id": 650490,
@@ -3965,6 +4155,7 @@
       "game_pk": null,
       "game_start_at": "2026-09-01T22:40:00.000Z",
       "matchup": "NYM @ TB",
+      "game_started_at_checkpoint": false,
       "all_prices": [
         {
           "book": "FanDuel",
@@ -4004,6 +4195,9 @@
         }
       ],
       "best_book": "FanDuel",
+      "best_books": [
+        "FanDuel"
+      ],
       "best_odds": 440,
       "best_odds_text": "+440",
       "best_price_captured_at": "2026-09-01T21:09:19.149Z",
@@ -4013,8 +4207,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 82,
       "player": "Andrew Benintendi",
       "mlbam_id": 643217,
@@ -4030,6 +4224,7 @@
       "game_pk": null,
       "game_start_at": "2026-09-02T00:10:00.000Z",
       "matchup": "CWS @ HOU",
+      "game_started_at_checkpoint": false,
       "all_prices": [
         {
           "book": "FanDuel",
@@ -4069,6 +4264,9 @@
         }
       ],
       "best_book": "FanDuel",
+      "best_books": [
+        "FanDuel"
+      ],
       "best_odds": 470,
       "best_odds_text": "+470",
       "best_price_captured_at": "2026-09-01T21:09:19.149Z",
@@ -4078,8 +4276,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 83,
       "player": "Blaze Jordan",
       "mlbam_id": 691458,
@@ -4095,8 +4293,10 @@
       "game_pk": null,
       "game_start_at": null,
       "matchup": null,
+      "game_started_at_checkpoint": false,
       "all_prices": [],
       "best_book": null,
+      "best_books": [],
       "best_odds": null,
       "best_odds_text": null,
       "best_price_captured_at": null,
@@ -4106,8 +4306,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 84,
       "player": "Bo Naylor",
       "mlbam_id": 666310,
@@ -4123,8 +4323,10 @@
       "game_pk": null,
       "game_start_at": null,
       "matchup": null,
+      "game_started_at_checkpoint": false,
       "all_prices": [],
       "best_book": null,
+      "best_books": [],
       "best_odds": null,
       "best_odds_text": null,
       "best_price_captured_at": null,
@@ -4134,8 +4336,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 85,
       "player": "Brady House",
       "mlbam_id": 691781,
@@ -4151,19 +4353,8 @@
       "game_pk": null,
       "game_start_at": "2026-09-01T22:45:00.000Z",
       "matchup": "ATL @ WSH",
+      "game_started_at_checkpoint": false,
       "all_prices": [
-        {
-          "book": "DraftKings",
-          "book_id": "draftkings",
-          "odds": 467,
-          "captured_at": "2026-09-01T21:08:57.527Z",
-          "source": "qstash-vercel-sportsgameodds",
-          "source_event_id": "8uTRSBEyYEfZ8tMMbOGn",
-          "source_odd_id": "batting_homeRuns-BRADY_HOUSE_1_MLB-game-yn-yes",
-          "provider_call_id": "2026-09-01:1717:2026-09-01T21:17:04.458Z:8726a136fe92",
-          "verified": true,
-          "url": null
-        },
         {
           "book": "FanDuel",
           "book_id": "fanduel",
@@ -4187,9 +4378,24 @@
           "provider_call_id": "2026-09-01:1717:2026-09-01T21:17:04.458Z:8726a136fe92",
           "verified": true,
           "url": null
+        },
+        {
+          "book": "DraftKings",
+          "book_id": "draftkings",
+          "odds": 467,
+          "captured_at": "2026-09-01T21:08:57.527Z",
+          "source": "qstash-vercel-sportsgameodds",
+          "source_event_id": "8uTRSBEyYEfZ8tMMbOGn",
+          "source_odd_id": "batting_homeRuns-BRADY_HOUSE_1_MLB-game-yn-yes",
+          "provider_call_id": "2026-09-01:1717:2026-09-01T21:17:04.458Z:8726a136fe92",
+          "verified": true,
+          "url": null
         }
       ],
       "best_book": "FanDuel",
+      "best_books": [
+        "FanDuel"
+      ],
       "best_odds": 480,
       "best_odds_text": "+480",
       "best_price_captured_at": "2026-09-01T21:09:19.149Z",
@@ -4199,8 +4405,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 86,
       "player": "Brenton Doyle",
       "mlbam_id": 686668,
@@ -4216,8 +4422,10 @@
       "game_pk": null,
       "game_start_at": null,
       "matchup": null,
+      "game_started_at_checkpoint": false,
       "all_prices": [],
       "best_book": null,
+      "best_books": [],
       "best_odds": null,
       "best_odds_text": null,
       "best_price_captured_at": null,
@@ -4227,8 +4435,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 87,
       "player": "Bryce Harper",
       "mlbam_id": 547180,
@@ -4244,12 +4452,13 @@
       "game_pk": null,
       "game_start_at": "2026-09-02T01:40:00.000Z",
       "matchup": "PHI @ ARI",
+      "game_started_at_checkpoint": false,
       "all_prices": [
         {
-          "book": "FanDuel",
-          "book_id": "fanduel",
-          "odds": 610,
-          "captured_at": "2026-09-01T21:09:19.149Z",
+          "book": "DraftKings",
+          "book_id": "draftkings",
+          "odds": 660,
+          "captured_at": "2026-09-01T21:08:57.527Z",
           "source": "qstash-vercel-sportsgameodds",
           "source_event_id": "QEg6NIn1dVnyrkDl4XUJ",
           "source_odd_id": "batting_homeRuns-BRYCE_HARPER_1_MLB-game-yn-yes",
@@ -4258,10 +4467,10 @@
           "url": null
         },
         {
-          "book": "DraftKings",
-          "book_id": "draftkings",
-          "odds": 660,
-          "captured_at": "2026-09-01T21:08:57.527Z",
+          "book": "FanDuel",
+          "book_id": "fanduel",
+          "odds": 610,
+          "captured_at": "2026-09-01T21:09:19.149Z",
           "source": "qstash-vercel-sportsgameodds",
           "source_event_id": "QEg6NIn1dVnyrkDl4XUJ",
           "source_odd_id": "batting_homeRuns-BRYCE_HARPER_1_MLB-game-yn-yes",
@@ -4283,6 +4492,9 @@
         }
       ],
       "best_book": "DraftKings",
+      "best_books": [
+        "DraftKings"
+      ],
       "best_odds": 660,
       "best_odds_text": "+660",
       "best_price_captured_at": "2026-09-01T21:08:57.527Z",
@@ -4292,8 +4504,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 88,
       "player": "Bryson Stott",
       "mlbam_id": 681082,
@@ -4309,12 +4521,13 @@
       "game_pk": null,
       "game_start_at": "2026-09-02T01:40:00.000Z",
       "matchup": "PHI @ ARI",
+      "game_started_at_checkpoint": false,
       "all_prices": [
         {
-          "book": "FanDuel",
-          "book_id": "fanduel",
-          "odds": 1040,
-          "captured_at": "2026-09-01T21:09:19.149Z",
+          "book": "BetMGM",
+          "book_id": "betmgm",
+          "odds": 1150,
+          "captured_at": "2026-09-01T21:08:53.093Z",
           "source": "qstash-vercel-sportsgameodds",
           "source_event_id": "QEg6NIn1dVnyrkDl4XUJ",
           "source_odd_id": "batting_homeRuns-BRYSON_STOTT_1_MLB-game-yn-yes",
@@ -4335,10 +4548,10 @@
           "url": null
         },
         {
-          "book": "BetMGM",
-          "book_id": "betmgm",
-          "odds": 1150,
-          "captured_at": "2026-09-01T21:08:53.093Z",
+          "book": "FanDuel",
+          "book_id": "fanduel",
+          "odds": 1040,
+          "captured_at": "2026-09-01T21:09:19.149Z",
           "source": "qstash-vercel-sportsgameodds",
           "source_event_id": "QEg6NIn1dVnyrkDl4XUJ",
           "source_odd_id": "batting_homeRuns-BRYSON_STOTT_1_MLB-game-yn-yes",
@@ -4348,6 +4561,9 @@
         }
       ],
       "best_book": "BetMGM",
+      "best_books": [
+        "BetMGM"
+      ],
       "best_odds": 1150,
       "best_odds_text": "+1150",
       "best_price_captured_at": "2026-09-01T21:08:53.093Z",
@@ -4357,8 +4573,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 89,
       "player": "Carlos Correa",
       "mlbam_id": 621043,
@@ -4374,8 +4590,10 @@
       "game_pk": null,
       "game_start_at": null,
       "matchup": null,
+      "game_started_at_checkpoint": false,
       "all_prices": [],
       "best_book": null,
+      "best_books": [],
       "best_odds": null,
       "best_odds_text": null,
       "best_price_captured_at": null,
@@ -4385,8 +4603,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 90,
       "player": "Christian Walker",
       "mlbam_id": 572233,
@@ -4402,12 +4620,13 @@
       "game_pk": null,
       "game_start_at": "2026-09-02T00:10:00.000Z",
       "matchup": "CWS @ HOU",
+      "game_started_at_checkpoint": false,
       "all_prices": [
         {
-          "book": "FanDuel",
-          "book_id": "fanduel",
-          "odds": 420,
-          "captured_at": "2026-09-01T21:09:19.149Z",
+          "book": "DraftKings",
+          "book_id": "draftkings",
+          "odds": 449,
+          "captured_at": "2026-09-01T21:08:57.527Z",
           "source": "qstash-vercel-sportsgameodds",
           "source_event_id": "zYJDf0ebLr8WAUOoamIn",
           "source_odd_id": "batting_homeRuns-CHRISTIAN_WALKER_1_MLB-game-yn-yes",
@@ -4416,10 +4635,10 @@
           "url": null
         },
         {
-          "book": "DraftKings",
-          "book_id": "draftkings",
-          "odds": 449,
-          "captured_at": "2026-09-01T21:08:57.527Z",
+          "book": "FanDuel",
+          "book_id": "fanduel",
+          "odds": 420,
+          "captured_at": "2026-09-01T21:09:19.149Z",
           "source": "qstash-vercel-sportsgameodds",
           "source_event_id": "zYJDf0ebLr8WAUOoamIn",
           "source_odd_id": "batting_homeRuns-CHRISTIAN_WALKER_1_MLB-game-yn-yes",
@@ -4441,6 +4660,9 @@
         }
       ],
       "best_book": "DraftKings",
+      "best_books": [
+        "DraftKings"
+      ],
       "best_odds": 449,
       "best_odds_text": "+449",
       "best_price_captured_at": "2026-09-01T21:08:57.527Z",
@@ -4450,8 +4672,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 91,
       "player": "Dalton Rushing",
       "mlbam_id": 687221,
@@ -4467,8 +4689,10 @@
       "game_pk": null,
       "game_start_at": null,
       "matchup": null,
+      "game_started_at_checkpoint": false,
       "all_prices": [],
       "best_book": null,
+      "best_books": [],
       "best_odds": null,
       "best_odds_text": null,
       "best_price_captured_at": null,
@@ -4478,8 +4702,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 92,
       "player": "Dansby Swanson",
       "mlbam_id": 621020,
@@ -4495,8 +4719,10 @@
       "game_pk": null,
       "game_start_at": null,
       "matchup": null,
+      "game_started_at_checkpoint": false,
       "all_prices": [],
       "best_book": null,
+      "best_books": [],
       "best_odds": null,
       "best_odds_text": null,
       "best_price_captured_at": null,
@@ -4506,8 +4732,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 93,
       "player": "Drake Baldwin",
       "mlbam_id": 686948,
@@ -4523,6 +4749,7 @@
       "game_pk": null,
       "game_start_at": "2026-09-01T22:45:00.000Z",
       "matchup": "ATL @ WSH",
+      "game_started_at_checkpoint": false,
       "all_prices": [
         {
           "book": "DraftKings",
@@ -4562,6 +4789,9 @@
         }
       ],
       "best_book": "DraftKings",
+      "best_books": [
+        "DraftKings"
+      ],
       "best_odds": 345,
       "best_odds_text": "+345",
       "best_price_captured_at": "2026-09-01T21:08:57.527Z",
@@ -4571,8 +4801,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 94,
       "player": "Drew Gilbert",
       "mlbam_id": 687551,
@@ -4588,12 +4818,13 @@
       "game_pk": null,
       "game_start_at": "2026-09-01T22:40:00.000Z",
       "matchup": "SF @ PIT",
+      "game_started_at_checkpoint": false,
       "all_prices": [
         {
-          "book": "FanDuel",
-          "book_id": "fanduel",
-          "odds": 870,
-          "captured_at": "2026-09-01T21:09:19.149Z",
+          "book": "DraftKings",
+          "book_id": "draftkings",
+          "odds": 890,
+          "captured_at": "2026-09-01T21:08:57.527Z",
           "source": "qstash-vercel-sportsgameodds",
           "source_event_id": "hWDxBS7Sp16rBwaR3Gv6",
           "source_odd_id": "batting_homeRuns-DREW_GILBERT_1_MLB-game-yn-yes",
@@ -4602,10 +4833,10 @@
           "url": null
         },
         {
-          "book": "DraftKings",
-          "book_id": "draftkings",
-          "odds": 890,
-          "captured_at": "2026-09-01T21:08:57.527Z",
+          "book": "FanDuel",
+          "book_id": "fanduel",
+          "odds": 870,
+          "captured_at": "2026-09-01T21:09:19.149Z",
           "source": "qstash-vercel-sportsgameodds",
           "source_event_id": "hWDxBS7Sp16rBwaR3Gv6",
           "source_odd_id": "batting_homeRuns-DREW_GILBERT_1_MLB-game-yn-yes",
@@ -4627,6 +4858,9 @@
         }
       ],
       "best_book": "DraftKings",
+      "best_books": [
+        "DraftKings"
+      ],
       "best_odds": 890,
       "best_odds_text": "+890",
       "best_price_captured_at": "2026-09-01T21:08:57.527Z",
@@ -4636,8 +4870,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 95,
       "player": "Ezequiel Duran",
       "mlbam_id": 677649,
@@ -4653,6 +4887,7 @@
       "game_pk": null,
       "game_start_at": "2026-09-02T00:05:00.000Z",
       "matchup": "OAK @ TEX",
+      "game_started_at_checkpoint": false,
       "all_prices": [
         {
           "book": "DraftKings",
@@ -4692,6 +4927,9 @@
         }
       ],
       "best_book": "DraftKings",
+      "best_books": [
+        "DraftKings"
+      ],
       "best_odds": 890,
       "best_odds_text": "+890",
       "best_price_captured_at": "2026-09-01T21:08:57.527Z",
@@ -4701,8 +4939,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 96,
       "player": "Gary Sánchez",
       "mlbam_id": 596142,
@@ -4718,8 +4956,10 @@
       "game_pk": null,
       "game_start_at": null,
       "matchup": null,
+      "game_started_at_checkpoint": false,
       "all_prices": [],
       "best_book": null,
+      "best_books": [],
       "best_odds": null,
       "best_odds_text": null,
       "best_price_captured_at": null,
@@ -4729,8 +4969,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 97,
       "player": "Hao-Yu Lee",
       "mlbam_id": 701678,
@@ -4746,8 +4986,10 @@
       "game_pk": null,
       "game_start_at": null,
       "matchup": null,
+      "game_started_at_checkpoint": false,
       "all_prices": [],
       "best_book": null,
+      "best_books": [],
       "best_odds": null,
       "best_odds_text": null,
       "best_price_captured_at": null,
@@ -4757,8 +4999,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 98,
       "player": "Harry Ford",
       "mlbam_id": 695670,
@@ -4774,12 +5016,13 @@
       "game_pk": null,
       "game_start_at": "2026-09-01T22:45:00.000Z",
       "matchup": "ATL @ WSH",
+      "game_started_at_checkpoint": false,
       "all_prices": [
         {
-          "book": "DraftKings",
-          "book_id": "draftkings",
-          "odds": 640,
-          "captured_at": "2026-09-01T21:08:57.527Z",
+          "book": "BetMGM",
+          "book_id": "betmgm",
+          "odds": 850,
+          "captured_at": "2026-09-01T21:09:07.057Z",
           "source": "qstash-vercel-sportsgameodds",
           "source_event_id": "8uTRSBEyYEfZ8tMMbOGn",
           "source_odd_id": "batting_homeRuns-HARRY_FORD_1_MLB-game-yn-yes",
@@ -4800,10 +5043,10 @@
           "url": null
         },
         {
-          "book": "BetMGM",
-          "book_id": "betmgm",
-          "odds": 850,
-          "captured_at": "2026-09-01T21:09:07.057Z",
+          "book": "DraftKings",
+          "book_id": "draftkings",
+          "odds": 640,
+          "captured_at": "2026-09-01T21:08:57.527Z",
           "source": "qstash-vercel-sportsgameodds",
           "source_event_id": "8uTRSBEyYEfZ8tMMbOGn",
           "source_odd_id": "batting_homeRuns-HARRY_FORD_1_MLB-game-yn-yes",
@@ -4813,6 +5056,9 @@
         }
       ],
       "best_book": "BetMGM",
+      "best_books": [
+        "BetMGM"
+      ],
       "best_odds": 850,
       "best_odds_text": "+850",
       "best_price_captured_at": "2026-09-01T21:09:07.057Z",
@@ -4822,8 +5068,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 99,
       "player": "Jac Caglianone",
       "mlbam_id": 695506,
@@ -4839,7 +5085,20 @@
       "game_pk": null,
       "game_start_at": "2026-09-01T23:40:00.000Z",
       "matchup": "MIA @ KC",
+      "game_started_at_checkpoint": false,
       "all_prices": [
+        {
+          "book": "BetMGM",
+          "book_id": "betmgm",
+          "odds": 375,
+          "captured_at": "2026-09-01T21:09:30.647Z",
+          "source": "qstash-vercel-sportsgameodds",
+          "source_event_id": "BMcuBbTFD1HAkrYTRpEe",
+          "source_odd_id": "batting_homeRuns-JAC_CAGLIANONE_1_MLB-game-yn-yes",
+          "provider_call_id": "2026-09-01:1717:2026-09-01T21:17:04.458Z:8726a136fe92",
+          "verified": true,
+          "url": null
+        },
         {
           "book": "FanDuel",
           "book_id": "fanduel",
@@ -4863,21 +5122,12 @@
           "provider_call_id": "2026-09-01:1717:2026-09-01T21:17:04.458Z:8726a136fe92",
           "verified": true,
           "url": null
-        },
-        {
-          "book": "BetMGM",
-          "book_id": "betmgm",
-          "odds": 375,
-          "captured_at": "2026-09-01T21:09:30.647Z",
-          "source": "qstash-vercel-sportsgameodds",
-          "source_event_id": "BMcuBbTFD1HAkrYTRpEe",
-          "source_odd_id": "batting_homeRuns-JAC_CAGLIANONE_1_MLB-game-yn-yes",
-          "provider_call_id": "2026-09-01:1717:2026-09-01T21:17:04.458Z:8726a136fe92",
-          "verified": true,
-          "url": null
         }
       ],
       "best_book": "BetMGM",
+      "best_books": [
+        "BetMGM"
+      ],
       "best_odds": 375,
       "best_odds_text": "+375",
       "best_price_captured_at": "2026-09-01T21:09:30.647Z",
@@ -4887,8 +5137,8 @@
     {
       "slate_date": "2026-09-01",
       "checkpoint": "1717",
-      "captured_at": "2026-09-01T23:18:41.807759+00:00",
-      "captured_at_et": "2026-09-01T19:18:41.807759-04:00",
+      "captured_at": "2026-09-01T21:17:04.458Z",
+      "captured_at_et": null,
       "rank": 100,
       "player": "James Outman",
       "mlbam_id": 681546,
@@ -4904,8 +5154,10 @@
       "game_pk": null,
       "game_start_at": null,
       "matchup": null,
+      "game_started_at_checkpoint": false,
       "all_prices": [],
       "best_book": null,
+      "best_books": [],
       "best_odds": null,
       "best_odds_text": null,
       "best_price_captured_at": null,
