@@ -25,6 +25,7 @@ const {
   decorateOverRows,
   walkForwardResidual,
 } = require('../lib/strikeouts-market-residual');
+const { buildV3Segments, segmentSummary: v3SegmentSummary } = require('../lib/strikeouts-discovery-segments');
 
 const ARCHIVE_START = '2026-08-07';
 const CHECKPOINTS = ['0817', '1117', '1717'];
@@ -285,7 +286,7 @@ module.exports = async function handler(request, response) {
     return response.status(400).json({ status: 'error', message: `through must be between ${ARCHIVE_START} and ${defaultThrough}` });
   }
 
-  const cacheKey = `mlbstrikeouts:discovery:v4:${through}`;
+  const cacheKey = `mlbstrikeouts:discovery:v5:${through}`;
   try {
     const cached = await redisCommand(['GET', cacheKey]);
     if (cached) {
@@ -598,7 +599,8 @@ module.exports = async function handler(request, response) {
       structuralLogLoss: v3WalkForward.structuralLogLoss == null ? null : Number(v3WalkForward.structuralLogLoss.toFixed(5)),
       residualLogLoss: v3WalkForward.residualLogLoss == null ? null : Number(v3WalkForward.residualLogLoss.toFixed(5)),
     };
-    const v3Strategy = summary(v3Selections);
+    const v3Strategy = v3SegmentSummary(v3Selections);
+    const v3Segments = buildV3Segments(v3Selections);
     const v3Promoted = (
       v3Calibration.n >= 500
       && v3Calibration.slates >= 8
@@ -616,7 +618,7 @@ module.exports = async function handler(request, response) {
     const oddsOrder = ['≤ -150', '-149 to -120', '-119 to +100', '+101 to +130', '+131 or longer'];
     const modelEdgeOrder = ['10%+', '5–9.9%', '2–4.9%', '0–1.9%', 'Negative'];
     const output = {
-      schemaVersion: 4,
+      schemaVersion: 5,
       kind: 'pitcher_strikeouts_historical_discovery',
       status: referenceEntries.length ? 'ready' : 'no_rows',
       generatedAt: new Date().toISOString(),
@@ -704,9 +706,7 @@ module.exports = async function handler(request, response) {
         calibration: v3Calibration,
         finalFit: compactResidualFit(v3WalkForward.finalFit),
         strategy: v3Strategy,
-        bySide: grouped(v3Selections, (row) => row.side, ['over', 'under']),
-        byBook: grouped(v3Selections, (row) => row.book, ['fanduel', 'draftkings', 'betmgm']),
-        byCheckpoint: grouped(v3Selections, (row) => row.checkpoint, CHECKPOINTS),
+        ...v3Segments,
         promoted: v3Promoted,
         promotionReason: v3Promoted
           ? 'PASS: residual model beat the market on both walk-forward calibration metrics and produced positive executable ROI.'
