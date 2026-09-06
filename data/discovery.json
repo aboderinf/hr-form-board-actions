@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "kind": "top_100_profit_discovery",
-  "generated_at": "2026-09-06T17:41:14.626733+00:00",
-  "generated_at_et": "2026-09-06T13:41:14.626733-04:00",
+  "generated_at": "2026-09-06T22:54:01.967785+00:00",
+  "generated_at_et": "2026-09-06T18:54:01.967785-04:00",
   "status": "ready",
   "methodology": {
     "capture": "All Top 100 form-score rows are archived at each discovery checkpoint, including rows without an available price.",
@@ -12,15 +12,15 @@
     "warning": "Results are exploratory and sample sizes must be considered before treating any segment as a repeatable edge."
   },
   "archive_started": "2026-08-02T23:21:58.928645-04:00",
-  "capture_count": 136,
-  "raw_top100_rows": 13600,
-  "raw_priced_rows": 5248,
+  "capture_count": 137,
+  "raw_top100_rows": 13700,
+  "raw_priced_rows": 5253,
   "unique_priced_player_games": 1987,
   "reports": {
     "rolling_14d": {
       "start": "2026-08-24",
       "end": "2026-09-06",
-      "raw_checkpoint_captures": 2100,
+      "raw_checkpoint_captures": 2105,
       "analyzed_checkpoint_rows": 1973,
       "complete_slates": 13,
       "latest_complete_slate": "2026-09-05",
@@ -13427,7 +13427,7 @@
     "calendar_month": {
       "start": "2026-09-01",
       "end": "2026-09-06",
-      "raw_checkpoint_captures": 993,
+      "raw_checkpoint_captures": 998,
       "analyzed_checkpoint_rows": 866,
       "complete_slates": 5,
       "latest_complete_slate": "2026-09-05",
@@ -25568,7 +25568,7 @@
     "all_time": {
       "start": "2026-08-02",
       "end": "2026-09-06",
-      "raw_checkpoint_captures": 5248,
+      "raw_checkpoint_captures": 5253,
       "analyzed_checkpoint_rows": 5121,
       "complete_slates": 33,
       "latest_complete_slate": "2026-09-05",
@@ -39704,6 +39704,16 @@
   "recent_captures": [
     {
       "slate_date": "2026-09-06",
+      "checkpoint": "1717",
+      "captured_at_et": "2026-09-06T18:54:01.814309-04:00",
+      "top100_rows": 100,
+      "priced_rows": 5,
+      "odds_coverage": 0.05,
+      "source_status": "ready",
+      "source_generated_at": "2026-09-06T21:17:03.704Z"
+    },
+    {
+      "slate_date": "2026-09-06",
       "checkpoint": "1117",
       "captured_at_et": null,
       "top100_rows": 100,
@@ -39891,16 +39901,6 @@
       "odds_coverage": 0.1,
       "source_status": "ready",
       "source_generated_at": "2026-09-02T00:17:04.970Z"
-    },
-    {
-      "slate_date": "2026-09-01",
-      "checkpoint": "1717",
-      "captured_at_et": null,
-      "top100_rows": 100,
-      "priced_rows": 59,
-      "odds_coverage": 0.59,
-      "source_status": "ready",
-      "source_generated_at": "2026-09-01T21:17:04.458Z"
     }
   ],
   "recent_results": [
@@ -39972,9 +39972,9 @@
       "best_price_captured_at": "2026-09-06T15:12:29.836Z",
       "source_event_id": "H755Duq8zWXOWj5W4ITM",
       "source_odd_id": "batting_homeRuns-DOMINIC_CANZONE_1_MLB-game-yn-yes",
-      "result": "PENDING",
-      "home_runs": null,
-      "profit_units": null
+      "result": "LOSS",
+      "home_runs": 0,
+      "profit_units": -1.0
     },
     {
       "slate_date": "2026-09-06",
@@ -40117,15 +40117,15 @@
       "best_price_captured_at": "2026-09-06T15:12:29.836Z",
       "source_event_id": "cvZUmjzVmvNqoKTaT6iL",
       "source_odd_id": "batting_homeRuns-COLE_CARRIGG_1_MLB-game-yn-yes",
-      "result": "PENDING",
-      "home_runs": null,
-      "profit_units": null
+      "result": "LOSS",
+      "home_runs": 0,
+      "profit_units": -1.0
     },
     {
       "slate_date": "2026-09-06",
-      "checkpoint": "0817",
-      "captured_at": "2026-09-06T12:17:05.366Z",
-      "captured_at_et": null,
+      "checkpoint": "1717",
+      "captured_at": "2026-09-06T22:54:01.814309+00:00",
+      "captured_at_et": "2026-09-06T18:54:01.814309-04:00",
       "rank": 93,
       "player": "Braden Montgomery",
       "mlbam_id": 695731,
@@ -40141,46 +40141,53 @@
       "game_pk": null,
       "game_start_at": "2026-09-06T22:20:00.000Z",
       "matchup": "MIN @ CWS",
-      "game_started_at_checkpoint": false,
       "all_prices": [
         {
-          "book": "DraftKings",
-          "book_id": "draftkings",
-          "odds": 680,
-          "captured_at": "2026-09-06T12:14:16.211Z",
+          "book": "FanDuel",
+          "book_id": "fanduel",
+          "odds": 750,
+          "captured_at": "2026-09-06T21:12:02.805Z",
           "source": "qstash-vercel-sportsgameodds",
           "source_event_id": "awCptl7seuQTcp54hAla",
           "source_odd_id": "batting_homeRuns-BRADEN_MONTGOMERY_1_MLB-game-yn-yes",
-          "provider_call_id": "2026-09-06:0817:2026-09-06T12:17:05.366Z:79c3e5483838",
+          "provider_call_id": "2026-09-06:1717:2026-09-06T21:17:03.704Z:f6a99851f3b4",
           "verified": true,
           "url": null
         },
         {
-          "book": "FanDuel",
-          "book_id": "fanduel",
-          "odds": 680,
-          "captured_at": "2026-09-06T12:14:37.497Z",
+          "book": "DraftKings",
+          "book_id": "draftkings",
+          "odds": 790,
+          "captured_at": "2026-09-06T21:11:43.294Z",
           "source": "qstash-vercel-sportsgameodds",
           "source_event_id": "awCptl7seuQTcp54hAla",
           "source_odd_id": "batting_homeRuns-BRADEN_MONTGOMERY_1_MLB-game-yn-yes",
-          "provider_call_id": "2026-09-06:0817:2026-09-06T12:17:05.366Z:79c3e5483838",
+          "provider_call_id": "2026-09-06:1717:2026-09-06T21:17:03.704Z:f6a99851f3b4",
+          "verified": true,
+          "url": null
+        },
+        {
+          "book": "BetMGM",
+          "book_id": "betmgm",
+          "odds": 500,
+          "captured_at": "2026-09-06T21:12:45.492Z",
+          "source": "qstash-vercel-sportsgameodds",
+          "source_event_id": "awCptl7seuQTcp54hAla",
+          "source_odd_id": "batting_homeRuns-BRADEN_MONTGOMERY_1_MLB-game-yn-yes",
+          "provider_call_id": "2026-09-06:1717:2026-09-06T21:17:03.704Z:f6a99851f3b4",
           "verified": true,
           "url": null
         }
       ],
       "best_book": "DraftKings",
-      "best_books": [
-        "DraftKings",
-        "FanDuel"
-      ],
-      "best_odds": 680,
-      "best_odds_text": "+680",
-      "best_price_captured_at": "2026-09-06T12:14:16.211Z",
+      "best_odds": 790,
+      "best_odds_text": "+790",
+      "best_price_captured_at": "2026-09-06T21:11:43.294Z",
       "source_event_id": "awCptl7seuQTcp54hAla",
       "source_odd_id": "batting_homeRuns-BRADEN_MONTGOMERY_1_MLB-game-yn-yes",
-      "result": "PENDING",
-      "home_runs": null,
-      "profit_units": null
+      "result": "LOSS",
+      "home_runs": 0,
+      "profit_units": -1.0
     },
     {
       "slate_date": "2026-09-06",
@@ -40250,9 +40257,9 @@
       "best_price_captured_at": "2026-09-06T15:11:49.018Z",
       "source_event_id": "JoOt8rGOFQFp4PSMu8uH",
       "source_odd_id": "batting_homeRuns-BOBBY_WITT_JR_1_MLB-game-yn-yes",
-      "result": "PENDING",
-      "home_runs": null,
-      "profit_units": null
+      "result": "LOSS",
+      "home_runs": 0,
+      "profit_units": -1.0
     },
     {
       "slate_date": "2026-09-06",
@@ -40322,9 +40329,9 @@
       "best_price_captured_at": "2026-09-06T15:12:29.836Z",
       "source_event_id": "euaikq8UNbYmahUszRtU",
       "source_odd_id": "batting_homeRuns-VAUGHN_GRISSOM_1_MLB-game-yn-yes",
-      "result": "PENDING",
-      "home_runs": null,
-      "profit_units": null
+      "result": "LOSS",
+      "home_runs": 0,
+      "profit_units": -1.0
     },
     {
       "slate_date": "2026-09-06",
@@ -40394,9 +40401,9 @@
       "best_price_captured_at": "2026-09-06T15:12:06.022Z",
       "source_event_id": "5FHtZQWYU3V2Mpee1C6J",
       "source_odd_id": "batting_homeRuns-RILEY_GREENE_1_MLB-game-yn-yes",
-      "result": "PENDING",
-      "home_runs": null,
-      "profit_units": null
+      "result": "LOSS",
+      "home_runs": 0,
+      "profit_units": -1.0
     },
     {
       "slate_date": "2026-09-06",
@@ -40466,9 +40473,9 @@
       "best_price_captured_at": "2026-09-06T15:11:18.610Z",
       "source_event_id": "ptNX57YhP7fDhW1NZYlV",
       "source_odd_id": "batting_homeRuns-CHRISTIAN_KOSS_1_MLB-game-yn-yes",
-      "result": "PENDING",
-      "home_runs": null,
-      "profit_units": null
+      "result": "LOSS",
+      "home_runs": 0,
+      "profit_units": -1.0
     },
     {
       "slate_date": "2026-09-06",
@@ -40539,9 +40546,9 @@
       "best_price_captured_at": "2026-09-06T12:15:38.602Z",
       "source_event_id": "n8AOFMwWIcQ22PCQspcC",
       "source_odd_id": "batting_homeRuns-ADLEY_RUTSCHMAN_1_MLB-game-yn-yes",
-      "result": "PENDING",
-      "home_runs": null,
-      "profit_units": null
+      "result": "LOSS",
+      "home_runs": 0,
+      "profit_units": -1.0
     },
     {
       "slate_date": "2026-09-06",
@@ -40611,9 +40618,9 @@
       "best_price_captured_at": "2026-09-06T12:15:52.785Z",
       "source_event_id": "tMIUkV2RGXkWAsfBhrkZ",
       "source_odd_id": "batting_homeRuns-FERNANDO_TATIS_JR_1_MLB-game-yn-yes",
-      "result": "PENDING",
-      "home_runs": null,
-      "profit_units": null
+      "result": "WIN",
+      "home_runs": 1,
+      "profit_units": 4.25
     },
     {
       "slate_date": "2026-09-06",
@@ -40684,9 +40691,9 @@
       "best_price_captured_at": "2026-09-06T12:14:16.211Z",
       "source_event_id": "n8AOFMwWIcQ22PCQspcC",
       "source_odd_id": "batting_homeRuns-NICK_SOGARD_1_MLB-game-yn-yes",
-      "result": "PENDING",
-      "home_runs": null,
-      "profit_units": null
+      "result": "LOSS",
+      "home_runs": 0,
+      "profit_units": -1.0
     },
     {
       "slate_date": "2026-09-06",
@@ -40744,9 +40751,9 @@
       "best_price_captured_at": "2026-09-06T12:14:16.211Z",
       "source_event_id": "K1QDZr4pezREDLjlRdbA",
       "source_odd_id": "batting_homeRuns-KETEL_MARTE_1_MLB-game-yn-yes",
-      "result": "PENDING",
-      "home_runs": null,
-      "profit_units": null
+      "result": "LOSS",
+      "home_runs": 0,
+      "profit_units": -1.0
     },
     {
       "slate_date": "2026-09-06",
@@ -40816,9 +40823,9 @@
       "best_price_captured_at": "2026-09-06T15:12:29.836Z",
       "source_event_id": "cvZUmjzVmvNqoKTaT6iL",
       "source_odd_id": "batting_homeRuns-JORDAN_WALKER_1_MLB-game-yn-yes",
-      "result": "PENDING",
-      "home_runs": null,
-      "profit_units": null
+      "result": "LOSS",
+      "home_runs": 0,
+      "profit_units": -1.0
     },
     {
       "slate_date": "2026-09-06",
@@ -40888,9 +40895,9 @@
       "best_price_captured_at": "2026-09-06T15:11:30.880Z",
       "source_event_id": "K1QDZr4pezREDLjlRdbA",
       "source_odd_id": "batting_homeRuns-GABRIEL_MORENO_1_MLB-game-yn-yes",
-      "result": "PENDING",
-      "home_runs": null,
-      "profit_units": null
+      "result": "LOSS",
+      "home_runs": 0,
+      "profit_units": -1.0
     },
     {
       "slate_date": "2026-09-06",
@@ -40960,9 +40967,9 @@
       "best_price_captured_at": "2026-09-06T15:12:29.836Z",
       "source_event_id": "ptNX57YhP7fDhW1NZYlV",
       "source_odd_id": "batting_homeRuns-BO_BICHETTE_1_MLB-game-yn-yes",
-      "result": "PENDING",
-      "home_runs": null,
-      "profit_units": null
+      "result": "WIN",
+      "home_runs": 1,
+      "profit_units": 7.199999999999999
     },
     {
       "slate_date": "2026-09-06",
@@ -41164,9 +41171,9 @@
       "best_price_captured_at": "2026-09-06T12:14:37.497Z",
       "source_event_id": "JoOt8rGOFQFp4PSMu8uH",
       "source_odd_id": "batting_homeRuns-VINNIE_PASQUANTINO_1_MLB-game-yn-yes",
-      "result": "PENDING",
-      "home_runs": null,
-      "profit_units": null
+      "result": "WIN",
+      "home_runs": 1,
+      "profit_units": 5.4
     },
     {
       "slate_date": "2026-09-06",
@@ -41236,9 +41243,9 @@
       "best_price_captured_at": "2026-09-06T12:14:37.497Z",
       "source_event_id": "n8AOFMwWIcQ22PCQspcC",
       "source_odd_id": "batting_homeRuns-PETE_ALONSO_1_MLB-game-yn-yes",
-      "result": "PENDING",
-      "home_runs": null,
-      "profit_units": null
+      "result": "LOSS",
+      "home_runs": 0,
+      "profit_units": -1.0
     },
     {
       "slate_date": "2026-09-06",
@@ -41308,15 +41315,15 @@
       "best_price_captured_at": "2026-09-06T15:12:29.836Z",
       "source_event_id": "gx3ppyWzVXtrXN9puiMS",
       "source_odd_id": "batting_homeRuns-KYLE_SCHWARBER_1_MLB-game-yn-yes",
-      "result": "LOSS",
-      "home_runs": 0,
-      "profit_units": -1.0
+      "result": "WIN",
+      "home_runs": 1,
+      "profit_units": 2.62
     },
     {
       "slate_date": "2026-09-06",
-      "checkpoint": "0817",
-      "captured_at": "2026-09-06T12:17:05.366Z",
-      "captured_at_et": null,
+      "checkpoint": "1717",
+      "captured_at": "2026-09-06T22:54:01.814309+00:00",
+      "captured_at_et": "2026-09-06T18:54:01.814309-04:00",
       "rank": 69,
       "player": "Daylen Lile",
       "mlbam_id": 695734,
@@ -41332,28 +41339,24 @@
       "game_pk": null,
       "game_start_at": "2026-09-07T02:10:00.000Z",
       "matchup": "WSH @ LAD",
-      "game_started_at_checkpoint": false,
       "all_prices": [
         {
           "book": "BetMGM",
           "book_id": "betmgm",
-          "odds": 525,
-          "captured_at": "2026-09-06T12:15:46.036Z",
+          "odds": 550,
+          "captured_at": "2026-09-06T21:12:45.492Z",
           "source": "qstash-vercel-sportsgameodds",
           "source_event_id": "TfVYxU93hF7gRuVrP66j",
           "source_odd_id": "batting_homeRuns-DAYLEN_LILE_1_MLB-game-yn-yes",
-          "provider_call_id": "2026-09-06:0817:2026-09-06T12:17:05.366Z:79c3e5483838",
+          "provider_call_id": "2026-09-06:1717:2026-09-06T21:17:03.704Z:f6a99851f3b4",
           "verified": true,
           "url": null
         }
       ],
       "best_book": "BetMGM",
-      "best_books": [
-        "BetMGM"
-      ],
-      "best_odds": 525,
-      "best_odds_text": "+525",
-      "best_price_captured_at": "2026-09-06T12:15:46.036Z",
+      "best_odds": 550,
+      "best_odds_text": "+550",
+      "best_price_captured_at": "2026-09-06T21:12:45.492Z",
       "source_event_id": "TfVYxU93hF7gRuVrP66j",
       "source_odd_id": "batting_homeRuns-DAYLEN_LILE_1_MLB-game-yn-yes",
       "result": "PENDING",
@@ -41428,9 +41431,9 @@
       "best_price_captured_at": "2026-09-06T15:12:05.212Z",
       "source_event_id": "TIpBGFLk91l72AY3BnQv",
       "source_odd_id": "batting_homeRuns-HERIBERTO_HERNANDEZ_1_MLB-game-yn-yes",
-      "result": "PENDING",
-      "home_runs": null,
-      "profit_units": null
+      "result": "WIN",
+      "home_runs": 1,
+      "profit_units": 6.25
     },
     {
       "slate_date": "2026-09-06",
@@ -41572,9 +41575,9 @@
       "best_price_captured_at": "2026-09-06T15:12:29.836Z",
       "source_event_id": "ptNX57YhP7fDhW1NZYlV",
       "source_odd_id": "batting_homeRuns-JUAN_SOTO_1_MLB-game-yn-yes",
-      "result": "PENDING",
-      "home_runs": null,
-      "profit_units": null
+      "result": "LOSS",
+      "home_runs": 0,
+      "profit_units": -1.0
     },
     {
       "slate_date": "2026-09-06",
@@ -41644,9 +41647,9 @@
       "best_price_captured_at": "2026-09-06T15:12:29.836Z",
       "source_event_id": "euaikq8UNbYmahUszRtU",
       "source_odd_id": "batting_homeRuns-ESMERLYN_VALDEZ_1_MLB-game-yn-yes",
-      "result": "PENDING",
-      "home_runs": null,
-      "profit_units": null
+      "result": "LOSS",
+      "home_runs": 0,
+      "profit_units": -1.0
     },
     {
       "slate_date": "2026-09-06",
@@ -41704,9 +41707,9 @@
       "best_price_captured_at": "2026-09-06T15:11:20.103Z",
       "source_event_id": "g5IHbrJNbt06ubfUuJOa",
       "source_odd_id": "batting_homeRuns-DANNY_JANSEN_1_MLB-game-yn-yes",
-      "result": "PENDING",
-      "home_runs": null,
-      "profit_units": null
+      "result": "LOSS",
+      "home_runs": 0,
+      "profit_units": -1.0
     },
     {
       "slate_date": "2026-09-06",
@@ -41777,9 +41780,9 @@
       "best_price_captured_at": "2026-09-06T15:12:29.836Z",
       "source_event_id": "5FHtZQWYU3V2Mpee1C6J",
       "source_odd_id": "batting_homeRuns-ANGEL_MARTINEZ_1_MLB-game-yn-yes",
-      "result": "PENDING",
-      "home_runs": null,
-      "profit_units": null
+      "result": "LOSS",
+      "home_runs": 0,
+      "profit_units": -1.0
     },
     {
       "slate_date": "2026-09-06",
@@ -41849,9 +41852,9 @@
       "best_price_captured_at": "2026-09-06T15:11:49.018Z",
       "source_event_id": "JoOt8rGOFQFp4PSMu8uH",
       "source_odd_id": "batting_homeRuns-KAZUMA_OKAMOTO_1_MLB-game-yn-yes",
-      "result": "PENDING",
-      "home_runs": null,
-      "profit_units": null
+      "result": "LOSS",
+      "home_runs": 0,
+      "profit_units": -1.0
     },
     {
       "slate_date": "2026-09-06",
@@ -41921,9 +41924,9 @@
       "best_price_captured_at": "2026-09-06T15:12:29.836Z",
       "source_event_id": "g5IHbrJNbt06ubfUuJOa",
       "source_odd_id": "batting_homeRuns-JUNIOR_CAMINERO_1_MLB-game-yn-yes",
-      "result": "PENDING",
-      "home_runs": null,
-      "profit_units": null
+      "result": "LOSS",
+      "home_runs": 0,
+      "profit_units": -1.0
     },
     {
       "slate_date": "2026-09-06",
@@ -41993,9 +41996,9 @@
       "best_price_captured_at": "2026-09-06T15:12:29.021Z",
       "source_event_id": "K1QDZr4pezREDLjlRdbA",
       "source_odd_id": "batting_homeRuns-JORDAN_LAWLAR_1_MLB-game-yn-yes",
-      "result": "PENDING",
-      "home_runs": null,
-      "profit_units": null
+      "result": "LOSS",
+      "home_runs": 0,
+      "profit_units": -1.0
     },
     {
       "slate_date": "2026-09-06",
@@ -42065,9 +42068,9 @@
       "best_price_captured_at": "2026-09-06T15:12:29.836Z",
       "source_event_id": "euaikq8UNbYmahUszRtU",
       "source_odd_id": "batting_homeRuns-BRANDON_LOWE_1_MLB-game-yn-yes",
-      "result": "PENDING",
-      "home_runs": null,
-      "profit_units": null
+      "result": "LOSS",
+      "home_runs": 0,
+      "profit_units": -1.0
     },
     {
       "slate_date": "2026-09-06",
@@ -42137,9 +42140,9 @@
       "best_price_captured_at": "2026-09-06T15:12:29.021Z",
       "source_event_id": "g5IHbrJNbt06ubfUuJOa",
       "source_odd_id": "batting_homeRuns-JUSTIN_FOSCUE_1_MLB-game-yn-yes",
-      "result": "PENDING",
-      "home_runs": null,
-      "profit_units": null
+      "result": "LOSS",
+      "home_runs": 0,
+      "profit_units": -1.0
     },
     {
       "slate_date": "2026-09-06",
@@ -42185,9 +42188,9 @@
       "best_price_captured_at": "2026-09-06T15:12:29.836Z",
       "source_event_id": "H755Duq8zWXOWj5W4ITM",
       "source_odd_id": "batting_homeRuns-BRIAN_SERVEN_1_MLB-game-yn-yes",
-      "result": "PENDING",
-      "home_runs": null,
-      "profit_units": null
+      "result": "LOSS",
+      "home_runs": 0,
+      "profit_units": -1.0
     },
     {
       "slate_date": "2026-09-06",
@@ -42257,9 +42260,9 @@
       "best_price_captured_at": "2026-09-06T15:12:29.836Z",
       "source_event_id": "H755Duq8zWXOWj5W4ITM",
       "source_odd_id": "batting_homeRuns-RANDY_AROZARENA_1_MLB-game-yn-yes",
-      "result": "PENDING",
-      "home_runs": null,
-      "profit_units": null
+      "result": "LOSS",
+      "home_runs": 0,
+      "profit_units": -1.0
     },
     {
       "slate_date": "2026-09-06",
@@ -42329,9 +42332,9 @@
       "best_price_captured_at": "2026-09-06T12:14:37.497Z",
       "source_event_id": "TIpBGFLk91l72AY3BnQv",
       "source_odd_id": "batting_homeRuns-ALEX_BREGMAN_1_MLB-game-yn-yes",
-      "result": "PENDING",
-      "home_runs": null,
-      "profit_units": null
+      "result": "LOSS",
+      "home_runs": 0,
+      "profit_units": -1.0
     },
     {
       "slate_date": "2026-09-06",
@@ -42389,9 +42392,9 @@
       "best_price_captured_at": "2026-09-06T12:14:37.497Z",
       "source_event_id": "cvZUmjzVmvNqoKTaT6iL",
       "source_odd_id": "batting_homeRuns-TJ_RUMFIELD_1_MLB-game-yn-yes",
-      "result": "PENDING",
-      "home_runs": null,
-      "profit_units": null
+      "result": "LOSS",
+      "home_runs": 0,
+      "profit_units": -1.0
     },
     {
       "slate_date": "2026-09-06",
@@ -42521,9 +42524,9 @@
       "best_price_captured_at": "2026-09-06T15:12:29.836Z",
       "source_event_id": "gx3ppyWzVXtrXN9puiMS",
       "source_odd_id": "batting_homeRuns-RONALD_ACUNA_JR_1_MLB-game-yn-yes",
-      "result": "LOSS",
-      "home_runs": 0,
-      "profit_units": -1.0
+      "result": "WIN",
+      "home_runs": 1,
+      "profit_units": 4.24
     },
     {
       "slate_date": "2026-09-06",
@@ -42593,9 +42596,9 @@
       "best_price_captured_at": "2026-09-06T12:15:50.102Z",
       "source_event_id": "n8AOFMwWIcQ22PCQspcC",
       "source_odd_id": "batting_homeRuns-ROMAN_ANTHONY_1_MLB-game-yn-yes",
-      "result": "PENDING",
-      "home_runs": null,
-      "profit_units": null
+      "result": "LOSS",
+      "home_runs": 0,
+      "profit_units": -1.0
     },
     {
       "slate_date": "2026-09-06",
@@ -42641,9 +42644,9 @@
       "best_price_captured_at": "2026-09-06T12:14:37.497Z",
       "source_event_id": "ptNX57YhP7fDhW1NZYlV",
       "source_odd_id": "batting_homeRuns-OSLEIVIS_BASABE_1_MLB-game-yn-yes",
-      "result": "PENDING",
-      "home_runs": null,
-      "profit_units": null
+      "result": "LOSS",
+      "home_runs": 0,
+      "profit_units": -1.0
     },
     {
       "slate_date": "2026-09-06",
@@ -42713,9 +42716,9 @@
       "best_price_captured_at": "2026-09-06T15:12:29.021Z",
       "source_event_id": "H755Duq8zWXOWj5W4ITM",
       "source_odd_id": "batting_homeRuns-JEFF_MCNEIL_1_MLB-game-yn-yes",
-      "result": "PENDING",
-      "home_runs": null,
-      "profit_units": null
+      "result": "LOSS",
+      "home_runs": 0,
+      "profit_units": -1.0
     },
     {
       "slate_date": "2026-09-06",
@@ -42785,9 +42788,9 @@
       "best_price_captured_at": "2026-09-06T15:12:29.836Z",
       "source_event_id": "cvZUmjzVmvNqoKTaT6iL",
       "source_odd_id": "batting_homeRuns-IVAN_HERRERA_1_MLB-game-yn-yes",
-      "result": "PENDING",
-      "home_runs": null,
-      "profit_units": null
+      "result": "LOSS",
+      "home_runs": 0,
+      "profit_units": -1.0
     },
     {
       "slate_date": "2026-09-06",
@@ -42857,9 +42860,9 @@
       "best_price_captured_at": "2026-09-06T15:12:29.836Z",
       "source_event_id": "H755Duq8zWXOWj5W4ITM",
       "source_odd_id": "batting_homeRuns-ALIKA_WILLIAMS_1_MLB-game-yn-yes",
-      "result": "PENDING",
-      "home_runs": null,
-      "profit_units": null
+      "result": "LOSS",
+      "home_runs": 0,
+      "profit_units": -1.0
     },
     {
       "slate_date": "2026-09-06",
@@ -42929,9 +42932,9 @@
       "best_price_captured_at": "2026-09-06T12:15:52.785Z",
       "source_event_id": "tMIUkV2RGXkWAsfBhrkZ",
       "source_odd_id": "batting_homeRuns-SPENCER_JONES_1_MLB-game-yn-yes",
-      "result": "PENDING",
-      "home_runs": null,
-      "profit_units": null
+      "result": "LOSS",
+      "home_runs": 0,
+      "profit_units": -1.0
     },
     {
       "slate_date": "2026-09-06",
@@ -42990,9 +42993,9 @@
       "best_price_captured_at": "2026-09-06T12:14:16.211Z",
       "source_event_id": "awCptl7seuQTcp54hAla",
       "source_odd_id": "batting_homeRuns-KODY_CLEMENS_1_MLB-game-yn-yes",
-      "result": "PENDING",
-      "home_runs": null,
-      "profit_units": null
+      "result": "LOSS",
+      "home_runs": 0,
+      "profit_units": -1.0
     },
     {
       "slate_date": "2026-09-06",
@@ -43050,9 +43053,9 @@
       "best_price_captured_at": "2026-09-06T12:14:16.211Z",
       "source_event_id": "TIpBGFLk91l72AY3BnQv",
       "source_odd_id": "batting_homeRuns-CARSON_KELLY_1_MLB-game-yn-yes",
-      "result": "PENDING",
-      "home_runs": null,
-      "profit_units": null
+      "result": "LOSS",
+      "home_runs": 0,
+      "profit_units": -1.0
     },
     {
       "slate_date": "2026-09-06",
@@ -43122,9 +43125,9 @@
       "best_price_captured_at": "2026-09-06T15:12:29.021Z",
       "source_event_id": "cvZUmjzVmvNqoKTaT6iL",
       "source_odd_id": "batting_homeRuns-THOMAS_SAGGESE_1_MLB-game-yn-yes",
-      "result": "PENDING",
-      "home_runs": null,
-      "profit_units": null
+      "result": "LOSS",
+      "home_runs": 0,
+      "profit_units": -1.0
     },
     {
       "slate_date": "2026-09-06",
@@ -43266,9 +43269,9 @@
       "best_price_captured_at": "2026-09-06T15:12:05.212Z",
       "source_event_id": "TIpBGFLk91l72AY3BnQv",
       "source_odd_id": "batting_homeRuns-MICHAEL_CONFORTO_1_MLB-game-yn-yes",
-      "result": "PENDING",
-      "home_runs": null,
-      "profit_units": null
+      "result": "LOSS",
+      "home_runs": 0,
+      "profit_units": -1.0
     },
     {
       "slate_date": "2026-09-06",
@@ -43518,9 +43521,9 @@
       "best_price_captured_at": "2026-09-06T12:14:16.211Z",
       "source_event_id": "gx3ppyWzVXtrXN9puiMS",
       "source_odd_id": "batting_homeRuns-SEAN_MURPHY_1_MLB-game-yn-yes",
-      "result": "PENDING",
-      "home_runs": null,
-      "profit_units": null
+      "result": "LOSS",
+      "home_runs": 0,
+      "profit_units": -1.0
     },
     {
       "slate_date": "2026-09-06",
@@ -43662,9 +43665,9 @@
       "best_price_captured_at": "2026-09-06T15:12:29.836Z",
       "source_event_id": "cvZUmjzVmvNqoKTaT6iL",
       "source_odd_id": "batting_homeRuns-JOSHUA_BAEZ_1_MLB-game-yn-yes",
-      "result": "PENDING",
-      "home_runs": null,
-      "profit_units": null
+      "result": "LOSS",
+      "home_runs": 0,
+      "profit_units": -1.0
     },
     {
       "slate_date": "2026-09-06",
@@ -43723,9 +43726,9 @@
       "best_price_captured_at": "2026-09-06T12:14:16.211Z",
       "source_event_id": "g5IHbrJNbt06ubfUuJOa",
       "source_odd_id": "batting_homeRuns-JONATHAN_ARANDA_1_MLB-game-yn-yes",
-      "result": "PENDING",
-      "home_runs": null,
-      "profit_units": null
+      "result": "LOSS",
+      "home_runs": 0,
+      "profit_units": -1.0
     },
     {
       "slate_date": "2026-09-06",
@@ -43795,9 +43798,9 @@
       "best_price_captured_at": "2026-09-06T15:12:29.836Z",
       "source_event_id": "ptNX57YhP7fDhW1NZYlV",
       "source_odd_id": "batting_homeRuns-FRANCISCO_LINDOR_1_MLB-game-yn-yes",
-      "result": "PENDING",
-      "home_runs": null,
-      "profit_units": null
+      "result": "LOSS",
+      "home_runs": 0,
+      "profit_units": -1.0
     },
     {
       "slate_date": "2026-09-06",
@@ -43855,9 +43858,9 @@
       "best_price_captured_at": "2026-09-06T12:14:37.497Z",
       "source_event_id": "g5IHbrJNbt06ubfUuJOa",
       "source_odd_id": "batting_homeRuns-EZEQUIEL_DURAN_1_MLB-game-yn-yes",
-      "result": "PENDING",
-      "home_runs": null,
-      "profit_units": null
+      "result": "LOSS",
+      "home_runs": 0,
+      "profit_units": -1.0
     },
     {
       "slate_date": "2026-09-06",
@@ -43915,15 +43918,15 @@
       "best_price_captured_at": "2026-09-06T15:12:29.836Z",
       "source_event_id": "ptNX57YhP7fDhW1NZYlV",
       "source_odd_id": "batting_homeRuns-MARK_VIENTOS_1_MLB-game-yn-yes",
-      "result": "PENDING",
-      "home_runs": null,
-      "profit_units": null
+      "result": "LOSS",
+      "home_runs": 0,
+      "profit_units": -1.0
     },
     {
       "slate_date": "2026-09-06",
-      "checkpoint": "0817",
-      "captured_at": "2026-09-06T12:17:05.366Z",
-      "captured_at_et": null,
+      "checkpoint": "1717",
+      "captured_at": "2026-09-06T22:54:01.814309+00:00",
+      "captured_at_et": "2026-09-06T18:54:01.814309-04:00",
       "rank": 8,
       "player": "Colson Montgomery",
       "mlbam_id": 695657,
@@ -43939,45 +43942,53 @@
       "game_pk": null,
       "game_start_at": "2026-09-06T22:20:00.000Z",
       "matchup": "MIN @ CWS",
-      "game_started_at_checkpoint": false,
       "all_prices": [
         {
-          "book": "DraftKings",
-          "book_id": "draftkings",
-          "odds": 302,
-          "captured_at": "2026-09-06T12:14:16.211Z",
+          "book": "FanDuel",
+          "book_id": "fanduel",
+          "odds": 300,
+          "captured_at": "2026-09-06T21:12:02.805Z",
           "source": "qstash-vercel-sportsgameodds",
           "source_event_id": "awCptl7seuQTcp54hAla",
           "source_odd_id": "batting_homeRuns-COLSON_MONTGOMERY_1_MLB-game-yn-yes",
-          "provider_call_id": "2026-09-06:0817:2026-09-06T12:17:05.366Z:79c3e5483838",
+          "provider_call_id": "2026-09-06:1717:2026-09-06T21:17:03.704Z:f6a99851f3b4",
           "verified": true,
           "url": null
         },
         {
-          "book": "FanDuel",
-          "book_id": "fanduel",
-          "odds": 290,
-          "captured_at": "2026-09-06T12:14:37.497Z",
+          "book": "DraftKings",
+          "book_id": "draftkings",
+          "odds": 321,
+          "captured_at": "2026-09-06T21:11:43.294Z",
           "source": "qstash-vercel-sportsgameodds",
           "source_event_id": "awCptl7seuQTcp54hAla",
           "source_odd_id": "batting_homeRuns-COLSON_MONTGOMERY_1_MLB-game-yn-yes",
-          "provider_call_id": "2026-09-06:0817:2026-09-06T12:17:05.366Z:79c3e5483838",
+          "provider_call_id": "2026-09-06:1717:2026-09-06T21:17:03.704Z:f6a99851f3b4",
+          "verified": true,
+          "url": null
+        },
+        {
+          "book": "BetMGM",
+          "book_id": "betmgm",
+          "odds": 270,
+          "captured_at": "2026-09-06T21:12:45.492Z",
+          "source": "qstash-vercel-sportsgameodds",
+          "source_event_id": "awCptl7seuQTcp54hAla",
+          "source_odd_id": "batting_homeRuns-COLSON_MONTGOMERY_1_MLB-game-yn-yes",
+          "provider_call_id": "2026-09-06:1717:2026-09-06T21:17:03.704Z:f6a99851f3b4",
           "verified": true,
           "url": null
         }
       ],
       "best_book": "DraftKings",
-      "best_books": [
-        "DraftKings"
-      ],
-      "best_odds": 302,
-      "best_odds_text": "+302",
-      "best_price_captured_at": "2026-09-06T12:14:16.211Z",
+      "best_odds": 321,
+      "best_odds_text": "+321",
+      "best_price_captured_at": "2026-09-06T21:11:43.294Z",
       "source_event_id": "awCptl7seuQTcp54hAla",
       "source_odd_id": "batting_homeRuns-COLSON_MONTGOMERY_1_MLB-game-yn-yes",
-      "result": "PENDING",
-      "home_runs": null,
-      "profit_units": null
+      "result": "LOSS",
+      "home_runs": 0,
+      "profit_units": -1.0
     },
     {
       "slate_date": "2026-09-06",
@@ -44047,9 +44058,9 @@
       "best_price_captured_at": "2026-09-06T15:12:29.836Z",
       "source_event_id": "n8AOFMwWIcQ22PCQspcC",
       "source_odd_id": "batting_homeRuns-MICKEY_GASPER_1_MLB-game-yn-yes",
-      "result": "PENDING",
-      "home_runs": null,
-      "profit_units": null
+      "result": "LOSS",
+      "home_runs": 0,
+      "profit_units": -1.0
     },
     {
       "slate_date": "2026-09-06",
@@ -44119,9 +44130,9 @@
       "best_price_captured_at": "2026-09-06T15:12:22.774Z",
       "source_event_id": "H755Duq8zWXOWj5W4ITM",
       "source_odd_id": "batting_homeRuns-CAL_RALEIGH_1_MLB-game-yn-yes",
-      "result": "PENDING",
-      "home_runs": null,
-      "profit_units": null
+      "result": "LOSS",
+      "home_runs": 0,
+      "profit_units": -1.0
     },
     {
       "slate_date": "2026-09-06",
@@ -44192,9 +44203,9 @@
       "best_price_captured_at": "2026-09-06T12:14:16.211Z",
       "source_event_id": "H755Duq8zWXOWj5W4ITM",
       "source_odd_id": "batting_homeRuns-ZACK_GELOF_1_MLB-game-yn-yes",
-      "result": "PENDING",
-      "home_runs": null,
-      "profit_units": null
+      "result": "LOSS",
+      "home_runs": 0,
+      "profit_units": -1.0
     },
     {
       "slate_date": "2026-09-06",
@@ -44264,15 +44275,15 @@
       "best_price_captured_at": "2026-09-06T15:12:05.212Z",
       "source_event_id": "TIpBGFLk91l72AY3BnQv",
       "source_odd_id": "batting_homeRuns-KYLE_STOWERS_1_MLB-game-yn-yes",
-      "result": "PENDING",
-      "home_runs": null,
-      "profit_units": null
+      "result": "LOSS",
+      "home_runs": 0,
+      "profit_units": -1.0
     },
     {
       "slate_date": "2026-09-06",
-      "checkpoint": "0817",
-      "captured_at": "2026-09-06T12:17:05.366Z",
-      "captured_at_et": null,
+      "checkpoint": "1717",
+      "captured_at": "2026-09-06T22:54:01.814309+00:00",
+      "captured_at_et": "2026-09-06T18:54:01.814309-04:00",
       "rank": 2,
       "player": "Ryan Jeffers",
       "mlbam_id": 680777,
@@ -44288,45 +44299,53 @@
       "game_pk": null,
       "game_start_at": "2026-09-06T22:20:00.000Z",
       "matchup": "MIN @ CWS",
-      "game_started_at_checkpoint": false,
       "all_prices": [
         {
           "book": "FanDuel",
           "book_id": "fanduel",
-          "odds": 430,
-          "captured_at": "2026-09-06T12:14:37.497Z",
+          "odds": 420,
+          "captured_at": "2026-09-06T21:12:02.805Z",
           "source": "qstash-vercel-sportsgameodds",
           "source_event_id": "awCptl7seuQTcp54hAla",
           "source_odd_id": "batting_homeRuns-RYAN_JEFFERS_1_MLB-game-yn-yes",
-          "provider_call_id": "2026-09-06:0817:2026-09-06T12:17:05.366Z:79c3e5483838",
+          "provider_call_id": "2026-09-06:1717:2026-09-06T21:17:03.704Z:f6a99851f3b4",
           "verified": true,
           "url": null
         },
         {
           "book": "DraftKings",
           "book_id": "draftkings",
-          "odds": 410,
-          "captured_at": "2026-09-06T12:14:16.211Z",
+          "odds": 432,
+          "captured_at": "2026-09-06T21:11:43.294Z",
           "source": "qstash-vercel-sportsgameodds",
           "source_event_id": "awCptl7seuQTcp54hAla",
           "source_odd_id": "batting_homeRuns-RYAN_JEFFERS_1_MLB-game-yn-yes",
-          "provider_call_id": "2026-09-06:0817:2026-09-06T12:17:05.366Z:79c3e5483838",
+          "provider_call_id": "2026-09-06:1717:2026-09-06T21:17:03.704Z:f6a99851f3b4",
+          "verified": true,
+          "url": null
+        },
+        {
+          "book": "BetMGM",
+          "book_id": "betmgm",
+          "odds": 375,
+          "captured_at": "2026-09-06T21:12:45.492Z",
+          "source": "qstash-vercel-sportsgameodds",
+          "source_event_id": "awCptl7seuQTcp54hAla",
+          "source_odd_id": "batting_homeRuns-RYAN_JEFFERS_1_MLB-game-yn-yes",
+          "provider_call_id": "2026-09-06:1717:2026-09-06T21:17:03.704Z:f6a99851f3b4",
           "verified": true,
           "url": null
         }
       ],
-      "best_book": "FanDuel",
-      "best_books": [
-        "FanDuel"
-      ],
-      "best_odds": 430,
-      "best_odds_text": "+430",
-      "best_price_captured_at": "2026-09-06T12:14:37.497Z",
+      "best_book": "DraftKings",
+      "best_odds": 432,
+      "best_odds_text": "+432",
+      "best_price_captured_at": "2026-09-06T21:11:43.294Z",
       "source_event_id": "awCptl7seuQTcp54hAla",
       "source_odd_id": "batting_homeRuns-RYAN_JEFFERS_1_MLB-game-yn-yes",
-      "result": "PENDING",
-      "home_runs": null,
-      "profit_units": null
+      "result": "LOSS",
+      "home_runs": 0,
+      "profit_units": -1.0
     },
     {
       "slate_date": "2026-09-06",
@@ -44384,9 +44403,9 @@
       "best_price_captured_at": "2026-09-06T12:14:16.211Z",
       "source_event_id": "ptNX57YhP7fDhW1NZYlV",
       "source_odd_id": "batting_homeRuns-RAFAEL_DEVERS_1_MLB-game-yn-yes",
-      "result": "PENDING",
-      "home_runs": null,
-      "profit_units": null
+      "result": "LOSS",
+      "home_runs": 0,
+      "profit_units": -1.0
     },
     {
       "slate_date": "2026-09-05",
