@@ -151,6 +151,7 @@ function renderDiscovery(data) {
     <div class="edge-meta">
       <span>${coverage.readyCaptures || 0}/${coverage.requestedCaptures || 0} checkpoints recovered</span>
       <span>${coverage.settledBookQuoteObservations || 0} exact-book observations</span>
+      <span>${coverage.nonStarterVoids || 0} non-starter observations voided</span>
       <span>${data.providerRequests ?? 0} extra odds calls</span>
     </div>
   </section>

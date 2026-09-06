@@ -53,9 +53,29 @@ test('discovery mines archived checkpoints without a thirteenth serverless funct
   assert.match(discovery, /providerRequests: 0/);
   assert.match(discovery, /holdoutStart/);
   assert.match(discovery, /ambiguousDoubleheaders/);
+  assert.match(discovery, /total-bases-settlement/);
+  assert.match(discovery, /nonStarterVoids/);
+  assert.match(discovery, /mlbtb2:discovery:v2/);
   assert.match(discovery, /String\(split\?\.date \|\| ''\) < slateDate/);
   assert.match(oddsApi, /total-bases-discovery/);
   assert.match(vercel, /\/api\/total-bases-discovery/);
   assert.doesNotMatch(discovery, /SPORTSGAMEODDS_API_KEY/);
   assert.doesNotMatch(discovery, /api\.sportsgameodds\.com/);
+});
+
+test('ledger and Discovery share starter-aware settlement', () => {
+  const settlement = fs.readFileSync(path.join(root, 'lib', 'total-bases-settlement.js'), 'utf8');
+  const readonlyLedger = fs.readFileSync(path.join(root, 'lib', 'total-bases-v2-frozen-monetization-readonly.js'), 'utf8');
+  const writerLedger = fs.readFileSync(path.join(root, 'lib', 'total-bases-v2-frozen-monetization.js'), 'utf8');
+  const ledgerClient = fs.readFileSync(path.join(root, 'sites', 'total-bases', 'monetization.js'), 'utf8');
+  const discoveryClient = fs.readFileSync(path.join(root, 'sites', 'total-bases', 'app.js'), 'utf8');
+
+  assert.match(settlement, /group=\[hitting,fielding\]/);
+  assert.match(settlement, /gamesStarted/);
+  assert.match(settlement, /did_not_start/);
+  assert.match(settlement, /starter_status_unavailable/);
+  assert.match(readonlyLedger, /require\('\.\/total-bases-settlement'\)/);
+  assert.match(writerLedger, /require\('\.\/total-bases-settlement'\)/);
+  assert.match(ledgerClient, /VOID · DID NOT START/);
+  assert.match(discoveryClient, /non-starter observations voided/);
 });

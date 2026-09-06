@@ -91,7 +91,14 @@ function selectionResult(pick) {
   const result = String(pick?.result || '').toLowerCase();
   if (result === 'win') return { cls: 'win', label: 'W' };
   if (result === 'loss') return { cls: 'loss', label: 'L' };
-  if (result === 'void') return { cls: 'void', label: 'VOID' };
+  if (result === 'void') {
+    const reason = String(pick?.voidReason || '').toLowerCase();
+    if (reason === 'did_not_start') return { cls: 'void', label: 'VOID · DID NOT START' };
+    if (reason === 'no_plate_appearance') return { cls: 'void', label: 'VOID · NO PA' };
+    return { cls: 'void', label: 'VOID' };
+  }
+  if (result === 'unverified') return { cls: 'void', label: 'PENDING · START UNVERIFIED' };
+  if (result === 'ambiguous') return { cls: 'void', label: 'PENDING · DOUBLEHEADER' };
   return { cls: 'void', label: result ? result.toUpperCase() : '—' };
 }
 
@@ -109,7 +116,12 @@ function selectionsDetails(day) {
 
 function renderDailyLedger(forward) {
   let days = [...(forward?.daily || [])].reverse();
-  if (ledgerState.betOnly) days = days.filter((day) => Number(day.bets || 0) > 0 || Number(day.voids || 0) > 0);
+  if (ledgerState.betOnly) {
+    days = days.filter((day) => Number(day.bets || 0) > 0
+      || Number(day.voids || 0) > 0
+      || Number(day.unverified || 0) > 0
+      || Number(day.ambiguous || 0) > 0);
+  }
   if (!days.length) return '<div class="money-none">No forward ledger rows match this view.</div>';
 
   const totalPages = Math.max(1, Math.ceil(days.length / ledgerState.pageSize));
@@ -236,7 +248,7 @@ function renderMonetization(data) {
     <div class="money-heading"><div><span>Selected slate execution</span><h3>Qualified 8:17 AM bets</h3></div><p>The ledger above always stays current even when you browse another slate date.</p></div>
     ${snapshotHealth(data)}
     ${picks}
-    <div class="money-footnote"><strong>Important:</strong> the checkpoint workflow creates the official daily pick snapshot. A versioned correction can only replay the frozen rule from an exact archived 8:17 checkpoint. Opening or refreshing this page cannot create or alter ledger selections. Existing archived odds are reused, adding 0 SportsGameOdds calls.</div>`;
+    <div class="money-footnote"><strong>Important:</strong> the checkpoint workflow creates the official daily pick snapshot. Pregame props count only when the hitter starts and records a plate appearance; non-starters and players with no plate appearance are void. Opening or refreshing this page cannot create or alter ledger selections. Existing archived odds are reused, adding 0 SportsGameOdds calls.</div>`;
   wireLedgerControls();
 }
 
