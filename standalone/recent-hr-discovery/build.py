@@ -2,7 +2,6 @@
 from __future__ import annotations
 
 import json
-import math
 import sys
 from collections import defaultdict
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -118,12 +117,24 @@ def prior_five(games: Iterable[dict[str, Any]], slate: date) -> list[dict[str, A
     return output
 
 
-def settle(games: Iterable[dict[str, Any]], slate: date, today: date) -> tuple[str, int | None]:
+def settle(
+    games: Iterable[dict[str, Any]],
+    slate: date,
+    today: date,
+    game_pk: int | str | None = None,
+) -> tuple[str, int | None]:
     rows = [
         game for game in games
         if str(game.get("date") or "") == slate.isoformat()
         and int(game.get("plateAppearances") or 0) > 0
     ]
+    if game_pk is not None:
+        exact = [
+            game for game in rows
+            if int(game.get("gamePk") or 0) == int(game_pk)
+        ]
+        if exact:
+            rows = exact
     if rows:
         home_runs = sum(int(game.get("homeRuns") or 0) for game in rows)
         return ("WIN" if home_runs > 0 else "LOSS", home_runs)
@@ -287,7 +298,12 @@ def main() -> int:
         slate = date.fromisoformat(str(row["slate_date"]))
         player_games = logs.get(int(row["mlbam_id"]), [])
         row["prior_five"] = prior_five(player_games, slate)
-        row["result"], row["home_runs"] = settle(player_games, slate, today)
+        row["result"], row["home_runs"] = settle(
+            player_games,
+            slate,
+            today,
+            row.get("game_pk"),
+        )
         row["best_price_profit_units"] = profit_units(row.get("best_odds"), row["result"])
         enriched.append(row)
 
