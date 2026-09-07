@@ -1,0 +1,63 @@
+name: Standalone Recent HR Discovery
+
+on:
+  push:
+    branches: [discovery-recent-hr-rank-slice]
+    paths:
+      - ".github/workflows/recent-hr-discovery-standalone.yml"
+      - "standalone/recent-hr-discovery/build.py"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: standalone-recent-hr-discovery
+  cancel-in-progress: true
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: discovery-recent-hr-rank-slice
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - run: pip install -r requirements.txt
+
+      - name: Build standalone discovery report
+        run: python standalone/recent-hr-discovery/build.py
+
+      - name: Validate generated report
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p = Path('standalone/recent-hr-discovery/summary.json')
+          data = json.loads(p.read_text())
+          assert data['reports']
+          assert data['eligible_checkpoint_rows'] > 0
+          print('reports', len(data['reports']))
+          print('rows', data['eligible_checkpoint_rows'])
+          print('settled', data['settled_checkpoint_rows'])
+          PY
+
+      - name: Commit standalone outputs to analysis branch only
+        shell: bash
+        run: |
+          git config user.name "recent-hr-discovery-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add standalone/recent-hr-discovery/summary.json standalone/recent-hr-discovery/index.html
+          if git diff --cached --quiet; then
+            echo "No output changes"
+            exit 0
+          fi
+          git commit -m "Build standalone recent-HR discovery report"
+          git push origin HEAD:discovery-recent-hr-rank-slice
