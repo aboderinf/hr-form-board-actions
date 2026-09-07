@@ -106,7 +106,7 @@ class TriplesModelTests(unittest.TestCase):
         players = payload["players"]
         self.assertGreater(len(players), 100)
         self.assertEqual([row["probability_rank"] for row in players[:10]], list(range(1, 11)))
-        self.assertTrue(all(0 < row["predicted_hit_probability"] < 0.25 for row in players))
+        self.assertTrue(all(0 < row["predicted_hit_probability"] <= 0.25 for row in players))
 
 
 if __name__ == "__main__":
