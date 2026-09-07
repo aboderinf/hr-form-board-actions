@@ -6,10 +6,9 @@ on:
     branches: [main]
     paths:
       - ".github/workflows/top100.yml"
-      - "app.js"
-      - "scores-enhancements.js"
-      - "index.html"
-      - "style.css"
+      - "scripts/build_hr_top100.py"
+      - "scripts/build_top100.py"
+      - "scripts/build_triples_model.py"
       - "src/model.py"
       - "src/sources.py"
       - "src/edge_source.py"
@@ -17,28 +16,12 @@ on:
       - "src/top100_view.py"
       - "src/triples.py"
       - "src/triples_model.py"
-      - "scripts/build_top100.py"
-      - "scripts/build_triples_model.py"
-      - "src/triples_model_runtime.py"
-      - "api/triples_model_runtime.py"
-      - "api/qstash-0817-diagnostic.js"
-      - "api/checkpoint-health.js"
-      - "vercel.json"
-      - "scripts/train_triples_model.py"
-      - "data/triples-model/model.json"
-      - "data/triples-model/performance.json"
-      - "data/triples-model/state-parts/**"
       - "tests/test_open_pool.py"
       - "tests/test_top100_view.py"
       - "tests/test_triples.py"
       - "tests/test_triples_model.py"
-      - "tests/test_triples_model_runtime.py"
   schedule:
-    # Primary and recovery invocations. GitHub may start scheduled work hours late,
-    # so freshness checks below use the ET slate date instead of the runner hour.
-    # EDT equivalents (4:05 and 6:05 AM ET).
     - cron: "5 8,10 * 3-11 *"
-    # EST equivalents. Duplicate-offset runs skip once all outputs are current.
     - cron: "5 9,11 * 3-11 *"
 
 permissions:
@@ -46,11 +29,76 @@ permissions:
 
 concurrency:
   group: refresh-top-100-scores
-  # Never let a delayed duplicate cancel an active model build.
   cancel-in-progress: false
 
 jobs:
-  refresh:
+  hr_form:
+    name: Publish HR Form
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Resolve ET slate
+        id: slate
+        run: |
+          python - <<'PY' >> "$GITHUB_OUTPUT"
+          from datetime import datetime
+          from zoneinfo import ZoneInfo
+          print(f"date={datetime.now(ZoneInfo('America/New_York')).date().isoformat()}")
+          PY
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install runtime
+        run: pip install -r requirements.txt
+
+      - name: Test HR Form contracts only
+        run: |
+          python -m unittest discover -s tests -p 'test_open_pool.py' -v
+          python -m unittest discover -s tests -p 'test_top100_view.py' -v
+
+      - name: Build today's HR Top 100
+        run: python scripts/build_hr_top100.py --date "${{ steps.slate.outputs.date }}"
+
+      - name: Require today's HR slate
+        env:
+          EXPECTED_SLATE: ${{ steps.slate.outputs.date }}
+        run: |
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          expected = os.environ["EXPECTED_SLATE"]
+          payload = json.loads(Path("data/top100.json").read_text(encoding="utf-8"))
+          if payload.get("slate_date") != expected:
+              raise SystemExit(f"HR Top 100 slate mismatch: expected {expected}, got {payload.get('slate_date')}")
+          if payload.get("status") not in {"ready", "no_players_in_form"}:
+              raise SystemExit(f"HR Top 100 build unusable: {payload.get('status')}")
+          print(f"HR Top 100 advanced to {expected} with {len(payload.get('players') or [])} rows")
+          PY
+
+      - name: Commit HR Form immediately
+        run: |
+          if git diff --quiet -- data/top100.json; then
+            echo "No HR Form changes."
+            exit 0
+          fi
+          git config user.name "hr-form-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/top100.json
+          git commit -m "Advance HR Form daily slate"
+          git pull --rebase origin main
+          git push
+
+  triples:
+    name: Refresh Triples independently
+    needs: hr_form
+    continue-on-error: true
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
@@ -58,161 +106,65 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Resolve current-slate freshness
-        id: window
-        shell: bash
+      - name: Resolve ET slate
+        id: slate
         run: |
           python - <<'PY' >> "$GITHUB_OUTPUT"
-          import json
-          import os
-          from datetime import datetime, timedelta
-          from pathlib import Path
+          from datetime import datetime
           from zoneinfo import ZoneInfo
-
-          now = datetime.now(ZoneInfo("America/New_York"))
-          expected_slate = now.date().isoformat()
-          expected_state = (now.date() - timedelta(days=1)).isoformat()
-          event = os.environ.get("GITHUB_EVENT_NAME", "")
-          manual_or_code_change = event != "schedule"
-
-          outputs = {
-              "top100": (
-                  Path("data/top100.json"),
-                  {"ready", "no_players_in_form"},
-              ),
-              "triples_top100": (
-                  Path("data/triples-top100.json"),
-                  {"ready", "no_players_in_form"},
-              ),
-              "triples_model": (
-                  Path("data/triples-model.json"),
-                  {"ready", "no_scheduled_players"},
-              ),
-          }
-          freshness = {}
-          stale_reasons = []
-
-          for label, (path, usable_statuses) in outputs.items():
-              try:
-                  payload = json.loads(path.read_text(encoding="utf-8"))
-              except Exception as exc:
-                  payload = {}
-                  stale_reasons.append(f"{label}:unreadable:{type(exc).__name__}")
-
-              slate_date = payload.get("slate_date")
-              status = payload.get("status")
-              freshness[label] = {
-                  "slate_date": slate_date,
-                  "status": status,
-                  "state_as_of": payload.get("state_as_of"),
-              }
-              if slate_date != expected_slate:
-                  stale_reasons.append(f"{label}:slate={slate_date}")
-              if status not in usable_statuses:
-                  stale_reasons.append(f"{label}:status={status}")
-
-          model_state = freshness["triples_model"].get("state_as_of")
-          if not model_state or str(model_state) < expected_state:
-              stale_reasons.append(
-                  f"triples_model:state_as_of={model_state};expected>={expected_state}"
-              )
-
-          if manual_or_code_change:
-              due = True
-              mode = "manual_or_code_change"
-          else:
-              due = bool(stale_reasons)
-              mode = "scheduled_stale_recovery" if due else "scheduled_already_current"
-
-          print(f"due={'true' if due else 'false'}")
-          print(f"mode={mode}")
-          print(f"slate_date={expected_slate}")
-          print(f"observed_et={now.isoformat()}")
-          print(f"freshness={json.dumps(freshness, sort_keys=True, separators=(',', ':'))}")
-          print(f"stale_reasons={json.dumps(stale_reasons, separators=(',', ':'))}")
+          print(f"date={datetime.now(ZoneInfo('America/New_York')).date().isoformat()}")
           PY
 
-      - name: Skip already-current scheduled run
-        if: steps.window.outputs.due != 'true'
-        run: echo "Skipping ${{ steps.window.outputs.mode }} at ${{ steps.window.outputs.observed_et }}."
-
       - uses: actions/setup-python@v5
-        if: steps.window.outputs.due == 'true'
         with:
           python-version: "3.12"
           cache: pip
 
       - name: Install runtime
-        if: steps.window.outputs.due == 'true'
         run: pip install -r requirements.txt
 
-      - name: Test only daily leaderboard contracts
-        if: steps.window.outputs.due == 'true'
+      - name: Test Triples contracts
         run: |
-          python -m unittest discover -s tests -p 'test_open_pool.py' -v
-          python -m unittest discover -s tests -p 'test_top100_view.py' -v
           python -m unittest discover -s tests -p 'test_triples.py' -v
           python -m unittest discover -s tests -p 'test_triples_model.py' -v
 
-      - name: Build today's Top 100 leaderboard
-        if: steps.window.outputs.due == 'true'
-        run: python scripts/build_top100.py --date "${{ steps.window.outputs.slate_date }}"
+      - name: Build Triples form board
+        run: python scripts/build_top100.py --date "${{ steps.slate.outputs.date }}"
 
-      - name: Build today's public-data Triples model board
-        if: steps.window.outputs.due == 'true'
-        run: python scripts/build_triples_model.py --date "${{ steps.window.outputs.slate_date }}"
+      - name: Build Triples model board
+        run: python scripts/build_triples_model.py --date "${{ steps.slate.outputs.date }}"
 
-      - name: Require today's slate
-        if: steps.window.outputs.due == 'true'
-        shell: bash
+      - name: Require today's Triples slate
+        env:
+          EXPECTED_SLATE: ${{ steps.slate.outputs.date }}
         run: |
           python - <<'PY'
-          import json
-          import os
+          import json, os
           from pathlib import Path
-
           expected = os.environ["EXPECTED_SLATE"]
-          payload = json.loads(Path("data/top100.json").read_text(encoding="utf-8"))
           triples = json.loads(Path("data/triples-top100.json").read_text(encoding="utf-8"))
           model = json.loads(Path("data/triples-model.json").read_text(encoding="utf-8"))
-          actual = payload.get("slate_date")
-          if actual != expected:
-              raise SystemExit(f"Top 100 slate mismatch: expected {expected}, got {actual}")
-          if payload.get("status") not in {"ready", "no_players_in_form"}:
-              raise SystemExit(f"Top 100 build was not usable: {payload.get('status')}")
           if triples.get("slate_date") != expected:
-              raise SystemExit(
-                  f"Triples Top 100 slate mismatch: expected {expected}, got {triples.get('slate_date')}"
-              )
+              raise SystemExit(f"Triples Top 100 slate mismatch: expected {expected}, got {triples.get('slate_date')}")
           if triples.get("status") not in {"ready", "no_players_in_form"}:
-              raise SystemExit(
-                  f"Triples Top 100 build was not usable: {triples.get('status')}"
-              )
+              raise SystemExit(f"Triples Top 100 unusable: {triples.get('status')}")
           if model.get("slate_date") != expected:
-              raise SystemExit(
-                  f"Triples model slate mismatch: expected {expected}, got {model.get('slate_date')}"
-              )
+              raise SystemExit(f"Triples model slate mismatch: expected {expected}, got {model.get('slate_date')}")
           if model.get("status") not in {"ready", "no_scheduled_players"}:
-              raise SystemExit(
-                  f"Triples model build was not usable: {model.get('status')}"
-              )
+              raise SystemExit(f"Triples model unusable: {model.get('status')}")
           if int(model.get("sports_game_odds_objects_added") or 0) != 0:
               raise SystemExit("Triples model must not add SportsGameOdds objects")
-          print(f"Top 100 advanced to {actual} with {len(payload.get('players') or [])} rows")
           PY
-        env:
-          EXPECTED_SLATE: ${{ steps.window.outputs.slate_date }}
 
-      - name: Commit leaderboard
-        if: steps.window.outputs.due == 'true'
+      - name: Commit Triples outputs
         run: |
-          if git diff --quiet && [ -z "$(git status --porcelain)" ]; then
-            echo "No Top 100 changes."
+          if git diff --quiet -- data/triples-top100.json data/triples-model.json data/triples-model/state-parts; then
+            echo "No Triples changes."
             exit 0
           fi
-          git config user.name "hr-form-bot"
+          git config user.name "triples-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add -A data/top100.json data/triples-top100.json data/triples-model.json data/triples-model/state-parts
-          git commit -m "Advance Top 100 daily slate"
+          git add data/triples-top100.json data/triples-model.json data/triples-model/state-parts
+          git commit -m "Advance Triples daily slate"
           git pull --rebase origin main
           git push
