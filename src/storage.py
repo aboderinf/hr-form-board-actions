@@ -7,6 +7,8 @@ from typing import Any
 
 from .model import portfolio_summary
 
+SHELL = '''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>HR Form Board — GitHub Actions</title><meta name="description" content="Independent GitHub Actions MLB home-run form tracker"><link rel="stylesheet" href="/style.css"></head><body><div id="app"><div class="shell"><div class="card empty">Loading tracked data…</div></div></div><script src="/central-data-source.js"></script><script type="module" src="/app.js"></script><script type="module" src="/discovery-enhancements.js"></script><script type="module" src="/scores-enhancements.js"></script><script type="module" src="/tracker-network.js"></script><script type="module" src="/rule-tracker.js"></script><script src="/picks-nav.js"></script></body></html>'''
+
 
 def write_json(path: Path, payload: Any) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -21,6 +23,10 @@ def load_json(path: Path, default: Any) -> Any:
         return json.loads(path.read_text(encoding="utf-8"))
     except FileNotFoundError:
         return default
+
+
+def render_site(data: dict, out: Path) -> None:
+    out.write_text(SHELL, encoding="utf-8")
 
 
 def rebuild(data_dir: Path, root: Path) -> None:
