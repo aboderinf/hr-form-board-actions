@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Recent HR Rule — HR Form Board</title>
+  <meta name="description" content="Daily forward picks and ledger for the Top-3 recent-HR rule">
+  <link rel="stylesheet" href="/style.css">
+  <style>
+    .rule-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:16px;margin:18px 0}.chips{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0}.chip{display:inline-flex;padding:5px 9px;border:1px solid var(--border,#2b3340);border-radius:999px;font-size:.78rem;font-weight:700}.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:14px 0}.stat{border:1px solid var(--border,#2b3340);border-radius:12px;padding:12px}.stat b{display:block;font-size:1.45rem}.stat span{font-size:.76rem;color:var(--muted,#8a93a3)}.pick{display:grid;grid-template-columns:1.2fr .7fr .8fr 1fr;gap:12px;padding:14px 0;border-top:1px solid var(--border,#2b3340);align-items:center}.pick:first-child{border-top:0}.player{font-weight:800;font-size:1.05rem}.sub{font-size:.8rem;color:var(--muted,#8a93a3);margin-top:3px}.odds{font-weight:800;font-size:1.05rem}.ledger{width:100%;border-collapse:collapse;font-size:.84rem}.ledger th,.ledger td{padding:9px 7px;border-bottom:1px solid var(--border,#2b3340);text-align:left}.win{font-weight:800}.loss{opacity:.82}.pending{color:var(--muted,#8a93a3)}.notice{margin-top:12px}.status{font-size:.86rem;color:var(--muted,#8a93a3)}@media(max-width:800px){.rule-grid{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}.pick{grid-template-columns:1fr 1fr}.table-wrap{overflow:auto}}@media(max-width:480px){.pick{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}}
+  </style>
+</head>
+<body>
+<div class="shell">
+  <header class="top">
+    <div><div class="brand">HR <span>Form Board</span> <span class="pill">Forward rule</span></div><div class="muted">Recent HR × Top-3 form rank</div></div>
+    <nav><a class="nav" href="/">Board</a><a class="nav" href="/picks.html">Early + Late Picks</a><a class="nav active" href="/recent-hr-rule.html">Recent HR Rule</a></nav>
+  </header>
+
+  <section class="hero">
+    <div class="card">
+      <div class="eyebrow">Frozen forward-test rule</div>
+      <h1>Top 3 +<br>two-game HR gap.</h1>
+      <div class="chips"><span class="chip">11:17 AM ET</span><span class="chip">Form rank 1–3</span><span class="chip">No HR last game</span><span class="chip">HR exactly 2 PA-games ago</span><span class="chip">Best available price</span><span class="chip">1u flat</span></div>
+      <p class="muted">The selection rule is frozen from the discovery analysis. No odds cutoff is applied to the live rule; the &lt;+500 observation remains research-only.</p>
+      <div class="notice"><b>Forward record only:</b> tracking starts September 7, 2026. The historical +83.9% Top-3 result is discovery context, not part of the live ledger.</div>
+    </div>
+    <div class="card">
+      <div class="eyebrow">Discovery benchmark</div>
+      <h2>53 observations · 19–34</h2>
+      <div class="stats"><div class="stat"><b>35.8%</b><span>Hit rate</span></div><div class="stat"><b>+44.48u</b><span>Net</span></div><div class="stat"><b>+83.9%</b><span>ROI</span></div><div class="stat"><b>11:17</b><span>Primary checkpoint</span></div></div>
+      <p class="status">Discovery figures are in-sample and should not be interpreted as the expected forward ROI.</p>
+    </div>
+  </section>
+
+  <div class="rule-grid">
+    <section class="card section">
+      <div class="eyebrow">Today</div><h2>Daily qualifying picks</h2>
+      <div id="todayStatus" class="status">Loading 11:17 checkpoint…</div>
+      <div id="todayPicks"></div>
+    </section>
+    <section class="card section">
+      <div class="eyebrow">Forward performance</div><h2>Live ledger</h2>
+      <div id="stats" class="stats"></div>
+      <div class="status">1 unit per pick at the best captured book price. Results are graded against the selected MLB game.</div>
+    </section>
+  </div>
+
+  <section class="card section">
+    <div class="eyebrow">All forward picks</div><h2>Ledger history</h2>
+    <div class="table-wrap"><table class="ledger"><thead><tr><th>Date</th><th>Player</th><th>Rank</th><th>Price</th><th>Book</th><th>Result</th><th>P/L</th></tr></thead><tbody id="ledgerBody"></tbody></table></div>
+  </section>
+
+  <footer class="footer">This page is isolated from the existing HR Form rules. It reads the 11:17 Discovery capture and maintains its own forward ledger.</footer>
+</div>
+<script type="module" src="/recent-hr-rule.js"></script>
+</body>
+</html>
