@@ -19,6 +19,8 @@ from src.sources import HttpClient, game_log
 from src.storage import write_json
 
 CHECKPOINTS = ("08:17", "11:17", "17:17", "20:17")
+RULE_FORWARD_START = date(2026, 8, 31)
+EARLY_GAME_CUTOFF_MINUTES = 17 * 60 + 17
 
 
 def load(path: Path, default: Any) -> Any:
@@ -45,6 +47,147 @@ def american_text(value: int | None) -> str | None:
     if value is None:
         return None
     return f"+{value}" if value > 0 else str(value)
+
+
+def _game_start_et(row: dict[str, Any]) -> datetime | None:
+    raw = row.get("game_start_at")
+    if not raw:
+        return None
+    try:
+        return datetime.fromisoformat(str(raw).replace("Z", "+00:00")).astimezone(ET)
+    except ValueError:
+        return None
+
+
+def _book_quote(row: dict[str, Any], book_id: str) -> dict[str, Any] | None:
+    return next(
+        (
+            quote
+            for quote in (row.get("all_prices") or [])
+            if str(quote.get("book_id") or "").lower() == book_id.lower()
+        ),
+        None,
+    )
+
+
+def _is_early_rule_pick(row: dict[str, Any]) -> bool:
+    if row.get("checkpoint") != "0817":
+        return False
+    if date.fromisoformat(row["slate_date"]) < RULE_FORWARD_START:
+        return False
+    if row.get("game_started_at_checkpoint") is True:
+        return False
+    form_score = float(row.get("score") or 0.0)
+    if not (0.1 <= form_score < 0.2):
+        return False
+    start = _game_start_et(row)
+    if start is None or start.hour * 60 + start.minute >= EARLY_GAME_CUTOFF_MINUTES:
+        return False
+    selected = best_price(row.get("all_prices") or [])
+    draftkings = _book_quote(row, "draftkings")
+    if not selected or not draftkings:
+        return False
+    selected_odds = int(selected.get("odds"))
+    dk_odds = int(draftkings.get("odds"))
+    if dk_odds != selected_odds:
+        return False
+    return selected_odds < 400 or 500 <= selected_odds < 600
+
+
+def _is_late_rule_pick(row: dict[str, Any]) -> bool:
+    if row.get("checkpoint") != "1717":
+        return False
+    if date.fromisoformat(row["slate_date"]) < RULE_FORWARD_START:
+        return False
+    if row.get("game_started_at_checkpoint") is True:
+        return False
+    form_score = float(row.get("score") or 0.0)
+    if not (0.1 <= form_score < 0.2):
+        return False
+    start = _game_start_et(row)
+    if start is None or start.hour * 60 + start.minute < EARLY_GAME_CUTOFF_MINUTES:
+        return False
+    price = row.get("best_odds")
+    return price is not None and 600 <= int(price) < 800
+
+
+def _rule_entry(row: dict[str, Any], rule_id: str, rule_name: str) -> dict[str, Any]:
+    if rule_id == "early-hr":
+        quote = _book_quote(row, "draftkings") or {}
+        bet_odds = quote.get("odds")
+        book = "DraftKings"
+    else:
+        bet_odds = row.get("best_odds")
+        book = row.get("best_book")
+    start = _game_start_et(row)
+    result = row.get("result") or "PENDING"
+    return {
+        "rule_id": rule_id,
+        "rule_name": rule_name,
+        "slate_date": row.get("slate_date"),
+        "checkpoint": row.get("checkpoint"),
+        "player": row.get("player"),
+        "mlbam_id": row.get("mlbam_id"),
+        "team": row.get("team"),
+        "matchup": row.get("matchup"),
+        "rank": row.get("rank"),
+        "score": row.get("score"),
+        "odds": bet_odds,
+        "book": book,
+        "game_start_at": row.get("game_start_at"),
+        "game_time_et": start.strftime("%-I:%M %p ET") if start else None,
+        "result": result,
+        "home_runs": row.get("home_runs"),
+        "profit_units": profit_units(bet_odds, result),
+        "captured_at": row.get("captured_at"),
+    }
+
+
+def _rule_summary(entries: list[dict[str, Any]]) -> dict[str, Any]:
+    settled = [row for row in entries if row.get("result") in {"WIN", "LOSS"}]
+    wins = sum(row.get("result") == "WIN" for row in settled)
+    losses = sum(row.get("result") == "LOSS" for row in settled)
+    net_units = sum(float(row.get("profit_units") or 0.0) for row in settled)
+    return {
+        "selections": len(entries),
+        "bets": len(settled),
+        "wins": wins,
+        "losses": losses,
+        "voids": sum(row.get("result") == "VOID" for row in entries),
+        "pending": sum(row.get("result") == "PENDING" for row in entries),
+        "hit_rate": wins / len(settled) if settled else None,
+        "net_units": net_units,
+        "roi": net_units / len(settled) if settled else None,
+        "slates": len({row.get("slate_date") for row in entries if row.get("slate_date")}),
+    }
+
+
+def build_rule_tracking(annotated: list[dict[str, Any]]) -> dict[str, Any]:
+    early = [_rule_entry(row, "early-hr", "Early HR") for row in annotated if _is_early_rule_pick(row)]
+    late = [_rule_entry(row, "late-hr", "Late HR") for row in annotated if _is_late_rule_pick(row)]
+    for rows in (early, late):
+        rows.sort(key=lambda row: (str(row.get("slate_date") or ""), str(row.get("player") or "")), reverse=True)
+    return {
+        "started_forward_tracking": RULE_FORWARD_START.isoformat(),
+        "rules": {
+            "early-hr": {
+                "rule_id": "early-hr",
+                "name": "Early HR",
+                "checkpoint": "08:17",
+                "definition": "Score 0.1000–0.1999; early game before 5:17 PM ET; DraftKings tied for best price; best odds <+400 or +500–+599; 1u flat.",
+                "summary": _rule_summary(early),
+                "entries": early,
+            },
+            "late-hr": {
+                "rule_id": "late-hr",
+                "name": "Late HR",
+                "checkpoint": "17:17",
+                "definition": "Score 0.1000–0.1999; game at/after 5:17 PM ET; best available price +600–+799; 1u flat.",
+                "summary": _rule_summary(late),
+                "entries": late,
+            },
+        },
+    }
 
 
 def create_capture(top100: dict[str, Any], edge: dict[str, Any] | None, now: datetime, checkpoint: str) -> dict[str, Any]:
@@ -197,6 +340,7 @@ def main() -> int:
     annotated = annotate_results(raw_entries, HttpClient(), today) if raw_entries else []
     reports = build_reports(annotated, today)
     unique = collapse_best_player_games(annotated)
+    rule_tracking = build_rule_tracking(annotated)
 
     recent_captures = []
     for capture in reversed(captures[-20:]):
@@ -213,7 +357,7 @@ def main() -> int:
 
     recent_results = sorted(unique, key=lambda row: (row.get("slate_date", ""), row.get("rank", 999)), reverse=True)[:100]
     output = {
-        "schema_version": 1,
+        "schema_version": 2,
         "kind": "top_100_profit_discovery",
         "generated_at": now.isoformat(),
         "generated_at_et": now_et.isoformat(),
@@ -231,12 +375,18 @@ def main() -> int:
         "raw_priced_rows": sum(row.get("best_odds") is not None for row in raw_entries),
         "unique_priced_player_games": len(unique),
         "reports": reports,
+        "rule_tracking": rule_tracking,
         "recent_captures": recent_captures,
         "recent_results": recent_results,
         "diagnostics": diagnostics,
     }
     write_json(ROOT / "data" / "discovery.json", output)
-    print(f"Discovery built: captures={len(captures)} raw={len(raw_entries)} unique_priced={len(unique)}")
+    print(
+        "Discovery built: "
+        f"captures={len(captures)} raw={len(raw_entries)} unique_priced={len(unique)} "
+        f"early={len(rule_tracking['rules']['early-hr']['entries'])} "
+        f"late={len(rule_tracking['rules']['late-hr']['entries'])}"
+    )
     return 0
 
 
