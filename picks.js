@@ -160,9 +160,14 @@ async function loadCapture(date, checkpoint) {
   }
 }
 
-function availableDates(index) {
+function availableDates(index, top100) {
   const dates = new Set();
+  if (top100?.slate_date) dates.add(top100.slate_date);
   if (index?.latest?.slate_date) dates.add(index.latest.slate_date);
+  if (typeof index?.latest === "string") dates.add(index.latest);
+  for (const date of index?.dates || []) {
+    if (date) dates.add(date);
+  }
   for (const row of index?.snapshots || []) {
     if (row?.slate_date) dates.add(row.slate_date);
   }
@@ -198,8 +203,12 @@ async function loadPicks() {
 
 async function init() {
   try {
-    boardIndex = await fetchJson("/data/index.json");
-    const dates = availableDates(boardIndex);
+    const [index, top100] = await Promise.all([
+      fetchJson("/data/index.json"),
+      fetchJson("/data/top100.json").catch(() => null),
+    ]);
+    boardIndex = index;
+    const dates = availableDates(index, top100);
     syncDateSelect(dates);
     $("slateDate").addEventListener("change", async (event) => {
       activeDate = event.target.value;
