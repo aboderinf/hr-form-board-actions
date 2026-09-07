@@ -14,10 +14,12 @@ on:
     paths:
       - "data/triggers/run-checkpoint-now.txt"
   schedule:
-    # Recovery fallback after the primary source-driven refresh. Native ET
-    # scheduling removes duplicate DST/UTC cron entries.
-    - cron: '51 8,11,17,20 * * *'
-      timezone: 'America/New_York'
+    # GitHub cron is UTC. These paired schedules cover EDT and EST; the Python
+    # resolver only accepts a real ET checkpoint within its tolerance window.
+    - cron: '51 12,15,21 * * *'
+    - cron: '51 0 * * *'
+    - cron: '51 13,16,22 * * *'
+    - cron: '51 1 * * *'
 
 permissions:
   contents: write
