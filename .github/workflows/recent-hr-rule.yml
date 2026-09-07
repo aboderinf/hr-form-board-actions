@@ -2,6 +2,13 @@ name: Recent HR Rule Forward Tracker
 
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/recent-hr-rule.yml"
+      - "scripts/build_recent_hr_rule.py"
+      - "data/top100.json"
+      - "data/discovery/archive/**"
   schedule:
     # Run after 11:17 AM ET in either daylight or standard time. The job is idempotent.
     - cron: "25 15 * * *"
