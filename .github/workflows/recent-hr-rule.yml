@@ -3,8 +3,9 @@ name: Recent HR Rule Forward Tracker
 on:
   workflow_dispatch:
   schedule:
-    # 11:25 AM ET during MLB DST season: lock picks after the 11:17 archive.
+    # Run after 11:17 AM ET in either daylight or standard time. The job is idempotent.
     - cron: "25 15 * * *"
+    - cron: "25 16 * * *"
     # Morning grading/reconciliation of prior picks.
     - cron: "15 10 * * *"
 
