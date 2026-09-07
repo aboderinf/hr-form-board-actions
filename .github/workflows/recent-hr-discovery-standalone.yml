@@ -6,6 +6,11 @@ on:
     paths:
       - ".github/workflows/recent-hr-discovery-standalone.yml"
       - "standalone/recent-hr-discovery/build.py"
+  pull_request:
+    branches: [main]
+    paths:
+      - ".github/workflows/recent-hr-discovery-standalone.yml"
+      - "standalone/recent-hr-discovery/build.py"
   workflow_dispatch:
 
 permissions:
@@ -50,6 +55,7 @@ jobs:
           PY
 
       - name: Commit standalone outputs to analysis branch only
+        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
         shell: bash
         run: |
           git config user.name "recent-hr-discovery-bot"
