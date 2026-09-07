@@ -21,16 +21,12 @@ on:
       - "src/discovery.py"
       - "tests/test_discovery.py"
   schedule:
-    # Reconciliation/export only. QStash/Vercel writes the canonical Redis
-    # Discovery snapshot immediately after each checkpoint capture.
-    - cron: '45 8 * * *'
-      timezone: 'America/New_York'
-    - cron: '45 11 * * *'
-      timezone: 'America/New_York'
-    - cron: '45 17 * * *'
-      timezone: 'America/New_York'
-    - cron: '45 20 * * *'
-      timezone: 'America/New_York'
+    # GitHub cron is UTC. Each pair covers EDT and EST. The resolver below
+    # uses America/New_York time and also recovers any earlier missing archive.
+    - cron: '45 12,13 * * *'
+    - cron: '45 15,16 * * *'
+    - cron: '45 21,22 * * *'
+    - cron: '45 0,1 * * *'
 
 permissions:
   contents: write
@@ -48,12 +44,11 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Resolve exact checkpoint independent of runner delay
+      - name: Resolve due and missing ET checkpoints
         id: window
         shell: bash
         env:
           EVENT_NAME: ${{ github.event_name }}
-          SCHEDULE_EXPR: ${{ github.event.schedule }}
           MANUAL_DATE: ${{ github.event.inputs.slate_date }}
           MANUAL_CHECKPOINT: ${{ github.event.inputs.checkpoint }}
         run: |
@@ -61,46 +56,40 @@ jobs:
           import os
           import re
           from datetime import datetime, time, timedelta
+          from pathlib import Path
           from zoneinfo import ZoneInfo
 
           et = ZoneInfo("America/New_York")
           now = datetime.now(et)
-          event = os.environ.get("EVENT_NAME", "")
-          schedule = os.environ.get("SCHEDULE_EXPR", "").strip()
           manual_date = os.environ.get("MANUAL_DATE", "").strip()
           manual_cp = re.sub(r"\D", "", os.environ.get("MANUAL_CHECKPOINT", "")).zfill(4)
-          valid = {"0817", "1117", "1717", "2017"}
-          checkpoint = None
+          valid = ["0817", "1117", "1717", "2017"]
+          slate_date = manual_date or now.date().isoformat()
 
-          if event == "schedule":
-              parts = schedule.split()
-              if len(parts) >= 2 and parts[1].isdigit():
-                  checkpoint = {8: "0817", 11: "1117", 17: "1717", 20: "2017"}.get(int(parts[1]))
-          elif manual_cp in valid:
-              checkpoint = manual_cp
+          if manual_cp in valid:
+              due = [manual_cp]
           else:
-              candidates = []
-              for cp in sorted(valid):
+              due = []
+              for cp in valid:
                   hour, minute = int(cp[:2]), int(cp[2:])
                   scheduled = datetime.combine(now.date(), time(hour, minute), et)
-                  delta = now - scheduled
-                  if timedelta(0) <= delta <= timedelta(hours=3):
-                      candidates.append((scheduled, cp))
-              if candidates:
-                  checkpoint = max(candidates)[1]
+                  if scheduled > now:
+                      continue
+                  archive = Path("data/discovery/archive") / f"{slate_date}_{cp}.json"
+                  # Reconcile a checkpoint shortly after it is due, and recover
+                  # any older checkpoint that is still missing from the Git archive.
+                  if not archive.exists() or now - scheduled <= timedelta(minutes=90):
+                      due.append(cp)
 
-          slate_date = manual_date or now.date().isoformat()
-          due = bool(checkpoint)
           print(f"due={'true' if due else 'false'}")
-          print(f"checkpoint={checkpoint or ''}")
+          print(f"checkpoints={' '.join(due)}")
           print(f"slate_date={slate_date}")
           print(f"observed_et={now.isoformat()}")
-          print(f"schedule_expr={schedule}")
           PY
 
-      - name: Skip when no exact checkpoint is attributable
+      - name: Skip when no checkpoint needs reconciliation
         if: steps.window.outputs.due != 'true'
-        run: echo "No exact checkpoint attributable at ${{ steps.window.outputs.observed_et }}; skipping."
+        run: echo "No Discovery checkpoint needs reconciliation at ${{ steps.window.outputs.observed_et }}."
 
       - uses: actions/setup-python@v5
         if: steps.window.outputs.due == 'true'
@@ -111,24 +100,38 @@ jobs:
       - if: steps.window.outputs.due == 'true'
         run: pip install -r requirements.txt
 
-      - name: Export canonical Redis Discovery checkpoint and rebuild reports
+      - name: Export every due canonical Redis Discovery checkpoint
         if: steps.window.outputs.due == 'true'
         shell: bash
+        env:
+          CHECKPOINTS: ${{ steps.window.outputs.checkpoints }}
+          SLATE_DATE: ${{ steps.window.outputs.slate_date }}
         run: |
-          set -euo pipefail
-          for attempt in 1 2 3; do
-            if python scripts/export_discovery_checkpoint.py \
-              --date "${{ steps.window.outputs.slate_date }}" \
-              --checkpoint "${{ steps.window.outputs.checkpoint }}"; then
-              exit 0
-            fi
-            if [ "$attempt" -lt 3 ]; then
-              echo "Discovery export attempt $attempt failed; retrying canonical Redis projection."
-              sleep $((attempt * 20))
+          set -u
+          failed=0
+          for checkpoint in $CHECKPOINTS; do
+            ok=0
+            for attempt in 1 2 3; do
+              if python scripts/export_discovery_checkpoint.py \
+                --date "$SLATE_DATE" \
+                --checkpoint "$checkpoint"; then
+                ok=1
+                break
+              fi
+              if [ "$attempt" -lt 3 ]; then
+                echo "Discovery $checkpoint export attempt $attempt failed; retrying canonical Redis projection."
+                sleep $((attempt * 20))
+              fi
+            done
+            if [ "$ok" -ne 1 ]; then
+              echo "::warning::Discovery $checkpoint could not be reconciled from canonical storage on this run."
+              failed=$((failed + 1))
             fi
           done
-          echo "Discovery static archive reconciliation failed after 3 attempts" >&2
-          exit 1
+          echo "Discovery reconciliation completed with $failed unresolved checkpoint(s)."
+          # Successful checkpoints must still be tested/committed even if a different
+          # checkpoint remains unavailable. Future runs will retry anything missing.
+          exit 0
 
       - name: Run only Discovery archive tests
         if: steps.window.outputs.due == 'true'
