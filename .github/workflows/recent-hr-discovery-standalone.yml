@@ -54,6 +54,15 @@ jobs:
           print('settled', data['settled_checkpoint_rows'])
           PY
 
+      - name: Upload corrected standalone report
+        uses: actions/upload-artifact@v4
+        with:
+          name: recent-hr-discovery-report
+          path: |
+            standalone/recent-hr-discovery/summary.json
+            standalone/recent-hr-discovery/index.html
+          retention-days: 3
+
       - name: Commit standalone outputs to analysis branch only
         if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
         shell: bash
