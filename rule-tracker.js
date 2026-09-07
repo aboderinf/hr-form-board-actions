@@ -2,6 +2,7 @@ const UNIFIED_TRACKER_ROUTE = "tracker";
 
 let unifiedTrackerCache = null;
 let unifiedTrackerFilter = "all";
+let unifiedTrackerRendering = false;
 
 const trackerSafe = (value) => value == null || value === "" ? "—" : String(value);
 const trackerOdds = (value) => value == null ? "—" : Number(value) > 0 ? `+${Math.round(Number(value))}` : `${Math.round(Number(value))}`;
@@ -172,7 +173,7 @@ function unifiedTrackerMarkup(data) {
   return `<style>
     .tracker-rule-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.tracker-legacy-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.tracker-rule-card{min-height:245px}.tracker-definition{min-height:68px}.tracker-metrics{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:14px}.tracker-metrics>div{border:1px solid var(--line);border-radius:12px;padding:10px}.tracker-metrics strong{display:block;font-size:20px}.tracker-metrics span,.tracker-small{font-size:11px;color:var(--muted)}.tracker-actions{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.tracker-ledger th{position:sticky;top:0;background:#0d1a24;z-index:2}@media(max-width:980px){.tracker-rule-grid,.tracker-legacy-grid{grid-template-columns:1fr}.tracker-definition{min-height:0}}
   </style>
-  <div class="shell">
+  <div class="shell" data-unified-tracker="1">
     <header class="top">
       <div><div class="brand">HR <span>Form Board</span> <span class="pill">All-rule tracker</span></div><div class="muted">Forward performance across every published HR rule</div></div>
       <nav><a class="nav" href="#today">Today</a><a class="nav" href="#scores">Top 100 Scores</a><a class="nav" href="#discovery">Discovery</a><a class="nav active" href="#tracker">Tracker</a><a class="nav" href="#data">Data</a><a class="nav" href="#method">Method</a></nav>
@@ -196,29 +197,6 @@ function unifiedTrackerMarkup(data) {
   </div>`;
 }
 
-async function renderUnifiedTracker(force = false) {
-  if (!trackerRouteActive()) return;
-  const app = document.querySelector("#app");
-  if (!app) return;
-  app.innerHTML = '<div class="shell"><div class="card empty">Loading all rule ledgers…</div></div>';
-  try {
-    const data = await loadUnifiedTracker(force);
-    if (!trackerRouteActive()) return;
-    app.innerHTML = unifiedTrackerMarkup(data);
-    document.querySelectorAll("[data-tracker-rule]").forEach((button) => {
-      button.onclick = () => {
-        unifiedTrackerFilter = button.dataset.trackerRule || "all";
-        app.innerHTML = unifiedTrackerMarkup(data);
-        bindUnifiedTrackerControls(data);
-      };
-    });
-    bindUnifiedTrackerControls(data);
-  } catch (error) {
-    console.error(error);
-    app.innerHTML = `<div class="shell"><div class="card"><h2>Tracker unavailable</h2><p class="loss">${trackerSafe(error.message)}</p></div></div>`;
-  }
-}
-
 function bindUnifiedTrackerControls(data) {
   document.querySelectorAll("[data-tracker-rule]").forEach((button) => {
     button.onclick = () => {
@@ -233,8 +211,37 @@ function bindUnifiedTrackerControls(data) {
   if (refresh) refresh.onclick = () => renderUnifiedTracker(true);
 }
 
+async function renderUnifiedTracker(force = false) {
+  if (!trackerRouteActive() || (unifiedTrackerRendering && !force)) return;
+  const app = document.querySelector("#app");
+  if (!app) return;
+  unifiedTrackerRendering = true;
+  app.innerHTML = '<div class="shell" data-unified-tracker="loading"><div class="card empty">Loading all rule ledgers…</div></div>';
+  try {
+    const data = await loadUnifiedTracker(force);
+    if (!trackerRouteActive()) return;
+    app.innerHTML = unifiedTrackerMarkup(data);
+    bindUnifiedTrackerControls(data);
+  } catch (error) {
+    console.error(error);
+    app.innerHTML = `<div class="shell" data-unified-tracker="error"><div class="card"><h2>Tracker unavailable</h2><p class="loss">${trackerSafe(error.message)}</p></div></div>`;
+  } finally {
+    unifiedTrackerRendering = false;
+  }
+}
+
 addEventListener("hashchange", () => {
-  if (trackerRouteActive()) queueMicrotask(() => renderUnifiedTracker(false));
+  if (trackerRouteActive()) setTimeout(() => renderUnifiedTracker(false), 0);
 });
 
-if (trackerRouteActive()) queueMicrotask(() => renderUnifiedTracker(false));
+const trackerAppRoot = document.querySelector("#app");
+if (trackerAppRoot) {
+  const trackerObserver = new MutationObserver(() => {
+    if (!trackerRouteActive()) return;
+    if (document.querySelector("[data-unified-tracker]")) return;
+    setTimeout(() => renderUnifiedTracker(false), 0);
+  });
+  trackerObserver.observe(trackerAppRoot, { childList: true });
+}
+
+if (trackerRouteActive()) setTimeout(() => renderUnifiedTracker(false), 0);
