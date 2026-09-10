@@ -45,6 +45,12 @@ async function handleTop100Refresh(request, response) {
 
   try {
     const result = await refreshTop100();
+    let storageMaintenance = null;
+    try {
+      storageMaintenance = await require('../lib/storage-maintenance').maintainStorage({ maxRecords: 32 });
+    } catch (error) {
+      console.warn('Historical archive compaction deferred:', String(error.message || error));
+    }
     const payload = result.payload || null;
     const projections = {};
     if (payload?.slate_date && ["built", "reused", "reused_after_race"].includes(result.outcome)) {
@@ -77,6 +83,7 @@ async function handleTop100Refresh(request, response) {
       delivery: payload?.delivery || "qstash-vercel-redis",
       providerRequests: 0,
       projections,
+      storageMaintenance,
       diagnostics: payload?.diagnostics || [],
     });
   } catch (error) {

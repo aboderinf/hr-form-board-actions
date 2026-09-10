@@ -5,6 +5,9 @@ const crypto = require('node:crypto');
 const codec = require('../lib/redis-value-codec');
 const runtime = require('../lib/checkpoint-runtime');
 const { maintainStorage } = require('../lib/storage-maintenance');
+const { releaseArchivedDuplicates } = require('../lib/storage-maintenance');
+const { readColdArchive, archivedKeys } = require('../lib/storage-archive');
+const { readTotalBasesCheckpoint } = require('../lib/total-bases-runtime');
 
 const original = JSON.stringify({ captured_at: '2026-08-20T12:17:03.000Z',
   source: { provider_call_id: 'original-call', provider_response_sha256: 'original-hash' },
@@ -107,4 +110,42 @@ test('concurrent updates are preserved by compare-and-set', async (t) => {
   const result = await maintainStorage({ maxRecords: 1 });
   assert.equal(result.recordsCompacted, 0);
   assert.equal(records.get(key), 'newer concurrent value');
+});
+
+test('permanent backups serve identical historical odds through the existing reader', async (t) => {
+  fakeRedis(t);
+  for (const key of archivedKeys()) {
+    const [, , date, checkpoint] = key.split(':');
+    const expected = readColdArchive(key);
+    assert.equal(await runtime.redisCommand(['GET', key]), expected);
+    assert.equal(await runtime.redisCommand(['GET', key], { raw: true }), null);
+    assert.equal(JSON.stringify(await readTotalBasesCheckpoint(date, checkpoint)), expected);
+  }
+});
+
+test('rescue releases only exact, durably backed-up duplicates and preserves a racing update', async (t) => {
+  fakeRedis(t);
+  const keys = archivedKeys();
+  const records = new Map(keys.map((key) => [key, readColdArchive(key)]));
+  t.mock.method(global, 'fetch', async (url, options) => {
+    const cmd = JSON.parse(options.body);
+    if (cmd[0] === 'GET') return Response.json({ result: records.get(cmd[1]) || null });
+    assert.equal(cmd[0], 'EVAL');
+    assert.match(cmd[1], /GET.*KEYS\[1\].*ARGV\[1\]/);
+    assert.match(cmd[1], /DEL/);
+    const key = cmd[3];
+    assert.equal(cmd[4], readColdArchive(key));
+    if (key === keys[0]) records.set(key, 'new concurrent checkpoint');
+    if (records.get(key) !== cmd[4]) return Response.json({ result: 0 });
+    records.delete(key);
+    return Response.json({ result: 1 });
+  });
+  const result = await releaseArchivedDuplicates();
+  assert.equal(result.recordsArchived, keys.length - 1);
+  assert.equal(records.get(keys[0]), 'new concurrent checkpoint');
+  for (const key of keys.slice(1)) {
+    assert.equal(records.has(key), false);
+    assert.ok(JSON.parse(readColdArchive(key)).rows.length > 0);
+    assert.equal(await runtime.redisCommand(['GET', key]), readColdArchive(key));
+  }
 });
