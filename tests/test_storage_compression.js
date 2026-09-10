@@ -149,3 +149,25 @@ test('rescue releases only exact, durably backed-up duplicates and preserves a r
     assert.equal(await runtime.redisCommand(['GET', key]), readColdArchive(key));
   }
 });
+
+test('over-quota rescue rechecks immutable duplicates and every removed value stays readable', async (t) => {
+  fakeRedis(t);
+  const keys = archivedKeys();
+  const records = new Map(keys.map((key) => [key, readColdArchive(key)]));
+  t.mock.method(global, 'fetch', async (url, options) => {
+    const cmd = JSON.parse(options.body);
+    if (cmd[0] === 'GET') return Response.json({ result: records.get(cmd[1]) || null });
+    if (cmd[0] === 'EVAL') {
+      if (cmd[3] === keys[0]) records.set(keys[0], 'changed since verification');
+      return Response.json({ error: 'ERR DB capacity quota exceeded' });
+    }
+    assert.equal(cmd[0], 'DEL');
+    assert.ok(keys.includes(cmd[1]));
+    assert.equal(records.get(cmd[1]), readColdArchive(cmd[1]));
+    return Response.json({ result: Number(records.delete(cmd[1])) });
+  });
+  const result = await releaseArchivedDuplicates();
+  assert.equal(result.recordsArchived, keys.length - 1);
+  assert.equal(records.get(keys[0]), 'changed since verification');
+  for (const key of keys.slice(1)) assert.equal(await runtime.redisCommand(['GET', key]), readColdArchive(key));
+});
