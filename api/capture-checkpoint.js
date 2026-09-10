@@ -142,6 +142,15 @@ module.exports = async function handler(request, response) {
   const slateDate = String(body.date || intendedSlateDate(checkpoint, now));
   try {
     const result = await captureCheckpoint({ slateDate, checkpoint, now });
+    // New writes are compressed by the shared codec. Gradually compact older
+    // records after the timestamped capture, retaining their original TTLs.
+    if (["captured", "reused"].includes(result.outcome)) {
+      try {
+        await require('../lib/storage-maintenance').maintainStorage({ maxRecords: 8 });
+      } catch (error) {
+        console.warn('Historical archive compaction deferred:', String(error.message || error));
+      }
+    }
     const payload = result.payload || null;
     let discoveryArchive = null;
     let discoveryArchiveError = null;

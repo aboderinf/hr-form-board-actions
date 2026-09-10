@@ -33,7 +33,7 @@ jobs:
       - name: Test archived triples projection
         run: node --test tests/test_triples_runtime.js
       - name: Test archive delivery under storage quota failures
-        run: node --test tests/test_storage_quota.js
+        run: node --test tests/test_storage_quota.js tests/test_storage_compression.js
       - name: Test archived total-bases projection and consolidation
         run: node --test tests/test_total_bases_runtime.js
       - name: Test starter-aware total-bases settlement

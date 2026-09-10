@@ -1,7 +1,7 @@
-const zlib = require("node:zlib");
 const {
   envFirst,
   normalizeCheckpoint,
+  readRawArchive,
   redisCommand,
   redisConfig,
 } = require("../lib/checkpoint-runtime");
@@ -14,12 +14,9 @@ async function handleRawIdentity(request, response) {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || !checkpoint) {
     return response.status(400).json({ error: "invalid date/checkpoint" });
   }
-  const stored = await redisCommand(["GET", `mlbhr:raw:${date}:${checkpoint}`]);
+  const stored = await readRawArchive(date, checkpoint);
   if (!stored) return response.status(404).json({ error: "raw checkpoint not found" });
-  const archive = JSON.parse(stored);
-  const raw = JSON.parse(
-    zlib.gunzipSync(Buffer.from(archive.responseGzipBase64, "base64")).toString("utf8"),
-  );
+  const { archive, responsePayload: raw } = stored;
   const rows = [];
   for (const event of raw?.data || []) {
     for (const [oddKey, oddValue] of Object.entries(event?.odds || {})) {
@@ -89,7 +86,11 @@ module.exports = async function handler(request, response) {
     try {
       redisOk = (await redisCommand(["PING"])) === "PONG";
       redisProviderKey = Boolean(await redisCommand(["EXISTS", "mlbhr:config:sportsgameodds-api-key"]));
-      capacity = await storageSummary();
+      capacity = await storageSummary({ probeWrites: true });
+      if (capacity.capacityAvailable === false) {
+        const maintenance = await require('../lib/storage-maintenance').maintainStorage({ maxRecords: 8 });
+        capacity = { ...await storageSummary({ probeWrites: true }), maintenance };
+      }
     } catch (error) {
       redisError = error instanceof Error ? error.message : String(error);
     }
@@ -125,7 +126,7 @@ module.exports = async function handler(request, response) {
     [`mlb-hr-checkpoint-${cp}`, `mlb-hr-checkpoint-${cp}-recovery`]);
   const schedulesReady = expectedIds.every((id) => qstashSchedules.some((row) =>
     row.scheduleId === id && !row.isPaused && row.destination === "https://hr-form-board-actions.vercel.app/api/capture-checkpoint"));
-  const ready = baseEnvReady && providerKeyReady && redisOk && capacity?.capacityAvailable !== false && qstashOk && schedulesReady;
+  const ready = baseEnvReady && providerKeyReady && redisOk && capacity?.capacityAvailable === true && qstashOk && schedulesReady;
   response.setHeader("Cache-Control", "no-store");
   if (request.method === "HEAD") return response.status(ready ? 200 : 503).end();
   return response.status(ready ? 200 : 503).json({
