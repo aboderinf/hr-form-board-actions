@@ -6,6 +6,7 @@ const {
   redisConfig,
 } = require("../lib/checkpoint-runtime");
 const { resolveQstash } = require("../lib/qstash-runtime");
+const { storageSummary, storageAudit } = require("../lib/storage-health");
 
 async function handleRawIdentity(request, response) {
   const date = String(request.query?.date || "");
@@ -60,6 +61,14 @@ module.exports = async function handler(request, response) {
   if (String(request.query?.action || "") === "raw-identity") {
     return handleRawIdentity(request, response);
   }
+  if (String(request.query?.action || "") === "storage-audit") {
+    response.setHeader("Cache-Control", "no-store");
+    try {
+      return response.status(200).json(await storageAudit());
+    } catch (error) {
+      return response.status(503).json({ status: "unavailable", message: String(error.message || error) });
+    }
+  }
 
   const redis = redisConfig();
   const envProviderKey = Boolean(envFirst("SPORTSGAMEODDS_API_KEY"));
@@ -75,10 +84,12 @@ module.exports = async function handler(request, response) {
   let redisOk = false;
   let redisError = null;
   let redisProviderKey = false;
+  let capacity = null;
   if (env.redisUrl && env.redisToken) {
     try {
       redisOk = (await redisCommand(["PING"])) === "PONG";
       redisProviderKey = Boolean(await redisCommand(["EXISTS", "mlbhr:config:sportsgameodds-api-key"]));
+      capacity = await storageSummary();
     } catch (error) {
       redisError = error instanceof Error ? error.message : String(error);
     }
@@ -110,7 +121,11 @@ module.exports = async function handler(request, response) {
 
   const providerKeyReady = envProviderKey || redisProviderKey;
   const baseEnvReady = env.qstashToken && env.qstashCurrentSigningKey && env.qstashNextSigningKey && env.redisUrl && env.redisToken;
-  const ready = baseEnvReady && providerKeyReady && redisOk && qstashOk && qstashSchedules.length === 4;
+  const expectedIds = ["0817", "1117", "1717", "2017"].flatMap((cp) =>
+    [`mlb-hr-checkpoint-${cp}`, `mlb-hr-checkpoint-${cp}-recovery`]);
+  const schedulesReady = expectedIds.every((id) => qstashSchedules.some((row) =>
+    row.scheduleId === id && !row.isPaused && row.destination === "https://hr-form-board-actions.vercel.app/api/capture-checkpoint"));
+  const ready = baseEnvReady && providerKeyReady && redisOk && capacity?.capacityAvailable !== false && qstashOk && schedulesReady;
   response.setHeader("Cache-Control", "no-store");
   if (request.method === "HEAD") return response.status(ready ? 200 : 503).end();
   return response.status(ready ? 200 : 503).json({
@@ -123,11 +138,12 @@ module.exports = async function handler(request, response) {
       ready: providerKeyReady,
       source: envProviderKey ? "vercel-env" : redisProviderKey ? "upstash-redis" : "missing",
     },
-    redis: { ok: redisOk, error: redisError },
+    redis: { ok: redisOk, error: redisError, capacity },
     qstash: {
       ok: qstashOk,
       apiBase: qstashRegionBase,
       checkpointScheduleCount: qstashSchedules.length,
+      schedulesReady,
       schedules: qstashSchedules,
       error: qstashError,
     },

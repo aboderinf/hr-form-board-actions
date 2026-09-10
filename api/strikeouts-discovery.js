@@ -1,4 +1,4 @@
-const { redisCommand } = require('../lib/checkpoint-runtime');
+const { redisCommand, writeDerivedCache } = require('../lib/checkpoint-runtime');
 const { readStrikeoutsCheckpoint } = require('../lib/strikeouts-runtime');
 const {
   LEAGUE_K_PA_FALLBACK,
@@ -730,7 +730,7 @@ module.exports = async function handler(request, response) {
         .map(publicEntry),
     };
 
-    await redisCommand(['SET', cacheKey, JSON.stringify(output), 'EX', 21600]);
+    await writeDerivedCache(['SET', cacheKey, JSON.stringify(output), 'EX', 21600]);
     response.setHeader('Access-Control-Allow-Origin', '*');
     response.setHeader('Cache-Control', 'public, s-maxage=900, stale-while-revalidate=3600');
     response.setHeader('X-Strikeouts-Discovery-Cache', 'MISS');
