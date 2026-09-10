@@ -105,6 +105,14 @@ test('quota rejection never removes or changes an archive', async (t) => {
   assert.ok(commands.every((cmd) => cmd[0] !== 'DEL'));
 });
 
+test('healthy storage does not repeat a full inventory on scheduler retries', async (t) => {
+  const { commands } = fakeRedis(t);
+  await maintainStorage({ maxRecords: 1 });
+  const scans = commands.filter((cmd) => cmd[0] === 'SCAN').length;
+  assert.equal((await maintainStorage()).status, 'recently_compacted');
+  assert.equal(commands.filter((cmd) => cmd[0] === 'SCAN').length, scans);
+});
+
 test('concurrent updates are preserved by compare-and-set', async (t) => {
   const { key, records } = fakeRedis(t, { race: true });
   const result = await maintainStorage({ maxRecords: 1 });

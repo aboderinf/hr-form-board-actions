@@ -88,7 +88,7 @@ module.exports = async function handler(request, response) {
       redisProviderKey = Boolean(await redisCommand(["EXISTS", "mlbhr:config:sportsgameodds-api-key"]));
       capacity = await storageSummary({ probeWrites: true });
       if (capacity.capacityAvailable === false) {
-        const maintenance = await require('../lib/storage-maintenance').maintainStorage({ maxRecords: 8 });
+        const maintenance = await require('../lib/storage-maintenance').maintainStorage({ maxRecords: 8, force: true });
         capacity = { ...await storageSummary({ probeWrites: true }), maintenance };
       }
     } catch (error) {
