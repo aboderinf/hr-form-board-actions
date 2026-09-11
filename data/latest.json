@@ -1,68 +1,41 @@
 {
   "schema_version": 1,
   "kind": "latest_shared_slate",
-  "refreshed_at": "2026-09-11T00:35:46.943054+00:00",
-  "refreshed_at_et": "2026-09-10T20:35:46.943054-04:00",
+  "refreshed_at": "2026-09-11T04:43:24.225153+00:00",
+  "refreshed_at_et": "2026-09-11T00:43:24.225153-04:00",
   "slate_date": "2026-09-10",
-  "status": "no_current_eligible_players",
+  "status": "shared_odds_slate_empty",
   "sources": {
     "mlb_hr_edge": {
       "source": "MLB HR Edge",
-      "source_url": "https://mlb-hr-edge.feranmi.chatgpt.site/api/odds?latest=1",
+      "source_url": "/home/runner/work/hr-form-board-actions/hr-form-board-actions/data/shared-odds/latest.json",
       "delivery": "qstash-vercel-redis",
       "source_date": "2026-09-10",
       "date_matches": true,
-      "as_of": "2026-09-10T21:17:00.000Z",
-      "status": "ready",
-      "generated_at": "2026-09-10T21:17:01.990Z",
-      "latest_ingest_at": "2026-09-10T21:17:01.990Z",
-      "provider_call_id": "2026-09-10:1717:2026-09-10T21:17:01.990Z:3df5865dd228",
-      "provider_response_sha256": "3df5865dd22836d3428ae796e693864c26f3106b5012b1c25d45e20fe788f0f8",
+      "as_of": "2026-09-11T00:17:00.000Z",
+      "status": "pending",
+      "generated_at": "2026-09-11T00:17:03.123Z",
+      "latest_ingest_at": "2026-09-11T00:17:03.123Z",
+      "provider_call_id": "2026-09-10:2017:2026-09-11T00:17:03.123Z:70a6d3cf6391",
+      "provider_response_sha256": "70a6d3cf639152bbd28c8aae19a91c4c012823e23f68260c724d99acf4974109",
       "archived_call_count": 1,
-      "quote_count": 98,
-      "all_available_quote_count": 253,
-      "excluded_live_or_post_start_quote_count": 57,
+      "quote_count": 0,
+      "all_available_quote_count": 118,
+      "excluded_live_or_post_start_quote_count": 118,
       "books": [
         "FanDuel",
         "DraftKings",
         "BetMGM"
       ],
-      "row_count": 34,
-      "compatibility_fallback": "odds_api",
-      "mlbam_ids_hydrated": 34,
-      "mlbam_ids_added": 34,
+      "row_count": 0,
+      "compatibility_fallback": "exact_upstash_checkpoint_cache",
+      "checkpoint": "2017",
+      "mlbam_ids_hydrated": 0,
+      "mlbam_ids_added": 0,
       "unresolved_player_names": []
     }
   },
   "diagnostics": [],
-  "portfolios": {
-    "top10": {
-      "picks": [],
-      "summary": {
-        "selections": 0,
-        "settled": 0,
-        "wins": 0,
-        "losses": 0,
-        "pushes": 0,
-        "hit_rate": null,
-        "net_units": 0,
-        "roi": null
-      }
-    },
-    "top20": {
-      "picks": [],
-      "summary": {
-        "selections": 0,
-        "settled": 0,
-        "wins": 0,
-        "losses": 0,
-        "pushes": 0,
-        "hit_rate": null,
-        "net_units": 0,
-        "roi": null
-      }
-    }
-  },
-  "source_generated_at": "2026-09-10T21:17:01.990Z",
-  "eligible_candidates": 0
+  "portfolios": {},
+  "source_generated_at": "2026-09-11T00:17:03.123Z"
 }
