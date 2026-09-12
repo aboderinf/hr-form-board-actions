@@ -1,8 +1,16 @@
+import { ODDS_RANGES, FORM_RANGES, resolveRange, rangeError, matchesRange } from "./discovery-ranges.mjs";
+
 const scoreTableState = {
   sortKey: "rank",
   sortDirection: "asc",
   filter: "all",
   query: "",
+  oddsRange: "all",
+  formRange: "all",
+  oddsMin: "",
+  oddsMax: "",
+  formMin: "",
+  formMax: "",
   view: "current",
   data: null,
   loading: null,
@@ -102,11 +110,14 @@ function compareValues(a, b, key) {
 function visiblePlayers() {
   const players = [...(scoreTableState.data?.players || [])];
   const query = scoreTableState.query.trim().toLowerCase();
+  const { oddsRange, formRange, error } = selectedScoreRanges();
+  if (error) return [];
   const filtered = players.filter((player) => {
     if (scoreTableState.filter === "priced" && !player.odds_available) return false;
     if (scoreTableState.filter === "unpriced" && player.odds_available) return false;
     if (scoreTableState.filter === "provisional" && !player.provisional) return false;
     if (scoreTableState.filter === "established" && player.provisional) return false;
+    if (!matchesRange(player.best_odds, oddsRange) || !matchesRange(player.score, formRange)) return false;
     if (!query) return true;
     return `${player.player || ""} ${player.team || ""}`.toLowerCase().includes(query);
   });
@@ -116,6 +127,28 @@ function visiblePlayers() {
     return compared === 0 ? Number(a.rank || 999) - Number(b.rank || 999) : compared * direction;
   });
   return filtered;
+}
+
+function selectedScoreRanges() {
+  const oddsRange = resolveRange(ODDS_RANGES, scoreTableState.oddsRange, scoreTableState.oddsMin, scoreTableState.oddsMax);
+  const formRange = resolveRange(FORM_RANGES, scoreTableState.formRange, scoreTableState.formMin, scoreTableState.formMax);
+  return { oddsRange, formRange, error: rangeError(oddsRange, "odds") || rangeError(formRange, "form") };
+}
+
+function scoreRangeControl(kind, label, ranges) {
+  const selection = scoreTableState[`${kind}Range`];
+  return `<div class="score-range-control">
+    <label for="score-${kind}-range">${label}</label>
+    <select id="score-${kind}-range" data-score-range="${kind}Range">
+      <option value="all" ${selection === "all" ? "selected" : ""}>All ${kind === "odds" ? "odds" : "form scores"}</option>
+      ${ranges.map((range) => `<option value="${range.value}" ${selection === range.value ? "selected" : ""}>${escapeHtml(range.label)}</option>`).join("")}
+      <option value="custom" ${selection === "custom" ? "selected" : ""}>Custom range…</option>
+    </select>
+    ${selection === "custom" ? `<div class="score-custom-range">
+      <label for="score-${kind}-min">Min<input id="score-${kind}-min" data-score-bound="${kind}Min" type="number" step="${kind === "form" ? "any" : "1"}" ${kind === "form" ? 'min="0" max="1"' : ""} value="${escapeHtml(scoreTableState[`${kind}Min`])}" placeholder="No minimum" aria-describedby="score-range-note score-range-error"></label>
+      <label for="score-${kind}-max">Max<input id="score-${kind}-max" data-score-bound="${kind}Max" type="number" step="${kind === "form" ? "any" : "1"}" ${kind === "form" ? 'min="0" max="1"' : ""} value="${escapeHtml(scoreTableState[`${kind}Max`])}" placeholder="No maximum" aria-describedby="score-range-note score-range-error"></label>
+    </div>` : ""}
+  </div>`;
 }
 
 function sortHeader(key, label) {
@@ -200,6 +233,7 @@ function renderEnhancedScores(section) {
   const coverageText = data.checkpoint_pending
     ? `The ${escapeHtml(data.checkpoint_label || "selected")} checkpoint for ${escapeHtml(data.slate_date || "this slate")} has not been archived yet.`
     : `Odds are optional and never affect rank. Shared coverage: ${Number(oddsMeta.priced_players || 0)} of ${Number((data.players || []).length)} players.`;
+  const rangeValidation = selectedScoreRanges().error;
 
   section.dataset.scoreEnhancement = `${data.generated_at || "ready"}-${scoreTableState.view}`;
   section.innerHTML = `
@@ -222,6 +256,14 @@ function renderEnhancedScores(section) {
         </select>
       </div>
     </div>
+    <div class="score-range-filters">
+      ${scoreRangeControl("odds", "Best odds · American", ODDS_RANGES)}
+      ${scoreRangeControl("form", "Form score", FORM_RANGES)}
+      <button type="button" id="score-reset-filters">Reset filters</button>
+    </div>
+    <p id="score-range-note" class="muted score-range-note">Ranges match Discovery. Odds use the best available price; an active odds range excludes players without a price. Custom min and max are inclusive; leave either blank for no limit.</p>
+    <p id="score-range-error" class="loss" role="alert">${escapeHtml(rangeValidation)}</p>
+    <p class="score-filter-count" role="status">Showing ${players.length} of ${(data.players || []).length} players</p>
     ${data.checkpoint_pending ? `<div class="empty">Pending ${escapeHtml(data.checkpoint_label || "checkpoint")}. This view will populate only when the exact immutable ${escapeHtml(data.slate_date || "slate")} archive exists; it will not substitute another checkpoint or stale date.</div>` : `
       <div class="table-note">Click any labeled column to sort. Game times are shown in Eastern Time. The 15-game strip runs oldest to newest; a highlighted cell is an HR game and its number is total HRs in that game.</div>
       ${players.length ? `<div class="tablewrap"><table class="scores-table">
@@ -347,6 +389,13 @@ async function enhanceScores(force = false) {
 }
 
 document.addEventListener("click", (event) => {
+  if (event.target.closest("#score-reset-filters")) {
+    Object.assign(scoreTableState, { filter: "all", query: "", oddsRange: "all", formRange: "all", oddsMin: "", oddsMax: "", formMin: "", formMax: "" });
+    const section = scoreSection();
+    if (section) renderEnhancedScores(section);
+    document.getElementById("score-reset-filters")?.focus();
+    return;
+  }
   const checkpointButton = event.target.closest("[data-score-checkpoint]");
   if (checkpointButton) {
     selectScoreView(checkpointButton.dataset.scoreCheckpoint);
@@ -382,10 +431,14 @@ document.addEventListener("input", (event) => {
 });
 
 document.addEventListener("change", (event) => {
-  if (event.target.id !== "score-filter") return;
-  scoreTableState.filter = event.target.value;
+  const key = event.target.dataset.scoreRange || event.target.dataset.scoreBound;
+  if (key) scoreTableState[key] = event.target.value;
+  else if (event.target.id === "score-filter") scoreTableState.filter = event.target.value;
+  else return;
+  const focusedId = document.activeElement?.id;
   const section = scoreSection();
   if (section) renderEnhancedScores(section);
+  if (focusedId) document.getElementById(focusedId)?.focus();
 });
 
 const scoreStyle = document.createElement("style");
@@ -394,6 +447,18 @@ scoreStyle.textContent = `
   .scores-checkpoint-label{font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px}
   .scores-checkpoint-tabs{overflow-x:auto;flex-wrap:nowrap;padding-bottom:2px}
   .scores-checkpoint-tabs button{white-space:nowrap}
+  .score-range-filters{display:flex;flex-wrap:wrap;gap:16px;align-items:flex-start;margin:8px 0 12px}
+  .score-range-control{flex:1 1 240px;max-width:440px;min-width:0}
+  .score-range-control>label{display:block;font-size:.875rem;font-weight:700;margin-bottom:6px}
+  .score-range-control select,.score-custom-range input{box-sizing:border-box;width:100%;font:inherit;font-size:1rem;min-height:42px;padding:9px 10px;border:1px solid var(--line);border-radius:8px;background:var(--panel,#0d1a24);color:inherit}
+  .score-custom-range{display:flex;gap:10px;margin-top:10px}
+  .score-custom-range label{flex:1;min-width:0;font-size:.875rem}
+  .score-custom-range input{display:block;margin-top:4px}
+  #score-reset-filters{align-self:flex-start;margin-top:26px;min-height:42px;padding:8px 14px;cursor:pointer}
+  .score-range-note{font-size:.875rem;max-width:900px}
+  #score-range-error:empty{display:none}
+  .score-filter-count{font-size:.875rem;font-weight:700}
+  @media(max-width:700px){.score-range-control{max-width:none;flex-basis:100%}#score-reset-filters{margin-top:0}}
 `;
 document.head.appendChild(scoreStyle);
 
