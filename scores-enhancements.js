@@ -259,9 +259,12 @@ function renderEnhancedScores(section) {
     <div class="score-range-filters">
       ${scoreRangeControl("odds", "Best odds · American", ODDS_RANGES)}
       ${scoreRangeControl("form", "Form score", FORM_RANGES)}
-      <button type="button" id="score-reset-filters">Reset filters</button>
+      <div class="score-range-actions">
+        ${scoreTableState.oddsRange === "custom" || scoreTableState.formRange === "custom" ? '<button type="button" id="score-apply-ranges">Apply custom ranges</button>' : ""}
+        <button type="button" id="score-reset-filters">Reset filters</button>
+      </div>
     </div>
-    <p id="score-range-note" class="muted score-range-note">Ranges match Discovery. Odds use the best available price; an active odds range excludes players without a price. Custom min and max are inclusive; leave either blank for no limit.</p>
+    <p id="score-range-note" class="muted score-range-note">Ranges match Discovery. Odds use the best available price; an active odds range excludes players without a price. Custom min and max are inclusive; leave either blank for no limit, then choose Apply custom ranges.</p>
     <p id="score-range-error" class="loss" role="alert">${escapeHtml(rangeValidation)}</p>
     <p class="score-filter-count" role="status">Showing ${players.length} of ${(data.players || []).length} players</p>
     ${data.checkpoint_pending ? `<div class="empty">Pending ${escapeHtml(data.checkpoint_label || "checkpoint")}. This view will populate only when the exact immutable ${escapeHtml(data.slate_date || "slate")} archive exists; it will not substitute another checkpoint or stale date.</div>` : `
@@ -389,6 +392,15 @@ async function enhanceScores(force = false) {
 }
 
 document.addEventListener("click", (event) => {
+  if (event.target.closest("#score-apply-ranges")) {
+    document.querySelectorAll("[data-score-bound]").forEach((input) => {
+      scoreTableState[input.dataset.scoreBound] = input.validity.badInput ? "invalid" : input.value;
+    });
+    const section = scoreSection();
+    if (section) renderEnhancedScores(section);
+    document.getElementById("score-apply-ranges")?.focus();
+    return;
+  }
   if (event.target.closest("#score-reset-filters")) {
     Object.assign(scoreTableState, { filter: "all", query: "", oddsRange: "all", formRange: "all", oddsMin: "", oddsMax: "", formMin: "", formMax: "" });
     const section = scoreSection();
@@ -416,6 +428,10 @@ document.addEventListener("click", (event) => {
 });
 
 document.addEventListener("input", (event) => {
+  if (event.target.dataset.scoreBound) {
+    scoreTableState[event.target.dataset.scoreBound] = event.target.validity.badInput ? "invalid" : event.target.value;
+    return;
+  }
   if (event.target.id !== "score-search") return;
   const cursor = event.target.selectionStart ?? event.target.value.length;
   scoreTableState.query = event.target.value;
@@ -431,7 +447,7 @@ document.addEventListener("input", (event) => {
 });
 
 document.addEventListener("change", (event) => {
-  const key = event.target.dataset.scoreRange || event.target.dataset.scoreBound;
+  const key = event.target.dataset.scoreRange;
   if (key) scoreTableState[key] = event.target.value;
   else if (event.target.id === "score-filter") scoreTableState.filter = event.target.value;
   else return;
@@ -454,11 +470,13 @@ scoreStyle.textContent = `
   .score-custom-range{display:flex;gap:10px;margin-top:10px}
   .score-custom-range label{flex:1;min-width:0;font-size:.875rem}
   .score-custom-range input{display:block;margin-top:4px}
-  #score-reset-filters{align-self:flex-start;margin-top:26px;min-height:42px;padding:8px 14px;cursor:pointer}
+  .score-range-actions{display:flex;flex-wrap:wrap;gap:8px;align-self:flex-start;margin-top:26px}
+  .score-range-actions button{min-height:42px;padding:8px 14px;cursor:pointer;font-size:.875rem}
+  #score-apply-ranges{background:var(--accent);color:var(--bg);font-weight:700}
   .score-range-note{font-size:.875rem;max-width:900px}
   #score-range-error:empty{display:none}
   .score-filter-count{font-size:.875rem;font-weight:700}
-  @media(max-width:700px){.score-range-control{max-width:none;flex-basis:100%}#score-reset-filters{margin-top:0}}
+  @media(max-width:700px){.score-range-control{max-width:none;flex-basis:100%}.score-range-actions{margin-top:0}}
 `;
 document.head.appendChild(scoreStyle);
 
