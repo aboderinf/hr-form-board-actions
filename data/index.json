@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-13T16:17:23.234631+00:00",
+  "generated_at": "2026-09-13T16:38:57.468218+00:00",
   "method": "0.50*L5 + 0.30*L7 + 0.20*L15 cumulative HR-game rates",
   "checkpoints_et": [
     "08:17",
@@ -10,23 +10,23 @@
   "aggregate": {
     "top10": {
       "selections": 1406,
-      "settled": 1334,
+      "settled": 1335,
       "wins": 123,
-      "losses": 1211,
+      "losses": 1212,
       "pushes": 0,
-      "hit_rate": 0.09220389805097451,
-      "net_units": -366.9,
-      "roi": -0.2750374812593703
+      "hit_rate": 0.09213483146067415,
+      "net_units": -367.9,
+      "roi": -0.27558052434456926
     },
     "top20": {
       "selections": 2699,
-      "settled": 2539,
+      "settled": 2540,
       "wins": 230,
-      "losses": 2309,
+      "losses": 2310,
       "pushes": 0,
-      "hit_rate": 0.09058684521465143,
-      "net_units": -721.0,
-      "roi": -0.2839700669554943
+      "hit_rate": 0.09055118110236221,
+      "net_units": -722.0,
+      "roi": -0.284251968503937
     }
   },
   "latest": {
@@ -289356,10 +289356,11 @@
               "batter_team": null,
               "lineup_position": null,
               "source_prediction_id": null,
-              "settled": false,
-              "result": "PENDING",
-              "home_runs": null,
-              "profit_units": null
+              "settled": true,
+              "result": "LOSS",
+              "home_runs": 0,
+              "profit_units": -1.0,
+              "settled_at": "2026-09-13T16:38:41.763970+00:00"
             },
             {
               "rank": 4,
@@ -289847,13 +289848,13 @@
           ],
           "summary": {
             "selections": 10,
-            "settled": 0,
+            "settled": 1,
             "wins": 0,
-            "losses": 0,
+            "losses": 1,
             "pushes": 0,
-            "hit_rate": null,
-            "net_units": 0,
-            "roi": null
+            "hit_rate": 0.0,
+            "net_units": -1.0,
+            "roi": -1.0
           }
         },
         "top20": {
@@ -290060,10 +290061,11 @@
               "batter_team": null,
               "lineup_position": null,
               "source_prediction_id": null,
-              "settled": false,
-              "result": "PENDING",
-              "home_runs": null,
-              "profit_units": null
+              "settled": true,
+              "result": "LOSS",
+              "home_runs": 0,
+              "profit_units": -1.0,
+              "settled_at": "2026-09-13T16:38:41.763970+00:00"
             },
             {
               "rank": 4,
@@ -291229,17 +291231,57 @@
           ],
           "summary": {
             "selections": 20,
-            "settled": 0,
+            "settled": 1,
             "wins": 0,
-            "losses": 0,
+            "losses": 1,
             "pushes": 0,
-            "hit_rate": null,
-            "net_units": 0,
-            "roi": null
+            "hit_rate": 0.0,
+            "net_units": -1.0,
+            "roi": -1.0
           }
         }
       },
       "eligible_candidates": 201
+    },
+    {
+      "schema_version": 2,
+      "snapshot_id": "2026-09-13_1117",
+      "slate_date": "2026-09-13",
+      "checkpoint_et": "11:17",
+      "scheduled_at_et": "2026-09-13T11:17:00-04:00",
+      "observed_at": "2026-09-13T16:38:41.763970+00:00",
+      "observed_at_et": "2026-09-13T12:38:41.763970-04:00",
+      "status": "shared_odds_not_available_at_checkpoint",
+      "sources": {
+        "mlb_hr_edge": {
+          "source": "MLB HR Edge",
+          "source_url": "https://mlb-hr-edge.feranmi.chatgpt.site/api/odds?date=2026-09-13&asOf=2026-09-13T11%3A32%3A00-04%3A00",
+          "delivery": "qstash-vercel-redis",
+          "source_date": "2026-09-13",
+          "date_matches": true,
+          "as_of": "2026-09-13T15:32:00.000Z",
+          "status": "ready",
+          "generated_at": "2026-09-13T15:17:04.614Z",
+          "latest_ingest_at": "2026-09-13T15:17:04.614Z",
+          "provider_call_id": "2026-09-13:1117:2026-09-13T15:17:04.614Z:5c3cece15e88",
+          "provider_response_sha256": "5c3cece15e889bcac917b97ba3c3d307910ac412e4a1d483146d7684b36ed229",
+          "archived_call_count": 1,
+          "quote_count": 733,
+          "all_available_quote_count": 1466,
+          "excluded_live_or_post_start_quote_count": 0,
+          "books": [
+            "FanDuel",
+            "DraftKings",
+            "BetMGM"
+          ],
+          "row_count": 263,
+          "compatibility_fallback": "odds_api",
+          "checkpoint_at": "2026-09-13T11:17:00-04:00",
+          "capture_cutoff": "2026-09-13T11:32:00-04:00"
+        }
+      },
+      "diagnostics": [],
+      "portfolios": {}
     }
   ]
 }
