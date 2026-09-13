@@ -1,6 +1,11 @@
+import { ODDS_RANGES, FORM_RANGES, DISCOVERY_BOOKS, parseDiscoverySlice, discoverySliceSummary } from "./discovery-ranges.mjs";
+
 const labState = {
   period: "rolling_14d",
   view: "1117",
+  form: "all",
+  odds: "all",
+  book: "all",
 };
 
 let discoveryPayload = null;
@@ -64,7 +69,7 @@ function summaryCards(summary = {}) {
   </div>`;
 }
 
-function segmentTable(rows = [], title = "Segments", limit = 18) {
+function segmentTable(rows = [], title = "Segments", limit = 18, clickable = false) {
   const ordered = [...rows]
     .filter((row) => Number(row.settled || 0) > 0)
     .sort((a, b) => Number(b.net_units || 0) - Number(a.net_units || 0) || Number(b.settled || 0) - Number(a.settled || 0))
@@ -73,7 +78,7 @@ function segmentTable(rows = [], title = "Segments", limit = 18) {
   return `<div class="tablewrap"><table>
     <thead><tr><th>${esc(title)}</th><th>Bets</th><th>Record</th><th>Hit rate</th><th>Break-even</th><th>Edge</th><th>Avg odds</th><th>Net</th><th>ROI</th><th>Evidence</th></tr></thead>
     <tbody>${ordered.map((row) => `<tr>
-      <td><b>${esc(row.label)}</b></td>
+      <td>${clickable ? `<button type="button" class="discovery-slice-link" data-lab-slice="${esc(row.label)}" aria-label="Inspect ${esc(row.label)}">${esc(row.label)}</button>` : `<b>${esc(row.label)}</b>`}</td>
       <td>${Number(row.settled || 0)}</td>
       <td>${Number(row.wins || 0)}–${Number(row.losses || 0)}</td>
       <td>${pct(row.hit_rate)}</td>
@@ -85,6 +90,49 @@ function segmentTable(rows = [], title = "Segments", limit = 18) {
       <td>${samplePill(row)}</td>
     </tr>`).join("")}</tbody>
   </table></div>`;
+}
+
+function sliceSelect(key, label, ranges, allLabel) {
+  return `<label for="lab-slice-${key}">${label}<select id="lab-slice-${key}" data-lab-filter="${key}">
+    <option value="all" ${labState[key] === "all" ? "selected" : ""}>${allLabel}</option>
+    ${ranges.map((range) => `<option value="${esc(range.value)}" ${labState[key] === range.value ? "selected" : ""}>${esc(range.label)}</option>`).join("")}
+  </select></label>`;
+}
+
+function sliceExplorer(detail, report) {
+  const summary = discoverySliceSummary(detail, labState.form, labState.odds, labState.book);
+  const formLabel = FORM_RANGES.find((range) => range.value === labState.form)?.label || "All form scores";
+  const oddsLabel = ODDS_RANGES.find((range) => range.value === labState.odds)?.label || "All odds";
+  const books = labState.book === "all" ? DISCOVERY_BOOKS : [labState.book];
+  const rows = books.map((book) => ({ book, summary: discoverySliceSummary(detail, labState.form, labState.odds, book) }));
+  return `<section id="discovery-slice-explorer" class="discovery-slice-explorer" aria-labelledby="discovery-slice-heading">
+    <div class="eyebrow">Slice explorer</div>
+    <h3 id="discovery-slice-heading" tabindex="-1">${esc(formLabel)} × ${esc(oddsLabel)}</h3>
+    <p class="muted">Choose any form × odds combination, or click a slice in the tables below.</p>
+    <div class="discovery-slice-controls">
+      ${sliceSelect("form", "Form score", FORM_RANGES, "All form scores")}
+      ${sliceSelect("odds", "Best odds · American", ODDS_RANGES, "All odds")}
+      ${sliceSelect("book", "Book offering best price", DISCOVERY_BOOKS.map((book) => ({ value: book, label: book })), "All best-price books")}
+      <button type="button" id="lab-reset-slice">Reset slice</button>
+    </div>
+    <p class="muted">${esc(periodLabels[labState.period])} · ${esc(report.start)} to ${esc(report.end)} · ${esc(labState.view === "best" ? "Best archived (hindsight)" : `${checkpointLabels[labState.view]} ET checkpoint`)}${report.latest_complete_slate ? ` · Latest complete slate: ${esc(report.latest_complete_slate)}` : ""}</p>
+    <div id="discovery-slice-results" aria-live="polite">
+      ${summary ? `<p>${samplePill(summary)}${labState.book !== "all" ? ` · ${esc(labState.book)} best-price bets` : ""}</p>${summaryCards(summary)}` : '<div class="empty">No archived bets match this slice for the selected period and checkpoint. Try another range or book.</div>'}
+      <h4>Performance by best-price book</h4>
+      <p class="muted">Each book's row includes only bets where that book supplied the archived best price. Different books can have different selections; this does not re-price the same bets at every book. Stakes: 1 unit per settled bet.</p>
+      <div class="tablewrap"><table class="discovery-slice-books">
+        <thead><tr><th>Best-price book</th><th>Settled bets</th><th>Record</th><th>Hit rate</th><th>Avg odds</th><th>Net units</th><th>ROI</th><th>Slates</th><th>Evidence</th></tr></thead>
+        <tbody>${rows.map(({ book, summary: row }) => `<tr>
+          <td><b>${esc(book)}</b></td><td>${Number(row?.settled || 0)}</td>
+          <td>${row ? `${Number(row.wins || 0)}–${Number(row.losses || 0)}` : "—"}</td>
+          <td>${pct(row?.hit_rate)}</td><td>${american(row?.average_odds)}</td>
+          <td class="${Number(row?.net_units || 0) >= 0 ? "plus" : "loss"}">${units(row?.net_units)}</td>
+          <td class="${Number(row?.roi || 0) >= 0 ? "plus" : "loss"}">${pct(row?.roi, true)}</td>
+          <td>${Number(row?.slates || 0)}</td><td>${row ? samplePill(row) : '<span class="muted">No settled bets</span>'}</td>
+        </tr>`).join("")}</tbody>
+      </table></div>
+    </div>
+  </section>`;
 }
 
 function checkpointTable(rows = []) {
@@ -114,7 +162,7 @@ function edgeTable(report = {}) {
   return `<div class="tablewrap"><table>
     <thead><tr><th>Dimension</th><th>Rule</th><th>Bets</th><th>Slates</th><th>Hit rate</th><th>Break-even</th><th>Net</th><th>ROI</th><th>Evidence</th></tr></thead>
     <tbody>${rows.map((row) => `<tr>
-      <td>${esc(row.dimension)}</td><td><b>${esc(row.rule)}</b></td><td>${Number(row.settled || 0)}</td><td>${Number(row.slates || 0)}</td>
+      <td>${esc(row.dimension)}</td><td>${/rank/i.test(row.dimension) ? `<b>${esc(row.rule)}</b>` : `<button type="button" class="discovery-slice-link" data-lab-slice="${esc(row.rule)}" aria-label="Inspect ${esc(row.rule)}">${esc(row.rule)}</button>`}</td><td>${Number(row.settled || 0)}</td><td>${Number(row.slates || 0)}</td>
       <td>${pct(row.hit_rate)}</td><td>${pct(row.market_break_even_hit_rate)}</td>
       <td class="plus">${units(row.net_units)}</td><td class="plus">${pct(row.roi, true)}</td><td>${samplePill(row)}</td>
     </tr>`).join("")}</tbody>
@@ -161,16 +209,15 @@ function renderLab(root) {
     </div>
 
     <div class="notice"><b>${esc(viewTitle)}:</b> ${esc(viewNote)}</div>
-    <p>${samplePill(detail.overall || {})}</p>
-    ${summaryCards(detail.overall || {})}
+    ${sliceExplorer(detail, report)}
 
     <div class="eyebrow">Intersection search</div><h3>Form score × odds</h3>
-    <p class="muted">Shows whether a form-score band is profitable only inside particular price bands at the selected checkpoint.</p>
-    ${segmentTable(detail.score_odds || [], "Score × odds")}
+    <p class="muted">Click a slice to inspect its sportsbook results above. All settled slices are shown, ordered by net units.</p>
+    ${segmentTable(detail.score_odds || [], "Score × odds", Infinity, true)}
 
     <div class="eyebrow">Sportsbook attribution</div><h3>Best book × odds × form score</h3>
-    <p class="muted">Shows whether FanDuel, DraftKings, or BetMGM offering the best price matters at this specific checkpoint.</p>
-    ${segmentTable(detail.book_odds_score || [], "Book × odds × score")}
+    <p class="muted">The 18 leading slices by net units. Click one to inspect it, or use the explorer to select any range and book.</p>
+    ${segmentTable(detail.book_odds_score || [], "Book × odds × score", 18, true)}
 
     <div class="eyebrow">Evidence-gated candidates</div><h3>Segments worth following prospectively</h3>
     <p class="muted">Gate: at least 40 settled bets, 4 wins, 5 slates, and positive net units. These are exploratory candidates, not proof of a durable edge.</p>
@@ -183,6 +230,26 @@ function renderLab(root) {
     <div class="notice discovery-lab-warning"><b>No fake fair odds:</b> HR Form Score is a recency/form index, not a calibrated home-run probability. Fair odds and expected EV are intentionally withheld until probability calibration is validated out of sample.</div>
   `;
 
+  root.querySelectorAll("[data-lab-filter]").forEach((select) => select.addEventListener("change", () => {
+    labState[select.dataset.labFilter] = select.value;
+    const id = select.id;
+    renderLab(root);
+    document.getElementById(id)?.focus({ preventScroll: true });
+  }));
+  root.querySelector("#lab-reset-slice")?.addEventListener("click", () => {
+    Object.assign(labState, { form: "all", odds: "all", book: "all" });
+    renderLab(root);
+    document.getElementById("lab-reset-slice")?.focus({ preventScroll: true });
+  });
+  root.querySelectorAll("[data-lab-slice]").forEach((button) => button.addEventListener("click", () => {
+    const slice = parseDiscoverySlice(button.dataset.labSlice);
+    Object.assign(labState, { form: slice.form, odds: slice.odds, book: slice.book });
+    if (slice.checkpoint) labState.view = slice.checkpoint;
+    renderLab(root);
+    const heading = document.getElementById("discovery-slice-heading");
+    heading?.focus({ preventScroll: true });
+    heading?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }));
   root.querySelectorAll("[data-lab-period]").forEach((button) => button.addEventListener("click", () => {
     labState.period = button.dataset.labPeriod;
     renderLab(root);
@@ -244,7 +311,25 @@ style.textContent = `
   .discovery-lab-warning{margin-top:22px}
   .checkpoint-jump-row{cursor:pointer}
   .checkpoint-jump-row:hover td{background:rgba(127,127,127,.08)}
+  .discovery-slice-explorer{border:1px solid var(--line,#e5e7eb);border-radius:12px;padding:20px;margin:24px 0}
+  .discovery-slice-explorer>.eyebrow{margin-top:0}
+  .discovery-slice-explorer h4{font-size:1rem;margin:20px 0 8px}
+  .discovery-slice-explorer p,.discovery-slice-explorer th,.discovery-slice-explorer td{font-size:.875rem}
+  .discovery-slice-controls{display:flex;flex-wrap:wrap;align-items:flex-end;gap:14px;margin:18px 0}
+  .discovery-slice-controls label{font-size:.875rem;font-weight:700;flex:1 1 190px;min-width:0}
+  .discovery-slice-controls select{display:block;box-sizing:border-box;width:100%;margin-top:6px;min-height:42px;padding:9px 10px;border:1px solid var(--line,#e5e7eb);border-radius:8px;background:var(--panel,#0d1a24);color:inherit;font:inherit;font-size:1rem}
+  #lab-reset-slice{min-height:42px;padding:8px 14px;cursor:pointer}
+  .discovery-slice-link{font:inherit;font-weight:700;border:0;padding:8px 0;text-align:left;background:transparent;color:var(--accent,#66e7b1);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+  .discovery-slice-link:hover{text-decoration-thickness:2px}
+  .discovery-slice-link:focus-visible{outline:2px solid currentColor;outline-offset:3px}
+  #discovery-slice-heading{scroll-margin-top:20px}
+  .discovery-slice-explorer .discovery-lab-metrics{grid-template-columns:repeat(4,minmax(0,1fr))}
   @media (max-width:700px){
+    .discovery-slice-explorer{padding:14px}
+    .discovery-slice-controls label{flex-basis:100%}
+    .discovery-slice-explorer .discovery-lab-metrics{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+    .discovery-slice-explorer .discovery-lab-metrics .card{padding:12px}
+    .discovery-slice-explorer .metric strong{font-size:1.2rem;overflow-wrap:anywhere}
     .discovery-lab-controls{display:block}
     .discovery-lab-controls>div{margin:12px 0}
     .checkpoint-tabs,.discovery-lab .tabs{overflow-x:auto;flex-wrap:nowrap;padding-bottom:4px}
