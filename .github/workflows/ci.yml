@@ -31,6 +31,8 @@ jobs:
         run: python -m py_compile src/*.py scripts/*.py api/triples_model_runtime.py
       - name: Run deterministic tests
         run: python -m unittest discover -s tests -v
+      - name: Test current Top 100 slate delivery and date rollover
+        run: node --test tests/test_top100_current.js
       - name: Test archived triples projection
         run: node --test tests/test_triples_runtime.js
       - name: Test archive delivery under storage quota failures

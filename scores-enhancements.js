@@ -14,6 +14,8 @@ const scoreTableState = {
   view: "current",
   data: null,
   loading: null,
+  loadingDate: null,
+  loadedAt: 0,
   checkpointData: new Map(),
   checkpointLoading: new Map(),
 };
@@ -230,12 +232,14 @@ function renderEnhancedScores(section) {
   const oddsMeta = data.odds || {};
   const checkpointMode = scoreTableState.view !== "current";
   const snapshotName = checkpointMode ? `${escapeHtml(data.checkpoint_label || scoreCheckpointLabels[scoreTableState.view] || scoreTableState.view)} checkpoint` : "Current leaderboard";
-  const coverageText = data.checkpoint_pending
+  const coverageText = data.current_pending
+    ? `The Top 100 leaderboard for ${escapeHtml(data.slate_date)} is not available yet. This page checks again automatically.`
+    : data.checkpoint_pending
     ? `The ${escapeHtml(data.checkpoint_label || "selected")} checkpoint for ${escapeHtml(data.slate_date || "this slate")} has not been archived yet.`
     : `Odds are optional and never affect rank. Shared coverage: ${Number(oddsMeta.priced_players || 0)} of ${Number((data.players || []).length)} players.`;
   const rangeValidation = selectedScoreRanges().error;
 
-  section.dataset.scoreEnhancement = `${data.generated_at || "ready"}-${scoreTableState.view}`;
+  section.dataset.scoreEnhancement = `${data.slate_date}-${data.status}-${data.generated_at || "ready"}-${data.odds?.refreshed_in_browser || ""}-${scoreTableState.view}`;
   section.innerHTML = `
     <div class="eyebrow">${snapshotName}</div>
     ${checkpointTabs()}
@@ -267,7 +271,7 @@ function renderEnhancedScores(section) {
     <p id="score-range-note" class="muted score-range-note">Ranges match Discovery. Odds use the best available price; an active odds range excludes players without a price. Custom min and max are inclusive; leave either blank for no limit, then choose Apply custom ranges.</p>
     <p id="score-range-error" class="loss" role="alert">${escapeHtml(rangeValidation)}</p>
     <p class="score-filter-count" role="status">Showing ${players.length} of ${(data.players || []).length} players</p>
-    ${data.checkpoint_pending ? `<div class="empty">Pending ${escapeHtml(data.checkpoint_label || "checkpoint")}. This view will populate only when the exact immutable ${escapeHtml(data.slate_date || "slate")} archive exists; it will not substitute another checkpoint or stale date.</div>` : `
+    ${data.current_pending ? '<div class="empty">Today’s leaderboard is pending. Checking for an update…</div>' : data.checkpoint_pending ? `<div class="empty">Pending ${escapeHtml(data.checkpoint_label || "checkpoint")}. This view will populate only when the exact immutable ${escapeHtml(data.slate_date || "slate")} archive exists; it will not substitute another checkpoint or stale date.</div>` : `
       <div class="table-note">Click any labeled column to sort. Game times are shown in Eastern Time. The 15-game strip runs oldest to newest; a highlighted cell is an HR game and its number is total HRs in that game.</div>
       ${players.length ? `<div class="tablewrap"><table class="scores-table">
         <thead><tr>
@@ -313,30 +317,72 @@ function scoreSection() {
   ) || null;
 }
 
+const SCORE_REFRESH_MS = 60_000;
+
+function currentScoreDate() {
+  return window.currentTop100Date();
+}
+
+function pendingCurrentScores(date) {
+  return {
+    slate_date: date, status: "pending", players: [], current_pending: true,
+    player_pool_count: 0, scored_player_count: 0, odds: { priced_players: 0 },
+  };
+}
+
+function publishCurrentScores(data) {
+  scoreTableState.currentData = data;
+  if (scoreTableState.view === "current") scoreTableState.data = data;
+  window.dispatchEvent(new CustomEvent("top100-updated", { detail: data }));
+}
+
 async function loadScoreData() {
-  if (scoreTableState.currentData) return scoreTableState.currentData;
-  if (!scoreTableState.loading) {
-    scoreTableState.loading = fetch("/data/top100.json", { cache: "no-store" })
-      .then((response) => {
-        if (!response.ok) throw new Error(`Top 100 fetch failed: ${response.status}`);
-        return response.json();
-      })
-      .then((data) => {
-        scoreTableState.currentData = data;
-        if (scoreTableState.view === "current") scoreTableState.data = data;
-        return data;
-      })
-      .catch((error) => {
-        console.error(error);
-        return null;
-      });
+  const date = currentScoreDate();
+  if (scoreTableState.currentData?.slate_date !== date) {
+    scoreTableState.loadedAt = 0;
+    scoreTableState.checkpointData.clear();
+    scoreTableState.checkpointLoading.clear();
+    // Clear yesterday immediately, including a selected checkpoint.
+    scoreTableState.data = null;
+    publishCurrentScores(pendingCurrentScores(date));
   }
-  return scoreTableState.loading;
+  if (scoreTableState.loading && scoreTableState.loadingDate === date) return scoreTableState.loading;
+  if (scoreTableState.loadedAt && Date.now() - scoreTableState.loadedAt < SCORE_REFRESH_MS) {
+    return scoreTableState.currentData;
+  }
+  scoreTableState.loadingDate = date;
+  const request = fetch(`/api/top100-current?date=${date}`, { cache: "no-store" })
+    .then(async (response) => {
+      if (!response.ok) throw new Error(`Top 100 fetch failed: ${response.status}`);
+      const data = await response.json();
+      if (data.slate_date !== date || !Array.isArray(data.players)) {
+        throw new Error(`Top 100 slate mismatch for ${date}`);
+      }
+      return data;
+    })
+    .catch((error) => {
+      console.error(error);
+      return scoreTableState.currentData?.slate_date === date
+        ? scoreTableState.currentData : pendingCurrentScores(date);
+    })
+    .then((data) => {
+      // Ignore a response that crossed midnight or was superseded.
+      if (currentScoreDate() !== date || scoreTableState.loading !== request) return null;
+      scoreTableState.loadedAt = Date.now();
+      scoreTableState.checkpointData.clear();
+      publishCurrentScores(data);
+      return data;
+    })
+    .finally(() => {
+      if (scoreTableState.loading === request) scoreTableState.loading = null;
+    });
+  scoreTableState.loading = request;
+  return request;
 }
 
 async function loadCheckpointData(checkpoint) {
   const current = await loadScoreData();
-  if (!current?.slate_date) return null;
+  if (!current?.slate_date || current.slate_date !== currentScoreDate()) return null;
   const key = `${current.slate_date}_${checkpoint}`;
   if (scoreTableState.checkpointData.has(key)) return scoreTableState.checkpointData.get(key);
   if (scoreTableState.checkpointLoading.has(key)) return scoreTableState.checkpointLoading.get(key);
@@ -356,7 +402,8 @@ async function loadCheckpointData(checkpoint) {
       return pendingCheckpointData(checkpoint);
     })
     .then((data) => {
-      scoreTableState.checkpointData.set(key, data);
+      if (current.slate_date !== currentScoreDate()) return null;
+      if (!data.checkpoint_pending) scoreTableState.checkpointData.set(key, data);
       scoreTableState.checkpointLoading.delete(key);
       return data;
     });
@@ -366,11 +413,9 @@ async function loadCheckpointData(checkpoint) {
 
 async function selectScoreView(view) {
   scoreTableState.view = view;
-  if (view === "current") {
-    scoreTableState.data = await loadScoreData();
-  } else {
-    scoreTableState.data = await loadCheckpointData(view);
-  }
+  const data = view === "current" ? await loadScoreData() : await loadCheckpointData(view);
+  if (scoreTableState.view !== view || data?.slate_date !== currentScoreDate()) return;
+  scoreTableState.data = data;
   const section = scoreSection();
   if (section && scoreTableState.data) renderEnhancedScores(section);
 }
@@ -381,11 +426,14 @@ async function enhanceScores(force = false) {
   await loadScoreData();
   if (scoreTableState.view === "current") {
     scoreTableState.data = scoreTableState.currentData;
-  } else if (!scoreTableState.data || String(scoreTableState.data.checkpoint) !== scoreTableState.view) {
+  } else if (!scoreTableState.data
+    || scoreTableState.data.slate_date !== currentScoreDate()
+    || String(scoreTableState.data.checkpoint) !== scoreTableState.view
+    || (force && scoreTableState.data.checkpoint_pending)) {
     scoreTableState.data = await loadCheckpointData(scoreTableState.view);
   }
   const data = scoreTableState.data;
-  if (!data) return;
+  if (!data || data.slate_date !== currentScoreDate()) return;
   const marker = `${data.generated_at || "ready"}-${scoreTableState.view}`;
   if (!force && section.dataset.scoreEnhancement === marker) return;
   renderEnhancedScores(section);
@@ -483,3 +531,12 @@ document.head.appendChild(scoreStyle);
 addEventListener("hashchange", () => setTimeout(() => enhanceScores(true), 0));
 new MutationObserver(() => enhanceScores(false)).observe(document.querySelector("#app"), { childList: true, subtree: true });
 setTimeout(() => enhanceScores(true), 0);
+
+function refreshVisibleScores() {
+  if (document.visibilityState !== "hidden") enhanceScores(true);
+}
+
+addEventListener("focus", refreshVisibleScores);
+addEventListener("pageshow", refreshVisibleScores);
+document.addEventListener("visibilitychange", refreshVisibleScores);
+setInterval(refreshVisibleScores, SCORE_REFRESH_MS);

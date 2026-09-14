@@ -25,7 +25,7 @@ let X = { status: "collecting", reports: {}, recent_captures: [], methodology: {
 try {
   const [board, scores, discovery] = await Promise.all([
     fetch("/data/index.json", { cache: "no-store" }),
-    fetch("/data/top100.json", { cache: "no-store" }),
+    fetch("/api/top100-current", { cache: "no-store" }),
     fetch("/data/discovery.json", { cache: "no-store" }),
   ]);
   if (board.ok) D = await board.json();
@@ -34,6 +34,11 @@ try {
 } catch (error) {
   console.error(error);
 }
+
+addEventListener("top100-updated", (event) => {
+  T = event.detail;
+  if (state.route === "scores") render();
+});
 
 addEventListener("hashchange", () => {
   state.route = location.hash.slice(1) || "today";
