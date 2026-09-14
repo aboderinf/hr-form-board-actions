@@ -24,7 +24,8 @@ jobs:
           cache: pip
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "24"
+      - run: npm ci --ignore-scripts --no-audit --no-fund
       - run: python -m pip install -r requirements.txt
       - name: Compile tracker modules
         run: python -m py_compile src/*.py scripts/*.py api/triples_model_runtime.py
@@ -34,6 +35,8 @@ jobs:
         run: node --test tests/test_triples_runtime.js
       - name: Test archive delivery under storage quota failures
         run: node --test tests/test_storage_quota.js tests/test_storage_compression.js
+      - name: Test permanent archival, migration and cache failure recovery
+        run: npm run test:archive
       - name: Test archived total-bases projection and consolidation
         run: node --test tests/test_total_bases_runtime.js
       - name: Test starter-aware total-bases settlement

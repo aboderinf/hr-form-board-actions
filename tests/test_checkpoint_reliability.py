@@ -63,7 +63,8 @@ class CheckpointReliabilityTests(unittest.TestCase):
         source = (ROOT / "api" / "capture-checkpoint.js").read_text(encoding="utf-8")
         self.assertIn('"provider_failed_after_single_attempt"', source)
         self.assertIn('"already_attempted"', source)
-        self.assertIn('await releaseAttemptForRetry(slateDate, checkpoint);', source)
+        self.assertIn('await releaseAttemptForRetry(slateDate, checkpoint, owner);', source)
+        self.assertIn('await releaseLease(attemptKey(date, checkpoint), owner);', source)
         self.assertIn('response.setHeader("Retry-After", "60")', source)
         self.assertIn('response.status(retryable ? 503', source)
 

@@ -58,6 +58,11 @@ module.exports = async function handler(request, response) {
   if (String(request.query?.action || "") === "raw-identity") {
     return handleRawIdentity(request, response);
   }
+  if (String(request.query?.action || '') === 'archive-health') {
+    response.setHeader('Cache-Control', 'no-store');
+    const archive = await require('../lib/archive-health').archiveHealth({ checkCaptures: true });
+    return response.status(archive.status === 'attention_required' ? 503 : 200).json(archive);
+  }
   if (String(request.query?.action || "") === "storage-audit") {
     response.setHeader("Cache-Control", "no-store");
     try {
@@ -126,14 +131,18 @@ module.exports = async function handler(request, response) {
     [`mlb-hr-checkpoint-${cp}`, `mlb-hr-checkpoint-${cp}-recovery`]);
   const schedulesReady = expectedIds.every((id) => qstashSchedules.some((row) =>
     row.scheduleId === id && !row.isPaused && row.destination === "https://hr-form-board-actions.vercel.app/api/capture-checkpoint"));
-  const ready = baseEnvReady && providerKeyReady && redisOk && capacity?.capacityAvailable === true && qstashOk && schedulesReady;
+  const archive = await require('../lib/archive-health').archiveHealth();
+  const archiveReady = archive.mode === 'active' && archive.writable && archive.status === 'ready';
+  const ready = baseEnvReady && providerKeyReady && (archiveReady || (redisOk && capacity?.capacityAvailable === true)) && qstashOk && schedulesReady
+    && (archive.mode === 'off' || archive.status === 'ready');
   response.setHeader("Cache-Control", "no-store");
   if (request.method === "HEAD") return response.status(ready ? 200 : 503).end();
   return response.status(ready ? 200 : 503).json({
     status: ready ? "ready" : "not_ready",
     scheduler: "upstash-qstash",
     captureHost: "vercel",
-    storage: "upstash-redis",
+    storage: archive.mode === 'active' ? 'cloudflare-r2-with-redis-cache' : 'upstash-redis',
+    archive,
     env,
     providerKey: {
       ready: providerKeyReady,
