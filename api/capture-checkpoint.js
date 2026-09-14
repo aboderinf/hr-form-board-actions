@@ -6,6 +6,7 @@ const {
   normalizeCheckpoint,
   redisCommand,
   redisConfig,
+  releaseLease,
   safeEqual,
 } = require("../lib/checkpoint-runtime");
 const {
@@ -23,9 +24,9 @@ function attemptKey(date, checkpoint) {
   return `mlbhr:attempt:${date}:${checkpoint}`;
 }
 
-async function releaseAttemptForRetry(date, checkpoint) {
+async function releaseAttemptForRetry(date, checkpoint, owner) {
   try {
-    await redisCommand(["DEL", attemptKey(date, checkpoint)]);
+    await releaseLease(attemptKey(date, checkpoint), owner);
   } catch (error) {
     console.error("Unable to release checkpoint attempt lock for retry", error);
   }
@@ -113,6 +114,10 @@ module.exports = async function handler(request, response) {
     return response.status(489).json({ status: "error", message: "Unauthorized" });
   }
 
+  if (String(request.query?.action || '').startsWith('archive-')) {
+    return require('../lib/archive-actions').handleArchiveAction(request, response);
+  }
+
   const redis = redisConfig();
   const missing = [];
   if (!redis.url || !redis.token) missing.push("Upstash Redis");
@@ -146,11 +151,12 @@ module.exports = async function handler(request, response) {
   }
 
   const now = new Date();
+  const owner = require('node:crypto').randomUUID();
   const slateDate = String(body.date || intendedSlateDate(checkpoint, now));
   try {
-    const result = await captureCheckpoint({ slateDate, checkpoint, now });
-    // New writes are compressed by the shared codec. Gradually compact older
-    // records after the timestamped capture, retaining their original TTLs.
+    const result = await captureCheckpoint({ slateDate, checkpoint, now, owner });
+    // After capture, incrementally migrate verified archives when configured,
+    // or continue the existing lossless compaction while archive mode is off.
     if (["captured", "reused"].includes(result.outcome)) {
       try {
         await require('../lib/storage-maintenance').maintainStorage({ maxRecords: 8 });
@@ -198,12 +204,9 @@ module.exports = async function handler(request, response) {
 
     const retryable = RETRYABLE_CAPTURE_OUTCOMES.has(result.outcome);
     if (retryable) {
-      // The old implementation held this lock for two days even after the
-      // one allowed provider request failed. Releasing it lets QStash perform
-      // its delivery retry without allowing overlapping requests: QStash only
-      // retries after this response, and the provider fetch itself times out
-      // after 30 seconds.
-      await releaseAttemptForRetry(slateDate, checkpoint);
+      // Only the owner can release a failed attempt. An overlapping delivery
+      // must not remove the lease held by the request still calling upstream.
+      await releaseAttemptForRetry(slateDate, checkpoint, owner);
       response.setHeader("Retry-After", "60");
     }
 
@@ -231,14 +234,14 @@ module.exports = async function handler(request, response) {
       error: result.error || null,
     });
   } catch (error) {
-    await releaseAttemptForRetry(slateDate, checkpoint);
+    await releaseAttemptForRetry(slateDate, checkpoint, owner);
     response.setHeader("Cache-Control", "no-store");
     response.setHeader("Retry-After", "60");
     return response.status(503).json({
       status: "infrastructure_error",
       date: slateDate,
       checkpoint,
-      providerRequests: 0,
+      providerRequests: Number(error.providerRequests || 0),
       message: error instanceof Error ? error.message : String(error),
     });
   }

@@ -1,0 +1,11 @@
+{
+  "name": "mlb-archive-backend",
+  "private": true,
+  "version": "1.0.0",
+  "dependencies": {
+    "@aws-sdk/client-s3": "3.1131.0"
+  },
+  "scripts": {
+    "test:archive": "node --test tests/test_object_archive.js tests/test_archive_integration.js tests/test_archive_capture.js"
+  }
+}
