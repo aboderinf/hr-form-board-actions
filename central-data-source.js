@@ -178,7 +178,7 @@ window.fetch = async function centralDatabaseFetch(input, init) {
   try {
     const checkpoint = normalizedCheckpoint(top100.checkpoint)
       || normalizedCheckpoint(top100.odds?.checkpoint);
-    const central = await centralOddsForDate(date, checkpoint);
+    const central = await centralOddsForDate(top100.slate_date, checkpoint);
     const merged = mergeCentralOdds(top100, central, checkpoint);
     return new Response(JSON.stringify(merged), {
       status: response.status,
@@ -191,7 +191,7 @@ window.fetch = async function centralDatabaseFetch(input, init) {
       },
     });
   } catch (error) {
-    console.warn("Current-slate odds unavailable; showing verified current-slate form.", error);
+    console.warn("Current-slate odds unavailable; retaining generated checkpoint odds for this verified slate.", error);
     return response;
   }
 };
