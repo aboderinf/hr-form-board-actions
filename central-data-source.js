@@ -4,9 +4,10 @@ const centralRequests = new Map();
 const CENTRAL_ODDS_CACHE_MS = 60_000;
 
 function currentTop100Date(now = new Date()) {
-  return new Intl.DateTimeFormat("en-CA", {
+  const parts = Object.fromEntries(new Intl.DateTimeFormat("en-US", {
     timeZone: "America/New_York", year: "numeric", month: "2-digit", day: "2-digit",
-  }).format(now);
+  }).formatToParts(now).map((part) => [part.type, part.value]));
+  return `${parts.year}-${parts.month}-${parts.day}`;
 }
 
 window.currentTop100Date = currentTop100Date;
@@ -153,14 +154,23 @@ function mergeCentralOdds(top100, central, requestedCheckpoint = "") {
 
 window.getCentralOddsDatabase = centralOddsForDate;
 
+async function hydrateTop100Odds(top100) {
+  const checkpoint = normalizedCheckpoint(top100?.checkpoint)
+    || normalizedCheckpoint(top100?.odds?.checkpoint);
+  const central = await centralOddsForDate(top100.slate_date, checkpoint);
+  return mergeCentralOdds(top100, central, checkpoint);
+}
+
+window.hydrateTop100Odds = hydrateTop100Odds;
+
 window.fetch = async function centralDatabaseFetch(input, init) {
   const requested = typeof input === "string" ? input : input?.url || String(input);
   const url = new URL(requested, location.href);
-  const isTop100 = url.origin === location.origin
-    && ["/data/top100.json", "/api/top100-current"].includes(url.pathname);
-  if (!isTop100) return nativeFetch(input, init);
+  const isLiveTop100 = url.origin === location.origin && url.pathname === "/api/top100-current";
+  const isLegacyTop100 = url.origin === location.origin && url.pathname === "/data/top100.json";
+  if (!isLiveTop100 && !isLegacyTop100) return nativeFetch(input, init);
 
-  // The generated file can shadow a Vercel rewrite. Always read the dated API.
+  // The generated file may be from the prior slate. Always read the dated live API.
   const date = url.searchParams.get("date") || currentTop100Date();
   const liveUrl = `/api/top100-current?${new URLSearchParams({ date })}`;
   const response = await nativeFetch(liveUrl, { ...init, cache: "no-store" });
@@ -175,11 +185,12 @@ window.fetch = async function centralDatabaseFetch(input, init) {
     }), { status: 503, headers: { "Content-Type": "application/json", "Cache-Control": "no-store" } });
   }
 
+  // The live route is the critical rendering path. Return form immediately.
+  // Legacy callers retain the historical form-plus-odds response.
+  if (isLiveTop100) return response;
+
   try {
-    const checkpoint = normalizedCheckpoint(top100.checkpoint)
-      || normalizedCheckpoint(top100.odds?.checkpoint);
-    const central = await centralOddsForDate(top100.slate_date, checkpoint);
-    const merged = mergeCentralOdds(top100, central, checkpoint);
+    const merged = await hydrateTop100Odds(top100);
     return new Response(JSON.stringify(merged), {
       status: response.status,
       statusText: response.statusText,
@@ -187,11 +198,14 @@ window.fetch = async function centralDatabaseFetch(input, init) {
         "Content-Type": "application/json; charset=utf-8",
         "Cache-Control": "no-store",
         "X-Odds-Source": "mlb-hr-edge-database",
-        "X-Odds-Checkpoint": checkpoint || "latest",
+        "X-Odds-Checkpoint": normalizedCheckpoint(merged.odds?.checkpoint) || "latest",
       },
     });
   } catch (error) {
-    console.warn("Current-slate odds unavailable; retaining generated checkpoint odds for this verified slate.", error);
+    console.warn(
+      "Current-slate odds unavailable; retaining generated checkpoint odds for this verified slate.",
+      error,
+    );
     return response;
   }
 };

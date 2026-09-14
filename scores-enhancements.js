@@ -16,6 +16,8 @@ const scoreTableState = {
   loading: null,
   loadingDate: null,
   loadedAt: 0,
+  oddsLoading: null,
+  oddsKey: null,
   checkpointData: new Map(),
   checkpointLoading: new Map(),
 };
@@ -336,6 +338,32 @@ function publishCurrentScores(data) {
   window.dispatchEvent(new CustomEvent("top100-updated", { detail: data }));
 }
 
+function hydrateScoreOdds(data) {
+  if (typeof window.hydrateTop100Odds !== "function" || !data?.slate_date || data.current_pending) return;
+  const checkpoint = String(data.checkpoint || data.odds?.checkpoint || "");
+  const key = `${data.slate_date}:${data.generated_at || ""}:${checkpoint}`;
+  if (scoreTableState.oddsLoading && scoreTableState.oddsKey === key) return;
+  scoreTableState.oddsKey = key;
+  const request = window.hydrateTop100Odds(data)
+    .then((merged) => {
+      const current = scoreTableState.currentData;
+      if (
+        currentScoreDate() !== data.slate_date
+        || current?.slate_date !== data.slate_date
+        || current?.generated_at !== data.generated_at
+      ) return;
+      publishCurrentScores(merged);
+      if (scoreSection()) enhanceScores(true);
+    })
+    .catch((error) => {
+      console.warn("Top 100 odds will retry in the background.", error);
+    })
+    .finally(() => {
+      if (scoreTableState.oddsLoading === request) scoreTableState.oddsLoading = null;
+    });
+  scoreTableState.oddsLoading = request;
+}
+
 async function loadScoreData() {
   const date = currentScoreDate();
   if (scoreTableState.currentData?.slate_date !== date) {
@@ -371,6 +399,7 @@ async function loadScoreData() {
       scoreTableState.loadedAt = Date.now();
       scoreTableState.checkpointData.clear();
       publishCurrentScores(data);
+      hydrateScoreOdds(data);
       return data;
     })
     .finally(() => {

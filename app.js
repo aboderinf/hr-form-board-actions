@@ -22,17 +22,63 @@ let D = {
 let T = { status: "loading", players: [], player_pool_count: 0, scored_player_count: 0 };
 let X = { status: "collecting", reports: {}, recent_captures: [], methodology: {} };
 
-try {
-  const [board, scores, discovery] = await Promise.all([
-    fetch("/data/index.json", { cache: "no-store" }),
-    fetch("/api/top100-current", { cache: "no-store" }),
-    fetch("/data/discovery.json", { cache: "no-store" }),
-  ]);
-  if (board.ok) D = await board.json();
-  if (scores.ok) T = await scores.json();
-  if (discovery.ok) X = await discovery.json();
-} catch (error) {
-  console.error(error);
+const dataState = {
+  board: "idle",
+  discovery: "idle",
+};
+const dataErrors = {};
+const dataPromises = {};
+
+async function loadData(kind, url, apply) {
+  if (dataState[kind] === "ready") return;
+  if (dataPromises[kind]) return dataPromises[kind];
+  dataState[kind] = "loading";
+  const request = fetch(url, { cache: "no-store" })
+    .then(async (response) => {
+      if (!response.ok) throw new Error(`${kind} fetch failed: ${response.status}`);
+      apply(await response.json());
+      dataState[kind] = "ready";
+      delete dataErrors[kind];
+    })
+    .catch((error) => {
+      dataState[kind] = "error";
+      dataErrors[kind] = error instanceof Error ? error.message : String(error);
+      console.error(error);
+    })
+    .finally(() => {
+      if (dataPromises[kind] === request) delete dataPromises[kind];
+    });
+  dataPromises[kind] = request;
+  return request;
+}
+
+function routeRequirements(route) {
+  if (route === "discovery") return [["discovery", "/data/discovery.json", (data) => { X = data; }]];
+  if (route === "data") {
+    return [
+      ["board", "/data/index.json", (data) => { D = data; }],
+      ["discovery", "/data/discovery.json", (data) => { X = data; }],
+    ];
+  }
+  if (route === "today" || route === "tracker") {
+    return [["board", "/data/index.json", (data) => { D = data; }]];
+  }
+  return [];
+}
+
+function routeDataPending(route) {
+  return routeRequirements(route).some(([kind]) => dataState[kind] !== "ready");
+}
+
+async function loadRouteData(route) {
+  const requirements = routeRequirements(route);
+  if (!requirements.length) return;
+  await Promise.all(requirements.map(([kind, url, apply]) => loadData(kind, url, apply)));
+  if (state.route === route) render();
+}
+
+function startRouteLoad() {
+  void loadRouteData(state.route);
 }
 
 addEventListener("top100-updated", (event) => {
@@ -43,6 +89,7 @@ addEventListener("top100-updated", (event) => {
 addEventListener("hashchange", () => {
   state.route = location.hash.slice(1) || "today";
   render();
+  startRouteLoad();
 });
 
 const safe = (value) => value == null || value === "" ? "—" : String(value);
@@ -283,17 +330,26 @@ function methodPage() {
   </section>`);
 }
 
+function loadingPage() {
+  const requirements = routeRequirements(state.route);
+  const failure = requirements.map(([kind]) => dataErrors[kind]).find(Boolean);
+  return layout(`<section class="card section"><div class="eyebrow">Loading</div><h2>${
+    failure ? "Could not load this page" : "Loading current data…"
+  }</h2><p class="${failure ? "loss" : "muted"}">${safe(failure || "The page shell is ready. Current data is loading now.")}</p></section>`);
+}
+
 function render() {
-  const page = {
+  const page = routeDataPending(state.route) ? loadingPage : ({
     today: todayPage,
     scores: scoresPage,
     discovery: discoveryPage,
     tracker: trackerPage,
     data: dataPage,
     method: methodPage,
-  }[state.route] || todayPage;
+  }[state.route] || todayPage);
   document.querySelector("#app").innerHTML = page();
   bindControls();
 }
 
 render();
+startRouteLoad();

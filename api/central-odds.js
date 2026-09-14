@@ -63,18 +63,26 @@ async function handleTop100View(request, response) {
   try {
     const redis = await readTop100(date);
     const payload = redis || localTop100(date);
-    response.setHeader("Cache-Control", "no-store");
     response.setHeader("Access-Control-Allow-Origin", "*");
-    if (!payload) return response.status(404).json({ status: "not_ready", slate_date: date });
+    if (!payload) {
+      response.setHeader("Cache-Control", "no-store");
+      return response.status(404).json({ status: "not_ready", slate_date: date });
+    }
+    // The route is date-keyed and form changes at most a few times per slate.
+    // Keep browsers revalidating while allowing Vercel's edge to serve repeat reads.
+    response.setHeader("Cache-Control", "public, max-age=0, s-maxage=120, stale-while-revalidate=600");
     response.setHeader("X-Top100-Source", redis ? "redis" : "static-fallback");
     if (request.method === "HEAD") return response.status(200).end();
     return response.status(200).json(payload);
   } catch (error) {
     const fallback = localTop100(date);
     if (fallback) {
+      response.setHeader("Cache-Control", "public, max-age=0, s-maxage=120, stale-while-revalidate=600");
+      response.setHeader("Access-Control-Allow-Origin", "*");
       response.setHeader("X-Top100-Source", "static-fallback-after-redis-error");
       return response.status(200).json(fallback);
     }
+    response.setHeader("Cache-Control", "no-store");
     return response.status(503).json({
       status: "infrastructure_error",
       slate_date: date,

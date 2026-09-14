@@ -32,7 +32,7 @@ jobs:
       - name: Run deterministic tests
         run: python -m unittest discover -s tests -v
       - name: Test current Top 100 slate delivery and date rollover
-        run: node --test tests/test_top100_current.js
+        run: node --test tests/test_top100_current.js tests/test_top100_loading.js
       - name: Test archived triples projection
         run: node --test tests/test_triples_runtime.js
       - name: Test archive delivery under storage quota failures
