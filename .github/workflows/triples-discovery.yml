@@ -9,10 +9,12 @@ on:
       - "src/discovery.py"
       - "src/triples.py"
       - "src/triples_discovery.py"
+      - "src/triples_model_discovery.py"
       - "src/triples_settlement.py"
       - "src/sources.py"
       - "scripts/build_triples_discovery.py"
       - "tests/test_triples_discovery.py"
+      - "tests/test_triples_model_discovery.py"
       - "tests/test_triples_settlement.py"
   schedule:
     # 1:35 AM ET, after the prior slate can be settled. Separate UTC entries
@@ -77,6 +79,7 @@ jobs:
         if: steps.window.outputs.due == 'true'
         run: |
           python -m unittest discover -s tests -p 'test_triples_discovery.py' -v
+          python -m unittest discover -s tests -p 'test_triples_model_discovery.py' -v
           python -m unittest discover -s tests -p 'test_triples_settlement.py' -v
 
       - name: Backfill archives, settle outcomes, and build reports
@@ -93,7 +96,8 @@ jobs:
           fi
           git config user.name "hr-form-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add data/triples-discovery.json data/triples-discovery/archive
-          git commit -m "Update Triples profit discovery"
+          git add data/triples-discovery.json data/triples-discovery/archive \
+            data/triples-model-discovery.json data/triples-model-discovery/archive
+          git commit -m "Update Triples discovery feeds"
           git pull --rebase origin main
           git push

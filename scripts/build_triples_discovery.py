@@ -3,9 +3,10 @@ from __future__ import annotations
 
 import argparse
 import json
+import subprocess
 import sys
 import time
-from collections import Counter
+from collections import Counter, defaultdict
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
@@ -22,6 +23,12 @@ from src.sources import HttpClient, MLB, game_log, season_hitter_pool
 from src.storage import write_json
 from src.triples import calculate_triples_form_open_pool, rank_triples_scores
 from src.triples_discovery import build_reports, collapse_best, complete_slate_partition
+from src.triples_model_discovery import (
+    build_daily_archive as build_model_daily_archive,
+    build_output as build_model_discovery_output,
+    parse_timestamp,
+    usable_model_board,
+)
 from src.triples_settlement import (
     best_archived_quote,
     map_event_game,
@@ -33,6 +40,7 @@ from src.triples_settlement import (
 
 
 ARCHIVE_START = date(2026, 8, 7)
+MODEL_ARCHIVE_START = date(2026, 8, 16)
 CHECKPOINTS = ("0817", "1117", "1717")
 FORM_BOARD = "https://hr-form-board-actions.vercel.app"
 
@@ -74,6 +82,159 @@ def load_or_fetch_capture(
         return None
     write_json(path, payload)
     return payload
+
+
+def model_archive_path(archive_dir: Path, slate: date) -> Path:
+    return archive_dir / f"{slate.isoformat()}.json"
+
+
+def read_model_archives(archive_dir: Path, today: date) -> dict[str, dict[str, Any]]:
+    output: dict[str, dict[str, Any]] = {}
+    for path in sorted(archive_dir.glob("*.json")):
+        try:
+            payload = json.loads(path.read_text(encoding="utf-8"))
+            slate = str(payload.get("slate_date") or "")
+            if (
+                payload.get("kind") == "triples_model_pick_slate"
+                and slate
+                and date.fromisoformat(slate) <= today
+            ):
+                output[slate] = payload
+        except (OSError, ValueError, json.JSONDecodeError):
+            continue
+    return output
+
+
+def git_model_board_candidates(
+    wanted_dates: set[str], diagnostics: list[str]
+) -> dict[str, list[tuple[dict[str, Any], str]]]:
+    output: dict[str, list[tuple[dict[str, Any], str]]] = defaultdict(list)
+    if not wanted_dates:
+        return output
+    try:
+        history = subprocess.run(
+            ["git", "log", "--format=%H", "--all", "--", "data/triples-model.json"],
+            cwd=ROOT,
+            check=True,
+            capture_output=True,
+            text=True,
+            timeout=60,
+        ).stdout.splitlines()
+    except (OSError, subprocess.SubprocessError) as exc:
+        diagnostics.append(f"Model board Git history unavailable: {exc}")
+        return output
+
+    for sha in history:
+        try:
+            raw = subprocess.run(
+                ["git", "show", f"{sha}:data/triples-model.json"],
+                cwd=ROOT,
+                check=True,
+                capture_output=True,
+                text=True,
+                timeout=30,
+            ).stdout
+            payload = json.loads(raw)
+        except (OSError, subprocess.SubprocessError, json.JSONDecodeError):
+            continue
+        slate = str(payload.get("slate_date") or "")
+        if slate in wanted_dates and usable_model_board(payload, slate):
+            output[slate].append((payload, f"git:{sha[:12]}"))
+    return output
+
+
+def runtime_model_boards(
+    wanted_dates: set[str], diagnostics: list[str]
+) -> dict[str, tuple[dict[str, Any], str]]:
+    output: dict[str, tuple[dict[str, Any], str]] = {}
+
+    def fetch(slate: str) -> tuple[str, dict[str, Any] | None, str | None]:
+        try:
+            payload = get_json(
+                f"{FORM_BOARD}/api/triples-model-current?date={slate}",
+                allow_missing=True,
+            )
+        except Exception as exc:
+            return slate, None, str(exc)
+        if payload is not None and usable_model_board(payload, slate):
+            return slate, payload, None
+        return slate, None, None
+
+    with ThreadPoolExecutor(max_workers=8) as executor:
+        futures = [executor.submit(fetch, slate) for slate in sorted(wanted_dates)]
+        for future in as_completed(futures):
+            slate, payload, error = future.result()
+            if error:
+                diagnostics.append(f"Runtime model board failed for {slate}: {error}")
+            elif payload is not None:
+                output[slate] = (payload, "runtime-archive")
+    return output
+
+
+def choose_model_boards(
+    wanted_dates: set[str], diagnostics: list[str]
+) -> dict[str, tuple[dict[str, Any], str]]:
+    candidates = git_model_board_candidates(wanted_dates, diagnostics)
+    for slate, candidate in runtime_model_boards(wanted_dates, diagnostics).items():
+        candidates[slate].append(candidate)
+    selected: dict[str, tuple[dict[str, Any], str]] = {}
+    for slate, options in candidates.items():
+        valid = [item for item in options if parse_timestamp(item[0].get("generated_at"))]
+        if valid:
+            selected[slate] = min(
+                valid,
+                key=lambda item: parse_timestamp(item[0].get("generated_at"))
+                or datetime.max.replace(tzinfo=timezone.utc),
+            )
+    return selected
+
+
+def build_model_pick_discovery(
+    entries: list[dict[str, Any]],
+    today: date,
+    archive_dir: Path,
+    output_path: Path,
+    diagnostics: list[str],
+) -> dict[str, Any]:
+    complete_entries, complete_dates, incomplete_dates = complete_slate_partition(entries)
+    candidate_dates = {
+        slate for slate in complete_dates if date.fromisoformat(slate) >= MODEL_ARCHIVE_START
+    }
+    archives = read_model_archives(archive_dir, today)
+    missing_archives = candidate_dates - set(archives)
+    boards = choose_model_boards(missing_archives, diagnostics)
+    entries_by_slate: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for row in complete_entries:
+        entries_by_slate[str(row["slate_date"])].append(row)
+
+    missing_model_dates: list[str] = []
+    for slate in sorted(missing_archives):
+        board_and_source = boards.get(slate)
+        if board_and_source is None:
+            missing_model_dates.append(slate)
+            continue
+        board, source = board_and_source
+        daily = build_model_daily_archive(
+            board,
+            entries_by_slate.get(slate, []),
+            source=source,
+        )
+        write_json(model_archive_path(archive_dir, date.fromisoformat(slate)), daily)
+        archives[slate] = daily
+
+    selected_archives = [archives[slate] for slate in sorted(candidate_dates & set(archives))]
+    output = build_model_discovery_output(
+        selected_archives,
+        today,
+        candidate_dates=candidate_dates,
+        incomplete_dates=[
+            slate for slate in incomplete_dates if date.fromisoformat(slate) >= MODEL_ARCHIVE_START
+        ],
+        missing_model_dates=missing_model_dates,
+        diagnostics=diagnostics,
+    )
+    write_json(output_path, output)
+    return output
 
 
 def fetch_teams(client: HttpClient, season: int) -> list[dict[str, Any]]:
@@ -356,6 +517,16 @@ def main() -> int:
         type=Path,
         default=ROOT / "data" / "triples-discovery.json",
     )
+    parser.add_argument(
+        "--model-archive-dir",
+        type=Path,
+        default=ROOT / "data" / "triples-model-discovery" / "archive",
+    )
+    parser.add_argument(
+        "--model-output",
+        type=Path,
+        default=ROOT / "data" / "triples-model-discovery.json",
+    )
     args = parser.parse_args()
 
     today = date.fromisoformat(args.today) if args.today else datetime.now(ET).date()
@@ -386,10 +557,18 @@ def main() -> int:
     entries, quality = annotate_entries(captures, pool, logs, schedules, codes, forms)
     output = build_output(captures, entries, quality, today, diagnostics)
     write_json(args.output, output)
+    model_output = build_model_pick_discovery(
+        entries,
+        today,
+        args.model_archive_dir,
+        args.model_output,
+        diagnostics,
+    )
     print(
         f"Triples discovery built: captures={len(captures)} rows={len(entries)} "
         f"settled={output['data_quality']['settled_rows']} "
-        f"pending={output['data_quality']['pending_rows']}"
+        f"pending={output['data_quality']['pending_rows']} "
+        f"model_slates={model_output['data_quality']['archived_model_slates']}"
     )
     return 0
 
