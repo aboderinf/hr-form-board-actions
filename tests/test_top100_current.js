@@ -32,6 +32,9 @@ function harness() {
   };
   const context = vm.createContext({
     window, document, Date: Clock, Intl, URL, URLSearchParams, Response,
+    ODDS_RANGES: [], FORM_RANGES: [],
+    resolveRange: () => ({ min: null, max: null }),
+    rangeError: () => "", matchesRange: () => true,
     location: { href: "https://hr-form-board-actions.vercel.app/#scores",
       origin: "https://hr-form-board-actions.vercel.app", hash: "#scores" },
     fetch: (...args) => window.fetch(...args),
@@ -42,15 +45,51 @@ function harness() {
     MutationObserver: class { observe() {} },
   });
   return {
-    window, calls, events, listeners, timers,
+    window, document, calls, events, listeners, timers,
+    now: () => now,
     date: (value) => { now = Date.parse(value); },
     reply: (fn) => { reply = fn; },
     bridge: () => vm.runInContext(fs.readFileSync("central-data-source.js", "utf8"), context),
     scores: () => vm.runInContext(
       fs.readFileSync("scores-enhancements.js", "utf8").replace(/^import .*;\n/, "")
-      + "\n;({ scoreTableState, loadScoreData, loadCheckpointData });", context),
+      + "\n;({ scoreTableState, loadScoreData, loadCheckpointData, renderEnhancedScores, enhanceScores, scoreRenderMarker });", context),
   };
 }
+
+test("a completed Top 100 render settles after one DOM update", async () => {
+  const h = harness();
+  let writes = 0;
+  let html = "";
+  const section = {
+    dataset: {},
+    querySelector: () => ({ textContent: "Current leaderboard" }),
+  };
+  Object.defineProperty(section, "innerHTML", {
+    get: () => html,
+    set: (value) => { writes += 1; html = value; },
+  });
+  h.document.querySelectorAll = (selector) => selector === "section.card.section" ? [section] : [];
+
+  const scores = h.scores();
+  const data = {
+    slate_date: "2026-09-14",
+    status: "ready",
+    generated_at: "2026-09-14T08:05:01Z",
+    players: [{ rank: 1, player: "Visible Hitter", team: "TST", score: 0.5 }],
+    odds: { priced_players: 0 },
+  };
+  Object.assign(scores.scoreTableState, {
+    currentData: data,
+    data,
+    loadedAt: h.now(),
+  });
+
+  scores.renderEnhancedScores(section);
+  assert.match(html, /Visible Hitter/);
+  assert.equal(writes, 1);
+  await scores.enhanceScores(false);
+  assert.equal(writes, 1, "the MutationObserver must not trigger an identical rerender");
+});
 
 test("legacy static Top 100 requests read today's API and join same-date odds", async () => {
   const h = harness();

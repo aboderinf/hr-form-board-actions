@@ -227,6 +227,10 @@ function pendingCheckpointData(checkpoint) {
   };
 }
 
+function scoreRenderMarker(data) {
+  return `${data.slate_date || ""}-${data.status || ""}-${data.generated_at || "ready"}-${data.odds?.refreshed_in_browser || ""}-${scoreTableState.view}`;
+}
+
 function renderEnhancedScores(section) {
   if (!scoreTableState.data) return;
   const data = scoreTableState.data;
@@ -241,7 +245,7 @@ function renderEnhancedScores(section) {
     : `Odds are optional and never affect rank. Shared coverage: ${Number(oddsMeta.priced_players || 0)} of ${Number((data.players || []).length)} players.`;
   const rangeValidation = selectedScoreRanges().error;
 
-  section.dataset.scoreEnhancement = `${data.slate_date}-${data.status}-${data.generated_at || "ready"}-${data.odds?.refreshed_in_browser || ""}-${scoreTableState.view}`;
+  section.dataset.scoreEnhancement = scoreRenderMarker(data);
   section.innerHTML = `
     <div class="eyebrow">${snapshotName}</div>
     ${checkpointTabs()}
@@ -450,8 +454,7 @@ async function selectScoreView(view) {
 }
 
 async function enhanceScores(force = false) {
-  const section = scoreSection();
-  if (!section) return;
+  if (!scoreSection()) return;
   await loadScoreData();
   if (scoreTableState.view === "current") {
     scoreTableState.data = scoreTableState.currentData;
@@ -463,7 +466,12 @@ async function enhanceScores(force = false) {
   }
   const data = scoreTableState.data;
   if (!data || data.slate_date !== currentScoreDate()) return;
-  const marker = `${data.generated_at || "ready"}-${scoreTableState.view}`;
+  // Loading publishes through app.js, which replaces #app. Reacquire the live
+  // section after the await so a completed request never renders into a
+  // detached section captured before that replacement.
+  const section = scoreSection();
+  if (!section) return;
+  const marker = scoreRenderMarker(data);
   if (!force && section.dataset.scoreEnhancement === marker) return;
   renderEnhancedScores(section);
 }
