@@ -356,8 +356,23 @@ def main() -> int:
         })
 
     recent_results = sorted(unique, key=lambda row: (row.get("slate_date", ""), row.get("rank", 999)), reverse=True)[:100]
+    slice_rows = [
+        {
+            "slate_date": row.get("slate_date"),
+            "checkpoint": row.get("checkpoint"),
+            "mlbam_id": row.get("mlbam_id"),
+            "score": row.get("score"),
+            "best_book": row.get("best_book"),
+            "best_odds": row.get("best_odds"),
+            "game_start_at": row.get("game_start_at"),
+            "result": row.get("result"),
+            "profit_units": row.get("profit_units"),
+        }
+        for row in annotated
+        if row.get("best_odds") is not None
+    ]
     output = {
-        "schema_version": 2,
+        "schema_version": 3,
         "kind": "top_100_profit_discovery",
         "generated_at": now.isoformat(),
         "generated_at_et": now_et.isoformat(),
@@ -375,6 +390,7 @@ def main() -> int:
         "raw_priced_rows": sum(row.get("best_odds") is not None for row in raw_entries),
         "unique_priced_player_games": len(unique),
         "reports": reports,
+        "slice_rows": slice_rows,
         "rule_tracking": rule_tracking,
         "recent_captures": recent_captures,
         "recent_results": recent_results,
