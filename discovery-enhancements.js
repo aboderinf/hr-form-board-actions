@@ -1,4 +1,4 @@
-import { ODDS_RANGES, FORM_RANGES, DISCOVERY_BOOKS, parseDiscoverySlice, discoverySliceSummary } from "./discovery-ranges.mjs";
+import { ODDS_RANGES, FORM_RANGES, GAME_TIME_RANGES, DISCOVERY_BOOKS, parseDiscoverySlice, discoverySliceSummary, discoveryRowsSummary } from "./discovery-ranges.mjs";
 
 const labState = {
   period: "rolling_14d",
@@ -6,6 +6,7 @@ const labState = {
   form: "all",
   odds: "all",
   book: "all",
+  gameTime: "all",
 };
 
 let discoveryPayload = null;
@@ -99,25 +100,42 @@ function sliceSelect(key, label, ranges, allLabel) {
   </select></label>`;
 }
 
+function activeSliceSummary(detail, report, book = labState.book) {
+  if (labState.gameTime === "all" || !Array.isArray(discoveryPayload?.slice_rows)) {
+    return discoverySliceSummary(detail, labState.form, labState.odds, book);
+  }
+  return discoveryRowsSummary(discoveryPayload.slice_rows, {
+    start: report.start,
+    end: report.end,
+    view: labState.view,
+    form: labState.form,
+    odds: labState.odds,
+    book,
+    gameTime: labState.gameTime,
+  });
+}
+
 function sliceExplorer(detail, report) {
-  const summary = discoverySliceSummary(detail, labState.form, labState.odds, labState.book);
+  const summary = activeSliceSummary(detail, report);
   const formLabel = FORM_RANGES.find((range) => range.value === labState.form)?.label || "All form scores";
   const oddsLabel = ODDS_RANGES.find((range) => range.value === labState.odds)?.label || "All odds";
+  const gameTimeLabel = GAME_TIME_RANGES.find((range) => range.value === labState.gameTime)?.label || "All game starts";
   const books = labState.book === "all" ? DISCOVERY_BOOKS : [labState.book];
-  const rows = books.map((book) => ({ book, summary: discoverySliceSummary(detail, labState.form, labState.odds, book) }));
+  const rows = books.map((book) => ({ book, summary: activeSliceSummary(detail, report, book) }));
   return `<section id="discovery-slice-explorer" class="discovery-slice-explorer" aria-labelledby="discovery-slice-heading">
     <div class="eyebrow">Slice explorer</div>
-    <h3 id="discovery-slice-heading" tabindex="-1">${esc(formLabel)} × ${esc(oddsLabel)}</h3>
-    <p class="muted">Choose any form × odds combination, or click a slice in the tables below.</p>
+    <h3 id="discovery-slice-heading" tabindex="-1">${esc(formLabel)} × ${esc(oddsLabel)}${labState.gameTime !== "all" ? ` × ${esc(gameTimeLabel)}` : ""}</h3>
+    <p class="muted">Choose any form × odds × game-start combination, or click a slice in the tables below.</p>
     <div class="discovery-slice-controls">
       ${sliceSelect("form", "Form score", FORM_RANGES, "All form scores")}
       ${sliceSelect("odds", "Best odds · American", ODDS_RANGES, "All odds")}
       ${sliceSelect("book", "Book offering best price", DISCOVERY_BOOKS.map((book) => ({ value: book, label: book })), "All best-price books")}
+      ${sliceSelect("gameTime", "Game start · ET", GAME_TIME_RANGES, "All game starts")}
       <button type="button" id="lab-reset-slice">Reset slice</button>
     </div>
-    <p class="muted">${esc(periodLabels[labState.period])} · ${esc(report.start)} to ${esc(report.end)} · ${esc(labState.view === "best" ? "Best archived (hindsight)" : `${checkpointLabels[labState.view]} ET checkpoint`)}${report.latest_complete_slate ? ` · Latest complete slate: ${esc(report.latest_complete_slate)}` : ""}</p>
+    <p class="muted">${esc(periodLabels[labState.period])} · ${esc(report.start)} to ${esc(report.end)} · ${esc(labState.view === "best" ? "Best archived (hindsight)" : `${checkpointLabels[labState.view]} ET checkpoint`)}${report.latest_complete_slate ? ` · Latest complete slate: ${esc(report.latest_complete_slate)}` : ""}${labState.gameTime !== "all" ? ` · Game start: ${esc(gameTimeLabel)}` : ""}</p>
     <div id="discovery-slice-results" aria-live="polite">
-      ${summary ? `<p>${samplePill(summary)}${labState.book !== "all" ? ` · ${esc(labState.book)} best-price bets` : ""}</p>${summaryCards(summary)}` : '<div class="empty">No archived bets match this slice for the selected period and checkpoint. Try another range or book.</div>'}
+      ${summary ? `<p>${samplePill(summary)}${labState.book !== "all" ? ` · ${esc(labState.book)} best-price bets` : ""}</p>${summaryCards(summary)}` : '<div class="empty">No archived bets match this slice for the selected period, checkpoint, and game-start window. Try another range or book.</div>'}
       <h4>Performance by best-price book</h4>
       <p class="muted">Each book's row includes only bets where that book supplied the archived best price. Different books can have different selections; this does not re-price the same bets at every book. Stakes: 1 unit per settled bet.</p>
       <div class="tablewrap"><table class="discovery-slice-books">
@@ -237,7 +255,7 @@ function renderLab(root) {
     document.getElementById(id)?.focus({ preventScroll: true });
   }));
   root.querySelector("#lab-reset-slice")?.addEventListener("click", () => {
-    Object.assign(labState, { form: "all", odds: "all", book: "all" });
+    Object.assign(labState, { form: "all", odds: "all", book: "all", gameTime: "all" });
     renderLab(root);
     document.getElementById("lab-reset-slice")?.focus({ preventScroll: true });
   });
