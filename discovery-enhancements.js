@@ -206,7 +206,6 @@ async function refreshTodaySlice(root, force = false) {
     if (requestId !== todaySliceRequestId || !root.isConnected) return;
     content.innerHTML = `<div class="empty">Today's slice picks are temporarily unavailable. ${esc(error instanceof Error ? error.message : String(error))}</div>`;
   }
-  bindTodayRefresh(root);
 }
 
 function samplePill(row = {}) {
