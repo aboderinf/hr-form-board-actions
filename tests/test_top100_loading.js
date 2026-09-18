@@ -69,13 +69,17 @@ test("live Top 100 form returns before the odds request begins", async () => {
       });
     },
   };
+  class Clock extends Date {
+    constructor(...args) { super(...(args.length ? args : ["2026-09-14T13:00:00Z"])); }
+    static now() { return Date.parse("2026-09-14T13:00:00Z"); }
+  }
   const context = {
     window,
     location: {
       href: "https://hr-form-board-actions.vercel.app/#scores",
       origin: "https://hr-form-board-actions.vercel.app",
     },
-    Date,
+    Date: Clock,
     Intl,
     URL,
     URLSearchParams,

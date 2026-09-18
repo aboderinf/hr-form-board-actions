@@ -1,4 +1,4 @@
-import { ODDS_RANGES, FORM_RANGES, GAME_TIME_RANGES, DISCOVERY_BOOKS, parseDiscoverySlice, discoverySliceSummary, discoveryRowsSummary } from "./discovery-ranges.mjs";
+import { ODDS_RANGES, FORM_RANGES, GAME_TIME_RANGES, DISCOVERY_BOOKS, parseDiscoverySlice, discoverySliceSummary, discoveryRowsSummary, discoveryTodayMatches, normalizeDiscoveryBook } from "./discovery-ranges.mjs";
 
 const labState = {
   period: "rolling_14d",
@@ -11,6 +11,16 @@ const labState = {
 
 let discoveryPayload = null;
 let loadingPromise = null;
+
+const todaySliceState = {
+  currentData: null,
+  currentLoadedAt: 0,
+  currentLoading: null,
+  checkpointData: new Map(),
+  checkpointLoading: new Map(),
+};
+const TODAY_SLICE_REFRESH_MS = 60_000;
+let todaySliceRequestId = 0;
 
 const checkpointLabels = {
   "0817": "8:17 AM",
@@ -50,6 +60,152 @@ function esc(value) {
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#039;");
+}
+
+function currentEtDate() {
+  if (typeof window.currentTop100Date === "function") return window.currentTop100Date();
+  const parts = Object.fromEntries(new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/New_York",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(new Date()).map((part) => [part.type, part.value]));
+  return `${parts.year}-${parts.month}-${parts.day}`;
+}
+
+function todayTime(value) {
+  if (!value) return "—";
+  const parsed = new Date(value);
+  if (Number.isNaN(parsed.getTime())) return "—";
+  return new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/New_York",
+    hour: "numeric",
+    minute: "2-digit",
+    timeZoneName: "short",
+  }).format(parsed);
+}
+
+function todaySliceShell() {
+  return `<section id="discovery-today-slice" class="discovery-today-slice" aria-labelledby="discovery-today-slice-heading">
+    <div class="discovery-today-head">
+      <div><div class="eyebrow">Today</div><h4 id="discovery-today-slice-heading">Today's slice picks</h4></div>
+      <button type="button" id="lab-refresh-today">Refresh</button>
+    </div>
+    <div data-today-slice-content aria-live="polite"><div class="empty">Loading today's qualifying players…</div></div>
+  </section>`;
+}
+
+async function loadCurrentTodaySlice(date, force = false) {
+  const fresh = todaySliceState.currentData?.slate_date === date
+    && Date.now() - todaySliceState.currentLoadedAt < TODAY_SLICE_REFRESH_MS;
+  if (!force && fresh) return todaySliceState.currentData;
+  if (todaySliceState.currentLoading) return todaySliceState.currentLoading;
+
+  todaySliceState.currentLoading = fetch(`/data/top100.json?date=${encodeURIComponent(date)}&t=${Date.now()}`, { cache: "no-store" })
+    .then(async (response) => {
+      if (!response.ok) throw new Error(`Today's Top 100 is not ready (HTTP ${response.status})`);
+      const payload = await response.json();
+      if (payload?.slate_date !== date || !Array.isArray(payload?.players)) {
+        throw new Error(`Today's Top 100 slate mismatch: expected ${date}, received ${payload?.slate_date || "none"}`);
+      }
+      todaySliceState.currentData = payload;
+      todaySliceState.currentLoadedAt = Date.now();
+      return payload;
+    })
+    .finally(() => { todaySliceState.currentLoading = null; });
+  return todaySliceState.currentLoading;
+}
+
+async function loadTodayCheckpoint(date, checkpoint, force = false) {
+  const key = `${date}_${checkpoint}`;
+  if (!force && todaySliceState.checkpointData.has(key)) return todaySliceState.checkpointData.get(key);
+  if (todaySliceState.checkpointLoading.has(key)) return todaySliceState.checkpointLoading.get(key);
+
+  const request = fetch(`/data/discovery/archive/${key}.json?t=${Date.now()}`, { cache: "no-store" })
+    .then(async (response) => {
+      if (response.status === 404) return null;
+      if (!response.ok) throw new Error(`Today's ${checkpoint} checkpoint is unavailable (HTTP ${response.status})`);
+      const payload = await response.json();
+      if (payload?.slate_date !== date || String(payload?.checkpoint || "") !== String(checkpoint) || !Array.isArray(payload?.entries)) {
+        throw new Error("Today's checkpoint archive does not match the selected slice");
+      }
+      todaySliceState.checkpointData.set(key, payload);
+      return payload;
+    })
+    .finally(() => { todaySliceState.checkpointLoading.delete(key); });
+  todaySliceState.checkpointLoading.set(key, request);
+  return request;
+}
+
+function todaySliceRows(players = []) {
+  if (!players.length) return '<div class="empty">No priced players on today\'s slate currently match this slice.</div>';
+  return `<div class="tablewrap"><table class="discovery-today-table">
+    <thead><tr><th>#</th><th>Player</th><th>Matchup</th><th>Score</th><th>L5/L7/L15</th><th>Best odds</th><th>Best book</th><th>Game ET</th></tr></thead>
+    <tbody>${players.map((player) => `<tr>
+      <td>${esc(player.rank ?? "—")}</td>
+      <td><b>${esc(player.player)}</b><div class="muted">${esc(player.team || "")}</div></td>
+      <td>${esc(player.matchup || "—")}</td>
+      <td class="plus">${player.score == null ? "—" : Number(player.score).toFixed(4)}</td>
+      <td>${Number(player.hr_games_l5 || 0)} / ${Number(player.hr_games_l7 || 0)} / ${Number(player.hr_games_l15 || 0)}</td>
+      <td class="plus">${american(player.best_odds)}</td>
+      <td>${esc(normalizeDiscoveryBook(player.best_book) || "—")}</td>
+      <td>${esc(todayTime(player.game_start_at))}</td>
+    </tr>`).join("")}</tbody>
+  </table></div>`;
+}
+
+function bindTodayRefresh(root) {
+  root.querySelector("#lab-refresh-today")?.addEventListener("click", () => {
+    todaySliceState.currentLoadedAt = 0;
+    void refreshTodaySlice(root, true);
+  });
+}
+
+async function refreshTodaySlice(root, force = false) {
+  const content = root.querySelector("[data-today-slice-content]");
+  if (!content) return;
+  const requestId = ++todaySliceRequestId;
+  const date = currentEtDate();
+  content.innerHTML = '<div class="empty">Loading today\'s qualifying players…</div>';
+
+  try {
+    let payload = null;
+    let mode = "live";
+    if (labState.view !== "best") {
+      payload = await loadTodayCheckpoint(date, labState.view, force);
+      if (payload) mode = "checkpoint";
+    }
+    if (!payload) payload = await loadCurrentTodaySlice(date, force);
+    if (requestId !== todaySliceRequestId || !root.isConnected) return;
+
+    const players = mode === "checkpoint" ? (payload.entries || []) : (payload.players || []);
+    const matches = discoveryTodayMatches(players, {
+      form: labState.form,
+      odds: labState.odds,
+      book: labState.book,
+      gameTime: labState.gameTime,
+      now: new Date().toISOString(),
+      liveOnly: mode === "live",
+    });
+
+    const sourceNote = mode === "checkpoint"
+      ? `Using today's immutable ${checkpointLabels[labState.view] || labState.view} ET capture.`
+      : labState.view === "best"
+        ? "Best archived is a hindsight benchmark, so today's picks use the current central-odds market as the executable preview."
+        : `Today's ${checkpointLabels[labState.view] || labState.view} ET checkpoint is not captured yet, so this is a live preview that can change before that checkpoint.`;
+    const oddsStamp = mode === "checkpoint"
+      ? (payload.captured_at_et || payload.captured_at || null)
+      : (payload.odds?.refreshed_in_browser || payload.generated_at_et || payload.generated_at || null);
+
+    content.innerHTML = `
+      <p><span class="pill">${matches.length} qualifying player${matches.length === 1 ? "" : "s"}</span> <span class="muted">· ${esc(date)}</span></p>
+      <p class="muted">${esc(sourceNote)}${oddsStamp ? ` Last refreshed: ${esc(todayTime(oddsStamp))}.` : ""}</p>
+      ${todaySliceRows(matches)}
+    `;
+  } catch (error) {
+    if (requestId !== todaySliceRequestId || !root.isConnected) return;
+    content.innerHTML = `<div class="empty">Today's slice picks are temporarily unavailable. ${esc(error instanceof Error ? error.message : String(error))}</div>`;
+  }
 }
 
 function samplePill(row = {}) {
@@ -133,6 +289,7 @@ function sliceExplorer(detail, report) {
       ${sliceSelect("gameTime", "Game start · ET", GAME_TIME_RANGES, "All game starts")}
       <button type="button" id="lab-reset-slice">Reset slice</button>
     </div>
+    ${todaySliceShell()}
     <p class="muted">${esc(periodLabels[labState.period])} · ${esc(report.start)} to ${esc(report.end)} · ${esc(labState.view === "best" ? "Best archived (hindsight)" : `${checkpointLabels[labState.view]} ET checkpoint`)}${report.latest_complete_slate ? ` · Latest complete slate: ${esc(report.latest_complete_slate)}` : ""}${labState.gameTime !== "all" ? ` · Game start: ${esc(gameTimeLabel)}` : ""}</p>
     <div id="discovery-slice-results" aria-live="polite">
       ${summary ? `<p>${samplePill(summary)}${labState.book !== "all" ? ` · ${esc(labState.book)} best-price bets` : ""}</p>${summaryCards(summary)}` : '<div class="empty">No archived bets match this slice for the selected period, checkpoint, and game-start window. Try another range or book.</div>'}
@@ -281,6 +438,8 @@ function renderLab(root) {
     renderLab(root);
     root.scrollIntoView({ behavior: "smooth", block: "start" });
   }));
+  bindTodayRefresh(root);
+  void refreshTodaySlice(root);
 }
 
 async function loadDiscovery() {
@@ -341,6 +500,12 @@ style.textContent = `
   .discovery-slice-link:hover{text-decoration-thickness:2px}
   .discovery-slice-link:focus-visible{outline:2px solid currentColor;outline-offset:3px}
   #discovery-slice-heading{scroll-margin-top:20px}
+  .discovery-today-slice{margin:18px 0 20px;padding:16px;border:1px solid var(--line,#e5e7eb);border-radius:10px}
+  .discovery-today-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+  .discovery-today-head .eyebrow{margin-top:0}
+  .discovery-today-head h4{margin:4px 0 0}
+  #lab-refresh-today{min-height:40px;padding:8px 14px;cursor:pointer}
+  .discovery-today-table td,.discovery-today-table th{white-space:nowrap}
   .discovery-slice-explorer .discovery-lab-metrics{grid-template-columns:repeat(4,minmax(0,1fr))}
   @media (max-width:700px){
     .discovery-slice-explorer{padding:14px}
@@ -364,4 +529,12 @@ if (app) {
   observer.observe(app, { childList: true, subtree: true });
 }
 addEventListener("hashchange", () => setTimeout(enhanceDiscovery, 0));
+setInterval(() => {
+  if ((location.hash.slice(1) || "today") !== "discovery") return;
+  const root = document.getElementById("hr-discovery-strategy-lab");
+  if (root) {
+    todaySliceState.currentLoadedAt = 0;
+    void refreshTodaySlice(root);
+  }
+}, TODAY_SLICE_REFRESH_MS);
 enhanceDiscovery();
