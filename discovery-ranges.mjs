@@ -28,6 +28,48 @@ export const GAME_TIME_RANGES = [
 
 export const DISCOVERY_BOOKS = ["FanDuel", "DraftKings", "BetMGM"];
 
+export function normalizeDiscoveryBook(value) {
+  const raw = String(value || "").trim();
+  const key = raw.toLowerCase().replace(/[^a-z0-9]+/g, "");
+  const aliases = {
+    fanduel: "FanDuel",
+    draftkings: "DraftKings",
+    betmgm: "BetMGM",
+  };
+  return aliases[key] || raw;
+}
+
+export function discoveryTodayMatches(players = [], options = {}) {
+  const {
+    form = "all",
+    odds = "all",
+    book = "all",
+    gameTime = "all",
+    now = null,
+    liveOnly = false,
+  } = options;
+  const formRange = FORM_RANGES.find((range) => range.value === form) || {};
+  const oddsRange = ODDS_RANGES.find((range) => range.value === odds) || {};
+  const nowMs = now ? Date.parse(now) : NaN;
+
+  return players
+    .filter((player) => {
+      if (!Number.isFinite(Number(player?.best_odds))) return false;
+      if (!matchesRange(player?.score, formRange) || !matchesRange(player?.best_odds, oddsRange)) return false;
+      if (book !== "all" && normalizeDiscoveryBook(player?.best_book) !== book) return false;
+      if (!matchesGameTime(player?.game_start_at, gameTime)) return false;
+      if (player?.game_started_at_checkpoint === true) return false;
+      if (liveOnly && Number.isFinite(nowMs)) {
+        const gameStartMs = Date.parse(String(player?.game_start_at || ""));
+        if (Number.isFinite(gameStartMs) && gameStartMs <= nowMs) return false;
+      }
+      return true;
+    })
+    .sort((a, b) => Number(a?.rank || 999) - Number(b?.rank || 999)
+      || Number(b?.score || 0) - Number(a?.score || 0)
+      || Number(b?.best_odds || -Infinity) - Number(a?.best_odds || -Infinity));
+}
+
 export function resolveRange(ranges, value, customMin = "", customMax = "") {
   if (value !== "custom") return { ...(ranges.find((range) => range.value === value) || {}) };
   const min = String(customMin).trim() === "" ? undefined : Number(customMin);
