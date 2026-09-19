@@ -1,0 +1,40 @@
+{
+  "schema_version": 2,
+  "snapshot_id": "2026-09-19_1117",
+  "slate_date": "2026-09-19",
+  "checkpoint_et": "11:17",
+  "scheduled_at_et": "2026-09-19T11:17:00-04:00",
+  "observed_at": "2026-09-19T16:05:36.174979+00:00",
+  "observed_at_et": "2026-09-19T12:05:36.174979-04:00",
+  "status": "shared_odds_not_available_at_checkpoint",
+  "sources": {
+    "mlb_hr_edge": {
+      "source": "MLB HR Edge",
+      "source_url": "https://mlb-hr-edge.feranmi.chatgpt.site/api/odds?date=2026-09-19&asOf=2026-09-19T11%3A32%3A00-04%3A00",
+      "delivery": "qstash-vercel-redis",
+      "source_date": "2026-09-19",
+      "date_matches": true,
+      "as_of": "2026-09-19T15:32:00.000Z",
+      "status": "ready",
+      "generated_at": "2026-09-19T15:17:07.303Z",
+      "latest_ingest_at": "2026-09-19T15:17:07.303Z",
+      "provider_call_id": "2026-09-19:1117:2026-09-19T15:17:07.303Z:74577f7dc2e1",
+      "provider_response_sha256": "74577f7dc2e106e8314db72ae6517872a81d391304c2fbbcfe85455ef4c71742",
+      "archived_call_count": 1,
+      "quote_count": 785,
+      "all_available_quote_count": 1569,
+      "excluded_live_or_post_start_quote_count": 0,
+      "books": [
+        "FanDuel",
+        "DraftKings",
+        "BetMGM"
+      ],
+      "row_count": 275,
+      "compatibility_fallback": "odds_api",
+      "checkpoint_at": "2026-09-19T11:17:00-04:00",
+      "capture_cutoff": "2026-09-19T11:32:00-04:00"
+    }
+  },
+  "diagnostics": [],
+  "portfolios": {}
+}
