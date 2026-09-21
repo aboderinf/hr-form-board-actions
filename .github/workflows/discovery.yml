@@ -1,6 +1,8 @@
 name: Archive Top 100 Discovery
 
 on:
+  pull_request:
+    branches: [main]
   workflow_dispatch:
     inputs:
       slate_date:
@@ -21,8 +23,11 @@ on:
       - "src/discovery.py"
       - "src/hr_picks.py"
       - "src/hr_companion.py"
+      - "src/hr_volume_companion.py"
+      - "hr-picks.js"
       - "tests/test_hr_picks.py"
       - "tests/test_hr_companion.py"
+      - "tests/test_hr_volume_companion.py"
       - "tests/test_discovery.py"
   schedule:
     # GitHub cron is UTC. Each pair covers EDT and EST. The resolver below
@@ -40,7 +45,26 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  validate:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Run HR regression tests
+        run: |
+          python -m unittest discover -s tests -p 'test_discovery.py' -v
+          python -m unittest discover -s tests -p 'test_hr_picks.py' -v
+          python -m unittest discover -s tests -p 'test_hr_companion.py' -v
+          python -m unittest discover -s tests -p 'test_hr_volume_companion.py' -v
+          node --check hr-picks.js
+
   archive:
+    if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -148,6 +172,8 @@ jobs:
           python -m unittest discover -s tests -p 'test_discovery.py' -v
           python -m unittest discover -s tests -p 'test_hr_picks.py' -v
           python -m unittest discover -s tests -p 'test_hr_companion.py' -v
+          python -m unittest discover -s tests -p 'test_hr_volume_companion.py' -v
+          node --check hr-picks.js
 
       - name: Commit reconciled Discovery archive
         if: steps.window.outputs.due == 'true' || github.event_name == 'push'
@@ -159,7 +185,7 @@ jobs:
           fi
           git config user.name "hr-form-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add data/discovery.json data/discovery/archive data/hr-picks.json data/hr-companion.json
+          git add data/discovery.json data/discovery/archive data/hr-picks.json data/hr-companion.json data/hr-volume-companion.json data/hr-portfolio.json
           git commit -m "Archive Top 100 discovery checkpoint"
           for attempt in 1 2 3; do
             git pull --rebase origin main && git push && exit 0
