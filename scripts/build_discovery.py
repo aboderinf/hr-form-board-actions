@@ -14,7 +14,6 @@ sys.path.insert(0, str(ROOT))
 
 from src.discovery import best_price, build_reports, collapse_best_player_games, profit_units
 from src.edge_source import fetch_latest_edge_odds
-from src.hr_picks_research import build_hr_picks_research
 from src.hr_picks import build_hr_picks
 from src.model import ET, normalize_name
 from src.sources import HttpClient, game_log
@@ -345,7 +344,6 @@ def main() -> int:
     reports = build_reports(annotated, today)
     unique = collapse_best_player_games(annotated)
     rule_tracking = build_rule_tracking(annotated)
-    picks_research = build_hr_picks_research(annotated, today)
 
     recent_captures = []
     for capture in reversed(captures[-20:]):
@@ -397,7 +395,6 @@ def main() -> int:
         "reports": reports,
         "slice_rows": slice_rows,
         "rule_tracking": rule_tracking,
-        "picks_research": picks_research,
         "recent_captures": recent_captures,
         "recent_results": recent_results,
         "diagnostics": diagnostics,
