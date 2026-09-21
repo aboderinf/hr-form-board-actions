@@ -19,6 +19,8 @@ on:
       - "scripts/export_discovery_checkpoint.py"
       - "scripts/build_discovery.py"
       - "src/discovery.py"
+      - "src/hr_picks.py"
+      - "tests/test_hr_picks.py"
       - "tests/test_discovery.py"
   schedule:
     # GitHub cron is UTC. Each pair covers EDT and EST. The resolver below
@@ -81,7 +83,8 @@ jobs:
                   if not archive.exists() or now - scheduled <= timedelta(minutes=90):
                       due.append(cp)
 
-          print(f"due={'true' if due else 'false'}")
+          force_rebuild = os.environ.get("EVENT_NAME") == "push"
+          print(f"due={'true' if due or force_rebuild else 'false'}")
           print(f"checkpoints={' '.join(due)}")
           print(f"slate_date={slate_date}")
           print(f"observed_et={now.isoformat()}")
@@ -133,9 +136,15 @@ jobs:
           # checkpoint remains unavailable. Future runs will retry anything missing.
           exit 0
 
-      - name: Run only Discovery archive tests
+      - name: Rebuild derived Discovery analytics
         if: steps.window.outputs.due == 'true'
-        run: python -m unittest discover -s tests -p 'test_discovery.py' -v
+        run: python scripts/build_discovery.py --no-capture
+
+      - name: Run Discovery and HR picks tests
+        if: steps.window.outputs.due == 'true'
+        run: |
+          python -m unittest discover -s tests -p 'test_discovery.py' -v
+          python -m unittest discover -s tests -p 'test_hr_picks.py' -v
 
       - name: Commit reconciled Discovery archive
         if: steps.window.outputs.due == 'true'
@@ -147,7 +156,7 @@ jobs:
           fi
           git config user.name "hr-form-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add data/discovery.json data/discovery/archive
+          git add data/discovery.json data/discovery/archive data/hr-picks.json
           git commit -m "Archive Top 100 discovery checkpoint"
           for attempt in 1 2 3; do
             git pull --rebase origin main && git push && exit 0

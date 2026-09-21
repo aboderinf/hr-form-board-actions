@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "kind": "hr_form_picks_research",
+  "status": "collecting",
+  "generated_at": null,
+  "promoted": false,
+  "methodology": {
+    "discovery": "Calibration-only rule grid; populated by the Discovery rebuild.",
+    "calibration": "Fixed calibration and early/late stability gates.",
+    "retrospective": "Historical diagnostic only; never used for promotion.",
+    "forward": "Clean prospective tracking begins 2026-09-21.",
+    "execution": "Frozen checkpoint snapshots; flat 1u; no appearance void."
+  },
+  "rule": null,
+  "calibration": {
+    "ready": false,
+    "reason": "Awaiting the first Discovery rebuild with the HR picks engine.",
+    "candidates_tested": 0,
+    "passing_candidates": 0,
+    "split_date": null,
+    "winner": null,
+    "top_candidates": []
+  },
+  "retrospective": null,
+  "promotion_gate": {
+    "passed": false,
+    "requirements": {
+      "min_settled_bets": 20,
+      "min_betting_slates": 5,
+      "positive_roi": true,
+      "min_profitable_slates": 3
+    },
+    "promoted_at": null
+  },
+  "forward": {
+    "start": "2026-09-21",
+    "promoted_at": null,
+    "summary": {
+      "selections": 0,
+      "bets": 0,
+      "wins": 0,
+      "losses": 0,
+      "voids": 0,
+      "pending": 0,
+      "slates": 0,
+      "profitable_slates": 0,
+      "losing_slates": 0,
+      "flat_slates": 0,
+      "profitable_slate_rate": null,
+      "hit_rate": null,
+      "average_break_even": null,
+      "empirical_probability_edge": null,
+      "lower90_hit_rate": null,
+      "net_units": 0,
+      "roi": null,
+      "max_positive_day_share": null
+    },
+    "daily": [],
+    "snapshots": []
+  },
+  "current": {
+    "slate_date": "2026-09-21",
+    "checkpoint": null,
+    "status": "checkpoint_pending",
+    "picks": []
+  }
+}
