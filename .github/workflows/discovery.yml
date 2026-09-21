@@ -97,12 +97,12 @@ jobs:
         run: echo "No Discovery checkpoint needs reconciliation at ${{ steps.window.outputs.observed_et }}."
 
       - uses: actions/setup-python@v5
-        if: steps.window.outputs.due == 'true'
+        if: steps.window.outputs.due == 'true' || github.event_name == 'push'
         with:
           python-version: "3.12"
           cache: pip
 
-      - if: steps.window.outputs.due == 'true'
+      - if: steps.window.outputs.due == 'true' || github.event_name == 'push'
         run: pip install -r requirements.txt
 
       - name: Export every due canonical Redis Discovery checkpoint
@@ -149,7 +149,7 @@ jobs:
           python -m unittest discover -s tests -p 'test_hr_picks.py' -v
 
       - name: Commit reconciled Discovery archive
-        if: steps.window.outputs.due == 'true'
+        if: steps.window.outputs.due == 'true' || github.event_name == 'push'
         shell: bash
         run: |
           if git diff --quiet && [ -z "$(git status --porcelain)" ]; then
