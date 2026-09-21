@@ -19,9 +19,11 @@ on:
       - "scripts/export_discovery_checkpoint.py"
       - "scripts/build_discovery.py"
       - "src/discovery.py"
+      - "src/hr_picks_research.py"
       - "src/hr_picks.py"
       - "tests/test_hr_picks.py"
       - "tests/test_discovery.py"
+      - "tests/test_hr_picks_research.py"
   schedule:
     # GitHub cron is UTC. Each pair covers EDT and EST. The resolver below
     # uses America/New_York time and also recovers any earlier missing archive.
