@@ -16,6 +16,7 @@ from src.discovery import best_price, build_reports, collapse_best_player_games,
 from src.edge_source import fetch_latest_edge_odds
 from src.hr_companion import build_hr_companion
 from src.hr_picks import build_hr_picks
+from src.hr_volume_companion import build_combined_portfolio, build_hr_volume_companion
 from src.model import ET, normalize_name
 from src.sources import HttpClient, game_log
 from src.storage import write_json
@@ -342,8 +343,11 @@ def main() -> int:
     annotated = annotate_results(raw_entries, HttpClient(), today) if raw_entries else []
     existing_hr_picks = load(ROOT / "data" / "hr-picks.json", {})
     existing_hr_companion = load(ROOT / "data" / "hr-companion.json", {})
+    existing_hr_volume = load(ROOT / "data" / "hr-volume-companion.json", {})
     hr_picks = build_hr_picks(annotated, today, existing_hr_picks)
     hr_companion = build_hr_companion(annotated, today, existing_hr_companion)
+    hr_volume = build_hr_volume_companion(annotated, today, existing_hr_volume)
+    hr_portfolio = build_combined_portfolio(hr_picks, hr_volume)
     reports = build_reports(annotated, today)
     unique = collapse_best_player_games(annotated)
     rule_tracking = build_rule_tracking(annotated)
@@ -405,13 +409,17 @@ def main() -> int:
     write_json(ROOT / "data" / "discovery.json", output)
     write_json(ROOT / "data" / "hr-picks.json", hr_picks)
     write_json(ROOT / "data" / "hr-companion.json", hr_companion)
+    write_json(ROOT / "data" / "hr-volume-companion.json", hr_volume)
+    write_json(ROOT / "data" / "hr-portfolio.json", hr_portfolio)
     print(
         "Discovery built: "
         f"captures={len(captures)} raw={len(raw_entries)} unique_priced={len(unique)} "
         f"early={len(rule_tracking['rules']['early-hr']['entries'])} "
         f"late={len(rule_tracking['rules']['late-hr']['entries'])} "
         f"hr_picks={hr_picks.get('status')} forward_bets={(hr_picks.get('forward') or {}).get('summary', {}).get('bets', 0)} "
-        f"companion_bets={(hr_companion.get('forward') or {}).get('summary', {}).get('bets', 0)}"
+        f"companion_bets={(hr_volume.get('forward') or {}).get('summary', {}).get('bets', 0)} "
+        f"portfolio_bets={(hr_portfolio.get('forward') or {}).get('summary', {}).get('bets', 0)} "
+        f"experimental_bets={(hr_companion.get('forward') or {}).get('summary', {}).get('bets', 0)}"
     )
     return 0
 
