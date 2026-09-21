@@ -402,13 +402,26 @@ def discover_rule(rows: Iterable[dict[str, Any]]) -> dict[str, Any]:
     split_date = recovered_dates[len(recovered_dates) // 2]
     early = [row for row in calibration if str(row.get("slate_date")) < split_date]
     late = [row for row in calibration if str(row.get("slate_date")) >= split_date]
+    early_by_checkpoint = {
+        checkpoint: [row for row in early if str(row.get("checkpoint") or "") == checkpoint]
+        for checkpoint in CHECKPOINTS
+    }
+    late_by_checkpoint = {
+        checkpoint: [row for row in late if str(row.get("checkpoint") or "") == checkpoint]
+        for checkpoint in CHECKPOINTS
+    }
+    calibration_by_checkpoint = {
+        checkpoint: [row for row in calibration if str(row.get("checkpoint") or "") == checkpoint]
+        for checkpoint in CHECKPOINTS
+    }
 
     passing: list[dict[str, Any]] = []
     grid = candidate_grid()
     for rule in grid:
-        early_summary = strategy_summary(select_rule(early, rule))
-        late_summary = strategy_summary(select_rule(late, rule))
-        full_summary = strategy_summary(select_rule(calibration, rule))
+        checkpoint = str(rule["checkpoint"])
+        early_summary = strategy_summary(select_rule(early_by_checkpoint[checkpoint], rule))
+        late_summary = strategy_summary(select_rule(late_by_checkpoint[checkpoint], rule))
+        full_summary = strategy_summary(select_rule(calibration_by_checkpoint[checkpoint], rule))
         if not _calibration_pass(early_summary, late_summary, full_summary):
             continue
         score = _calibration_score(early_summary, late_summary, full_summary)
@@ -543,8 +556,13 @@ def build_hr_picks(
     existing: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     rows = list(annotated_rows)
-    discovery = discover_rule(rows)
     existing = existing or {}
+    cached_calibration = existing.get("calibration") if isinstance(existing.get("calibration"), dict) else None
+    cached_rule = existing.get("rule") if isinstance(existing.get("rule"), dict) else None
+    if cached_calibration and cached_calibration.get("ready") and cached_rule and cached_rule.get("frozen_for_forward_tracking"):
+        discovery = cached_calibration
+    else:
+        discovery = discover_rule(rows)
     winner = discovery.get("winner")
     now = datetime.now(timezone.utc).isoformat()
 
