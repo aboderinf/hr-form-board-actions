@@ -14,6 +14,7 @@ sys.path.insert(0, str(ROOT))
 
 from src.discovery import best_price, build_reports, collapse_best_player_games, profit_units
 from src.edge_source import fetch_latest_edge_odds
+from src.hr_picks import build_hr_picks
 from src.model import ET, normalize_name
 from src.sources import HttpClient, game_log
 from src.storage import write_json
@@ -338,6 +339,8 @@ def main() -> int:
     captures = [load(path, {}) for path in sorted(archive_dir.glob("*.json"))]
     raw_entries = [entry for capture in captures for entry in (capture.get("entries") or [])]
     annotated = annotate_results(raw_entries, HttpClient(), today) if raw_entries else []
+    existing_hr_picks = load(ROOT / "data" / "hr-picks.json", {})
+    hr_picks = build_hr_picks(annotated, today, existing_hr_picks)
     reports = build_reports(annotated, today)
     unique = collapse_best_player_games(annotated)
     rule_tracking = build_rule_tracking(annotated)
@@ -397,11 +400,13 @@ def main() -> int:
         "diagnostics": diagnostics,
     }
     write_json(ROOT / "data" / "discovery.json", output)
+    write_json(ROOT / "data" / "hr-picks.json", hr_picks)
     print(
         "Discovery built: "
         f"captures={len(captures)} raw={len(raw_entries)} unique_priced={len(unique)} "
         f"early={len(rule_tracking['rules']['early-hr']['entries'])} "
-        f"late={len(rule_tracking['rules']['late-hr']['entries'])}"
+        f"late={len(rule_tracking['rules']['late-hr']['entries'])} "
+        f"hr_picks={hr_picks.get('status')} forward_bets={(hr_picks.get('forward') or {}).get('summary', {}).get('bets', 0)}"
     )
     return 0
 
