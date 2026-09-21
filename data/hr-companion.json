@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "kind": "hr_form_companion",
+  "status": "active",
+  "generated_at": "2026-09-21T05:59:33.886613+00:00",
+  "rule": {
+    "name": "Dynamic evidence-gated companion",
+    "checkpoints": [
+      "0817",
+      "1117",
+      "1717",
+      "2017"
+    ],
+    "trigger": "Checkpoint × HR Form band × odds band",
+    "selection_cap": null,
+    "freeze": "First qualifying checkpoint per player per slate; exact archived book and price are immutable."
+  },
+  "methodology": {
+    "history": "Every checkpoint uses only complete, prior settled slates; the current slate never contributes to its own rule selection.",
+    "evidence_gate": "Each trigger cell must independently clear all-history, trailing-30-day, and trailing-14-day gates of at least 40 settled bets, 4 wins, 5 slates, and positive net units.",
+    "weighted_return": "Expected return is the settled-bet-weighted ROI across the three evidence horizons and must remain positive.",
+    "support": "At least two of three broader parent slices (checkpoint × form, checkpoint × odds, form × odds) must each have at least 20 settled bets, 5 slates, and positive net units in prior history.",
+    "execution": "Select every pregame player in a qualifying broad trigger cell. Book, rank, and game-time slices are supporting diagnostics only and never trigger a bet by themselves. If a player qualifies more than once, the first checkpoint wins.",
+    "staking": "One flat unit per settled HR prop. No plate appearance is a void."
+  },
+  "forward": {
+    "start": "2026-09-21",
+    "summary": {
+      "selections": 0,
+      "bets": 0,
+      "wins": 0,
+      "losses": 0,
+      "voids": 0,
+      "pending": 0,
+      "slates": 0,
+      "profitable_slates": 0,
+      "hit_rate": null,
+      "net_units": 0,
+      "roi": null
+    },
+    "daily": [],
+    "snapshots": []
+  },
+  "current": {
+    "slate_date": "2026-09-21",
+    "status": "checkpoint_pending",
+    "checkpoints": [],
+    "picks": []
+  }
+}

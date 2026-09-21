@@ -1,14 +1,14 @@
 {
   "schema_version": 1,
   "kind": "hr_form_picks_research",
-  "status": "research",
-  "generated_at": "2026-09-21T05:37:13.818280+00:00",
+  "status": "active",
+  "generated_at": "2026-09-21T05:59:33.838896+00:00",
   "promoted": false,
   "methodology": {
     "discovery": "Candidate execution rules span checkpoint, form band, odds band, best-price book, and a per-slate top-N cap. Candidate ranking never uses the retrospective or forward periods.",
     "calibration": "Calibration is fixed at 2026-08-04 through 2026-09-05 and split at the median recovered date. A rule must be profitable with positive empirical edge in both halves and the full block, clear minimum sample/slate counts, beat average market break-even with its full-block 90% Wilson lower hit-rate bound, and avoid one-day profit concentration.",
     "retrospective": "2026-09-06 through 2026-09-20 is reported only as a retrospective diagnostic because it was visible during strategy development.",
-    "forward": "Clean prospective tracking begins 2026-09-21. Research picks are snapshotted once at the frozen checkpoint and never replaced. Promotion requires at least 20 settled forward bets, 5 betting slates, positive forward ROI, and at least 3 profitable slates.",
+    "forward": "Clean prospective tracking begins 2026-09-21. Primary picks are snapshotted once at the frozen checkpoint and never replaced. Validation requires at least 20 settled forward bets, 5 betting slates, positive forward ROI, and at least 3 profitable slates.",
     "execution": "One flat unit per settled HR prop. The frozen rule uses the best archived price at its checkpoint, ranks qualifiers by HR Form score then price, and takes at most 3 players. Captures at or after game start are excluded. No plate appearance is a void."
   },
   "rule": {
