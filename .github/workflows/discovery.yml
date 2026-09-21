@@ -20,7 +20,9 @@ on:
       - "scripts/build_discovery.py"
       - "src/discovery.py"
       - "src/hr_picks.py"
+      - "src/hr_companion.py"
       - "tests/test_hr_picks.py"
+      - "tests/test_hr_companion.py"
       - "tests/test_discovery.py"
   schedule:
     # GitHub cron is UTC. Each pair covers EDT and EST. The resolver below
@@ -145,6 +147,7 @@ jobs:
         run: |
           python -m unittest discover -s tests -p 'test_discovery.py' -v
           python -m unittest discover -s tests -p 'test_hr_picks.py' -v
+          python -m unittest discover -s tests -p 'test_hr_companion.py' -v
 
       - name: Commit reconciled Discovery archive
         if: steps.window.outputs.due == 'true' || github.event_name == 'push'
@@ -156,7 +159,7 @@ jobs:
           fi
           git config user.name "hr-form-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add data/discovery.json data/discovery/archive data/hr-picks.json
+          git add data/discovery.json data/discovery/archive data/hr-picks.json data/hr-companion.json
           git commit -m "Archive Top 100 discovery checkpoint"
           for attempt in 1 2 3; do
             git pull --rebase origin main && git push && exit 0
