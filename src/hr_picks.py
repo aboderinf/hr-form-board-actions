@@ -665,7 +665,7 @@ def build_hr_picks(
             and str(row.get("checkpoint") or "") == str(rule["checkpoint"])
         ]
         selected = select_rule(current_rows, rule)
-        mode = "official" if promoted_at is not None else "research"
+        mode = "primary"
         current_snapshot = {
             "slate_date": current_date,
             "checkpoint": rule["checkpoint"],
@@ -714,13 +714,13 @@ def build_hr_picks(
         current_status = "checkpoint_pending" if today >= FORWARD_START else "forward_not_started"
         current_picks: list[dict[str, Any]] = []
     else:
-        current_status = "official" if current_snapshot.get("mode") == "official" else "research"
+        current_status = "active"
         current_picks = list(current_snapshot.get("selections") or [])
 
     return {
         "schema_version": 1,
         "kind": "hr_form_picks_research",
-        "status": "promoted" if promoted_at is not None else "research",
+        "status": "active",
         "generated_at": now,
         "promoted": promoted_at is not None,
         "methodology": {
@@ -741,8 +741,8 @@ def build_hr_picks(
                 "reported only as a retrospective diagnostic because it was visible during strategy development."
             ),
             "forward": (
-                f"Clean prospective tracking begins {FORWARD_START.isoformat()}. Research picks "
-                "are snapshotted once at the frozen checkpoint and never replaced. Promotion "
+                f"Clean prospective tracking begins {FORWARD_START.isoformat()}. Primary picks "
+                "are snapshotted once at the frozen checkpoint and never replaced. Validation "
                 f"requires at least {PROMOTION_MIN_BETS} settled forward bets, "
                 f"{PROMOTION_MIN_SLATES} betting slates, positive forward ROI, and at least "
                 f"{PROMOTION_MIN_PROFITABLE_SLATES} profitable slates."
