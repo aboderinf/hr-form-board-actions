@@ -2,7 +2,7 @@
   "schema_version": 1,
   "kind": "hr_form_picks_research",
   "status": "active",
-  "generated_at": "2026-09-21T20:00:06.283019+00:00",
+  "generated_at": "2026-09-22T00:07:52.107188+00:00",
   "promoted": false,
   "methodology": {
     "discovery": "Candidate execution rules span checkpoint, form band, odds band, best-price book, and a per-slate top-N cap. Candidate ranking never uses the retrospective or forward periods.",
@@ -727,13 +727,54 @@
       "roi": null,
       "max_positive_day_share": null
     },
-    "daily": [],
-    "snapshots": []
+    "daily": [
+      {
+        "slate_date": "2026-09-21",
+        "checkpoint": "1717",
+        "mode": "primary",
+        "captured_at": "2026-09-22T00:07:50.474790+00:00",
+        "selections": [],
+        "bets": 0,
+        "wins": 0,
+        "losses": 0,
+        "voids": 0,
+        "pending": 0,
+        "slates": 0,
+        "profitable_slates": 0,
+        "losing_slates": 0,
+        "flat_slates": 0,
+        "profitable_slate_rate": null,
+        "hit_rate": null,
+        "average_break_even": null,
+        "empirical_probability_edge": null,
+        "lower90_hit_rate": null,
+        "net_units": 0,
+        "roi": null,
+        "max_positive_day_share": null,
+        "cumulative": {
+          "bets": 0,
+          "wins": 0,
+          "losses": 0,
+          "net_units": 0.0,
+          "roi": null
+        }
+      }
+    ],
+    "snapshots": [
+      {
+        "slate_date": "2026-09-21",
+        "checkpoint": "1717",
+        "mode": "primary",
+        "captured_at": "2026-09-22T00:07:50.474790+00:00",
+        "rule_id": "hr-grid-1717-100_199-400_499-all-top3",
+        "selections": []
+      }
+    ]
   },
   "current": {
     "slate_date": "2026-09-21",
     "checkpoint": "1717",
-    "status": "checkpoint_pending",
+    "status": "active",
     "picks": []
   }
 }
