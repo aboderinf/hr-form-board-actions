@@ -2,7 +2,7 @@
   "schema_version": 1,
   "kind": "hr_form_combined_portfolio",
   "status": "active",
-  "generated_at": "2026-09-22T18:56:14.267199+00:00",
+  "generated_at": "2026-09-22T23:36:15.928896+00:00",
   "methodology": {
     "definition": "Union of the independently frozen Primary / Selective and Companion / Volume rules.",
     "staking": "One flat unit per unique player HR prop.",
@@ -12,12 +12,12 @@
   "forward": {
     "start": "2026-09-21",
     "summary": {
-      "selections": 0,
+      "selections": 2,
       "bets": 0,
       "wins": 0,
       "losses": 0,
       "voids": 0,
-      "pending": 0,
+      "pending": 2,
       "slates": 0,
       "profitable_slates": 0,
       "losing_slates": 0,
@@ -31,11 +31,123 @@
       "roi": null,
       "max_positive_day_share": null
     },
-    "daily": []
+    "daily": [
+      {
+        "slate_date": "2026-09-22",
+        "mode": "combined",
+        "sources": {
+          "primary": 1,
+          "companion": 1
+        },
+        "selections": [
+          {
+            "slate_date": "2026-09-22",
+            "checkpoint": "1717",
+            "mode": "companion",
+            "player": "Hunter Goodman",
+            "mlbam_id": 696100,
+            "team": "Colorado Rockies",
+            "matchup": "ARI @ COL",
+            "rank": 26,
+            "score": 0.32571428571428573,
+            "odds": 311,
+            "book": "DraftKings",
+            "game_start_at": "2026-09-23T00:40:00.000Z",
+            "captured_at": "2026-09-22T23:36:14.497034+00:00",
+            "result": "PENDING",
+            "home_runs": null,
+            "profit_units": 0.0,
+            "strategy": "companion"
+          },
+          {
+            "slate_date": "2026-09-22",
+            "checkpoint": "1717",
+            "mode": "primary",
+            "player": "Jackson Merrill",
+            "mlbam_id": 701538,
+            "team": "San Diego Padres",
+            "matchup": "SD @ LAD",
+            "rank": 86,
+            "score": 0.18285714285714286,
+            "odds": 490,
+            "book": "FanDuel",
+            "game_start_at": "2026-09-23T02:10:00.000Z",
+            "captured_at": "2026-09-22T23:36:14.497034+00:00",
+            "result": "PENDING",
+            "home_runs": null,
+            "profit_units": 0.0,
+            "strategy": "primary"
+          }
+        ],
+        "bets": 0,
+        "wins": 0,
+        "losses": 0,
+        "voids": 0,
+        "pending": 2,
+        "slates": 0,
+        "profitable_slates": 0,
+        "losing_slates": 0,
+        "flat_slates": 0,
+        "profitable_slate_rate": null,
+        "hit_rate": null,
+        "average_break_even": null,
+        "empirical_probability_edge": null,
+        "lower90_hit_rate": null,
+        "net_units": 0,
+        "roi": null,
+        "max_positive_day_share": null,
+        "cumulative": {
+          "bets": 0,
+          "wins": 0,
+          "losses": 0,
+          "net_units": 0.0,
+          "roi": null
+        }
+      }
+    ]
   },
   "current": {
     "slate_date": "2026-09-22",
-    "status": "checkpoint_pending",
-    "picks": []
+    "status": "active",
+    "picks": [
+      {
+        "slate_date": "2026-09-22",
+        "checkpoint": "1717",
+        "mode": "companion",
+        "player": "Hunter Goodman",
+        "mlbam_id": 696100,
+        "team": "Colorado Rockies",
+        "matchup": "ARI @ COL",
+        "rank": 26,
+        "score": 0.32571428571428573,
+        "odds": 311,
+        "book": "DraftKings",
+        "game_start_at": "2026-09-23T00:40:00.000Z",
+        "captured_at": "2026-09-22T23:36:14.497034+00:00",
+        "result": "PENDING",
+        "home_runs": null,
+        "profit_units": 0.0,
+        "strategy": "companion"
+      },
+      {
+        "slate_date": "2026-09-22",
+        "checkpoint": "1717",
+        "mode": "primary",
+        "player": "Jackson Merrill",
+        "mlbam_id": 701538,
+        "team": "San Diego Padres",
+        "matchup": "SD @ LAD",
+        "rank": 86,
+        "score": 0.18285714285714286,
+        "odds": 490,
+        "book": "FanDuel",
+        "game_start_at": "2026-09-23T02:10:00.000Z",
+        "captured_at": "2026-09-22T23:36:14.497034+00:00",
+        "result": "PENDING",
+        "home_runs": null,
+        "profit_units": 0.0,
+        "strategy": "primary"
+      }
+    ]
   }
 }
