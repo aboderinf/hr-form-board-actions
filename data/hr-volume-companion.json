@@ -2,7 +2,7 @@
   "schema_version": 1,
   "kind": "hr_form_volume_companion",
   "status": "active",
-  "generated_at": "2026-09-24T19:32:04.814085+00:00",
+  "generated_at": "2026-09-24T22:12:05.827Z",
   "rule": {
     "checkpoint": "1717",
     "form_id": "200p",
@@ -137,13 +137,13 @@
       "profitable_slates": 0,
       "losing_slates": 2,
       "flat_slates": 0,
-      "profitable_slate_rate": 0.0,
-      "hit_rate": 0.0,
+      "profitable_slate_rate": 0,
+      "hit_rate": 0,
       "average_break_even": 0.2304276121155552,
       "empirical_probability_edge": -0.2304276121155552,
-      "lower90_hit_rate": 0.0,
-      "net_units": -3.0,
-      "roi": -1.0,
+      "lower90_hit_rate": 0,
+      "net_units": -3,
+      "roi": -1,
       "max_positive_day_share": null
     },
     "daily": [
@@ -174,7 +174,7 @@
           "bets": 0,
           "wins": 0,
           "losses": 0,
-          "net_units": 0.0,
+          "net_units": 0,
           "roi": null
         }
       },
@@ -200,7 +200,7 @@
             "captured_at": "2026-09-22T23:36:14.497034+00:00",
             "result": "LOSS",
             "home_runs": 0,
-            "profit_units": -1.0
+            "profit_units": -1
           }
         ],
         "bets": 1,
@@ -212,20 +212,20 @@
         "profitable_slates": 0,
         "losing_slates": 1,
         "flat_slates": 0,
-        "profitable_slate_rate": 0.0,
-        "hit_rate": 0.0,
+        "profitable_slate_rate": 0,
+        "hit_rate": 0,
         "average_break_even": 0.24330900243309003,
         "empirical_probability_edge": -0.24330900243309003,
-        "lower90_hit_rate": 0.0,
-        "net_units": -1.0,
-        "roi": -1.0,
+        "lower90_hit_rate": 0,
+        "net_units": -1,
+        "roi": -1,
         "max_positive_day_share": null,
         "cumulative": {
           "bets": 1,
           "wins": 0,
           "losses": 1,
-          "net_units": -1.0,
-          "roi": -1.0
+          "net_units": -1,
+          "roi": -1
         }
       },
       {
@@ -250,7 +250,7 @@
             "captured_at": "2026-09-23T23:42:31.756104+00:00",
             "result": "LOSS",
             "home_runs": 0,
-            "profit_units": -1.0
+            "profit_units": -1
           },
           {
             "slate_date": "2026-09-23",
@@ -268,7 +268,7 @@
             "captured_at": "2026-09-23T23:42:31.756104+00:00",
             "result": "LOSS",
             "home_runs": 0,
-            "profit_units": -1.0
+            "profit_units": -1
           }
         ],
         "bets": 2,
@@ -280,20 +280,20 @@
         "profitable_slates": 0,
         "losing_slates": 1,
         "flat_slates": 0,
-        "profitable_slate_rate": 0.0,
-        "hit_rate": 0.0,
+        "profitable_slate_rate": 0,
+        "hit_rate": 0,
         "average_break_even": 0.22398691695678785,
         "empirical_probability_edge": -0.22398691695678785,
-        "lower90_hit_rate": 0.0,
-        "net_units": -2.0,
-        "roi": -1.0,
+        "lower90_hit_rate": 0,
+        "net_units": -2,
+        "roi": -1,
         "max_positive_day_share": null,
         "cumulative": {
           "bets": 3,
           "wins": 0,
           "losses": 3,
-          "net_units": -3.0,
-          "roi": -1.0
+          "net_units": -3,
+          "roi": -1
         }
       }
     ],
@@ -329,7 +329,7 @@
             "captured_at": "2026-09-22T23:36:14.497034+00:00",
             "result": "LOSS",
             "home_runs": 0,
-            "profit_units": -1.0
+            "profit_units": -1
           }
         ]
       },
@@ -356,7 +356,7 @@
             "captured_at": "2026-09-23T23:42:31.756104+00:00",
             "result": "LOSS",
             "home_runs": 0,
-            "profit_units": -1.0
+            "profit_units": -1
           },
           {
             "slate_date": "2026-09-23",
@@ -374,7 +374,7 @@
             "captured_at": "2026-09-23T23:42:31.756104+00:00",
             "result": "LOSS",
             "home_runs": 0,
-            "profit_units": -1.0
+            "profit_units": -1
           }
         ]
       }
@@ -383,7 +383,8 @@
   "current": {
     "slate_date": "2026-09-24",
     "checkpoint": "1717",
-    "status": "checkpoint_pending",
-    "picks": []
+    "status": "checkpoint_missed",
+    "picks": [],
+    "reason": "Exact 17:17 ET checkpoint was not captured because Redis was over capacity. No later odds were substituted and no ledger entry was created."
   }
 }
