@@ -3,6 +3,7 @@ const {
   checkpointAuth,
   checkpointTargetUtc,
   currentEtDate,
+  normalizeCheckpoint,
   redisCommand,
 } = require("../lib/checkpoint-runtime");
 
@@ -291,7 +292,12 @@ module.exports = async function handler(request, response) {
     const resolved = await resolveQstash();
     const headers = { Authorization: `Bearer ${resolved.token}` };
     const diagnosticDate = String(request.query?.date || currentEtDate());
-    const target = checkpointTargetUtc(diagnosticDate, "0817");
+    const requestedCheckpoint = request.query?.checkpoint == null ? null : String(request.query.checkpoint);
+    const diagnosticCheckpoint = requestedCheckpoint == null ? "0817" : normalizeCheckpoint(requestedCheckpoint);
+    if (!diagnosticCheckpoint) {
+      return response.status(400).json({ status: "error", message: "Invalid checkpoint" });
+    }
+    const target = checkpointTargetUtc(diagnosticDate, diagnosticCheckpoint);
     const logParams = new URLSearchParams({
       fromDate: String(target.getTime() - 2 * 60 * 1000),
       toDate: String(target.getTime() + 20 * 60 * 1000),
@@ -299,11 +305,11 @@ module.exports = async function handler(request, response) {
     });
     const [logsResponse, scheduleResponse, checkpointRaw, attemptRaw, failureRaw, rawArchiveRaw] = await Promise.all([
       fetch(`${resolved.base}/v2/logs?${logParams}`, { headers, cache: "no-store" }),
-      fetch(`${resolved.base}/v2/schedules/mlb-hr-checkpoint-0817`, { headers, cache: "no-store" }),
-      redisCommand(["GET", `mlbhr:checkpoint:${diagnosticDate}:0817`]),
-      redisCommand(["GET", `mlbhr:attempt:${diagnosticDate}:0817`]),
-      redisCommand(["GET", `mlbhr:failure:${diagnosticDate}:0817`]),
-      redisCommand(["GET", `mlbhr:raw:${diagnosticDate}:0817`]),
+      fetch(`${resolved.base}/v2/schedules/mlb-hr-checkpoint-${diagnosticCheckpoint}`, { headers, cache: "no-store" }),
+      redisCommand(["GET", `mlbhr:checkpoint:${diagnosticDate}:${diagnosticCheckpoint}`]),
+      redisCommand(["GET", `mlbhr:attempt:${diagnosticDate}:${diagnosticCheckpoint}`]),
+      redisCommand(["GET", `mlbhr:failure:${diagnosticDate}:${diagnosticCheckpoint}`]),
+      redisCommand(["GET", `mlbhr:raw:${diagnosticDate}:${diagnosticCheckpoint}`]),
     ]);
     const logsPayload = await logsResponse.json().catch(() => ({}));
     const schedule = await scheduleResponse.json().catch(() => ({}));
@@ -316,7 +322,7 @@ module.exports = async function handler(request, response) {
     }
     const allLogs = (logsPayload.logs || []).map(safeLog);
     const relevantLogs = allLogs.filter((row) =>
-      String(row.scheduleId || "").startsWith("mlb-hr-checkpoint-0817")
+      String(row.scheduleId || "").startsWith(`mlb-hr-checkpoint-${diagnosticCheckpoint}`)
       || row.url === CHECKPOINT_DESTINATION
     );
     const safeSchedule = {
@@ -344,6 +350,7 @@ module.exports = async function handler(request, response) {
     return response.status(200).json({
       status: "ok",
       diagnosticDate,
+      diagnosticCheckpoint,
       qstashApiBase: resolved.base,
       schedule: safeSchedule,
       redis: {
