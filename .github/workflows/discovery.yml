@@ -42,7 +42,7 @@ permissions:
 
 concurrency:
   group: top-100-discovery-archive
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   validate:
@@ -71,6 +71,10 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
+      - name: Sync latest main before generating shared artifacts
+        shell: bash
+        run: git pull --ff-only origin main
 
       - name: Resolve due and missing ET checkpoints
         id: window
