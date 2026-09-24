@@ -1,4 +1,6 @@
 const {
+  checkpointTargetUtc,
+  currentEtDate,
   envFirst,
   normalizeCheckpoint,
   readRawArchive,
@@ -127,14 +129,39 @@ module.exports = async function handler(request, response) {
 
   const providerKeyReady = envProviderKey || redisProviderKey;
   const baseEnvReady = env.qstashToken && env.qstashCurrentSigningKey && env.qstashNextSigningKey && env.redisUrl && env.redisToken;
-  const expectedIds = ["0817", "1117", "1717", "2017"].flatMap((cp) =>
-    [`mlb-hr-checkpoint-${cp}`, `mlb-hr-checkpoint-${cp}-recovery`]);
+  const checkpointIds = ["0817", "1117", "1717", "2017"];
+  const expectedIds = checkpointIds.flatMap((cp) => [
+    `mlb-hr-checkpoint-${cp}`,
+    `mlb-hr-checkpoint-${cp}-recovery`,
+    `mlb-hr-checkpoint-${cp}-recovery-10`,
+    `mlb-hr-checkpoint-${cp}-recovery-14`,
+  ]);
   const schedulesReady = expectedIds.every((id) => qstashSchedules.some((row) =>
     row.scheduleId === id && !row.isPaused && row.destination === "https://hr-form-board-actions.vercel.app/api/capture-checkpoint"));
   const archive = await require('../lib/archive-health').archiveHealth();
   const archiveReady = archive.mode === 'active' && archive.writable && archive.status === 'ready';
+
+  const now = new Date();
+  const captureDate = currentEtDate(now);
+  const captureGraceMinutes = 20;
+  const captures = await Promise.all(checkpointIds.map(async (checkpoint) => {
+    const targetAt = checkpointTargetUtc(captureDate, checkpoint);
+    if (now.getTime() < targetAt.getTime() + captureGraceMinutes * 60_000) {
+      return { date: captureDate, checkpoint, status: 'not_due', targetAt: targetAt.toISOString() };
+    }
+    try {
+      const stored = await readRawArchive(captureDate, checkpoint);
+      return stored
+        ? { date: captureDate, checkpoint, status: 'saved', targetAt: targetAt.toISOString(), completedAt: stored.archive?.completedAt || null }
+        : { date: captureDate, checkpoint, status: 'missing', targetAt: targetAt.toISOString() };
+    } catch (error) {
+      return { date: captureDate, checkpoint, status: 'unavailable', targetAt: targetAt.toISOString(), error: String(error.message || error) };
+    }
+  }));
+  const dueCapturesReady = captures.every((row) => row.status === 'saved' || row.status === 'not_due');
+
   const ready = baseEnvReady && providerKeyReady && (archiveReady || (redisOk && capacity?.capacityAvailable === true)) && qstashOk && schedulesReady
-    && (archive.mode === 'off' || archive.status === 'ready');
+    && dueCapturesReady && (archive.mode === 'off' || archive.status === 'ready');
   response.setHeader("Cache-Control", "no-store");
   if (request.method === "HEAD") return response.status(ready ? 200 : 503).end();
   return response.status(ready ? 200 : 503).json({
@@ -149,6 +176,7 @@ module.exports = async function handler(request, response) {
       source: envProviderKey ? "vercel-env" : redisProviderKey ? "upstash-redis" : "missing",
     },
     redis: { ok: redisOk, error: redisError, capacity },
+    captures: { date: captureDate, graceMinutes: captureGraceMinutes, ready: dueCapturesReady, checks: captures },
     qstash: {
       ok: qstashOk,
       apiBase: qstashRegionBase,
