@@ -13,6 +13,12 @@ const formatScore = (value) => value == null ? "—" : Number(value).toFixed(4);
 let boardIndex = null;
 let activeDate = null;
 
+function etToday() {
+  return new Intl.DateTimeFormat("en-CA", {
+    timeZone: TZ, year: "numeric", month: "2-digit", day: "2-digit",
+  }).format(new Date());
+}
+
 function escapeHtml(value) {
   return safe(value).replace(/[&<>'"]/g, (ch) => ({
     "&": "&amp;",
@@ -140,7 +146,11 @@ function renderSection(kind, capture, error = null) {
   const entries = capture.entries || [];
   const qualified = sortPicks(entries.filter(isEarly ? qualifiesEarly : qualifiesLate));
   countEl.textContent = `${qualified.length} ${qualified.length === 1 ? "pick" : "picks"}`;
-  metaEl.textContent = `${capture.slate_date} · ${isEarly ? "08:17" : "17:17"} ET archive · ${capture.priced_rows ?? 0} priced Top-100 rows`;
+  const actualCheckpoint = String(capture.checkpoint || (isEarly ? "0817" : "1717"));
+  const recoveryFor = capture.recovery_for_checkpoint || null;
+  metaEl.textContent = recoveryFor
+    ? `${capture.slate_date} · ${actualCheckpoint} ET recovery archive for missed ${recoveryFor} · ${capture.priced_rows ?? 0} priced Top-100 rows · not an official ${recoveryFor} snapshot`
+    : `${capture.slate_date} · ${actualCheckpoint} ET archive · ${capture.priced_rows ?? 0} priced Top-100 rows`;
   picksEl.innerHTML = qualified.length
     ? qualified.map((entry) => pickMarkup(entry, kind)).join("")
     : `<div class="status-box">No ${isEarly ? "early" : "late"} games satisfy every rule condition for this slate.</div>`;
@@ -179,7 +189,7 @@ function syncDateSelect(dates) {
   const requested = new URLSearchParams(location.search).get("date");
   const preferred = requested && dates.includes(requested) ? requested : dates[0];
   select.innerHTML = dates.map((date) => `<option value="${date}">${date}</option>`).join("");
-  activeDate = preferred || new Intl.DateTimeFormat("en-CA", { timeZone: TZ, year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date());
+  activeDate = preferred || etToday();
   select.value = activeDate;
 }
 
@@ -188,10 +198,20 @@ async function loadPicks() {
   $("pageStatus").innerHTML = '<span class="loading-dot"></span>Loading immutable checkpoint archives…';
   $("refreshPicks").disabled = true;
 
-  const [early, late] = await Promise.all([
+  let [early, late] = await Promise.all([
     loadCapture(activeDate, "0817"),
     loadCapture(activeDate, "1717"),
   ]);
+
+  if (!early.data && activeDate === etToday()) {
+    const recovery = await loadCapture(activeDate, "1117");
+    if (recovery.data) {
+      early = {
+        data: { ...recovery.data, recovery_for_checkpoint: "0817" },
+        error: null,
+      };
+    }
+  }
 
   renderSection("early", early.data, early.error);
   renderSection("late", late.data, late.error);
