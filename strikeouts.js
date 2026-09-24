@@ -5,7 +5,7 @@ const summary = $('summary');
 const toolbar = $('form-toolbar');
 const dateInput = $('slate-date');
 const checkpoint = $('checkpoint');
-let activeView = 'form';
+let activeView = 'picks';
 
 function etToday() {
   return new Intl.DateTimeFormat('en-CA', {
@@ -241,6 +241,174 @@ function renderModel(data) {
     <div class="method"><strong>v3 rule:</strong> sportsbook no-vig probability is the starting point. The model learns only a ridge-shrunk residual correction using pre-checkpoint information: structural disagreement, Form/workload/opponent context, cross-book disagreement, exact-line dispersion, and earlier same-day line/price movement. Research rows require ≥8 starts, ≥1.25 percentage-point residual edge and ≥1.5% EV. They are not picks unless the promotion gate passes. SportsGameOdds calls from this view: ${esc(data.providerRequests ?? 0)}.</div>`;
 }
 
+
+function checkpointLabel(value) {
+  return ({0817:'8:17 AM',1117:'11:17 AM',1717:'5:17 PM',2017:'8:17 PM'})[value] || value;
+}
+
+function bestExactLineOver(row) {
+  const q = row?.bestAtReference;
+  if (!q || String(q.side || 'over').toLowerCase() !== 'over') return null;
+  const odds = Number(q.americanOdds);
+  if (!Number.isFinite(odds)) return null;
+  return { ...q, americanOdds: odds, line: Number(q.line ?? row.referenceLine) };
+}
+
+function formRulePicks(data) {
+  const picks = [];
+  for (const row of data?.rows || []) {
+    const score = Number(row.form?.formScore);
+    const best = bestExactLineOver(row);
+    if (!best || !Number.isFinite(score)) continue;
+    if (score >= 75 && best.americanOdds >= -119 && best.americanOdds <= 100) {
+      picks.push({
+        rule: 'Elite Over',
+        pitcherName: row.pitcherName,
+        team: row.team,
+        opponent: row.opponent,
+        formScore: score,
+        side: 'OVER',
+        line: best.line,
+        odds: best.americanOdds,
+        book: best.book,
+        checkpoint: data.checkpoint,
+        capturedAt: best.capturedAt || data.checkpointAsOf || null,
+      });
+    }
+    if (score < 45 && Number(row.referenceLine) === 4.5 && best.americanOdds >= 101 && best.americanOdds <= 130) {
+      picks.push({
+        rule: 'Companion Over',
+        pitcherName: row.pitcherName,
+        team: row.team,
+        opponent: row.opponent,
+        formScore: score,
+        side: 'OVER',
+        line: best.line,
+        odds: best.americanOdds,
+        book: best.book,
+        checkpoint: data.checkpoint,
+        capturedAt: best.capturedAt || data.checkpointAsOf || null,
+      });
+    }
+  }
+  return picks;
+}
+
+function midFormUnderPicks(data) {
+  const rows = (data?.researchCandidates || data?.bets || [])
+    .filter((row) =>
+      String(row.side || '').toLowerCase() === 'under'
+      && Number(row.formScore) >= 45
+      && Number(row.formScore) < 60
+      && Number(row.sampleStarts) >= 8
+      && Number(row.v3ProbabilityEdge) >= 0.0125
+      && Number(row.v3ExpectedValue) >= 0.015
+    )
+    .sort((a,b) => Number(b.v3ExpectedValue || -999) - Number(a.v3ExpectedValue || -999));
+  const seen = new Set();
+  return rows.filter((row) => {
+    const key = String(row.mlbamId || row.pitcherName);
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  }).map((row) => ({
+    rule: 'v3 Mid-form Under',
+    pitcherName: row.pitcherName,
+    team: row.team,
+    opponent: row.opponent,
+    formScore: Number(row.formScore),
+    side: 'UNDER',
+    line: Number(row.line),
+    odds: Number(row.odds),
+    book: row.book,
+    checkpoint: data.checkpoint,
+    capturedAt: data.checkpointAsOf || null,
+    edge: Number(row.v3ProbabilityEdge),
+    ev: Number(row.v3ExpectedValue),
+  }));
+}
+
+async function fetchCheckpointPair(date, cp) {
+  const params = new URLSearchParams({ date, checkpoint: cp });
+  const [formResponse, modelResponse] = await Promise.all([
+    fetch(`/api/strikeouts-form?${params}`, { cache: 'no-store' }),
+    fetch(`/api/strikeouts-model?${params}`, { cache: 'no-store' }),
+  ]);
+  let form = null;
+  let model = null;
+  try { form = await formResponse.json(); } catch {}
+  try { model = await modelResponse.json(); } catch {}
+  return {
+    checkpoint: cp,
+    form: formResponse.ok ? form : null,
+    model: modelResponse.ok ? model : null,
+    formStatus: formResponse.status,
+    modelStatus: modelResponse.status,
+  };
+}
+
+function renderDailyPicks(result) {
+  status.hidden = true;
+  const picks = result.picks || [];
+  renderMetrics([
+    ['Frozen picks', picks.length],
+    ['Checkpoints available', result.available.length],
+    ['Missing checkpoints', result.missing.length],
+    ['Slate', result.date],
+  ]);
+  const rows = picks.map((pick, i) => `<tr>
+    <td class="rank">${i+1}</td>
+    <td><strong>${esc(pick.rule)}</strong></td>
+    <td class="pitcher"><strong>${esc(pick.pitcherName)}</strong><small>${esc(pick.team)} vs ${esc(pick.opponent)}</small></td>
+    <td>${Number(pick.formScore).toFixed(1)}</td>
+    <td><span class="side ${pick.side.toLowerCase()}">${esc(pick.side)}</span> <strong>${esc(pick.line)}</strong></td>
+    <td><span class="book">${esc(bookLabel(pick.book))}</span> <strong>${esc(american(pick.odds))}</strong></td>
+    <td>${esc(checkpointLabel(pick.checkpoint))}</td>
+    <td>${pick.edge == null ? '—' : pct(pick.edge,1)}</td>
+    <td>${pick.ev == null ? '—' : pct(pick.ev,1)}</td>
+  </tr>`).join('');
+  const coverage = result.missing.length
+    ? `<div class="method"><strong>Coverage warning:</strong> ${esc(result.missing.map(checkpointLabel).join(', '))} checkpoint archive${result.missing.length === 1 ? ' is' : 's are'} unavailable. No pick is backdated into a missed checkpoint. Later qualifying signals are frozen at the first checkpoint where they actually exist.</div>`
+    : '';
+  const table = rows
+    ? `<div class="table-card"><div class="table-scroll"><table><thead><tr><th>#</th><th>Rule</th><th>Pitcher</th><th>Form</th><th>Bet</th><th>Best exact-line price</th><th>Frozen at</th><th>Residual edge</th><th>EV</th></tr></thead><tbody>${rows}</tbody></table></div></div>`
+    : '<div class="placeholder"><h2>No qualifying Daily Picks yet</h2><p>The available archived checkpoints were evaluated against Elite Over, Companion Over, and v3 Mid-form Under. A missing checkpoint is not treated as a no-pick and is never backfilled with a later price.</p></div>';
+  content.innerHTML = table + coverage + '<div class="method"><strong>Daily Picks policy:</strong> first qualifying checkpoint per pitcher/slate is immutable. Elite Over = form ≥75 with best exact-line Over price −119 through +100. Companion Over = form &lt;45, 4.5 Ks, best exact-line Over price +101 through +130. v3 Mid-form Under = form 45–59.9, ≥8 starts, residual edge ≥1.25 points and EV ≥1.5%, using the highest-EV qualifying exact archived Under quote.</div>';
+}
+
+async function loadDailyPicks() {
+  status.hidden = false;
+  status.textContent = 'Evaluating frozen Daily Picks from archived checkpoints…';
+  summary.hidden = true;
+  content.innerHTML = '';
+  const date = dateInput.value || etToday();
+  const requested = checkpoint.value ? [checkpoint.value] : ['0817','1117','1717','2017'];
+  try {
+    const pairs = [];
+    for (const cp of requested) pairs.push(await fetchCheckpointPair(date, cp));
+    const available = pairs.filter((x) => x.form || x.model);
+    const missing = pairs.filter((x) => !x.form && !x.model).map((x) => x.checkpoint);
+    const frozen = [];
+    const seenPitchers = new Set();
+    for (const pair of available) {
+      const candidates = [
+        ...(pair.form ? formRulePicks(pair.form) : []),
+        ...(pair.model ? midFormUnderPicks(pair.model) : []),
+      ];
+      for (const pick of candidates) {
+        const key = String(pick.pitcherName || '').toLowerCase();
+        if (!key || seenPitchers.has(key)) continue;
+        seenPitchers.add(key);
+        frozen.push(pick);
+      }
+    }
+    renderDailyPicks({ date, picks: frozen, available: available.map((x)=>x.checkpoint), missing });
+  } catch (error) {
+    status.textContent = error instanceof Error ? error.message : String(error);
+    content.innerHTML = '<div class="placeholder"><h2>Daily Picks unavailable</h2><p>The archived strikeout checkpoints could not be evaluated.</p></div>';
+  }
+}
+
 async function loadForm() {
   status.hidden = false;
   status.textContent = 'Loading strikeout form and archived lines…';
@@ -290,9 +458,10 @@ async function loadModel() {
 }
 
 function loadActive() {
+  if (activeView === 'picks') return loadDailyPicks();
   if (activeView === 'discovery') return loadDiscovery();
   if (activeView === 'model') return loadModel();
-  return loadForm();
+  return loadDailyPicks();
 }
 
 document.querySelectorAll('.tab').forEach((tab) => tab.addEventListener('click', () => {
