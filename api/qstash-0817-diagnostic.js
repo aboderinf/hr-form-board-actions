@@ -13,7 +13,7 @@ const TRIPLES_MODEL_CRON = "5 8,9,10,11 * * *";
 const TRIPLES_MODEL_SCHEDULE_ID = "mlb-triples-model-daily";
 const CHECKPOINT_DESTINATION = "https://hr-form-board-actions.vercel.app/api/capture-checkpoint";
 const CHECKPOINTS = ["0817", "1117", "1717", "2017"];
-const RECOVERY_MINUTES = 5;
+const RECOVERY_MINUTES = [5, 10, 14];
 
 function safeLog(row) {
   return {
@@ -36,9 +36,9 @@ function destinationOf(schedule) {
   return String(schedule?.destination || schedule?.url || "").replace(/\/+$/, "");
 }
 
-function checkpointCron(checkpoint, recovery = false) {
+function checkpointCron(checkpoint, recoveryMinutes = 0) {
   const hour = Number(checkpoint.slice(0, 2));
-  const minute = Number(checkpoint.slice(2)) + (recovery ? RECOVERY_MINUTES : 0);
+  const minute = Number(checkpoint.slice(2)) + Number(recoveryMinutes || 0);
   return `CRON_TZ=America/New_York ${minute} ${hour} * * *`;
 }
 
@@ -49,10 +49,12 @@ function qstashScheduleCreateUrl(base, destination) {
   return `${base}/v2/schedules/${destination}`;
 }
 
-async function upsertCheckpointSchedule(resolved, checkpoint, recovery = false) {
-  const suffix = recovery ? "-recovery" : "";
+async function upsertCheckpointSchedule(resolved, checkpoint, recoveryMinutes = 0) {
+  const suffix = recoveryMinutes
+    ? (Number(recoveryMinutes) === 5 ? "-recovery" : `-recovery-${String(recoveryMinutes).padStart(2, "0")}`)
+    : "";
   const scheduleId = `mlb-hr-checkpoint-${checkpoint}${suffix}`;
-  const cron = checkpointCron(checkpoint, recovery);
+  const cron = checkpointCron(checkpoint, recoveryMinutes);
   const auth = checkpointAuth();
   if (!auth) throw new Error("QSTASH_TOKEN is unavailable for checkpoint authentication");
 
@@ -99,7 +101,8 @@ async function upsertCheckpointSchedule(resolved, checkpoint, recovery = false) 
   return {
     scheduleId,
     checkpoint,
-    role: recovery ? "recovery" : "primary",
+    role: recoveryMinutes ? "recovery" : "primary",
+    recoveryMinutes: Number(recoveryMinutes || 0),
     cron,
     retries: 2,
     retryDelayExpression: "60000 * (1 + retried)",
@@ -111,8 +114,10 @@ async function ensureCheckpointSchedules(response) {
   const resolved = await resolveQstash();
   const configured = [];
   for (const checkpoint of CHECKPOINTS) {
-    configured.push(await upsertCheckpointSchedule(resolved, checkpoint, false));
-    configured.push(await upsertCheckpointSchedule(resolved, checkpoint, true));
+    configured.push(await upsertCheckpointSchedule(resolved, checkpoint, 0));
+    for (const recoveryMinutes of RECOVERY_MINUTES) {
+      configured.push(await upsertCheckpointSchedule(resolved, checkpoint, recoveryMinutes));
+    }
   }
   response.setHeader("Cache-Control", "no-store");
   return response.status(200).json({
@@ -310,8 +315,7 @@ module.exports = async function handler(request, response) {
     }
     const allLogs = (logsPayload.logs || []).map(safeLog);
     const relevantLogs = allLogs.filter((row) =>
-      row.scheduleId === "mlb-hr-checkpoint-0817"
-      || row.scheduleId === "mlb-hr-checkpoint-0817-recovery"
+      String(row.scheduleId || "").startsWith("mlb-hr-checkpoint-0817")
       || row.url === CHECKPOINT_DESTINATION
     );
     const safeSchedule = {
