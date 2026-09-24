@@ -1,7 +1,8 @@
 from __future__ import annotations
 
 from collections import defaultdict
-from datetime import date, datetime, timezone
+from datetime import date, datetime, time, timedelta, timezone
+from zoneinfo import ZoneInfo
 from typing import Any, Iterable
 
 CHECKPOINTS = ("0817", "1117", "1717", "2017")
@@ -10,6 +11,7 @@ CALIBRATION_END = date(2026, 9, 5)
 RETROSPECTIVE_START = date(2026, 9, 6)
 RETROSPECTIVE_END = date(2026, 9, 20)
 FORWARD_START = date(2026, 9, 21)
+HR_ET = ZoneInfo("America/New_York")
 
 PROMOTION_MIN_BETS = 20
 PROMOTION_MIN_SLATES = 5
@@ -554,6 +556,7 @@ def build_hr_picks(
     annotated_rows: Iterable[dict[str, Any]],
     today: date,
     existing: dict[str, Any] | None = None,
+    now_et: datetime | None = None,
 ) -> dict[str, Any]:
     rows = list(annotated_rows)
     existing = existing or {}
@@ -711,7 +714,14 @@ def build_hr_picks(
     )
 
     if current_snapshot is None:
-        current_status = "checkpoint_pending" if today >= FORWARD_START else "forward_not_started"
+        if today < FORWARD_START:
+            current_status = "forward_not_started"
+        elif now_et is None:
+            current_status = "checkpoint_pending"
+        else:
+            hour, minute = int(str(rule["checkpoint"])[:2]), int(str(rule["checkpoint"])[2:])
+            due_at = datetime.combine(today, time(hour, minute), HR_ET) + timedelta(minutes=20)
+            current_status = "checkpoint_missed" if now_et >= due_at else "checkpoint_pending"
         current_picks: list[dict[str, Any]] = []
     else:
         current_status = "active"
