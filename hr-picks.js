@@ -122,6 +122,13 @@ function experimentalCheckpointCards(current) {
   ).join("") + '</div>';
 }
 
+function currentStatusMessage(current, readyText) {
+  if (!current) return readyText;
+  if (current.status === "checkpoint_pending") return "Waiting for the 17:17 archive.";
+  if (current.status === "checkpoint_missed") return "17:17 checkpoint missed. Exact archived odds are unavailable; no later odds were substituted and no ledger pick was created.";
+  return readyText;
+}
+
 function renderBody(primary, companion, portfolio, experimental) {
   const shell = document.querySelector("#app .shell");
   if (!shell) return;
@@ -177,12 +184,12 @@ function renderBody(primary, companion, portfolio, experimental) {
     '<p class="muted">DraftKings must be the archived best-price book. The exact 17:17 DK price is frozen and never replaced.</p></div></section>';
 
   html += '<section class="card section"><div class="eyebrow">PRIMARY | TODAY</div><h2>' + esc(pCurrent.slate_date || "Today") +
-    ' · 17:17 ET</h2><p class="muted">' + (pCurrent.status === "checkpoint_pending" ? "Waiting for the 17:17 archive." : "Primary selections are frozen for forward tracking.") +
+    ' · 17:17 ET</h2><p class="muted">' + currentStatusMessage(pCurrent, "Primary selections are frozen for forward tracking.") +
     '</p>' + picksTable(pCurrent.picks || []) + '</section>';
 
   html += '<section class="card section"><div class="eyebrow">COMPANION | TODAY</div><h2>' + esc(cCurrent.slate_date || pCurrent.slate_date || "Today") +
     ' · 17:17 ET</h2><p class="muted">' + (!companion ? "Fixed companion data will appear after the next Discovery rebuild." :
-    (cCurrent.status === "checkpoint_pending" ? "Waiting for the 17:17 archive." : "Volume selections are independently frozen for forward tracking.")) +
+    currentStatusMessage(cCurrent, "Volume selections are independently frozen for forward tracking.")) +
     '</p>' + (companion ? picksTable(cCurrent.picks || []) : '<div class="empty">Awaiting fixed companion build.</div>') + '</section>';
 
   html += '<section class="card section"><div class="eyebrow">PRIMARY | DAILY LEDGER</div><h2>Selective rule record</h2>' +
