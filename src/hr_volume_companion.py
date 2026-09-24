@@ -1,7 +1,8 @@
 from __future__ import annotations
 
 from collections import defaultdict
-from datetime import date, datetime, timezone
+from datetime import date, datetime, time, timedelta, timezone
+from zoneinfo import ZoneInfo
 from typing import Any, Iterable
 
 from src.hr_picks import (
@@ -21,6 +22,7 @@ from src.hr_picks import (
 )
 
 CALIBRATION_SPLIT = date(2026, 8, 20)
+HR_ET = ZoneInfo("America/New_York")
 
 VOLUME_RULE: dict[str, Any] = {
     "checkpoint": "1717",
@@ -165,6 +167,7 @@ def build_hr_volume_companion(
     annotated_rows: Iterable[dict[str, Any]],
     today: date,
     existing: dict[str, Any] | None = None,
+    now_et: datetime | None = None,
 ) -> dict[str, Any]:
     rows = list(annotated_rows)
     existing = existing or {}
@@ -247,7 +250,14 @@ def build_hr_volume_companion(
         None,
     )
     if current_snapshot is None:
-        current_status = "checkpoint_pending" if today >= FORWARD_START else "forward_not_started"
+        if today < FORWARD_START:
+            current_status = "forward_not_started"
+        elif now_et is None:
+            current_status = "checkpoint_pending"
+        else:
+            hour, minute = int(VOLUME_RULE["checkpoint"][:2]), int(VOLUME_RULE["checkpoint"][2:])
+            due_at = datetime.combine(today, time(hour, minute), HR_ET) + timedelta(minutes=20)
+            current_status = "checkpoint_missed" if now_et >= due_at else "checkpoint_pending"
         current_picks: list[dict[str, Any]] = []
     else:
         current_status = "active"
@@ -391,7 +401,19 @@ def build_combined_portfolio(
         },
         "current": {
             "slate_date": current_date,
-            "status": "active" if current_picks else "checkpoint_pending",
+            "status": (
+                "active"
+                if current_picks or all(
+                    (payload.get("current") or {}).get("status") == "active"
+                    for payload in (primary, companion)
+                )
+                else "checkpoint_missed"
+                if any(
+                    (payload.get("current") or {}).get("status") == "checkpoint_missed"
+                    for payload in (primary, companion)
+                )
+                else "checkpoint_pending"
+            ),
             "picks": current_picks,
         },
     }
