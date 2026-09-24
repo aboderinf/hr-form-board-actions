@@ -213,6 +213,16 @@ async function loadPicks() {
     }
   }
 
+  if (!late.data && activeDate === etToday()) {
+    const recovery = await loadCapture(activeDate, "2017");
+    if (recovery.data) {
+      late = {
+        data: { ...recovery.data, recovery_for_checkpoint: "1717" },
+        error: null,
+      };
+    }
+  }
+
   renderSection("early", early.data, early.error);
   renderSection("late", late.data, late.error);
 
