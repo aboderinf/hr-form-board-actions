@@ -13,7 +13,7 @@ const TRIPLES_MODEL_CRON = "5 8,9,10,11 * * *";
 const TRIPLES_MODEL_SCHEDULE_ID = "mlb-triples-model-daily";
 const CHECKPOINT_DESTINATION = "https://hr-form-board-actions.vercel.app/api/capture-checkpoint";
 const CHECKPOINTS = ["0817", "1117", "1717", "2017"];
-const RECOVERY_MINUTES = [5, 10, 14];
+const RECOVERY_MINUTES = [5];
 
 function safeLog(row) {
   return {
@@ -125,6 +125,7 @@ async function ensureCheckpointSchedules(response) {
     qstashApiBase: resolved.base,
     destination: CHECKPOINT_DESTINATION,
     recoveryDelayMinutes: RECOVERY_MINUTES,
+    scheduleQuotaNote: "Uses 8 checkpoint schedules total (primary + 5-minute recovery) to stay within the Upstash schedule quota.",
     sportsGameOddsCallsOnHealthyDay: "one per checkpoint; recovery deliveries reuse Redis",
     schedules: configured,
   });
