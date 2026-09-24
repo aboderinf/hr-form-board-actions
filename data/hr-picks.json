@@ -2,7 +2,7 @@
   "schema_version": 1,
   "kind": "hr_form_picks_research",
   "status": "active",
-  "generated_at": "2026-09-24T19:32:04.776861+00:00",
+  "generated_at": "2026-09-24T22:12:03.570Z",
   "promoted": false,
   "methodology": {
     "discovery": "Candidate execution rules span checkpoint, form band, odds band, best-price book, and a per-slate top-N cap. Candidate ranking never uses the retrospective or forward periods.",
@@ -725,7 +725,7 @@
       "lower90_hit_rate": 0.05790732119985868,
       "net_units": 1.4,
       "roi": 0.3500000000000001,
-      "max_positive_day_share": 1.0
+      "max_positive_day_share": 1
     },
     "daily": [
       {
@@ -755,7 +755,7 @@
           "bets": 0,
           "wins": 0,
           "losses": 0,
-          "net_units": 0.0,
+          "net_units": 0,
           "roi": null
         }
       },
@@ -781,7 +781,7 @@
             "captured_at": "2026-09-22T23:36:14.497034+00:00",
             "result": "LOSS",
             "home_runs": 0,
-            "profit_units": -1.0
+            "profit_units": -1
           }
         ],
         "bets": 1,
@@ -793,20 +793,20 @@
         "profitable_slates": 0,
         "losing_slates": 1,
         "flat_slates": 0,
-        "profitable_slate_rate": 0.0,
-        "hit_rate": 0.0,
+        "profitable_slate_rate": 0,
+        "hit_rate": 0,
         "average_break_even": 0.1694915254237288,
         "empirical_probability_edge": -0.1694915254237288,
-        "lower90_hit_rate": 0.0,
-        "net_units": -1.0,
-        "roi": -1.0,
+        "lower90_hit_rate": 0,
+        "net_units": -1,
+        "roi": -1,
         "max_positive_day_share": null,
         "cumulative": {
           "bets": 1,
           "wins": 0,
           "losses": 1,
-          "net_units": -1.0,
-          "roi": -1.0
+          "net_units": -1,
+          "roi": -1
         }
       },
       {
@@ -831,7 +831,7 @@
             "captured_at": "2026-09-23T23:42:31.756104+00:00",
             "result": "LOSS",
             "home_runs": 0,
-            "profit_units": -1.0
+            "profit_units": -1
           },
           {
             "slate_date": "2026-09-23",
@@ -849,7 +849,7 @@
             "captured_at": "2026-09-23T23:42:31.756104+00:00",
             "result": "LOSS",
             "home_runs": 0,
-            "profit_units": -1.0
+            "profit_units": -1
           },
           {
             "slate_date": "2026-09-23",
@@ -879,14 +879,14 @@
         "profitable_slates": 1,
         "losing_slates": 0,
         "flat_slates": 0,
-        "profitable_slate_rate": 1.0,
+        "profitable_slate_rate": 1,
         "hit_rate": 0.3333333333333333,
         "average_break_even": 0.17670510236671402,
         "empirical_probability_edge": 0.1566282309666193,
         "lower90_hit_rate": 0.0782657263337284,
         "net_units": 2.4,
         "roi": 0.8000000000000002,
-        "max_positive_day_share": 1.0,
+        "max_positive_day_share": 1,
         "cumulative": {
           "bets": 4,
           "wins": 1,
@@ -928,7 +928,7 @@
             "captured_at": "2026-09-22T23:36:14.497034+00:00",
             "result": "LOSS",
             "home_runs": 0,
-            "profit_units": -1.0
+            "profit_units": -1
           }
         ]
       },
@@ -955,7 +955,7 @@
             "captured_at": "2026-09-23T23:42:31.756104+00:00",
             "result": "LOSS",
             "home_runs": 0,
-            "profit_units": -1.0
+            "profit_units": -1
           },
           {
             "slate_date": "2026-09-23",
@@ -973,7 +973,7 @@
             "captured_at": "2026-09-23T23:42:31.756104+00:00",
             "result": "LOSS",
             "home_runs": 0,
-            "profit_units": -1.0
+            "profit_units": -1
           },
           {
             "slate_date": "2026-09-23",
@@ -1000,7 +1000,8 @@
   "current": {
     "slate_date": "2026-09-24",
     "checkpoint": "1717",
-    "status": "checkpoint_pending",
-    "picks": []
+    "status": "checkpoint_missed",
+    "picks": [],
+    "reason": "Exact 17:17 ET checkpoint was not captured because Redis was over capacity. No later odds were substituted and no ledger entry was created."
   }
 }
