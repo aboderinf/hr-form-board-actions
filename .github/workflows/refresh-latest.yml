@@ -37,8 +37,7 @@ jobs:
         with:
           python-version: "3.12"
           cache: pip
-      - if: steps.window.outputs.due == 'true'
-        run: pip install -r requirements.txt
+      - run: pip install -r requirements.txt
       - name: Read latest MLB HR Edge slate and rebuild Today
         run: python scripts/refresh_latest.py
       - name: Validate only latest-source parsing
