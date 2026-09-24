@@ -130,11 +130,11 @@ module.exports = async function handler(request, response) {
   const providerKeyReady = envProviderKey || redisProviderKey;
   const baseEnvReady = env.qstashToken && env.qstashCurrentSigningKey && env.qstashNextSigningKey && env.redisUrl && env.redisToken;
   const checkpointIds = ["0817", "1117", "1717", "2017"];
+  // Upstash currently allows 10 schedules. Keep checkpoint capture at 8 total:
+  // one primary + one 5-minute recovery for each of the four checkpoints.
   const expectedIds = checkpointIds.flatMap((cp) => [
     `mlb-hr-checkpoint-${cp}`,
     `mlb-hr-checkpoint-${cp}-recovery`,
-    `mlb-hr-checkpoint-${cp}-recovery-10`,
-    `mlb-hr-checkpoint-${cp}-recovery-14`,
   ]);
   const schedulesReady = expectedIds.every((id) => qstashSchedules.some((row) =>
     row.scheduleId === id && !row.isPaused && row.destination === "https://hr-form-board-actions.vercel.app/api/capture-checkpoint"));
