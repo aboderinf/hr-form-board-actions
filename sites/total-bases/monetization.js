@@ -203,6 +203,14 @@ function renderMonetization(data) {
   const overallOos = forward.overallOutOfSample || {};
   const promoted = Boolean(data.promoted);
   const rows = data.rows || [];
+  const recoveryDisplay = data.executionDisplay === 'same_day_recovery_not_ledgered';
+  const recoveryCheckpoint = rows.find((row) => row.recoveryCheckpoint)?.recoveryCheckpoint || null;
+  const selectedSlateTitle = recoveryDisplay
+    ? `Recovered ${recoveryCheckpoint === '1117' ? '11:17 AM' : (recoveryCheckpoint || 'later-checkpoint')} candidates · not ledgered`
+    : 'Qualified 8:17 AM bets';
+  const selectedSlateNote = recoveryDisplay
+    ? 'The authoritative 8:17 snapshot is missing. These are same-day actionable candidates from the first verified later checkpoint and are intentionally excluded from the official 8:17 ledger.'
+    : 'The ledger above always stays current even when you browse another slate date.';
   const ruleText = rule.checkpoint
     ? `8:17 AM · top ${rule.topN}/slate · best price no longer than +${rule.maxOdds} · ${Math.round(Number(rule.contextWeight) * 100)}% v2 context + ${Math.round(Number(rule.formWeight) * 100)}% form anchor`
     : 'No frozen execution rule';
@@ -215,13 +223,14 @@ function renderMonetization(data) {
       <div><small>Execution P</small><strong>${pctMoney(row.monetizedProbability)}</strong></div>
       <div><small>Edge</small><strong class="money-positive">${pctMoney(row.monetizedEdge)}</strong></div>
       <div><small>EV</small><strong class="money-positive">${pctMoney(row.monetizedEv)}</strong></div>
-    </article>`).join('')}</div>` : `<div class="money-none">No qualified 8:17 AM bets for this slate under the frozen top-three rule.</div>`;
+      ${recoveryDisplay ? `<div><small>Status</small><strong>Recovery ${escMoney(row.recoveryCheckpoint || '')} · not ledgered</strong></div>` : ''}
+    </article>`).join('')}</div>` : `<div class="money-none">${recoveryDisplay ? 'No qualifying same-day recovery candidates are available.' : 'No qualified 8:17 AM bets for this slate under the frozen top-three rule.'}</div>`;
 
   panel.innerHTML = `
     <section class="money-hero ${promoted ? 'promoted' : 'held'}">
       <div>
         <div class="money-eyebrow">EXECUTION LAYER · ${data.frozen ? 'FROZEN' : 'RESEARCH'}</div>
-        <h2>${promoted ? 'Validated monetization rule' : 'Execution held by model gate'}</h2>
+        <h2>${data.frozen ? 'Frozen execution rule' : (promoted ? 'Validated monetization rule' : 'Execution held by model gate')}</h2>
         <p>${escMoney(ruleText)}. The rule is frozen; the ledger is read-only and updates from authoritative 8:17 snapshots.</p>
       </div>
       <div class="money-badge">${escMoney(data.monetizationStatus || (promoted ? 'PROMOTED' : 'HELD'))}</div>
@@ -245,7 +254,7 @@ function renderMonetization(data) {
     <div class="money-heading"><div><span>Day by day</span><h3>Frozen-rule performance ledger</h3></div><p>Newest 10 days by default. Expand a row's picks only when you need them.</p></div>
     ${renderDailyLedger(forward)}
 
-    <div class="money-heading"><div><span>Selected slate execution</span><h3>Qualified 8:17 AM bets</h3></div><p>The ledger above always stays current even when you browse another slate date.</p></div>
+    <div class="money-heading"><div><span>Selected slate execution</span><h3>${escMoney(selectedSlateTitle)}</h3></div><p>${escMoney(selectedSlateNote)}</p></div>
     ${snapshotHealth(data)}
     ${picks}
     <div class="money-footnote"><strong>Important:</strong> the checkpoint workflow creates the official daily pick snapshot. Pregame props count only when the hitter starts and records a plate appearance; non-starters and players with no plate appearance are void. Opening or refreshing this page cannot create or alter ledger selections. Existing archived odds are reused, adding 0 SportsGameOdds calls.</div>`;
