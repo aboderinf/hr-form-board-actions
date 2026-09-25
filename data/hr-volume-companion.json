@@ -2,7 +2,7 @@
   "schema_version": 1,
   "kind": "hr_form_volume_companion",
   "status": "active",
-  "generated_at": "2026-09-25T19:16:10.984657+00:00",
+  "generated_at": "2026-09-25T23:57:17.355892+00:00",
   "rule": {
     "checkpoint": "1717",
     "form_id": "200p",
@@ -127,12 +127,12 @@
     "start": "2026-09-21",
     "promoted_at": null,
     "summary": {
-      "selections": 3,
+      "selections": 4,
       "bets": 3,
       "wins": 0,
       "losses": 3,
       "voids": 0,
-      "pending": 0,
+      "pending": 1,
       "slates": 2,
       "profitable_slates": 0,
       "losing_slates": 2,
@@ -295,6 +295,56 @@
           "net_units": -3.0,
           "roi": -1.0
         }
+      },
+      {
+        "slate_date": "2026-09-25",
+        "checkpoint": "1717",
+        "mode": "companion",
+        "captured_at": "2026-09-25T23:57:15.444191+00:00",
+        "selections": [
+          {
+            "slate_date": "2026-09-25",
+            "checkpoint": "1717",
+            "mode": "companion",
+            "player": "Christian Walker",
+            "mlbam_id": 572233,
+            "team": "Houston Astros",
+            "matchup": "HOU @ OAK",
+            "rank": 25,
+            "score": 0.32571428571428573,
+            "odds": 377,
+            "book": "DraftKings",
+            "game_start_at": "2026-09-26T01:40:00.000Z",
+            "captured_at": "2026-09-25T23:57:15.444191+00:00",
+            "result": "PENDING",
+            "home_runs": null,
+            "profit_units": 0.0
+          }
+        ],
+        "bets": 0,
+        "wins": 0,
+        "losses": 0,
+        "voids": 0,
+        "pending": 1,
+        "slates": 0,
+        "profitable_slates": 0,
+        "losing_slates": 0,
+        "flat_slates": 0,
+        "profitable_slate_rate": null,
+        "hit_rate": null,
+        "average_break_even": null,
+        "empirical_probability_edge": null,
+        "lower90_hit_rate": null,
+        "net_units": 0,
+        "roi": null,
+        "max_positive_day_share": null,
+        "cumulative": {
+          "bets": 3,
+          "wins": 0,
+          "losses": 3,
+          "net_units": -3.0,
+          "roi": -1.0
+        }
       }
     ],
     "snapshots": [
@@ -377,13 +427,59 @@
             "profit_units": -1.0
           }
         ]
+      },
+      {
+        "slate_date": "2026-09-25",
+        "checkpoint": "1717",
+        "mode": "companion",
+        "captured_at": "2026-09-25T23:57:15.444191+00:00",
+        "rule_id": "hr-volume-1717-200p-u400-DK-top10",
+        "selections": [
+          {
+            "slate_date": "2026-09-25",
+            "checkpoint": "1717",
+            "mode": "companion",
+            "player": "Christian Walker",
+            "mlbam_id": 572233,
+            "team": "Houston Astros",
+            "matchup": "HOU @ OAK",
+            "rank": 25,
+            "score": 0.32571428571428573,
+            "odds": 377,
+            "book": "DraftKings",
+            "game_start_at": "2026-09-26T01:40:00.000Z",
+            "captured_at": "2026-09-25T23:57:15.444191+00:00",
+            "result": "PENDING",
+            "home_runs": null,
+            "profit_units": 0.0
+          }
+        ]
       }
     ]
   },
   "current": {
     "slate_date": "2026-09-25",
     "checkpoint": "1717",
-    "status": "checkpoint_pending",
-    "picks": []
+    "status": "active",
+    "picks": [
+      {
+        "slate_date": "2026-09-25",
+        "checkpoint": "1717",
+        "mode": "companion",
+        "player": "Christian Walker",
+        "mlbam_id": 572233,
+        "team": "Houston Astros",
+        "matchup": "HOU @ OAK",
+        "rank": 25,
+        "score": 0.32571428571428573,
+        "odds": 377,
+        "book": "DraftKings",
+        "game_start_at": "2026-09-26T01:40:00.000Z",
+        "captured_at": "2026-09-25T23:57:15.444191+00:00",
+        "result": "PENDING",
+        "home_runs": null,
+        "profit_units": 0.0
+      }
+    ]
   }
 }
