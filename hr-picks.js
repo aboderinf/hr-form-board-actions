@@ -11,6 +11,39 @@ const pct = (value, digits = 1) => value == null ? "-" : (Number(value) >= 0 ? "
 const units = (value) => value == null ? "-" : (Number(value) >= 0 ? "+" : "") + Number(value).toFixed(2) + "u";
 const odds = (value) => value == null ? "-" : (Number(value) > 0 ? "+" : "") + Math.round(Number(value));
 const record = (summary = {}) => Number(summary.wins || 0) + "-" + Number(summary.losses || 0) + (Number(summary.voids || 0) ? " | " + Number(summary.voids || 0) + "V" : "");
+const gameTimeEt = (value) => {
+  if (!value) return "-";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return String(value);
+  return new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/New_York",
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+  }).format(date) + " ET";
+};
+const cellWeightedRoi = (row) => {
+  const evidence = ((row || {}).cell || {}).evidence || {};
+  const horizons = ["all_time", "trailing_30d", "trailing_14d"];
+  let settled = 0;
+  let net = 0;
+  for (const key of horizons) {
+    const stats = evidence[key] || {};
+    settled += Number(stats.settled || 0);
+    net += Number(stats.net_units || 0);
+  }
+  return settled > 0 ? net / settled : null;
+};
+const cellRoiDetail = (row) => {
+  const evidence = ((row || {}).cell || {}).evidence || {};
+  const all = (evidence.all_time || {}).roi;
+  const d30 = (evidence.trailing_30d || {}).roi;
+  const d14 = (evidence.trailing_14d || {}).roi;
+  if (all == null && d30 == null && d14 == null) return "";
+  return "14d " + pct(d14) + " · 30d " + pct(d30) + " · all " + pct(all);
+};
 
 let bundle = null;
 let loading = null;
@@ -74,11 +107,13 @@ function picksTable(rows, options) {
   if (!rows.length) return '<div class="empty">No selections are frozen yet.</div>';
   const showStrategy = !!options.showStrategy;
   const showCell = !!options.showCell;
+  const showRoi = options.showRoi == null ? showCell : !!options.showRoi;
   let head = '<thead><tr><th>#</th><th>Player</th>';
   if (showStrategy) head += '<th>Strategy</th>';
   head += '<th>Score</th><th>Price</th><th>Book</th>';
   if (showCell) head += '<th>Trigger cell</th>';
-  head += '<th>Game</th><th>Status</th></tr></thead>';
+  if (showRoi) head += '<th>Underlying ROI</th>';
+  head += '<th>Game time (ET)</th><th>Status</th></tr></thead>';
   const body = rows.map((row, index) => {
     let html = '<tr><td>' + (index + 1) + '</td><td><b>' + esc(row.player) + '</b><div class="muted">' +
       esc(row.team || "") + (row.matchup ? ' | ' + esc(row.matchup) : '') + '</div></td>';
@@ -86,7 +121,12 @@ function picksTable(rows, options) {
     html += '<td>' + (row.score == null ? "-" : Number(row.score).toFixed(4)) + '</td>' +
       '<td class="plus"><b>' + odds(row.odds) + '</b></td><td>' + esc(row.book || "-") + '</td>';
     if (showCell) html += '<td>' + esc((row.cell || {}).label || "-") + '</td>';
-    html += '<td>' + esc(row.game_start_at || "-") + '</td><td><span class="pill">' +
+    if (showRoi) {
+      const weighted = cellWeightedRoi(row);
+      html += '<td><b class="' + (Number(weighted || 0) >= 0 ? "plus" : "loss") + '">' +
+        pct(weighted) + '</b><div class="muted">' + esc(cellRoiDetail(row)) + '</div></td>';
+    }
+    html += '<td>' + esc(gameTimeEt(row.game_start_at)) + '</td><td><span class="pill">' +
       esc(row.result || "PENDING") + '</span></td></tr>';
     return html;
   }).join("");
@@ -110,7 +150,10 @@ function ledgerTable(daily, mode) {
       '</div></td></tr>';
     const detail = selections.length
       ? '<tr class="hrp-ledger-detail"><td colspan="7"><details class="hrp-ledger-dropdown"><summary>Actual picks · ' +
-        selections.length + '</summary>' + picksTable(selections, { showStrategy: mode === "combined" }) + '</details></td></tr>'
+        selections.length + '</summary>' + picksTable(selections, {
+          showStrategy: mode === "combined",
+          showCell: mode === "dynamic" || mode === "dynamic-validation" || mode === "experimental",
+        }) + '</details></td></tr>'
       : '<tr class="hrp-ledger-detail"><td colspan="7"><details class="hrp-ledger-dropdown"><summary>Actual picks · 0</summary><div class="empty">No player-level selections were saved for this ledger row.</div></details></td></tr>';
     return summaryRow + detail;
   }).join("");
