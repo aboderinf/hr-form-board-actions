@@ -70,11 +70,15 @@ class CheckpointReliabilityTests(unittest.TestCase):
 
     def test_schedule_preflight_has_independent_recovery_deliveries(self) -> None:
         source = (ROOT / "api" / "qstash-0817-diagnostic.js").read_text(encoding="utf-8")
-        self.assertIn('const RECOVERY_MINUTES = 5;', source)
+        self.assertIn('const RECOVERY_MINUTES = [5];', source)
         self.assertIn('"Upstash-Schedule-Id": scheduleId', source)
         self.assertIn('"Upstash-Retries": "2"', source)
         self.assertIn('"Upstash-Retry-Delay": "60000 * (1 + retried)"', source)
-        self.assertIn('configured.push(await upsertCheckpointSchedule(resolved, checkpoint, true));', source)
+        self.assertIn('for (const recoveryMinutes of RECOVERY_MINUTES)', source)
+        self.assertIn(
+            'configured.push(await upsertCheckpointSchedule(resolved, checkpoint, recoveryMinutes));',
+            source,
+        )
 
     def test_top100_qstash_destination_rewrites_to_existing_function(self) -> None:
         qstash_source = (ROOT / "api" / "qstash-0817-diagnostic.js").read_text(encoding="utf-8")
