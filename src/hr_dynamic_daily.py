@@ -235,11 +235,17 @@ def qualifying_cells(
         if float(month_stats.get("net_units") or 0.0) <= 0:
             continue
 
-        output.append(cell_public(key, evidence))
+        public = cell_public(key, evidence)
+        total_bets = sum(int(stats.get("settled") or 0) for stats in evidence.values())
+        public["weighted_expected_return"] = (
+            sum(float(stats.get("net_units") or 0.0) for stats in evidence.values()) / total_bets
+            if total_bets else None
+        )
+        output.append(public)
 
     output.sort(
         key=lambda item: (
-            -float((item.get("evidence") or {}).get("trailing_14d", {}).get("roi") or 0.0),
+            -float(item.get("weighted_expected_return") or 0.0),
             -int((item.get("evidence") or {}).get("trailing_14d", {}).get("settled") or 0),
             -float((item.get("evidence") or {}).get("all_time", {}).get("roi") or 0.0),
             item.get("label") or "",
@@ -610,8 +616,9 @@ def build_hr_dynamic_daily(
                 f"{TRAILING_14_MIN_ROI:.0%}."
             ),
             "ranking": (
-                f"Among qualifying cells represented on the current slate, rank by trailing-14-day "
-                f"ROI and keep the top {TOP_CELLS_PER_CHECKPOINT} per checkpoint."
+                f"Among qualifying cells represented on the current slate, rank by settled-bet-weighted "
+                f"ROI across all history, trailing 30 days, and trailing 14 days; keep the top "
+                f"{TOP_CELLS_PER_CHECKPOINT} per checkpoint."
             ),
             "player_selection": (
                 f"Within those cells, take the top {MAX_PICKS_PER_CHECKPOINT} players per checkpoint "
