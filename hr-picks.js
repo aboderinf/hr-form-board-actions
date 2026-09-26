@@ -107,9 +107,9 @@ function ledgerTable(daily, mode) {
       units((day.cumulative || {}).net_units) + '<div class="muted">' + pct((day.cumulative || {}).roi) +
       '</div></td></tr>';
     const detail = selections.length
-      ? '<tr class="hrp-ledger-detail"><td colspan="7"><div class="hrp-ledger-label">Actual picks · ' +
-        selections.length + '</div>' + picksTable(selections, { showStrategy: mode === "combined" }) + '</td></tr>'
-      : '<tr class="hrp-ledger-detail"><td colspan="7"><div class="empty">No player-level selections were saved for this ledger row.</div></td></tr>';
+      ? '<tr class="hrp-ledger-detail"><td colspan="7"><details class="hrp-ledger-dropdown"><summary>Actual picks · ' +
+        selections.length + '</summary>' + picksTable(selections, { showStrategy: mode === "combined" }) + '</details></td></tr>'
+      : '<tr class="hrp-ledger-detail"><td colspan="7"><details class="hrp-ledger-dropdown"><summary>Actual picks · 0</summary><div class="empty">No player-level selections were saved for this ledger row.</div></details></td></tr>';
     return summaryRow + detail;
   }).join("");
   return '<div class="tablewrap"><table class="hrp-table"><thead><tr><th>Date</th><th>' + label +
@@ -243,7 +243,7 @@ function renderBody(primary, companion, portfolio, experimental) {
     '<article class="hrp-stat"><span>Profitable slates</span><strong>' + Number(portForward.profitable_slates || 0) + '</strong><small>Forward only</small></article>' +
     '<article class="hrp-stat"><span>Overlap deduped</span><strong>' + Number((portfolio || {}).overlap_deduped || 0) + '</strong><small>Same player / slate</small></article></div>' +
     (portfolio ? ledgerTable(((portfolio.forward || {}).daily || []), "combined") : '<div class="empty">Combined ledger will appear after the next Discovery rebuild.</div>') +
-    '<details open><summary>Current combined selections</summary>' + (portfolio ? currentPicksTable(portCurrent, ((portfolio.forward || {}).daily || []), { showStrategy: true }) : '<div class="empty">Awaiting portfolio build.</div>') + '</details></section>';
+    '<details><summary>Current combined selections</summary>' + (portfolio ? currentPicksTable(portCurrent, ((portfolio.forward || {}).daily || []), { showStrategy: true }) : '<div class="empty">Awaiting portfolio build.</div>') + '</details></section>';
 
   html += '<section class="card section"><div class="eyebrow">FIXED-RULE EVIDENCE</div><h2>Calibration and diagnostic context</h2>' +
     '<p class="muted">These historical panels describe why the rules were chosen. They do not alter the rules or enter the prospective ledgers.</p>' +
@@ -314,9 +314,11 @@ style.textContent = [
   ".hrp-stat strong{display:block;font-size:1.35rem;margin:6px 0}",
   ".hrp-stat small{color:var(--muted,#8492a6)}",
   ".hrp-table .muted{font-size:.78rem;margin-top:3px}",
-  ".hrp-ledger-detail>td{padding:10px 0 20px}",
-  ".hrp-ledger-detail .tablewrap{margin-top:8px}",
-  ".hrp-ledger-label{font-weight:800;margin:2px 0 8px}",
+  ".hrp-ledger-detail>td{padding:6px 0 14px}",
+  ".hrp-ledger-detail .tablewrap{margin-top:10px}",
+  ".hrp-ledger-dropdown{margin:0 8px}",
+  ".hrp-ledger-dropdown>summary{cursor:pointer;font-weight:800;padding:8px 10px;border:1px solid var(--line,#e5e7eb);border-radius:10px}",
+  ".hrp-ledger-dropdown[open]>summary{margin-bottom:8px}",
   ".hrp-root details{margin-top:16px}",
   ".hrp-root summary{cursor:pointer;font-weight:700}",
   ".hrp-combined{border-width:2px}",
