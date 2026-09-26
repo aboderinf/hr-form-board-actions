@@ -317,22 +317,29 @@ def select_checkpoint(
             str(row.get("player") or ""),
         ),
     )
-    picks: list[dict[str, Any]] = []
+    capped: list[tuple[dict[str, Any], dict[str, Any]]] = []
     for row in ordered:
+        key = cell_key(row)
+        cell = by_key.get(key) if key is not None else None
+        if cell is None:
+            continue
+        capped.append((row, cell))
+        if len(capped) >= MAX_PICKS_PER_CHECKPOINT:
+            break
+
+    # Cap the checkpoint first, then de-duplicate against earlier checkpoints.
+    # This exactly matches the walk-forward research: a duplicate does not
+    # promote the third-ranked player into the later checkpoint portfolio.
+    picks: list[dict[str, Any]] = []
+    for row, cell in capped:
         try:
             player_id = int(row.get("mlbam_id"))
         except (TypeError, ValueError):
             continue
         if player_id in selected_ids:
             continue
-        key = cell_key(row)
-        cell = by_key.get(key) if key is not None else None
-        if cell is None:
-            continue
         picks.append(_pick_from_row(row, cell, freeze=freeze))
         selected_ids.add(player_id)
-        if len(picks) >= MAX_PICKS_PER_CHECKPOINT:
-            break
     return cells, picks
 
 
