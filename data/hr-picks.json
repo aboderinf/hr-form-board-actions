@@ -2,7 +2,7 @@
   "schema_version": 1,
   "kind": "hr_form_picks_research",
   "status": "active",
-  "generated_at": "2026-09-26T23:15:22.715621+00:00",
+  "generated_at": "2026-09-26T23:38:22.614606+00:00",
   "promoted": false,
   "methodology": {
     "discovery": "Candidate execution rules span checkpoint, form band, odds band, best-price book, and a per-slate top-N cap. Candidate ranking never uses the retrospective or forward periods.",
@@ -709,22 +709,22 @@
     "promoted_at": null,
     "summary": {
       "selections": 9,
-      "bets": 6,
+      "bets": 7,
       "wins": 1,
-      "losses": 5,
+      "losses": 6,
       "voids": 1,
-      "pending": 2,
-      "slates": 3,
+      "pending": 1,
+      "slates": 4,
       "profitable_slates": 1,
-      "losing_slates": 2,
+      "losing_slates": 3,
       "flat_slates": 0,
-      "profitable_slate_rate": 0.3333333333333333,
-      "hit_rate": 0.16666666666666666,
-      "average_break_even": 0.17817371252167422,
-      "empirical_probability_edge": -0.011507045855007558,
-      "lower90_hit_rate": 0.038105570079342885,
-      "net_units": -0.6,
-      "roi": -0.09999999999999994,
+      "profitable_slate_rate": 0.25,
+      "hit_rate": 0.14285714285714285,
+      "average_break_even": 0.18019285249110537,
+      "empirical_probability_edge": -0.037335709633962516,
+      "lower90_hit_rate": 0.03254380205478664,
+      "net_units": -1.6,
+      "roi": -0.2285714285714285,
       "max_positive_day_share": 1.0
     },
     "daily": [
@@ -1019,34 +1019,34 @@
             "book": "FanDuel",
             "game_start_at": "2026-09-26T23:10:00.000Z",
             "captured_at": "2026-09-26T21:17:03.756Z",
-            "result": "PENDING",
-            "home_runs": null,
-            "profit_units": 0.0
+            "result": "LOSS",
+            "home_runs": 0,
+            "profit_units": -1.0
           }
         ],
-        "bets": 0,
+        "bets": 1,
         "wins": 0,
-        "losses": 0,
+        "losses": 1,
         "voids": 0,
-        "pending": 2,
-        "slates": 0,
+        "pending": 1,
+        "slates": 1,
         "profitable_slates": 0,
-        "losing_slates": 0,
+        "losing_slates": 1,
         "flat_slates": 0,
-        "profitable_slate_rate": null,
-        "hit_rate": null,
-        "average_break_even": null,
-        "empirical_probability_edge": null,
-        "lower90_hit_rate": null,
-        "net_units": 0,
-        "roi": null,
+        "profitable_slate_rate": 0.0,
+        "hit_rate": 0.0,
+        "average_break_even": 0.19230769230769232,
+        "empirical_probability_edge": -0.19230769230769232,
+        "lower90_hit_rate": 0.0,
+        "net_units": -1.0,
+        "roi": -1.0,
         "max_positive_day_share": null,
         "cumulative": {
-          "bets": 6,
+          "bets": 7,
           "wins": 1,
-          "losses": 5,
-          "net_units": -0.6,
-          "roi": -0.10000000000000002
+          "losses": 6,
+          "net_units": -1.6,
+          "roi": -0.2285714285714286
         }
       }
     ],
@@ -1251,9 +1251,9 @@
             "book": "FanDuel",
             "game_start_at": "2026-09-26T23:10:00.000Z",
             "captured_at": "2026-09-26T21:17:03.756Z",
-            "result": "PENDING",
-            "home_runs": null,
-            "profit_units": 0.0
+            "result": "LOSS",
+            "home_runs": 0,
+            "profit_units": -1.0
           }
         ]
       }
@@ -1296,9 +1296,9 @@
         "book": "FanDuel",
         "game_start_at": "2026-09-26T23:10:00.000Z",
         "captured_at": "2026-09-26T21:17:03.756Z",
-        "result": "PENDING",
-        "home_runs": null,
-        "profit_units": 0.0
+        "result": "LOSS",
+        "home_runs": 0,
+        "profit_units": -1.0
       }
     ]
   }
