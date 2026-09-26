@@ -2,6 +2,7 @@ const PRIMARY_URL = "/data/hr-picks.json";
 const COMPANION_URL = "/data/hr-volume-companion.json";
 const PORTFOLIO_URL = "/data/hr-portfolio.json";
 const EXPERIMENTAL_URL = "/data/hr-companion.json";
+const DYNAMIC_URL = "/data/hr-dynamic-daily.json";
 
 const esc = (value) => String(value == null ? "" : value).replace(/[&<>"']/g, (c) => ({
   "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;",
@@ -31,8 +32,9 @@ async function load() {
       fetchJson(COMPANION_URL, false),
       fetchJson(PORTFOLIO_URL, false),
       fetchJson(EXPERIMENTAL_URL, false),
-    ]).then(([primary, companion, portfolio, experimental]) => {
-      bundle = { primary, companion, portfolio, experimental };
+      fetchJson(DYNAMIC_URL, false),
+    ]).then(([primary, companion, portfolio, experimental, dynamic]) => {
+      bundle = { primary, companion, portfolio, experimental, dynamic };
       return bundle;
     }).finally(() => { loading = null; });
   }
@@ -160,7 +162,7 @@ function currentPicksTable(current, daily, options) {
   return picksTable([], options);
 }
 
-function renderBody(primary, companion, portfolio, experimental) {
+function renderBody(primary, companion, portfolio, experimental, dynamic) {
   const shell = document.querySelector("#app .shell");
   if (!shell) return;
   ensureNav();
@@ -187,6 +189,12 @@ function renderBody(primary, companion, portfolio, experimental) {
 
   const expForward = ((experimental || {}).forward || {}).summary || {};
   const expCurrent = (experimental || {}).current || {};
+
+  const dynForward = ((dynamic || {}).forward || {}).summary || {};
+  const dynCurrent = (dynamic || {}).current || {};
+  const dynValidation = ((dynamic || {}).research || {}).validation || {};
+  const dynValidationSummary = dynValidation.summary || {};
+  const dynRule = (dynamic || {}).rule || {};
 
   const pCal = ((primary.calibration || {}).winner || {}).full || {};
   const pRetro = (primary.retrospective || {}).summary || {};
@@ -252,6 +260,22 @@ function renderBody(primary, companion, portfolio, experimental) {
     metricCard("Calibration", cCal.full || {}) + metricCard("Early half", cCal.early || {}) + metricCard("Late half", cCal.late || {}) + metricCard("Sep. 6–20", cRetro) +
     '</div></article></div></section>';
 
+  html += '<section class="card section hrp-dynamic"><div class="eyebrow">DYNAMIC DAILY PICKS | VALIDATED WALK-FORWARD</div>' +
+    '<h2>' + esc(dynRule.name || "Dynamic Daily ROI") + '</h2>' +
+    '<p class="muted">Re-evaluates all four checkpoints daily. Trigger cells are checkpoint × best-price sportsbook × form band; the current slate never contributes to its own evidence.</p>' +
+    '<div class="hrp-stats">' + metricCard("Sep 12–25 validation", dynValidationSummary) +
+    metricCard("Forward", dynForward) +
+    '<article class="hrp-stat"><span>Validation profitable slates</span><strong>' + Number(dynValidationSummary.profitable_slates || 0) + '/' + Number(dynValidationSummary.slates || 0) + '</strong><small>Untouched after development ranking</small></article>' +
+    '<article class="hrp-stat"><span>Selection</span><strong>Top 3 × 2</strong><small>3 cells / checkpoint · 2 players max</small></article></div>' +
+    '<div class="notice"><b>Evidence:</b> all-time gate ≥40 settled / 4 wins / 5 slates / positive net; trailing 14d ≥20 bets and ≥10% ROI; trailing 30d positive. Cells are ranked by weighted ROI across all three horizons.</div>' +
+    '<h3>Today</h3>' +
+    (dynamic ? experimentalCheckpointCards(dynCurrent) : '<div class="empty">Dynamic daily data unavailable.</div>') +
+    (dynamic ? currentPicksTable(dynCurrent, ((dynamic.forward || {}).daily || []), { showCell: true }) : '') +
+    '<details open><summary>14-day validation ledger</summary>' +
+    (dynamic ? ledgerTable((dynValidation.daily || []), "dynamic-validation") : '') + '</details>' +
+    '<details><summary>Prospective ledger · starts Sep. 26</summary>' +
+    (dynamic ? ledgerTable(((dynamic.forward || {}).daily || []), "dynamic") : '') + '</details></section>';
+
   html += '<section class="card section hrp-experimental"><div class="eyebrow">EXPERIMENTAL | DYNAMIC DISCOVERY</div>' +
     '<h2>Adaptive evidence-gated track</h2><p class="muted">This is the previously deployed all-checkpoint dynamic system. It remains prospectively tracked for research, but it is not the official Companion and is excluded from the Combined Portfolio ledger.</p>' +
     '<div class="hrp-stats">' + metricCard("Experimental forward", expForward) +
@@ -286,7 +310,7 @@ async function renderIfNeeded() {
   try {
     const data = await load();
     if ((location.hash.slice(1) || "today") !== "picks") return;
-    renderBody(data.primary, data.companion, data.portfolio, data.experimental);
+    renderBody(data.primary, data.companion, data.portfolio, data.experimental, data.dynamic);
   } catch (error) {
     const header = shell.querySelector("header.top");
     const footer = shell.querySelector("footer.footer");
