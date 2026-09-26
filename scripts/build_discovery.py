@@ -412,7 +412,6 @@ def main() -> int:
     write_json(ROOT / "data" / "discovery.json", output)
     write_json(ROOT / "data" / "hr-picks.json", hr_picks)
     write_json(ROOT / "data" / "hr-companion.json", hr_companion)
-    write_json(ROOT / "data" / "hr-dynamic-daily.json", hr_dynamic)
     write_json(ROOT / "data" / "hr-volume-companion.json", hr_volume)
     write_json(ROOT / "data" / "hr-dynamic-daily.json", hr_dynamic)
     write_json(ROOT / "data" / "hr-portfolio.json", hr_portfolio)
@@ -425,8 +424,7 @@ def main() -> int:
         f"companion_bets={(hr_volume.get('forward') or {}).get('summary', {}).get('bets', 0)} "
         f"dynamic_bets={(hr_dynamic.get('forward') or {}).get('summary', {}).get('bets', 0)} "
         f"portfolio_bets={(hr_portfolio.get('forward') or {}).get('summary', {}).get('bets', 0)} "
-        f"experimental_bets={(hr_companion.get('forward') or {}).get('summary', {}).get('bets', 0)} "
-        f"dynamic_bets={(hr_dynamic.get('forward') or {}).get('summary', {}).get('bets', 0)}"
+        f"experimental_bets={(hr_companion.get('forward') or {}).get('summary', {}).get('bets', 0)}"
     )
     return 0
 
