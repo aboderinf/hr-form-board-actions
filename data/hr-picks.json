@@ -2,7 +2,7 @@
   "schema_version": 1,
   "kind": "hr_form_picks_research",
   "status": "active",
-  "generated_at": "2026-09-26T20:20:22.463888+00:00",
+  "generated_at": "2026-09-26T23:15:22.715621+00:00",
   "promoted": false,
   "methodology": {
     "discovery": "Candidate execution rules span checkpoint, form band, odds band, best-price book, and a per-slate top-N cap. Candidate ranking never uses the retrospective or forward periods.",
@@ -708,12 +708,12 @@
     "start": "2026-09-21",
     "promoted_at": null,
     "summary": {
-      "selections": 7,
+      "selections": 9,
       "bets": 6,
       "wins": 1,
       "losses": 5,
       "voids": 1,
-      "pending": 0,
+      "pending": 2,
       "slates": 3,
       "profitable_slates": 1,
       "losing_slates": 2,
@@ -980,6 +980,74 @@
           "net_units": -0.6,
           "roi": -0.10000000000000002
         }
+      },
+      {
+        "slate_date": "2026-09-26",
+        "checkpoint": "1717",
+        "mode": "primary",
+        "captured_at": "2026-09-26T21:17:03.756Z",
+        "selections": [
+          {
+            "slate_date": "2026-09-26",
+            "checkpoint": "1717",
+            "mode": "primary",
+            "player": "Manny Machado",
+            "mlbam_id": 592518,
+            "team": "San Diego Padres",
+            "matchup": "ARI @ SD",
+            "rank": 93,
+            "score": 0.18285714285714286,
+            "odds": 420,
+            "book": "FanDuel",
+            "game_start_at": "2026-09-27T00:40:00.000Z",
+            "captured_at": "2026-09-26T21:17:03.756Z",
+            "result": "PENDING",
+            "home_runs": null,
+            "profit_units": 0.0
+          },
+          {
+            "slate_date": "2026-09-26",
+            "checkpoint": "1717",
+            "mode": "primary",
+            "player": "Randal Grichuk",
+            "mlbam_id": 545341,
+            "team": "Chicago White Sox",
+            "matchup": "COL @ CWS",
+            "rank": 95,
+            "score": 0.18285714285714286,
+            "odds": 420,
+            "book": "FanDuel",
+            "game_start_at": "2026-09-26T23:10:00.000Z",
+            "captured_at": "2026-09-26T21:17:03.756Z",
+            "result": "PENDING",
+            "home_runs": null,
+            "profit_units": 0.0
+          }
+        ],
+        "bets": 0,
+        "wins": 0,
+        "losses": 0,
+        "voids": 0,
+        "pending": 2,
+        "slates": 0,
+        "profitable_slates": 0,
+        "losing_slates": 0,
+        "flat_slates": 0,
+        "profitable_slate_rate": null,
+        "hit_rate": null,
+        "average_break_even": null,
+        "empirical_probability_edge": null,
+        "lower90_hit_rate": null,
+        "net_units": 0,
+        "roi": null,
+        "max_positive_day_share": null,
+        "cumulative": {
+          "bets": 6,
+          "wins": 1,
+          "losses": 5,
+          "net_units": -0.6,
+          "roi": -0.10000000000000002
+        }
       }
     ],
     "snapshots": [
@@ -1143,13 +1211,95 @@
             "profit_units": 0.0
           }
         ]
+      },
+      {
+        "slate_date": "2026-09-26",
+        "checkpoint": "1717",
+        "mode": "primary",
+        "captured_at": "2026-09-26T21:17:03.756Z",
+        "rule_id": "hr-grid-1717-100_199-400_499-all-top3",
+        "selections": [
+          {
+            "slate_date": "2026-09-26",
+            "checkpoint": "1717",
+            "mode": "primary",
+            "player": "Manny Machado",
+            "mlbam_id": 592518,
+            "team": "San Diego Padres",
+            "matchup": "ARI @ SD",
+            "rank": 93,
+            "score": 0.18285714285714286,
+            "odds": 420,
+            "book": "FanDuel",
+            "game_start_at": "2026-09-27T00:40:00.000Z",
+            "captured_at": "2026-09-26T21:17:03.756Z",
+            "result": "PENDING",
+            "home_runs": null,
+            "profit_units": 0.0
+          },
+          {
+            "slate_date": "2026-09-26",
+            "checkpoint": "1717",
+            "mode": "primary",
+            "player": "Randal Grichuk",
+            "mlbam_id": 545341,
+            "team": "Chicago White Sox",
+            "matchup": "COL @ CWS",
+            "rank": 95,
+            "score": 0.18285714285714286,
+            "odds": 420,
+            "book": "FanDuel",
+            "game_start_at": "2026-09-26T23:10:00.000Z",
+            "captured_at": "2026-09-26T21:17:03.756Z",
+            "result": "PENDING",
+            "home_runs": null,
+            "profit_units": 0.0
+          }
+        ]
       }
     ]
   },
   "current": {
     "slate_date": "2026-09-26",
     "checkpoint": "1717",
-    "status": "checkpoint_pending",
-    "picks": []
+    "status": "active",
+    "picks": [
+      {
+        "slate_date": "2026-09-26",
+        "checkpoint": "1717",
+        "mode": "primary",
+        "player": "Manny Machado",
+        "mlbam_id": 592518,
+        "team": "San Diego Padres",
+        "matchup": "ARI @ SD",
+        "rank": 93,
+        "score": 0.18285714285714286,
+        "odds": 420,
+        "book": "FanDuel",
+        "game_start_at": "2026-09-27T00:40:00.000Z",
+        "captured_at": "2026-09-26T21:17:03.756Z",
+        "result": "PENDING",
+        "home_runs": null,
+        "profit_units": 0.0
+      },
+      {
+        "slate_date": "2026-09-26",
+        "checkpoint": "1717",
+        "mode": "primary",
+        "player": "Randal Grichuk",
+        "mlbam_id": 545341,
+        "team": "Chicago White Sox",
+        "matchup": "COL @ CWS",
+        "rank": 95,
+        "score": 0.18285714285714286,
+        "odds": 420,
+        "book": "FanDuel",
+        "game_start_at": "2026-09-26T23:10:00.000Z",
+        "captured_at": "2026-09-26T21:17:03.756Z",
+        "result": "PENDING",
+        "home_runs": null,
+        "profit_units": 0.0
+      }
+    ]
   }
 }

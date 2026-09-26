@@ -2,7 +2,7 @@
   "schema_version": 1,
   "kind": "hr_form_combined_portfolio",
   "status": "active",
-  "generated_at": "2026-09-26T20:20:32.583264+00:00",
+  "generated_at": "2026-09-26T23:15:36.585041+00:00",
   "methodology": {
     "definition": "Union of the independently frozen Primary / Selective and Companion / Volume rules.",
     "staking": "One flat unit per unique player HR prop.",
@@ -12,12 +12,12 @@
   "forward": {
     "start": "2026-09-21",
     "summary": {
-      "selections": 11,
+      "selections": 13,
       "bets": 10,
       "wins": 2,
       "losses": 8,
       "voids": 1,
-      "pending": 0,
+      "pending": 2,
       "slates": 3,
       "profitable_slates": 2,
       "losing_slates": 1,
@@ -342,12 +342,123 @@
           "net_units": 0.17,
           "roi": 0.016999999999999994
         }
+      },
+      {
+        "slate_date": "2026-09-26",
+        "mode": "combined",
+        "sources": {
+          "primary": 2,
+          "companion": 0
+        },
+        "selections": [
+          {
+            "slate_date": "2026-09-26",
+            "checkpoint": "1717",
+            "mode": "primary",
+            "player": "Manny Machado",
+            "mlbam_id": 592518,
+            "team": "San Diego Padres",
+            "matchup": "ARI @ SD",
+            "rank": 93,
+            "score": 0.18285714285714286,
+            "odds": 420,
+            "book": "FanDuel",
+            "game_start_at": "2026-09-27T00:40:00.000Z",
+            "captured_at": "2026-09-26T21:17:03.756Z",
+            "result": "PENDING",
+            "home_runs": null,
+            "profit_units": 0.0,
+            "strategy": "primary"
+          },
+          {
+            "slate_date": "2026-09-26",
+            "checkpoint": "1717",
+            "mode": "primary",
+            "player": "Randal Grichuk",
+            "mlbam_id": 545341,
+            "team": "Chicago White Sox",
+            "matchup": "COL @ CWS",
+            "rank": 95,
+            "score": 0.18285714285714286,
+            "odds": 420,
+            "book": "FanDuel",
+            "game_start_at": "2026-09-26T23:10:00.000Z",
+            "captured_at": "2026-09-26T21:17:03.756Z",
+            "result": "PENDING",
+            "home_runs": null,
+            "profit_units": 0.0,
+            "strategy": "primary"
+          }
+        ],
+        "bets": 0,
+        "wins": 0,
+        "losses": 0,
+        "voids": 0,
+        "pending": 2,
+        "slates": 0,
+        "profitable_slates": 0,
+        "losing_slates": 0,
+        "flat_slates": 0,
+        "profitable_slate_rate": null,
+        "hit_rate": null,
+        "average_break_even": null,
+        "empirical_probability_edge": null,
+        "lower90_hit_rate": null,
+        "net_units": 0,
+        "roi": null,
+        "max_positive_day_share": null,
+        "cumulative": {
+          "bets": 10,
+          "wins": 2,
+          "losses": 8,
+          "net_units": 0.17,
+          "roi": 0.016999999999999994
+        }
       }
     ]
   },
   "current": {
     "slate_date": "2026-09-26",
-    "status": "checkpoint_pending",
-    "picks": []
+    "status": "active",
+    "picks": [
+      {
+        "slate_date": "2026-09-26",
+        "checkpoint": "1717",
+        "mode": "primary",
+        "player": "Manny Machado",
+        "mlbam_id": 592518,
+        "team": "San Diego Padres",
+        "matchup": "ARI @ SD",
+        "rank": 93,
+        "score": 0.18285714285714286,
+        "odds": 420,
+        "book": "FanDuel",
+        "game_start_at": "2026-09-27T00:40:00.000Z",
+        "captured_at": "2026-09-26T21:17:03.756Z",
+        "result": "PENDING",
+        "home_runs": null,
+        "profit_units": 0.0,
+        "strategy": "primary"
+      },
+      {
+        "slate_date": "2026-09-26",
+        "checkpoint": "1717",
+        "mode": "primary",
+        "player": "Randal Grichuk",
+        "mlbam_id": 545341,
+        "team": "Chicago White Sox",
+        "matchup": "COL @ CWS",
+        "rank": 95,
+        "score": 0.18285714285714286,
+        "odds": 420,
+        "book": "FanDuel",
+        "game_start_at": "2026-09-26T23:10:00.000Z",
+        "captured_at": "2026-09-26T21:17:03.756Z",
+        "result": "PENDING",
+        "home_runs": null,
+        "profit_units": 0.0,
+        "strategy": "primary"
+      }
+    ]
   }
 }
