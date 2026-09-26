@@ -1,14 +1,14 @@
 {
   "schema_version": 1,
   "kind": "latest_shared_slate",
-  "refreshed_at": "2026-09-25T23:57:18.838637+00:00",
-  "refreshed_at_et": "2026-09-25T19:57:18.838637-04:00",
+  "refreshed_at": "2026-09-26T00:09:40.233300+00:00",
+  "refreshed_at_et": "2026-09-25T20:09:40.233300-04:00",
   "slate_date": "2026-09-25",
   "status": "current",
   "sources": {
     "mlb_hr_edge": {
       "source": "MLB HR Edge",
-      "source_url": "/home/runner/work/hr-form-board-actions/hr-form-board-actions/data/shared-odds/latest.json",
+      "source_url": "https://mlb-hr-edge.feranmi.chatgpt.site/api/odds?latest=1",
       "delivery": "qstash-vercel-redis",
       "source_date": "2026-09-25",
       "date_matches": true,
@@ -28,8 +28,7 @@
         "BetMGM"
       ],
       "row_count": 264,
-      "compatibility_fallback": "exact_upstash_checkpoint_cache",
-      "checkpoint": "1717",
+      "compatibility_fallback": "odds_api",
       "mlbam_ids_hydrated": 259,
       "mlbam_ids_added": 259,
       "unresolved_player_names": [
@@ -538,10 +537,10 @@
               "url": null
             },
             {
-              "book": "BetMGM",
-              "book_id": "betmgm",
+              "book": "DraftKings",
+              "book_id": "draftkings",
               "odds": 1000,
-              "captured_at": "2026-09-25T21:12:58.463Z",
+              "captured_at": "2026-09-25T21:11:28.764Z",
               "source": "qstash-vercel-sportsgameodds",
               "source_event_id": "BeovEYqqhSUUF1YrFQ45",
               "source_odd_id": "batting_homeRuns-RYAN_KREIDLER_1_MLB-game-yn-yes",
@@ -550,10 +549,10 @@
               "url": null
             },
             {
-              "book": "DraftKings",
-              "book_id": "draftkings",
+              "book": "BetMGM",
+              "book_id": "betmgm",
               "odds": 1000,
-              "captured_at": "2026-09-25T21:11:28.764Z",
+              "captured_at": "2026-09-25T21:12:58.463Z",
               "source": "qstash-vercel-sportsgameodds",
               "source_event_id": "BeovEYqqhSUUF1YrFQ45",
               "source_odd_id": "batting_homeRuns-RYAN_KREIDLER_1_MLB-game-yn-yes",
@@ -1200,10 +1199,10 @@
               "url": null
             },
             {
-              "book": "BetMGM",
-              "book_id": "betmgm",
+              "book": "DraftKings",
+              "book_id": "draftkings",
               "odds": 1000,
-              "captured_at": "2026-09-25T21:12:58.463Z",
+              "captured_at": "2026-09-25T21:11:28.764Z",
               "source": "qstash-vercel-sportsgameodds",
               "source_event_id": "BeovEYqqhSUUF1YrFQ45",
               "source_odd_id": "batting_homeRuns-RYAN_KREIDLER_1_MLB-game-yn-yes",
@@ -1212,10 +1211,10 @@
               "url": null
             },
             {
-              "book": "DraftKings",
-              "book_id": "draftkings",
+              "book": "BetMGM",
+              "book_id": "betmgm",
               "odds": 1000,
-              "captured_at": "2026-09-25T21:11:28.764Z",
+              "captured_at": "2026-09-25T21:12:58.463Z",
               "source": "qstash-vercel-sportsgameodds",
               "source_event_id": "BeovEYqqhSUUF1YrFQ45",
               "source_odd_id": "batting_homeRuns-RYAN_KREIDLER_1_MLB-game-yn-yes",
