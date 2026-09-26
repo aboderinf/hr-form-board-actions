@@ -1,14 +1,14 @@
 {
   "schema_version": 1,
   "kind": "latest_shared_slate",
-  "refreshed_at": "2026-09-26T17:24:00.191874+00:00",
-  "refreshed_at_et": "2026-09-26T13:24:00.191874-04:00",
+  "refreshed_at": "2026-09-26T18:37:55.334282+00:00",
+  "refreshed_at_et": "2026-09-26T14:37:55.334282-04:00",
   "slate_date": "2026-09-26",
   "status": "current",
   "sources": {
     "mlb_hr_edge": {
       "source": "MLB HR Edge",
-      "source_url": "https://mlb-hr-edge.feranmi.chatgpt.site/api/odds?latest=1",
+      "source_url": "/home/runner/work/hr-form-board-actions/hr-form-board-actions/data/shared-odds/latest.json",
       "delivery": "qstash-vercel-redis",
       "source_date": "2026-09-26",
       "date_matches": true,
@@ -28,7 +28,8 @@
         "BetMGM"
       ],
       "row_count": 244,
-      "compatibility_fallback": "odds_api",
+      "compatibility_fallback": "exact_upstash_checkpoint_cache",
+      "checkpoint": "1117",
       "mlbam_ids_hydrated": 236,
       "mlbam_ids_added": 236,
       "unresolved_player_names": [
@@ -558,10 +559,10 @@
           "dk_odds": 510,
           "all_prices": [
             {
-              "book": "FanDuel",
-              "book_id": "fanduel",
-              "odds": 540,
-              "captured_at": "2026-09-26T15:09:12.279Z",
+              "book": "DraftKings",
+              "book_id": "draftkings",
+              "odds": 510,
+              "captured_at": "2026-09-26T15:08:49.573Z",
               "source": "qstash-vercel-sportsgameodds",
               "source_event_id": "t9CdTwkN5JfPA2wNtr19",
               "source_odd_id": "batting_homeRuns-YAINER_DIAZ_1_MLB-game-yn-yes",
@@ -570,10 +571,10 @@
               "url": null
             },
             {
-              "book": "DraftKings",
-              "book_id": "draftkings",
-              "odds": 510,
-              "captured_at": "2026-09-26T15:08:49.573Z",
+              "book": "FanDuel",
+              "book_id": "fanduel",
+              "odds": 540,
+              "captured_at": "2026-09-26T15:09:12.279Z",
               "source": "qstash-vercel-sportsgameodds",
               "source_event_id": "t9CdTwkN5JfPA2wNtr19",
               "source_odd_id": "batting_homeRuns-YAINER_DIAZ_1_MLB-game-yn-yes",
@@ -1196,10 +1197,10 @@
           "dk_odds": 510,
           "all_prices": [
             {
-              "book": "FanDuel",
-              "book_id": "fanduel",
-              "odds": 540,
-              "captured_at": "2026-09-26T15:09:12.279Z",
+              "book": "DraftKings",
+              "book_id": "draftkings",
+              "odds": 510,
+              "captured_at": "2026-09-26T15:08:49.573Z",
               "source": "qstash-vercel-sportsgameodds",
               "source_event_id": "t9CdTwkN5JfPA2wNtr19",
               "source_odd_id": "batting_homeRuns-YAINER_DIAZ_1_MLB-game-yn-yes",
@@ -1208,10 +1209,10 @@
               "url": null
             },
             {
-              "book": "DraftKings",
-              "book_id": "draftkings",
-              "odds": 510,
-              "captured_at": "2026-09-26T15:08:49.573Z",
+              "book": "FanDuel",
+              "book_id": "fanduel",
+              "odds": 540,
+              "captured_at": "2026-09-26T15:09:12.279Z",
               "source": "qstash-vercel-sportsgameodds",
               "source_event_id": "t9CdTwkN5JfPA2wNtr19",
               "source_odd_id": "batting_homeRuns-YAINER_DIAZ_1_MLB-game-yn-yes",
@@ -1394,10 +1395,10 @@
           "dk_odds": 800,
           "all_prices": [
             {
-              "book": "FanDuel",
-              "book_id": "fanduel",
-              "odds": 750,
-              "captured_at": "2026-09-26T15:09:12.279Z",
+              "book": "DraftKings",
+              "book_id": "draftkings",
+              "odds": 800,
+              "captured_at": "2026-09-26T15:08:49.573Z",
               "source": "qstash-vercel-sportsgameodds",
               "source_event_id": "t9CdTwkN5JfPA2wNtr19",
               "source_odd_id": "batting_homeRuns-DONOVAN_WALTON_1_MLB-game-yn-yes",
@@ -1406,10 +1407,10 @@
               "url": null
             },
             {
-              "book": "DraftKings",
-              "book_id": "draftkings",
-              "odds": 800,
-              "captured_at": "2026-09-26T15:08:49.573Z",
+              "book": "FanDuel",
+              "book_id": "fanduel",
+              "odds": 750,
+              "captured_at": "2026-09-26T15:09:12.279Z",
               "source": "qstash-vercel-sportsgameodds",
               "source_event_id": "t9CdTwkN5JfPA2wNtr19",
               "source_odd_id": "batting_homeRuns-DONOVAN_WALTON_1_MLB-game-yn-yes",
