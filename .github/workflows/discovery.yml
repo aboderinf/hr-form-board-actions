@@ -23,10 +23,13 @@ on:
       - "src/discovery.py"
       - "src/hr_picks.py"
       - "src/hr_companion.py"
+      - "src/hr_dynamic_daily.py"
       - "src/hr_volume_companion.py"
       - "hr-picks.js"
+      - "hr-dynamic-daily.js"
       - "tests/test_hr_picks.py"
       - "tests/test_hr_companion.py"
+      - "tests/test_hr_dynamic_daily.py"
       - "tests/test_hr_volume_companion.py"
       - "tests/test_discovery.py"
   schedule:
@@ -60,8 +63,10 @@ jobs:
           python -m unittest discover -s tests -p 'test_discovery.py' -v
           python -m unittest discover -s tests -p 'test_hr_picks.py' -v
           python -m unittest discover -s tests -p 'test_hr_companion.py' -v
+          python -m unittest discover -s tests -p 'test_hr_dynamic_daily.py' -v
           python -m unittest discover -s tests -p 'test_hr_volume_companion.py' -v
           node --check hr-picks.js
+          node --check hr-dynamic-daily.js
 
   archive:
     if: github.event_name != 'pull_request'
