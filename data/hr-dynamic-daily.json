@@ -2,7 +2,7 @@
   "schema_version": 1,
   "kind": "hr_dynamic_daily_picks",
   "status": "active",
-  "generated_at": "2026-09-26T19:30:49.151427+00:00",
+  "generated_at": "2026-09-26T19:46:05.336255+00:00",
   "rule": {
     "name": "Dynamic Daily ROI",
     "checkpoints": [
@@ -15,7 +15,7 @@
     "all_time_gate": "At least 40 settled bets, 4 wins, 5 slates, and positive net units.",
     "trailing_30d_gate": "At least 5 settled bets and positive net units.",
     "trailing_14d_gate": "At least 20 settled bets and ROI ≥ 10%.",
-    "ranking": "Among qualifying cells represented on the current slate, rank by trailing-14-day ROI and keep the top 3 per checkpoint.",
+    "ranking": "Among qualifying cells represented on the current slate, rank by settled-bet-weighted ROI across all history, trailing 30 days, and trailing 14 days; keep the top 3 per checkpoint.",
     "player_selection": "Within those cells, take the top 2 players per checkpoint by HR Form score, then archived best price. First qualifying checkpoint per player wins.",
     "price_freeze": "Freeze the exact checkpoint sportsbook and price; never substitute a later quote.",
     "staking": "One flat unit per settled HR prop. No plate appearance is a void."
@@ -5549,7 +5549,8 @@
                   "roi": 0.24782608695652175,
                   "hit_rate": 0.21739130434782608
                 }
-              }
+              },
+              "weighted_expected_return": 0.24782608695652175
             },
             {
               "checkpoint": "0817",
@@ -5588,7 +5589,8 @@
                   "roi": 0.11789473684210527,
                   "hit_rate": 0.18421052631578946
                 }
-              }
+              },
+              "weighted_expected_return": 0.11789473684210527
             }
           ],
           "selections": [
@@ -5746,7 +5748,8 @@
                   "roi": 0.36938775510204086,
                   "hit_rate": 0.24489795918367346
                 }
-              }
+              },
+              "weighted_expected_return": 0.36938775510204086
             }
           ],
           "selections": [
@@ -5904,7 +5907,8 @@
                   "roi": 0.1423076923076923,
                   "hit_rate": 0.19230769230769232
                 }
-              }
+              },
+              "weighted_expected_return": 0.09549180327868852
             }
           ],
           "selections": [
@@ -6062,7 +6066,8 @@
                   "roi": 0.24259259259259258,
                   "hit_rate": 0.2222222222222222
                 }
-              }
+              },
+              "weighted_expected_return": 0.24259259259259258
             },
             {
               "checkpoint": "0817",
@@ -6101,7 +6106,8 @@
                   "roi": 0.12120481927710844,
                   "hit_rate": 0.18072289156626506
                 }
-              }
+              },
+              "weighted_expected_return": 0.12120481927710844
             }
           ],
           "selections": [
@@ -6259,7 +6265,8 @@
                   "roi": 0.16119402985074627,
                   "hit_rate": 0.208955223880597
                 }
-              }
+              },
+              "weighted_expected_return": 0.13853658536585367
             }
           ],
           "selections": [
@@ -6417,7 +6424,8 @@
                   "roi": 0.16507936507936508,
                   "hit_rate": 0.20634920634920634
                 }
-              }
+              },
+              "weighted_expected_return": 0.09569377990430622
             }
           ],
           "selections": [
@@ -6575,7 +6583,8 @@
                   "roi": 0.17176470588235296,
                   "hit_rate": 0.17647058823529413
                 }
-              }
+              },
+              "weighted_expected_return": 0.17016949152542374
             }
           ],
           "selections": [
@@ -6733,7 +6742,8 @@
                   "roi": 0.15454545454545454,
                   "hit_rate": 0.19696969696969696
                 }
-              }
+              },
+              "weighted_expected_return": 0.16160714285714287
             },
             {
               "checkpoint": "0817",
@@ -6772,7 +6782,8 @@
                   "roi": 0.10065934065934067,
                   "hit_rate": 0.16483516483516483
                 }
-              }
+              },
+              "weighted_expected_return": 0.11935275080906148
             }
           ],
           "selections": [
@@ -6930,7 +6941,8 @@
                   "roi": 0.14482758620689656,
                   "hit_rate": 0.1724137931034483
                 }
-              }
+              },
+              "weighted_expected_return": 0.1318032786885246
             }
           ],
           "selections": [
@@ -7033,7 +7045,8 @@
                   "roi": 0.17200000000000001,
                   "hit_rate": 0.17142857142857143
                 }
-              }
+              },
+              "weighted_expected_return": 0.10412213740458015
             }
           ],
           "selections": [
@@ -7136,7 +7149,8 @@
                   "roi": 0.23728813559322035,
                   "hit_rate": 0.2033898305084746
                 }
-              }
+              },
+              "weighted_expected_return": 0.1735159817351598
             }
           ],
           "selections": [
@@ -7294,7 +7308,8 @@
                   "roi": 0.2921875,
                   "hit_rate": 0.203125
                 }
-              }
+              },
+              "weighted_expected_return": 0.20210084033613443
             }
           ],
           "selections": [
@@ -7397,7 +7412,8 @@
                   "roi": 0.329375,
                   "hit_rate": 0.1875
                 }
-              }
+              },
+              "weighted_expected_return": 0.2885
             }
           ],
           "selections": [
@@ -7555,7 +7571,8 @@
                   "roi": 0.5482142857142857,
                   "hit_rate": 0.2857142857142857
                 }
-              }
+              },
+              "weighted_expected_return": 0.25482456140350873
             },
             {
               "checkpoint": "0817",
@@ -7594,7 +7611,8 @@
                   "roi": 0.2966101694915254,
                   "hit_rate": 0.2033898305084746
                 }
-              }
+              },
+              "weighted_expected_return": 0.19106382978723405
             }
           ],
           "selections": [
@@ -7717,45 +7735,6 @@
           "qualified_cells": [
             {
               "checkpoint": "1117",
-              "book": "BetMGM",
-              "form_id": "200_299",
-              "form": "0.200–0.299",
-              "label": "1117 · BetMGM best price · 0.200–0.299",
-              "evidence": {
-                "all_time": {
-                  "settled": 42,
-                  "wins": 9,
-                  "losses": 33,
-                  "voids": 5,
-                  "slates": 18,
-                  "net_units": 12.4,
-                  "roi": 0.29523809523809524,
-                  "hit_rate": 0.21428571428571427
-                },
-                "trailing_30d": {
-                  "settled": 42,
-                  "wins": 9,
-                  "losses": 33,
-                  "voids": 5,
-                  "slates": 18,
-                  "net_units": 12.4,
-                  "roi": 0.29523809523809524,
-                  "hit_rate": 0.21428571428571427
-                },
-                "trailing_14d": {
-                  "settled": 27,
-                  "wins": 8,
-                  "losses": 19,
-                  "voids": 4,
-                  "slates": 12,
-                  "net_units": 21.15,
-                  "roi": 0.7833333333333333,
-                  "hit_rate": 0.2962962962962963
-                }
-              }
-            },
-            {
-              "checkpoint": "1117",
               "book": "DraftKings",
               "form_id": "400p",
               "form": "0.400+",
@@ -7791,7 +7770,48 @@
                   "roi": 0.6681818181818181,
                   "hit_rate": 0.24242424242424243
                 }
-              }
+              },
+              "weighted_expected_return": 0.512992125984252
+            },
+            {
+              "checkpoint": "1117",
+              "book": "BetMGM",
+              "form_id": "200_299",
+              "form": "0.200–0.299",
+              "label": "1117 · BetMGM best price · 0.200–0.299",
+              "evidence": {
+                "all_time": {
+                  "settled": 42,
+                  "wins": 9,
+                  "losses": 33,
+                  "voids": 5,
+                  "slates": 18,
+                  "net_units": 12.4,
+                  "roi": 0.29523809523809524,
+                  "hit_rate": 0.21428571428571427
+                },
+                "trailing_30d": {
+                  "settled": 42,
+                  "wins": 9,
+                  "losses": 33,
+                  "voids": 5,
+                  "slates": 18,
+                  "net_units": 12.4,
+                  "roi": 0.29523809523809524,
+                  "hit_rate": 0.21428571428571427
+                },
+                "trailing_14d": {
+                  "settled": 27,
+                  "wins": 8,
+                  "losses": 19,
+                  "voids": 4,
+                  "slates": 12,
+                  "net_units": 21.15,
+                  "roi": 0.7833333333333333,
+                  "hit_rate": 0.2962962962962963
+                }
+              },
+              "weighted_expected_return": 0.413963963963964
             }
           ],
           "selections": [
@@ -7894,7 +7914,8 @@
                   "roi": 0.5482142857142857,
                   "hit_rate": 0.2857142857142857
                 }
-              }
+              },
+              "weighted_expected_return": 0.23318965517241377
             },
             {
               "checkpoint": "0817",
@@ -7933,7 +7954,8 @@
                   "roi": 0.275,
                   "hit_rate": 0.2
                 }
-              }
+              },
+              "weighted_expected_return": 0.16624999999999998
             }
           ],
           "selections": [
@@ -8056,45 +8078,6 @@
           "qualified_cells": [
             {
               "checkpoint": "1117",
-              "book": "BetMGM",
-              "form_id": "200_299",
-              "form": "0.200–0.299",
-              "label": "1117 · BetMGM best price · 0.200–0.299",
-              "evidence": {
-                "all_time": {
-                  "settled": 43,
-                  "wins": 9,
-                  "losses": 34,
-                  "voids": 5,
-                  "slates": 19,
-                  "net_units": 11.4,
-                  "roi": 0.2651162790697674,
-                  "hit_rate": 0.20930232558139536
-                },
-                "trailing_30d": {
-                  "settled": 43,
-                  "wins": 9,
-                  "losses": 34,
-                  "voids": 5,
-                  "slates": 19,
-                  "net_units": 11.4,
-                  "roi": 0.2651162790697674,
-                  "hit_rate": 0.20930232558139536
-                },
-                "trailing_14d": {
-                  "settled": 28,
-                  "wins": 8,
-                  "losses": 20,
-                  "voids": 4,
-                  "slates": 13,
-                  "net_units": 20.15,
-                  "roi": 0.7196428571428571,
-                  "hit_rate": 0.2857142857142857
-                }
-              }
-            },
-            {
-              "checkpoint": "1117",
               "book": "DraftKings",
               "form_id": "400p",
               "form": "0.400+",
@@ -8130,7 +8113,48 @@
                   "roi": 0.49696969696969695,
                   "hit_rate": 0.21212121212121213
                 }
-              }
+              },
+              "weighted_expected_return": 0.44573643410852715
+            },
+            {
+              "checkpoint": "1117",
+              "book": "BetMGM",
+              "form_id": "200_299",
+              "form": "0.200–0.299",
+              "label": "1117 · BetMGM best price · 0.200–0.299",
+              "evidence": {
+                "all_time": {
+                  "settled": 43,
+                  "wins": 9,
+                  "losses": 34,
+                  "voids": 5,
+                  "slates": 19,
+                  "net_units": 11.4,
+                  "roi": 0.2651162790697674,
+                  "hit_rate": 0.20930232558139536
+                },
+                "trailing_30d": {
+                  "settled": 43,
+                  "wins": 9,
+                  "losses": 34,
+                  "voids": 5,
+                  "slates": 19,
+                  "net_units": 11.4,
+                  "roi": 0.2651162790697674,
+                  "hit_rate": 0.20930232558139536
+                },
+                "trailing_14d": {
+                  "settled": 28,
+                  "wins": 8,
+                  "losses": 20,
+                  "voids": 4,
+                  "slates": 13,
+                  "net_units": 20.15,
+                  "roi": 0.7196428571428571,
+                  "hit_rate": 0.2857142857142857
+                }
+              },
+              "weighted_expected_return": 0.3767543859649123
             }
           ],
           "selections": [
@@ -8253,45 +8277,6 @@
           "qualified_cells": [
             {
               "checkpoint": "0817",
-              "book": "BetMGM",
-              "form_id": "200_299",
-              "form": "0.200–0.299",
-              "label": "0817 · BetMGM best price · 0.200–0.299",
-              "evidence": {
-                "all_time": {
-                  "settled": 51,
-                  "wins": 10,
-                  "losses": 41,
-                  "voids": 6,
-                  "slates": 21,
-                  "net_units": 4.35,
-                  "roi": 0.08529411764705881,
-                  "hit_rate": 0.19607843137254902
-                },
-                "trailing_30d": {
-                  "settled": 51,
-                  "wins": 10,
-                  "losses": 41,
-                  "voids": 6,
-                  "slates": 21,
-                  "net_units": 4.35,
-                  "roi": 0.08529411764705881,
-                  "hit_rate": 0.19607843137254902
-                },
-                "trailing_14d": {
-                  "settled": 34,
-                  "wins": 9,
-                  "losses": 25,
-                  "voids": 5,
-                  "slates": 13,
-                  "net_units": 14.85,
-                  "roi": 0.43676470588235294,
-                  "hit_rate": 0.2647058823529412
-                }
-              }
-            },
-            {
-              "checkpoint": "0817",
               "book": "DraftKings",
               "form_id": "400p",
               "form": "0.400+",
@@ -8327,7 +8312,48 @@
                   "roi": 0.29800000000000004,
                   "hit_rate": 0.2
                 }
-              }
+              },
+              "weighted_expected_return": 0.24757009345794392
+            },
+            {
+              "checkpoint": "0817",
+              "book": "BetMGM",
+              "form_id": "200_299",
+              "form": "0.200–0.299",
+              "label": "0817 · BetMGM best price · 0.200–0.299",
+              "evidence": {
+                "all_time": {
+                  "settled": 51,
+                  "wins": 10,
+                  "losses": 41,
+                  "voids": 6,
+                  "slates": 21,
+                  "net_units": 4.35,
+                  "roi": 0.08529411764705881,
+                  "hit_rate": 0.19607843137254902
+                },
+                "trailing_30d": {
+                  "settled": 51,
+                  "wins": 10,
+                  "losses": 41,
+                  "voids": 6,
+                  "slates": 21,
+                  "net_units": 4.35,
+                  "roi": 0.08529411764705881,
+                  "hit_rate": 0.19607843137254902
+                },
+                "trailing_14d": {
+                  "settled": 34,
+                  "wins": 9,
+                  "losses": 25,
+                  "voids": 5,
+                  "slates": 13,
+                  "net_units": 14.85,
+                  "roi": 0.43676470588235294,
+                  "hit_rate": 0.2647058823529412
+                }
+              },
+              "weighted_expected_return": 0.17316176470588232
             }
           ],
           "selections": [
@@ -8485,7 +8511,8 @@
                   "roi": 0.7390625,
                   "hit_rate": 0.25
                 }
-              }
+              },
+              "weighted_expected_return": 0.5549242424242424
             },
             {
               "checkpoint": "1117",
@@ -8524,7 +8551,8 @@
                   "roi": 0.5779411764705882,
                   "hit_rate": 0.2647058823529412
                 }
-              }
+              },
+              "weighted_expected_return": 0.29440298507462687
             }
           ],
           "selections": [
@@ -8682,7 +8710,8 @@
                   "roi": 0.174,
                   "hit_rate": 0.2
                 }
-              }
+              },
+              "weighted_expected_return": 0.318141592920354
             }
           ],
           "selections": [
@@ -8785,7 +8814,8 @@
                   "roi": 0.4108695652173914,
                   "hit_rate": 0.21739130434782608
                 }
-              }
+              },
+              "weighted_expected_return": 0.2246788990825688
             },
             {
               "checkpoint": "0817",
@@ -8824,7 +8854,8 @@
                   "roi": 0.3546875,
                   "hit_rate": 0.25
                 }
-              }
+              },
+              "weighted_expected_return": 0.13272058823529412
             },
             {
               "checkpoint": "0817",
@@ -8863,7 +8894,8 @@
                   "roi": 0.10714285714285711,
                   "hit_rate": 0.17857142857142858
                 }
-              }
+              },
+              "weighted_expected_return": 0.09669421487603305
             }
           ],
           "selections": [
@@ -9021,7 +9053,8 @@
                   "roi": 0.59,
                   "hit_rate": 0.22857142857142856
                 }
-              }
+              },
+              "weighted_expected_return": 0.4353146853146853
             },
             {
               "checkpoint": "1117",
@@ -9060,7 +9093,8 @@
                   "roi": 0.5125,
                   "hit_rate": 0.25
                 }
-              }
+              },
+              "weighted_expected_return": 0.25522388059701495
             }
           ],
           "selections": [
@@ -9163,7 +9197,8 @@
                   "roi": 0.12884615384615383,
                   "hit_rate": 0.19230769230769232
                 }
-              }
+              },
+              "weighted_expected_return": 0.28405172413793106
             }
           ],
           "selections": [
@@ -9266,7 +9301,8 @@
                   "roi": 0.3546875,
                   "hit_rate": 0.25
                 }
-              }
+              },
+              "weighted_expected_return": 0.11630434782608697
             }
           ],
           "selections": [
@@ -9334,45 +9370,6 @@
           "qualified_cells": [
             {
               "checkpoint": "1117",
-              "book": "BetMGM",
-              "form_id": "200_299",
-              "form": "0.200–0.299",
-              "label": "1117 · BetMGM best price · 0.200–0.299",
-              "evidence": {
-                "all_time": {
-                  "settled": 52,
-                  "wins": 10,
-                  "losses": 42,
-                  "voids": 5,
-                  "slates": 22,
-                  "net_units": 7.9,
-                  "roi": 0.15192307692307694,
-                  "hit_rate": 0.19230769230769232
-                },
-                "trailing_30d": {
-                  "settled": 52,
-                  "wins": 10,
-                  "losses": 42,
-                  "voids": 5,
-                  "slates": 22,
-                  "net_units": 7.9,
-                  "roi": 0.15192307692307694,
-                  "hit_rate": 0.19230769230769232
-                },
-                "trailing_14d": {
-                  "settled": 31,
-                  "wins": 8,
-                  "losses": 23,
-                  "voids": 4,
-                  "slates": 13,
-                  "net_units": 17.4,
-                  "roi": 0.5612903225806452,
-                  "hit_rate": 0.25806451612903225
-                }
-              }
-            },
-            {
-              "checkpoint": "1117",
               "book": "DraftKings",
               "form_id": "400p",
               "form": "0.400+",
@@ -9408,7 +9405,48 @@
                   "roi": 0.18222222222222217,
                   "hit_rate": 0.19444444444444445
                 }
-              }
+              },
+              "weighted_expected_return": 0.332
+            },
+            {
+              "checkpoint": "1117",
+              "book": "BetMGM",
+              "form_id": "200_299",
+              "form": "0.200–0.299",
+              "label": "1117 · BetMGM best price · 0.200–0.299",
+              "evidence": {
+                "all_time": {
+                  "settled": 52,
+                  "wins": 10,
+                  "losses": 42,
+                  "voids": 5,
+                  "slates": 22,
+                  "net_units": 7.9,
+                  "roi": 0.15192307692307694,
+                  "hit_rate": 0.19230769230769232
+                },
+                "trailing_30d": {
+                  "settled": 52,
+                  "wins": 10,
+                  "losses": 42,
+                  "voids": 5,
+                  "slates": 22,
+                  "net_units": 7.9,
+                  "roi": 0.15192307692307694,
+                  "hit_rate": 0.19230769230769232
+                },
+                "trailing_14d": {
+                  "settled": 31,
+                  "wins": 8,
+                  "losses": 23,
+                  "voids": 4,
+                  "slates": 13,
+                  "net_units": 17.4,
+                  "roi": 0.5612903225806452,
+                  "hit_rate": 0.25806451612903225
+                }
+              },
+              "weighted_expected_return": 0.24592592592592594
             }
           ],
           "selections": [
@@ -9566,7 +9604,8 @@
                   "roi": 0.49545454545454537,
                   "hit_rate": 0.2727272727272727
                 }
-              }
+              },
+              "weighted_expected_return": 0.22021276595744682
             }
           ],
           "selections": [
@@ -9724,7 +9763,8 @@
                   "roi": 0.684375,
                   "hit_rate": 0.28125
                 }
-              }
+              },
+              "weighted_expected_return": 0.3384057971014493
             },
             {
               "checkpoint": "1117",
@@ -9763,7 +9803,8 @@
                   "roi": 0.18222222222222217,
                   "hit_rate": 0.19444444444444445
                 }
-              }
+              },
+              "weighted_expected_return": 0.29740259740259745
             },
             {
               "checkpoint": "1117",
@@ -9802,7 +9843,8 @@
                   "roi": 0.153968253968254,
                   "hit_rate": 0.15873015873015872
                 }
-              }
+              },
+              "weighted_expected_return": 0.06676056338028169
             }
           ],
           "selections": [
@@ -9960,7 +10002,8 @@
                   "roi": 0.20685714285714285,
                   "hit_rate": 0.17142857142857143
                 }
-              }
+              },
+              "weighted_expected_return": 0.08502283105022831
             }
           ],
           "selections": [
@@ -10118,7 +10161,8 @@
                   "roi": 0.29516129032258065,
                   "hit_rate": 0.22580645161290322
                 }
-              }
+              },
+              "weighted_expected_return": 0.1549645390070922
             }
           ],
           "selections": [
@@ -10186,45 +10230,6 @@
           "qualified_cells": [
             {
               "checkpoint": "1117",
-              "book": "BetMGM",
-              "form_id": "200_299",
-              "form": "0.200–0.299",
-              "label": "1117 · BetMGM best price · 0.200–0.299",
-              "evidence": {
-                "all_time": {
-                  "settled": 55,
-                  "wins": 11,
-                  "losses": 44,
-                  "voids": 6,
-                  "slates": 24,
-                  "net_units": 10.4,
-                  "roi": 0.1890909090909091,
-                  "hit_rate": 0.2
-                },
-                "trailing_30d": {
-                  "settled": 55,
-                  "wins": 11,
-                  "losses": 44,
-                  "voids": 6,
-                  "slates": 24,
-                  "net_units": 10.4,
-                  "roi": 0.1890909090909091,
-                  "hit_rate": 0.2
-                },
-                "trailing_14d": {
-                  "settled": 30,
-                  "wins": 7,
-                  "losses": 23,
-                  "voids": 3,
-                  "slates": 14,
-                  "net_units": 14.55,
-                  "roi": 0.48500000000000004,
-                  "hit_rate": 0.23333333333333334
-                }
-              }
-            },
-            {
-              "checkpoint": "1117",
               "book": "DraftKings",
               "form_id": "400p",
               "form": "0.400+",
@@ -10260,7 +10265,48 @@
                   "roi": 0.18222222222222217,
                   "hit_rate": 0.19444444444444445
                 }
-              }
+              },
+              "weighted_expected_return": 0.2645569620253165
+            },
+            {
+              "checkpoint": "1117",
+              "book": "BetMGM",
+              "form_id": "200_299",
+              "form": "0.200–0.299",
+              "label": "1117 · BetMGM best price · 0.200–0.299",
+              "evidence": {
+                "all_time": {
+                  "settled": 55,
+                  "wins": 11,
+                  "losses": 44,
+                  "voids": 6,
+                  "slates": 24,
+                  "net_units": 10.4,
+                  "roi": 0.1890909090909091,
+                  "hit_rate": 0.2
+                },
+                "trailing_30d": {
+                  "settled": 55,
+                  "wins": 11,
+                  "losses": 44,
+                  "voids": 6,
+                  "slates": 24,
+                  "net_units": 10.4,
+                  "roi": 0.1890909090909091,
+                  "hit_rate": 0.2
+                },
+                "trailing_14d": {
+                  "settled": 30,
+                  "wins": 7,
+                  "losses": 23,
+                  "voids": 3,
+                  "slates": 14,
+                  "net_units": 14.55,
+                  "roi": 0.48500000000000004,
+                  "hit_rate": 0.23333333333333334
+                }
+              },
+              "weighted_expected_return": 0.2525
             }
           ],
           "selections": [
@@ -10418,7 +10464,8 @@
                   "roi": 1.0833333333333333,
                   "hit_rate": 0.2857142857142857
                 }
-              }
+              },
+              "weighted_expected_return": 0.3935643564356436
             },
             {
               "checkpoint": "1717",
@@ -10457,7 +10504,8 @@
                   "roi": 0.30492753623188407,
                   "hit_rate": 0.18840579710144928
                 }
-              }
+              },
+              "weighted_expected_return": 0.10792122538293217
             }
           ],
           "selections": [
@@ -10560,7 +10608,8 @@
                   "roi": 0.8810344827586207,
                   "hit_rate": 0.27586206896551724
                 }
-              }
+              },
+              "weighted_expected_return": 0.4563829787234042
             },
             {
               "checkpoint": "1117",
@@ -10599,7 +10648,8 @@
                   "roi": 0.21599999999999997,
                   "hit_rate": 0.2
                 }
-              }
+              },
+              "weighted_expected_return": 0.24099378881987576
             },
             {
               "checkpoint": "1117",
@@ -10638,7 +10688,8 @@
                   "roi": 0.13275862068965522,
                   "hit_rate": 0.15517241379310345
                 }
-              }
+              },
+              "weighted_expected_return": 0.03826815642458101
             }
           ],
           "selections": [
@@ -10796,7 +10847,8 @@
                   "roi": 1.5595238095238095,
                   "hit_rate": 0.3333333333333333
                 }
-              }
+              },
+              "weighted_expected_return": 0.6577669902912622
             },
             {
               "checkpoint": "1717",
@@ -10835,7 +10887,8 @@
                   "roi": 0.1918840579710145,
                   "hit_rate": 0.17391304347826086
                 }
-              }
+              },
+              "weighted_expected_return": 0.0674946466809422
             }
           ],
           "selections": [
@@ -10993,7 +11046,8 @@
                   "roi": 0.39666666666666667,
                   "hit_rate": 0.23333333333333334
                 }
-              }
+              },
+              "weighted_expected_return": 0.3
             }
           ],
           "selections": [
@@ -11151,7 +11205,8 @@
                   "roi": 0.7396551724137931,
                   "hit_rate": 0.27586206896551724
                 }
-              }
+              },
+              "weighted_expected_return": 0.48971631205673755
             },
             {
               "checkpoint": "1117",
@@ -11190,7 +11245,8 @@
                   "roi": 0.18222222222222217,
                   "hit_rate": 0.19444444444444445
                 }
-              }
+              },
+              "weighted_expected_return": 0.1964071856287425
             }
           ],
           "selections": [
@@ -11348,7 +11404,8 @@
                   "roi": 1.361904761904762,
                   "hit_rate": 0.3333333333333333
                 }
-              }
+              },
+              "weighted_expected_return": 0.6336448598130843
             },
             {
               "checkpoint": "1717",
@@ -11387,7 +11444,8 @@
                   "roi": 0.11135135135135135,
                   "hit_rate": 0.16216216216216217
                 }
-              }
+              },
+              "weighted_expected_return": 0.034273858921161825
             }
           ],
           "selections": [
@@ -11490,7 +11548,8 @@
                   "roi": 0.19838709677419356,
                   "hit_rate": 0.1935483870967742
                 }
-              }
+              },
+              "weighted_expected_return": 0.22346938775510206
             }
           ],
           "selections": [
@@ -11648,7 +11707,8 @@
                   "roi": 0.5421875,
                   "hit_rate": 0.25
                 }
-              }
+              },
+              "weighted_expected_return": 0.4061688311688312
             },
             {
               "checkpoint": "1117",
@@ -11687,7 +11747,8 @@
                   "roi": 0.2321052631578947,
                   "hit_rate": 0.21052631578947367
                 }
-              }
+              },
+              "weighted_expected_return": 0.21474285714285712
             }
           ],
           "selections": [
@@ -11845,7 +11906,8 @@
                   "roi": 1.3217391304347825,
                   "hit_rate": 0.34782608695652173
                 }
-              }
+              },
+              "weighted_expected_return": 0.6333333333333332
             },
             {
               "checkpoint": "1717",
@@ -11884,7 +11946,8 @@
                   "roi": 0.14222222222222222,
                   "hit_rate": 0.16666666666666666
                 }
-              }
+              },
+              "weighted_expected_return": 0.04292887029288703
             }
           ],
           "selections": [
@@ -11987,7 +12050,8 @@
                   "roi": 0.3852941176470588,
                   "hit_rate": 0.23529411764705882
                 }
-              }
+              },
+              "weighted_expected_return": 0.31062500000000004
             }
           ],
           "selections": [
@@ -12145,7 +12209,8 @@
                   "roi": 0.6472222222222223,
                   "hit_rate": 0.2777777777777778
                 }
-              }
+              },
+              "weighted_expected_return": 0.4666666666666667
             },
             {
               "checkpoint": "1117",
@@ -12184,7 +12249,8 @@
                   "roi": 0.4288888888888888,
                   "hit_rate": 0.25
                 }
-              }
+              },
+              "weighted_expected_return": 0.26502793296089383
             }
           ],
           "selections": [
@@ -12342,7 +12408,8 @@
                   "roi": 0.553125,
                   "hit_rate": 0.25
                 }
-              }
+              },
+              "weighted_expected_return": 0.41698113207547166
             }
           ],
           "selections": [
@@ -12445,7 +12512,8 @@
                   "roi": 0.38499999999999995,
                   "hit_rate": 0.23529411764705882
                 }
-              }
+              },
+              "weighted_expected_return": 0.24769662921348318
             }
           ],
           "selections": [
@@ -12603,7 +12671,8 @@
                   "roi": 0.265,
                   "hit_rate": 0.2
                 }
-              }
+              },
+              "weighted_expected_return": 0.36891025641025643
             }
           ],
           "selections": [
@@ -12761,7 +12830,8 @@
                   "roi": 0.6882352941176471,
                   "hit_rate": 0.2647058823529412
                 }
-              }
+              },
+              "weighted_expected_return": 0.5696969696969697
             },
             {
               "checkpoint": "1117",
@@ -12800,7 +12870,8 @@
                   "roi": 0.3080555555555555,
                   "hit_rate": 0.2222222222222222
                 }
-              }
+              },
+              "weighted_expected_return": 0.2202747252747253
             }
           ],
           "selections": [
@@ -12958,7 +13029,8 @@
                   "roi": 1.5260869565217392,
                   "hit_rate": 0.391304347826087
                 }
-              }
+              },
+              "weighted_expected_return": 0.8821428571428572
             }
           ],
           "selections": [
@@ -13061,7 +13133,8 @@
                   "roi": 0.4096774193548387,
                   "hit_rate": 0.22580645161290322
                 }
-              }
+              },
+              "weighted_expected_return": 0.4378205128205128
             }
           ],
           "selections": [
@@ -13219,7 +13292,8 @@
                   "roi": 0.32571428571428573,
                   "hit_rate": 0.22857142857142856
                 }
-              }
+              },
+              "weighted_expected_return": 0.43898809523809523
             }
           ],
           "selections": []
@@ -13266,7 +13340,8 @@
                   "roi": 0.9625,
                   "hit_rate": 0.3333333333333333
                 }
-              }
+              },
+              "weighted_expected_return": 0.7076923076923078
             }
           ],
           "selections": []
@@ -13313,7 +13388,8 @@
                   "roi": 0.365625,
                   "hit_rate": 0.21875
                 }
-              }
+              },
+              "weighted_expected_return": 0.3272189349112426
             }
           ],
           "selections": [
@@ -13471,7 +13547,8 @@
                   "roi": 0.365625,
                   "hit_rate": 0.21875
                 }
-              }
+              },
+              "weighted_expected_return": 0.31941176470588234
             }
           ],
           "selections": [
@@ -13629,7 +13706,8 @@
                   "roi": 0.3647058823529412,
                   "hit_rate": 0.23529411764705882
                 }
-              }
+              },
+              "weighted_expected_return": 0.38936781609195403
             }
           ],
           "selections": [
@@ -13732,7 +13810,8 @@
                   "roi": 1.047826086956522,
                   "hit_rate": 0.34782608695652173
                 }
-              }
+              },
+              "weighted_expected_return": 0.6789915966386556
             }
           ],
           "selections": [
@@ -17004,7 +17083,8 @@
                   "roi": 0.1575757575757576,
                   "hit_rate": 0.18181818181818182
                 }
-              }
+              },
+              "weighted_expected_return": 0.1763440860215054
             }
           ],
           "selections": [
@@ -17162,7 +17242,8 @@
                   "roi": 0.1685714285714286,
                   "hit_rate": 0.2
                 }
-              }
+              },
+              "weighted_expected_return": 0.24342105263157895
             }
           ],
           "selections": [
@@ -17265,7 +17346,8 @@
                   "roi": 0.890909090909091,
                   "hit_rate": 0.3181818181818182
                 }
-              }
+              },
+              "weighted_expected_return": 0.5299212598425198
             }
           ],
           "selections": [
@@ -17423,7 +17505,8 @@
                   "roi": 0.4175,
                   "hit_rate": 0.2
                 }
-              }
+              },
+              "weighted_expected_return": 0.31875
             },
             {
               "checkpoint": "0817",
@@ -17462,7 +17545,8 @@
                   "roi": 0.1702439024390244,
                   "hit_rate": 0.21951219512195122
                 }
-              }
+              },
+              "weighted_expected_return": 0.16364102564102564
             }
           ],
           "selections": [
@@ -17585,45 +17669,6 @@
           "qualified_cells": [
             {
               "checkpoint": "1117",
-              "book": "FanDuel",
-              "form_id": "100_199",
-              "form": "0.100–0.199",
-              "label": "1117 · FanDuel best price · 0.100–0.199",
-              "evidence": {
-                "all_time": {
-                  "settled": 185,
-                  "wins": 30,
-                  "losses": 155,
-                  "voids": 12,
-                  "slates": 37,
-                  "net_units": 10.2,
-                  "roi": 0.05513513513513514,
-                  "hit_rate": 0.16216216216216217
-                },
-                "trailing_30d": {
-                  "settled": 133,
-                  "wins": 19,
-                  "losses": 114,
-                  "voids": 9,
-                  "slates": 28,
-                  "net_units": 3.1,
-                  "roi": 0.023308270676691736,
-                  "hit_rate": 0.14285714285714285
-                },
-                "trailing_14d": {
-                  "settled": 46,
-                  "wins": 9,
-                  "losses": 37,
-                  "voids": 3,
-                  "slates": 13,
-                  "net_units": 10.6,
-                  "roi": 0.23043478260869565,
-                  "hit_rate": 0.1956521739130435
-                }
-              }
-            },
-            {
-              "checkpoint": "1117",
               "book": "BetMGM",
               "form_id": "200_299",
               "form": "0.200–0.299",
@@ -17659,7 +17704,48 @@
                   "roi": 0.19090909090909092,
                   "hit_rate": 0.18181818181818182
                 }
-              }
+              },
+              "weighted_expected_return": 0.2363013698630137
+            },
+            {
+              "checkpoint": "1117",
+              "book": "FanDuel",
+              "form_id": "100_199",
+              "form": "0.100–0.199",
+              "label": "1117 · FanDuel best price · 0.100–0.199",
+              "evidence": {
+                "all_time": {
+                  "settled": 185,
+                  "wins": 30,
+                  "losses": 155,
+                  "voids": 12,
+                  "slates": 37,
+                  "net_units": 10.2,
+                  "roi": 0.05513513513513514,
+                  "hit_rate": 0.16216216216216217
+                },
+                "trailing_30d": {
+                  "settled": 133,
+                  "wins": 19,
+                  "losses": 114,
+                  "voids": 9,
+                  "slates": 28,
+                  "net_units": 3.1,
+                  "roi": 0.023308270676691736,
+                  "hit_rate": 0.14285714285714285
+                },
+                "trailing_14d": {
+                  "settled": 46,
+                  "wins": 9,
+                  "losses": 37,
+                  "voids": 3,
+                  "slates": 13,
+                  "net_units": 10.6,
+                  "roi": 0.23043478260869565,
+                  "hit_rate": 0.1956521739130435
+                }
+              },
+              "weighted_expected_return": 0.06565934065934066
             }
           ],
           "selections": [
@@ -17817,7 +17903,8 @@
                   "roi": 0.7333333333333334,
                   "hit_rate": 0.2916666666666667
                 }
-              }
+              },
+              "weighted_expected_return": 0.46090225563909776
             }
           ],
           "selections": []
@@ -17864,7 +17951,8 @@
                   "roi": 0.14238095238095239,
                   "hit_rate": 0.21428571428571427
                 }
-              }
+              },
+              "weighted_expected_return": 0.12331683168316832
             }
           ],
           "selections": [
@@ -18022,7 +18110,8 @@
                   "roi": 0.11481481481481483,
                   "hit_rate": 0.18518518518518517
                 }
-              }
+              },
+              "weighted_expected_return": 0.03
             }
           ],
           "selections": [
@@ -18180,7 +18269,8 @@
                   "roi": 0.23658536585365852,
                   "hit_rate": 0.17073170731707318
                 }
-              }
+              },
+              "weighted_expected_return": 0.24549763033175354
             }
           ],
           "selections": [
@@ -18338,7 +18428,8 @@
                   "roi": 0.16899999999999998,
                   "hit_rate": 0.225
                 }
-              }
+              },
+              "weighted_expected_return": 0.2710958904109589
             }
           ],
           "selections": [
@@ -18461,45 +18552,6 @@
           "qualified_cells": [
             {
               "checkpoint": "1717",
-              "book": "DraftKings",
-              "form_id": "400p",
-              "form": "0.400+",
-              "label": "1717 · DraftKings best price · 0.400+",
-              "evidence": {
-                "all_time": {
-                  "settled": 57,
-                  "wins": 10,
-                  "losses": 47,
-                  "voids": 0,
-                  "slates": 28,
-                  "net_units": 0.78,
-                  "roi": 0.013684210526315802,
-                  "hit_rate": 0.17543859649122806
-                },
-                "trailing_30d": {
-                  "settled": 44,
-                  "wins": 9,
-                  "losses": 35,
-                  "voids": 0,
-                  "slates": 21,
-                  "net_units": 9.55,
-                  "roi": 0.21704545454545457,
-                  "hit_rate": 0.20454545454545456
-                },
-                "trailing_14d": {
-                  "settled": 22,
-                  "wins": 5,
-                  "losses": 17,
-                  "voids": 0,
-                  "slates": 11,
-                  "net_units": 5.92,
-                  "roi": 0.2690909090909091,
-                  "hit_rate": 0.22727272727272727
-                }
-              }
-            },
-            {
-              "checkpoint": "1717",
               "book": "BetMGM",
               "form_id": "200_299",
               "form": "0.200–0.299",
@@ -18535,7 +18587,48 @@
                   "roi": 0.16041666666666665,
                   "hit_rate": 0.20833333333333334
                 }
-              }
+              },
+              "weighted_expected_return": 0.34738805970149256
+            },
+            {
+              "checkpoint": "1717",
+              "book": "DraftKings",
+              "form_id": "400p",
+              "form": "0.400+",
+              "label": "1717 · DraftKings best price · 0.400+",
+              "evidence": {
+                "all_time": {
+                  "settled": 57,
+                  "wins": 10,
+                  "losses": 47,
+                  "voids": 0,
+                  "slates": 28,
+                  "net_units": 0.78,
+                  "roi": 0.013684210526315802,
+                  "hit_rate": 0.17543859649122806
+                },
+                "trailing_30d": {
+                  "settled": 44,
+                  "wins": 9,
+                  "losses": 35,
+                  "voids": 0,
+                  "slates": 21,
+                  "net_units": 9.55,
+                  "roi": 0.21704545454545457,
+                  "hit_rate": 0.20454545454545456
+                },
+                "trailing_14d": {
+                  "settled": 22,
+                  "wins": 5,
+                  "losses": 17,
+                  "voids": 0,
+                  "slates": 11,
+                  "net_units": 5.92,
+                  "roi": 0.2690909090909091,
+                  "hit_rate": 0.22727272727272727
+                }
+              },
+              "weighted_expected_return": 0.13211382113821138
             }
           ],
           "selections": [
@@ -18693,7 +18786,8 @@
                   "roi": 0.15227272727272728,
                   "hit_rate": 0.1590909090909091
                 }
-              }
+              },
+              "weighted_expected_return": 0.1891402714932127
             }
           ],
           "selections": [
@@ -18816,45 +18910,6 @@
           "qualified_cells": [
             {
               "checkpoint": "1117",
-              "book": "DraftKings",
-              "form_id": "400p",
-              "form": "0.400+",
-              "label": "1117 · DraftKings best price · 0.400+",
-              "evidence": {
-                "all_time": {
-                  "settled": 103,
-                  "wins": 22,
-                  "losses": 81,
-                  "voids": 2,
-                  "slates": 39,
-                  "net_units": 22.38,
-                  "roi": 0.2172815533980582,
-                  "hit_rate": 0.21359223300970873
-                },
-                "trailing_30d": {
-                  "settled": 82,
-                  "wins": 16,
-                  "losses": 66,
-                  "voids": 1,
-                  "slates": 28,
-                  "net_units": 7.32,
-                  "roi": 0.08926829268292681,
-                  "hit_rate": 0.1951219512195122
-                },
-                "trailing_14d": {
-                  "settled": 42,
-                  "wins": 9,
-                  "losses": 33,
-                  "voids": 1,
-                  "slates": 13,
-                  "net_units": 4.76,
-                  "roi": 0.11333333333333333,
-                  "hit_rate": 0.21428571428571427
-                }
-              }
-            },
-            {
-              "checkpoint": "1117",
               "book": "BetMGM",
               "form_id": "200_299",
               "form": "0.200–0.299",
@@ -18890,7 +18945,48 @@
                   "roi": 0.10425531914893618,
                   "hit_rate": 0.1702127659574468
                 }
-              }
+              },
+              "weighted_expected_return": 0.1956521739130435
+            },
+            {
+              "checkpoint": "1117",
+              "book": "DraftKings",
+              "form_id": "400p",
+              "form": "0.400+",
+              "label": "1117 · DraftKings best price · 0.400+",
+              "evidence": {
+                "all_time": {
+                  "settled": 103,
+                  "wins": 22,
+                  "losses": 81,
+                  "voids": 2,
+                  "slates": 39,
+                  "net_units": 22.38,
+                  "roi": 0.2172815533980582,
+                  "hit_rate": 0.21359223300970873
+                },
+                "trailing_30d": {
+                  "settled": 82,
+                  "wins": 16,
+                  "losses": 66,
+                  "voids": 1,
+                  "slates": 28,
+                  "net_units": 7.32,
+                  "roi": 0.08926829268292681,
+                  "hit_rate": 0.1951219512195122
+                },
+                "trailing_14d": {
+                  "settled": 42,
+                  "wins": 9,
+                  "losses": 33,
+                  "voids": 1,
+                  "slates": 13,
+                  "net_units": 4.76,
+                  "roi": 0.11333333333333333,
+                  "hit_rate": 0.21428571428571427
+                }
+              },
+              "weighted_expected_return": 0.15180616740088107
             }
           ],
           "selections": [
@@ -18993,7 +19089,8 @@
                   "roi": 0.43478260869565216,
                   "hit_rate": 0.13043478260869565
                 }
-              }
+              },
+              "weighted_expected_return": 0.2528481012658228
             }
           ],
           "selections": [
@@ -19116,42 +19213,43 @@
           "qualified_cells": [
             {
               "checkpoint": "1117",
-              "book": "FanDuel",
-              "form_id": "300_399",
-              "form": "0.300–0.399",
-              "label": "1117 · FanDuel best price · 0.300–0.399",
+              "book": "DraftKings",
+              "form_id": "400p",
+              "form": "0.400+",
+              "label": "1117 · DraftKings best price · 0.400+",
               "evidence": {
                 "all_time": {
-                  "settled": 190,
-                  "wins": 34,
-                  "losses": 156,
-                  "voids": 14,
-                  "slates": 41,
-                  "net_units": 9.7,
-                  "roi": 0.051052631578947384,
-                  "hit_rate": 0.17894736842105263
+                  "settled": 104,
+                  "wins": 22,
+                  "losses": 82,
+                  "voids": 2,
+                  "slates": 40,
+                  "net_units": 21.38,
+                  "roi": 0.20557692307692305,
+                  "hit_rate": 0.21153846153846154
                 },
                 "trailing_30d": {
-                  "settled": 112,
-                  "wins": 20,
-                  "losses": 92,
-                  "voids": 11,
+                  "settled": 81,
+                  "wins": 16,
+                  "losses": 65,
+                  "voids": 1,
                   "slates": 28,
-                  "net_units": 2.8,
-                  "roi": 0.025000000000000022,
-                  "hit_rate": 0.17857142857142858
+                  "net_units": 8.32,
+                  "roi": 0.10271604938271603,
+                  "hit_rate": 0.19753086419753085
                 },
                 "trailing_14d": {
-                  "settled": 54,
-                  "wins": 12,
-                  "losses": 42,
-                  "voids": 6,
+                  "settled": 41,
+                  "wins": 9,
+                  "losses": 32,
+                  "voids": 1,
                   "slates": 13,
-                  "net_units": 15.5,
-                  "roi": 0.2870370370370371,
-                  "hit_rate": 0.2222222222222222
+                  "net_units": 5.76,
+                  "roi": 0.14048780487804877,
+                  "hit_rate": 0.21951219512195122
                 }
-              }
+              },
+              "weighted_expected_return": 0.15690265486725663
             },
             {
               "checkpoint": "1117",
@@ -19190,46 +19288,48 @@
                   "roi": 0.2217391304347826,
                   "hit_rate": 0.17391304347826086
                 }
-              }
+              },
+              "weighted_expected_return": 0.11070422535211266
             },
             {
               "checkpoint": "1117",
-              "book": "DraftKings",
-              "form_id": "400p",
-              "form": "0.400+",
-              "label": "1117 · DraftKings best price · 0.400+",
+              "book": "FanDuel",
+              "form_id": "300_399",
+              "form": "0.300–0.399",
+              "label": "1117 · FanDuel best price · 0.300–0.399",
               "evidence": {
                 "all_time": {
-                  "settled": 104,
-                  "wins": 22,
-                  "losses": 82,
-                  "voids": 2,
-                  "slates": 40,
-                  "net_units": 21.38,
-                  "roi": 0.20557692307692305,
-                  "hit_rate": 0.21153846153846154
+                  "settled": 190,
+                  "wins": 34,
+                  "losses": 156,
+                  "voids": 14,
+                  "slates": 41,
+                  "net_units": 9.7,
+                  "roi": 0.051052631578947384,
+                  "hit_rate": 0.17894736842105263
                 },
                 "trailing_30d": {
-                  "settled": 81,
-                  "wins": 16,
-                  "losses": 65,
-                  "voids": 1,
+                  "settled": 112,
+                  "wins": 20,
+                  "losses": 92,
+                  "voids": 11,
                   "slates": 28,
-                  "net_units": 8.32,
-                  "roi": 0.10271604938271603,
-                  "hit_rate": 0.19753086419753085
+                  "net_units": 2.8,
+                  "roi": 0.025000000000000022,
+                  "hit_rate": 0.17857142857142858
                 },
                 "trailing_14d": {
-                  "settled": 41,
-                  "wins": 9,
-                  "losses": 32,
-                  "voids": 1,
+                  "settled": 54,
+                  "wins": 12,
+                  "losses": 42,
+                  "voids": 6,
                   "slates": 13,
-                  "net_units": 5.76,
-                  "roi": 0.14048780487804877,
-                  "hit_rate": 0.21951219512195122
+                  "net_units": 15.5,
+                  "roi": 0.2870370370370371,
+                  "hit_rate": 0.2222222222222222
                 }
-              }
+              },
+              "weighted_expected_return": 0.07865168539325842
             }
           ],
           "selections": [
@@ -19387,7 +19487,8 @@
                   "roi": 0.6630434782608695,
                   "hit_rate": 0.17391304347826086
                 }
-              }
+              },
+              "weighted_expected_return": 0.2921383647798742
             }
           ],
           "selections": [
@@ -19455,42 +19556,43 @@
           "qualified_cells": [
             {
               "checkpoint": "1117",
-              "book": "FanDuel",
-              "form_id": "300_399",
-              "form": "0.300–0.399",
-              "label": "1117 · FanDuel best price · 0.300–0.399",
+              "book": "DraftKings",
+              "form_id": "400p",
+              "form": "0.400+",
+              "label": "1117 · DraftKings best price · 0.400+",
               "evidence": {
                 "all_time": {
-                  "settled": 191,
-                  "wins": 34,
-                  "losses": 157,
-                  "voids": 14,
-                  "slates": 42,
-                  "net_units": 8.7,
-                  "roi": 0.0455497382198953,
-                  "hit_rate": 0.17801047120418848
+                  "settled": 106,
+                  "wins": 22,
+                  "losses": 84,
+                  "voids": 3,
+                  "slates": 41,
+                  "net_units": 19.38,
+                  "roi": 0.18283018867924525,
+                  "hit_rate": 0.20754716981132076
                 },
                 "trailing_30d": {
-                  "settled": 108,
-                  "wins": 19,
-                  "losses": 89,
-                  "voids": 11,
+                  "settled": 81,
+                  "wins": 16,
+                  "losses": 65,
+                  "voids": 2,
                   "slates": 28,
-                  "net_units": 2.6,
-                  "roi": 0.024074074074074095,
-                  "hit_rate": 0.17592592592592593
+                  "net_units": 8.32,
+                  "roi": 0.10271604938271603,
+                  "hit_rate": 0.19753086419753085
                 },
                 "trailing_14d": {
-                  "settled": 53,
-                  "wins": 12,
-                  "losses": 41,
-                  "voids": 5,
+                  "settled": 40,
+                  "wins": 9,
+                  "losses": 31,
+                  "voids": 2,
                   "slates": 13,
-                  "net_units": 16.5,
-                  "roi": 0.3113207547169811,
-                  "hit_rate": 0.22641509433962265
+                  "net_units": 6.76,
+                  "roi": 0.16899999999999998,
+                  "hit_rate": 0.225
                 }
-              }
+              },
+              "weighted_expected_return": 0.15180616740088107
             },
             {
               "checkpoint": "1117",
@@ -19529,46 +19631,48 @@
                   "roi": 0.2217391304347826,
                   "hit_rate": 0.17391304347826086
                 }
-              }
+              },
+              "weighted_expected_return": 0.09098591549295774
             },
             {
               "checkpoint": "1117",
-              "book": "DraftKings",
-              "form_id": "400p",
-              "form": "0.400+",
-              "label": "1117 · DraftKings best price · 0.400+",
+              "book": "FanDuel",
+              "form_id": "300_399",
+              "form": "0.300–0.399",
+              "label": "1117 · FanDuel best price · 0.300–0.399",
               "evidence": {
                 "all_time": {
-                  "settled": 106,
-                  "wins": 22,
-                  "losses": 84,
-                  "voids": 3,
-                  "slates": 41,
-                  "net_units": 19.38,
-                  "roi": 0.18283018867924525,
-                  "hit_rate": 0.20754716981132076
+                  "settled": 191,
+                  "wins": 34,
+                  "losses": 157,
+                  "voids": 14,
+                  "slates": 42,
+                  "net_units": 8.7,
+                  "roi": 0.0455497382198953,
+                  "hit_rate": 0.17801047120418848
                 },
                 "trailing_30d": {
-                  "settled": 81,
-                  "wins": 16,
-                  "losses": 65,
-                  "voids": 2,
+                  "settled": 108,
+                  "wins": 19,
+                  "losses": 89,
+                  "voids": 11,
                   "slates": 28,
-                  "net_units": 8.32,
-                  "roi": 0.10271604938271603,
-                  "hit_rate": 0.19753086419753085
+                  "net_units": 2.6,
+                  "roi": 0.024074074074074095,
+                  "hit_rate": 0.17592592592592593
                 },
                 "trailing_14d": {
-                  "settled": 40,
-                  "wins": 9,
-                  "losses": 31,
-                  "voids": 2,
+                  "settled": 53,
+                  "wins": 12,
+                  "losses": 41,
+                  "voids": 5,
                   "slates": 13,
-                  "net_units": 6.76,
-                  "roi": 0.16899999999999998,
-                  "hit_rate": 0.225
+                  "net_units": 16.5,
+                  "roi": 0.3113207547169811,
+                  "hit_rate": 0.22641509433962265
                 }
-              }
+              },
+              "weighted_expected_return": 0.07897727272727273
             }
           ],
           "selections": [
@@ -19726,7 +19830,8 @@
                   "roi": 0.59375,
                   "hit_rate": 0.16666666666666666
                 }
-              }
+              },
+              "weighted_expected_return": 0.3003164556962025
             }
           ],
           "selections": [
@@ -19849,6 +19954,46 @@
           "qualified_cells": [
             {
               "checkpoint": "1117",
+              "book": "DraftKings",
+              "form_id": "400p",
+              "form": "0.400+",
+              "label": "1117 · DraftKings best price · 0.400+",
+              "evidence": {
+                "all_time": {
+                  "settled": 109,
+                  "wins": 23,
+                  "losses": 86,
+                  "voids": 3,
+                  "slates": 42,
+                  "net_units": 21.15,
+                  "roi": 0.19403669724770636,
+                  "hit_rate": 0.21100917431192662
+                },
+                "trailing_30d": {
+                  "settled": 81,
+                  "wins": 17,
+                  "losses": 64,
+                  "voids": 2,
+                  "slates": 28,
+                  "net_units": 13.09,
+                  "roi": 0.1616049382716049,
+                  "hit_rate": 0.20987654320987653
+                },
+                "trailing_14d": {
+                  "settled": 40,
+                  "wins": 9,
+                  "losses": 31,
+                  "voids": 2,
+                  "slates": 13,
+                  "net_units": 7.27,
+                  "roi": 0.18175,
+                  "hit_rate": 0.225
+                }
+              },
+              "weighted_expected_return": 0.1804782608695652
+            },
+            {
+              "checkpoint": "1117",
               "book": "FanDuel",
               "form_id": "300_399",
               "form": "0.300–0.399",
@@ -19884,7 +20029,8 @@
                   "roi": 0.455,
                   "hit_rate": 0.25
                 }
-              }
+              },
+              "weighted_expected_return": 0.17081081081081081
             },
             {
               "checkpoint": "1117",
@@ -19923,46 +20069,8 @@
                   "roi": 0.3069767441860465,
                   "hit_rate": 0.18604651162790697
                 }
-              }
-            },
-            {
-              "checkpoint": "1117",
-              "book": "DraftKings",
-              "form_id": "400p",
-              "form": "0.400+",
-              "label": "1117 · DraftKings best price · 0.400+",
-              "evidence": {
-                "all_time": {
-                  "settled": 109,
-                  "wins": 23,
-                  "losses": 86,
-                  "voids": 3,
-                  "slates": 42,
-                  "net_units": 21.15,
-                  "roi": 0.19403669724770636,
-                  "hit_rate": 0.21100917431192662
-                },
-                "trailing_30d": {
-                  "settled": 81,
-                  "wins": 17,
-                  "losses": 64,
-                  "voids": 2,
-                  "slates": 28,
-                  "net_units": 13.09,
-                  "roi": 0.1616049382716049,
-                  "hit_rate": 0.20987654320987653
-                },
-                "trailing_14d": {
-                  "settled": 40,
-                  "wins": 9,
-                  "losses": 31,
-                  "voids": 2,
-                  "slates": 13,
-                  "net_units": 7.27,
-                  "roi": 0.18175,
-                  "hit_rate": 0.225
-                }
-              }
+              },
+              "weighted_expected_return": 0.0971671388101983
             }
           ],
           "selections": [
@@ -20120,7 +20228,8 @@
                   "roi": 1.2375,
                   "hit_rate": 0.25
                 }
-              }
+              },
+              "weighted_expected_return": 0.4147798742138365
             }
           ],
           "selections": [
@@ -20223,7 +20332,8 @@
                   "roi": 0.4311475409836066,
                   "hit_rate": 0.2459016393442623
                 }
-              }
+              },
+              "weighted_expected_return": 0.13227513227513227
             },
             {
               "checkpoint": "1117",
@@ -20262,7 +20372,8 @@
                   "roi": 0.31363636363636366,
                   "hit_rate": 0.18181818181818182
                 }
-              }
+              },
+              "weighted_expected_return": 0.11730769230769232
             }
           ],
           "selections": [
@@ -20420,7 +20531,8 @@
                   "roi": 0.34714285714285714,
                   "hit_rate": 0.23809523809523808
                 }
-              }
+              },
+              "weighted_expected_return": 0.12060150375939849
             }
           ],
           "selections": [
@@ -20488,45 +20600,6 @@
           "qualified_cells": [
             {
               "checkpoint": "1117",
-              "book": "FanDuel",
-              "form_id": "300_399",
-              "form": "0.300–0.399",
-              "label": "1117 · FanDuel best price · 0.300–0.399",
-              "evidence": {
-                "all_time": {
-                  "settled": 212,
-                  "wins": 39,
-                  "losses": 173,
-                  "voids": 14,
-                  "slates": 45,
-                  "net_units": 17.8,
-                  "roi": 0.0839622641509434,
-                  "hit_rate": 0.18396226415094338
-                },
-                "trailing_30d": {
-                  "settled": 114,
-                  "wins": 23,
-                  "losses": 91,
-                  "voids": 10,
-                  "slates": 27,
-                  "net_units": 21.5,
-                  "roi": 0.18859649122807018,
-                  "hit_rate": 0.20175438596491227
-                },
-                "trailing_14d": {
-                  "settled": 63,
-                  "wins": 16,
-                  "losses": 47,
-                  "voids": 2,
-                  "slates": 12,
-                  "net_units": 30.8,
-                  "roi": 0.4888888888888889,
-                  "hit_rate": 0.25396825396825395
-                }
-              }
-            },
-            {
-              "checkpoint": "1117",
               "book": "DraftKings",
               "form_id": "400p",
               "form": "0.400+",
@@ -20562,7 +20635,48 @@
                   "roi": 0.18425,
                   "hit_rate": 0.225
                 }
-              }
+              },
+              "weighted_expected_return": 0.19088983050847455
+            },
+            {
+              "checkpoint": "1117",
+              "book": "FanDuel",
+              "form_id": "300_399",
+              "form": "0.300–0.399",
+              "label": "1117 · FanDuel best price · 0.300–0.399",
+              "evidence": {
+                "all_time": {
+                  "settled": 212,
+                  "wins": 39,
+                  "losses": 173,
+                  "voids": 14,
+                  "slates": 45,
+                  "net_units": 17.8,
+                  "roi": 0.0839622641509434,
+                  "hit_rate": 0.18396226415094338
+                },
+                "trailing_30d": {
+                  "settled": 114,
+                  "wins": 23,
+                  "losses": 91,
+                  "voids": 10,
+                  "slates": 27,
+                  "net_units": 21.5,
+                  "roi": 0.18859649122807018,
+                  "hit_rate": 0.20175438596491227
+                },
+                "trailing_14d": {
+                  "settled": 63,
+                  "wins": 16,
+                  "losses": 47,
+                  "voids": 2,
+                  "slates": 12,
+                  "net_units": 30.8,
+                  "roi": 0.4888888888888889,
+                  "hit_rate": 0.25396825396825395
+                }
+              },
+              "weighted_expected_return": 0.18020565552699228
             }
           ],
           "selections": [
@@ -20720,7 +20834,8 @@
                   "roi": 0.34714285714285714,
                   "hit_rate": 0.23809523809523808
                 }
-              }
+              },
+              "weighted_expected_return": 0.13770992366412213
             }
           ],
           "selections": [
@@ -20788,45 +20903,6 @@
           "qualified_cells": [
             {
               "checkpoint": "1117",
-              "book": "FanDuel",
-              "form_id": "300_399",
-              "form": "0.300–0.399",
-              "label": "1117 · FanDuel best price · 0.300–0.399",
-              "evidence": {
-                "all_time": {
-                  "settled": 218,
-                  "wins": 39,
-                  "losses": 179,
-                  "voids": 15,
-                  "slates": 46,
-                  "net_units": 11.8,
-                  "roi": 0.05412844036697248,
-                  "hit_rate": 0.17889908256880735
-                },
-                "trailing_30d": {
-                  "settled": 113,
-                  "wins": 23,
-                  "losses": 90,
-                  "voids": 11,
-                  "slates": 27,
-                  "net_units": 22.5,
-                  "roi": 0.19911504424778761,
-                  "hit_rate": 0.20353982300884957
-                },
-                "trailing_14d": {
-                  "settled": 66,
-                  "wins": 16,
-                  "losses": 50,
-                  "voids": 3,
-                  "slates": 12,
-                  "net_units": 27.8,
-                  "roi": 0.4212121212121212,
-                  "hit_rate": 0.24242424242424243
-                }
-              }
-            },
-            {
-              "checkpoint": "1117",
               "book": "DraftKings",
               "form_id": "400p",
               "form": "0.400+",
@@ -20862,7 +20938,48 @@
                   "roi": 0.35404761904761906,
                   "hit_rate": 0.23809523809523808
                 }
-              }
+              },
+              "weighted_expected_return": 0.2611570247933884
+            },
+            {
+              "checkpoint": "1117",
+              "book": "FanDuel",
+              "form_id": "300_399",
+              "form": "0.300–0.399",
+              "label": "1117 · FanDuel best price · 0.300–0.399",
+              "evidence": {
+                "all_time": {
+                  "settled": 218,
+                  "wins": 39,
+                  "losses": 179,
+                  "voids": 15,
+                  "slates": 46,
+                  "net_units": 11.8,
+                  "roi": 0.05412844036697248,
+                  "hit_rate": 0.17889908256880735
+                },
+                "trailing_30d": {
+                  "settled": 113,
+                  "wins": 23,
+                  "losses": 90,
+                  "voids": 11,
+                  "slates": 27,
+                  "net_units": 22.5,
+                  "roi": 0.19911504424778761,
+                  "hit_rate": 0.20353982300884957
+                },
+                "trailing_14d": {
+                  "settled": 66,
+                  "wins": 16,
+                  "losses": 50,
+                  "voids": 3,
+                  "slates": 12,
+                  "net_units": 27.8,
+                  "roi": 0.4212121212121212,
+                  "hit_rate": 0.24242424242424243
+                }
+              },
+              "weighted_expected_return": 0.15642317380352644
             }
           ],
           "selections": [
@@ -21020,7 +21137,8 @@
                   "roi": 0.8695,
                   "hit_rate": 0.3
                 }
-              }
+              },
+              "weighted_expected_return": 0.33590909090909093
             }
           ],
           "selections": [
@@ -21143,6 +21261,46 @@
           "qualified_cells": [
             {
               "checkpoint": "1117",
+              "book": "DraftKings",
+              "form_id": "400p",
+              "form": "0.400+",
+              "label": "1117 · DraftKings best price · 0.400+",
+              "evidence": {
+                "all_time": {
+                  "settled": 121,
+                  "wins": 25,
+                  "losses": 96,
+                  "voids": 4,
+                  "slates": 47,
+                  "net_units": 23.37,
+                  "roi": 0.19314049586776857,
+                  "hit_rate": 0.2066115702479339
+                },
+                "trailing_30d": {
+                  "settled": 81,
+                  "wins": 18,
+                  "losses": 63,
+                  "voids": 3,
+                  "slates": 29,
+                  "net_units": 22.96,
+                  "roi": 0.28345679012345676,
+                  "hit_rate": 0.2222222222222222
+                },
+                "trailing_14d": {
+                  "settled": 41,
+                  "wins": 8,
+                  "losses": 33,
+                  "voids": 3,
+                  "slates": 13,
+                  "net_units": 5.87,
+                  "roi": 0.1431707317073171,
+                  "hit_rate": 0.1951219512195122
+                }
+              },
+              "weighted_expected_return": 0.21481481481481482
+            },
+            {
+              "checkpoint": "1117",
               "book": "FanDuel",
               "form_id": "100_199",
               "form": "0.100–0.199",
@@ -21178,7 +21336,8 @@
                   "roi": 0.6976744186046512,
                   "hit_rate": 0.23255813953488372
                 }
-              }
+              },
+              "weighted_expected_return": 0.18725761772853183
             },
             {
               "checkpoint": "1117",
@@ -21217,46 +21376,8 @@
                   "roi": 0.4212121212121212,
                   "hit_rate": 0.24242424242424243
                 }
-              }
-            },
-            {
-              "checkpoint": "1117",
-              "book": "DraftKings",
-              "form_id": "400p",
-              "form": "0.400+",
-              "label": "1117 · DraftKings best price · 0.400+",
-              "evidence": {
-                "all_time": {
-                  "settled": 121,
-                  "wins": 25,
-                  "losses": 96,
-                  "voids": 4,
-                  "slates": 47,
-                  "net_units": 23.37,
-                  "roi": 0.19314049586776857,
-                  "hit_rate": 0.2066115702479339
-                },
-                "trailing_30d": {
-                  "settled": 81,
-                  "wins": 18,
-                  "losses": 63,
-                  "voids": 3,
-                  "slates": 29,
-                  "net_units": 22.96,
-                  "roi": 0.28345679012345676,
-                  "hit_rate": 0.2222222222222222
-                },
-                "trailing_14d": {
-                  "settled": 41,
-                  "wins": 8,
-                  "losses": 33,
-                  "voids": 3,
-                  "slates": 13,
-                  "net_units": 5.87,
-                  "roi": 0.1431707317073171,
-                  "hit_rate": 0.1951219512195122
-                }
-              }
+              },
+              "weighted_expected_return": 0.1506265664160401
             }
           ],
           "selections": [
@@ -21414,7 +21535,8 @@
                   "roi": 0.6238095238095239,
                   "hit_rate": 0.2857142857142857
                 }
-              }
+              },
+              "weighted_expected_return": 0.32727272727272727
             },
             {
               "checkpoint": "0817",
@@ -21453,7 +21575,8 @@
                   "roi": 0.13260869565217392,
                   "hit_rate": 0.17391304347826086
                 }
-              }
+              },
+              "weighted_expected_return": 0.16027667984189722
             }
           ],
           "selections": [
@@ -21576,6 +21699,46 @@
           "qualified_cells": [
             {
               "checkpoint": "1117",
+              "book": "DraftKings",
+              "form_id": "400p",
+              "form": "0.400+",
+              "label": "1117 · DraftKings best price · 0.400+",
+              "evidence": {
+                "all_time": {
+                  "settled": 123,
+                  "wins": 26,
+                  "losses": 97,
+                  "voids": 4,
+                  "slates": 48,
+                  "net_units": 27.12,
+                  "roi": 0.22048780487804875,
+                  "hit_rate": 0.21138211382113822
+                },
+                "trailing_30d": {
+                  "settled": 79,
+                  "wins": 17,
+                  "losses": 62,
+                  "voids": 3,
+                  "slates": 29,
+                  "net_units": 15.08,
+                  "roi": 0.1908860759493671,
+                  "hit_rate": 0.21518987341772153
+                },
+                "trailing_14d": {
+                  "settled": 43,
+                  "wins": 9,
+                  "losses": 34,
+                  "voids": 3,
+                  "slates": 14,
+                  "net_units": 9.62,
+                  "roi": 0.22372093023255815,
+                  "hit_rate": 0.20930232558139536
+                }
+              },
+              "weighted_expected_return": 0.21151020408163265
+            },
+            {
+              "checkpoint": "1117",
               "book": "FanDuel",
               "form_id": "100_199",
               "form": "0.100–0.199",
@@ -21611,7 +21774,8 @@
                   "roi": 0.43137254901960786,
                   "hit_rate": 0.19607843137254902
                 }
-              }
+              },
+              "weighted_expected_return": 0.1308707124010554
             },
             {
               "checkpoint": "1117",
@@ -21650,46 +21814,8 @@
                   "roi": 0.37941176470588234,
                   "hit_rate": 0.23529411764705882
                 }
-              }
-            },
-            {
-              "checkpoint": "1117",
-              "book": "DraftKings",
-              "form_id": "400p",
-              "form": "0.400+",
-              "label": "1117 · DraftKings best price · 0.400+",
-              "evidence": {
-                "all_time": {
-                  "settled": 123,
-                  "wins": 26,
-                  "losses": 97,
-                  "voids": 4,
-                  "slates": 48,
-                  "net_units": 27.12,
-                  "roi": 0.22048780487804875,
-                  "hit_rate": 0.21138211382113822
-                },
-                "trailing_30d": {
-                  "settled": 79,
-                  "wins": 17,
-                  "losses": 62,
-                  "voids": 3,
-                  "slates": 29,
-                  "net_units": 15.08,
-                  "roi": 0.1908860759493671,
-                  "hit_rate": 0.21518987341772153
-                },
-                "trailing_14d": {
-                  "settled": 43,
-                  "wins": 9,
-                  "losses": 34,
-                  "voids": 3,
-                  "slates": 14,
-                  "net_units": 9.62,
-                  "roi": 0.22372093023255815,
-                  "hit_rate": 0.20930232558139536
-                }
-              }
+              },
+              "weighted_expected_return": 0.11521197007481297
             }
           ],
           "selections": [
@@ -21847,7 +21973,8 @@
                   "roi": 0.5652173913043478,
                   "hit_rate": 0.2608695652173913
                 }
-              }
+              },
+              "weighted_expected_return": 0.29251798561151077
             }
           ],
           "selections": []
