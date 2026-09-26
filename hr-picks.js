@@ -98,13 +98,19 @@ function ledgerTable(daily, mode) {
   const body = [...daily].reverse().map((day) => {
     let modeText = day.mode || mode || "-";
     if (mode === "combined" && day.sources) modeText = "P " + Number(day.sources.primary || 0) + " / C " + Number(day.sources.companion || 0);
-    return '<tr><td><b>' + esc(day.slate_date) + '</b></td><td><span class="pill">' + esc(modeText) +
+    const selections = Array.isArray(day.selections) ? day.selections : [];
+    const summaryRow = '<tr><td><b>' + esc(day.slate_date) + '</b></td><td><span class="pill">' + esc(modeText) +
       '</span></td><td>' + Number(day.bets || 0) + '</td><td>' + esc(record(day)) + '</td><td class="' +
       (Number(day.net_units || 0) >= 0 ? "plus" : "loss") + '">' + units(day.net_units) + '</td><td class="' +
       (Number(day.roi || 0) >= 0 ? "plus" : "loss") + '">' + pct(day.roi) + '</td><td class="' +
       (Number((day.cumulative || {}).net_units || 0) >= 0 ? "plus" : "loss") + '">' +
       units((day.cumulative || {}).net_units) + '<div class="muted">' + pct((day.cumulative || {}).roi) +
       '</div></td></tr>';
+    const detail = selections.length
+      ? '<tr class="hrp-ledger-detail"><td colspan="7"><div class="hrp-ledger-label">Actual picks · ' +
+        selections.length + '</div>' + picksTable(selections, { showStrategy: mode === "combined" }) + '</td></tr>'
+      : '<tr class="hrp-ledger-detail"><td colspan="7"><div class="empty">No player-level selections were saved for this ledger row.</div></td></tr>';
+    return summaryRow + detail;
   }).join("");
   return '<div class="tablewrap"><table class="hrp-table"><thead><tr><th>Date</th><th>' + label +
     '</th><th>Bets</th><th>Record</th><th>Net</th><th>ROI</th><th>Cumulative</th></tr></thead><tbody>' +
@@ -127,6 +133,31 @@ function currentStatusMessage(current, readyText) {
   if (current.status === "checkpoint_pending") return "Waiting for the 17:17 archive.";
   if (current.status === "checkpoint_missed") return "17:17 checkpoint missed. Exact archived odds are unavailable; no later odds were substituted and no ledger pick was created.";
   return readyText;
+}
+
+function currentPicksTable(current, daily, options) {
+  current = current || {};
+  daily = daily || [];
+  const currentRows = Array.isArray(current.picks) ? current.picks : [];
+  if (currentRows.length) return picksTable(currentRows, options);
+
+  const sameDay = [...daily].reverse().find((day) =>
+    day && day.slate_date === current.slate_date && Array.isArray(day.selections) && day.selections.length
+  );
+  if (sameDay) {
+    return '<div class="notice"><b>Recovered from the saved ledger snapshot:</b> current.picks was empty, but the same-day frozen selections are present in the ledger.</div>' +
+      picksTable(sameDay.selections, options);
+  }
+
+  const latest = [...daily].reverse().find((day) =>
+    day && Array.isArray(day.selections) && day.selections.length
+  );
+  if (latest) {
+    return '<div class="empty">No picks are frozen for ' + esc(current.slate_date || "the current slate") +
+      ' yet. Most recent frozen slate: <b>' + esc(latest.slate_date) + '</b>.</div>' +
+      picksTable(latest.selections, options);
+  }
+  return picksTable([], options);
 }
 
 function renderBody(primary, companion, portfolio, experimental) {
@@ -185,12 +216,12 @@ function renderBody(primary, companion, portfolio, experimental) {
 
   html += '<section class="card section"><div class="eyebrow">PRIMARY | TODAY</div><h2>' + esc(pCurrent.slate_date || "Today") +
     ' · 17:17 ET</h2><p class="muted">' + currentStatusMessage(pCurrent, "Primary selections are frozen for forward tracking.") +
-    '</p>' + picksTable(pCurrent.picks || []) + '</section>';
+    '</p>' + currentPicksTable(pCurrent, (primary.forward || {}).daily || []) + '</section>';
 
   html += '<section class="card section"><div class="eyebrow">COMPANION | TODAY</div><h2>' + esc(cCurrent.slate_date || pCurrent.slate_date || "Today") +
     ' · 17:17 ET</h2><p class="muted">' + (!companion ? "Fixed companion data will appear after the next Discovery rebuild." :
     currentStatusMessage(cCurrent, "Volume selections are independently frozen for forward tracking.")) +
-    '</p>' + (companion ? picksTable(cCurrent.picks || []) : '<div class="empty">Awaiting fixed companion build.</div>') + '</section>';
+    '</p>' + (companion ? currentPicksTable(cCurrent, ((companion.forward || {}).daily || [])) : '<div class="empty">Awaiting fixed companion build.</div>') + '</section>';
 
   html += '<section class="card section"><div class="eyebrow">PRIMARY | DAILY LEDGER</div><h2>Selective rule record</h2>' +
     '<div class="hrp-stats">' + metricCard("Forward ROI", pForward) +
@@ -212,7 +243,7 @@ function renderBody(primary, companion, portfolio, experimental) {
     '<article class="hrp-stat"><span>Profitable slates</span><strong>' + Number(portForward.profitable_slates || 0) + '</strong><small>Forward only</small></article>' +
     '<article class="hrp-stat"><span>Overlap deduped</span><strong>' + Number((portfolio || {}).overlap_deduped || 0) + '</strong><small>Same player / slate</small></article></div>' +
     (portfolio ? ledgerTable(((portfolio.forward || {}).daily || []), "combined") : '<div class="empty">Combined ledger will appear after the next Discovery rebuild.</div>') +
-    '<details><summary>Today combined selections</summary>' + (portfolio ? picksTable(portCurrent.picks || [], { showStrategy: true }) : '<div class="empty">Awaiting portfolio build.</div>') + '</details></section>';
+    '<details open><summary>Current combined selections</summary>' + (portfolio ? currentPicksTable(portCurrent, ((portfolio.forward || {}).daily || []), { showStrategy: true }) : '<div class="empty">Awaiting portfolio build.</div>') + '</details></section>';
 
   html += '<section class="card section"><div class="eyebrow">FIXED-RULE EVIDENCE</div><h2>Calibration and diagnostic context</h2>' +
     '<p class="muted">These historical panels describe why the rules were chosen. They do not alter the rules or enter the prospective ledgers.</p>' +
@@ -228,7 +259,7 @@ function renderBody(primary, companion, portfolio, experimental) {
     '<article class="hrp-stat"><span>Selection cap</span><strong>NONE</strong><small>Evidence-gated qualifiers</small></article>' +
     '<article class="hrp-stat"><span>Portfolio impact</span><strong>NONE</strong><small>Tracked separately</small></article></div>' +
     (experimental ? experimentalCheckpointCards(expCurrent) : '<div class="empty">Experimental data unavailable.</div>') +
-    (experimental ? picksTable(expCurrent.picks || [], { showCell: true }) : '') +
+    (experimental ? currentPicksTable(expCurrent, ((experimental.forward || {}).daily || []), { showCell: true }) : '') +
     '<details><summary>Experimental daily ledger</summary>' + (experimental ? ledgerTable(((experimental.forward || {}).daily || []), "experimental") : '') + '</details></section>';
 
   html += '<section class="card section"><div class="eyebrow">EXECUTION GUARDRAILS</div><h2>What is frozen</h2><table><tbody>' +
@@ -283,6 +314,9 @@ style.textContent = [
   ".hrp-stat strong{display:block;font-size:1.35rem;margin:6px 0}",
   ".hrp-stat small{color:var(--muted,#8492a6)}",
   ".hrp-table .muted{font-size:.78rem;margin-top:3px}",
+  ".hrp-ledger-detail>td{padding:10px 0 20px}",
+  ".hrp-ledger-detail .tablewrap{margin-top:8px}",
+  ".hrp-ledger-label{font-weight:800;margin:2px 0 8px}",
   ".hrp-root details{margin-top:16px}",
   ".hrp-root summary{cursor:pointer;font-weight:700}",
   ".hrp-combined{border-width:2px}",
