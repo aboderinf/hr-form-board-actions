@@ -222,7 +222,11 @@ module.exports = async function handler(request, response) {
     return response.status(405).json({ status: "error", message: "Method not allowed" });
   }
 
-  if (String(request.query?.action || "") === "hr-picks-live") {\n    return require("../lib/hr-picks-live-runtime").handleLiveHrPicks(request, response);\n  }\n\n  const view = String(request.query?.view || "");
+  if (String(request.query?.action || "") === "hr-picks-live") {
+    return require("../lib/hr-picks-live-runtime").handleLiveHrPicks(request, response);
+  }
+
+  const view = String(request.query?.view || "");
   if (view === "top100") return handleTop100View(request, response);
   if (view === "discovery-archive") return handleDiscoveryArchiveView(request, response);
 
