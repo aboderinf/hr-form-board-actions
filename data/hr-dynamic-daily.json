@@ -2,7 +2,7 @@
   "schema_version": 1,
   "kind": "hr_dynamic_daily_picks",
   "status": "active",
-  "generated_at": "2026-09-27T18:59:40.330095+00:00",
+  "generated_at": "2026-09-27T23:48:47.098692+00:00",
   "rule": {
     "name": "Dynamic Daily ROI",
     "checkpoints": [
@@ -21986,20 +21986,20 @@
     "start": "2026-09-26",
     "summary": {
       "selections": 8,
-      "bets": 4,
+      "bets": 6,
       "wins": 1,
-      "losses": 3,
+      "losses": 5,
       "voids": 0,
-      "pending": 4,
-      "slates": 1,
+      "pending": 2,
+      "slates": 2,
       "profitable_slates": 1,
-      "losing_slates": 0,
-      "profitable_slate_rate": 1.0,
-      "hit_rate": 0.25,
-      "average_break_even": 0.16295138256464223,
-      "empirical_probability_edge": 0.08704861743535777,
-      "net_units": 1.43,
-      "roi": 0.35749999999999993
+      "losing_slates": 1,
+      "profitable_slate_rate": 0.5,
+      "hit_rate": 0.16666666666666666,
+      "average_break_even": 0.16274964301551342,
+      "empirical_probability_edge": 0.003917023651153234,
+      "net_units": -0.57,
+      "roi": -0.09500000000000004
     },
     "daily": [
       {
@@ -22257,7 +22257,8 @@
         "slate_date": "2026-09-27",
         "checkpoints": [
           "0817",
-          "1117"
+          "1117",
+          "1717"
         ],
         "selections": [
           {
@@ -22311,9 +22312,9 @@
                 }
               }
             },
-            "result": "PENDING",
-            "home_runs": null,
-            "profit_units": 0.0
+            "result": "LOSS",
+            "home_runs": 0,
+            "profit_units": -1.0
           },
           {
             "slate_date": "2026-09-27",
@@ -22366,9 +22367,9 @@
                 }
               }
             },
-            "result": "PENDING",
-            "home_runs": null,
-            "profit_units": 0.0
+            "result": "LOSS",
+            "home_runs": 0,
+            "profit_units": -1.0
           },
           {
             "slate_date": "2026-09-27",
@@ -22481,26 +22482,26 @@
             "profit_units": 0.0
           }
         ],
-        "bets": 0,
+        "bets": 2,
         "wins": 0,
-        "losses": 0,
+        "losses": 2,
         "voids": 0,
-        "pending": 4,
-        "slates": 0,
+        "pending": 2,
+        "slates": 1,
         "profitable_slates": 0,
-        "losing_slates": 0,
-        "profitable_slate_rate": null,
-        "hit_rate": null,
-        "average_break_even": null,
-        "empirical_probability_edge": null,
-        "net_units": 0,
-        "roi": null,
+        "losing_slates": 1,
+        "profitable_slate_rate": 0.0,
+        "hit_rate": 0.0,
+        "average_break_even": 0.16234616391725581,
+        "empirical_probability_edge": -0.16234616391725581,
+        "net_units": -2.0,
+        "roi": -1.0,
         "cumulative": {
-          "bets": 4,
+          "bets": 6,
           "wins": 1,
-          "losses": 3,
-          "net_units": 1.43,
-          "roi": 0.3575
+          "losses": 5,
+          "net_units": -0.57,
+          "roi": -0.09500000000000001
         }
       }
     ],
@@ -23127,9 +23128,9 @@
                 }
               }
             },
-            "result": "PENDING",
-            "home_runs": null,
-            "profit_units": 0.0
+            "result": "LOSS",
+            "home_runs": 0,
+            "profit_units": -1.0
           },
           {
             "slate_date": "2026-09-27",
@@ -23182,9 +23183,9 @@
                 }
               }
             },
-            "result": "PENDING",
-            "home_runs": null,
-            "profit_units": 0.0
+            "result": "LOSS",
+            "home_runs": 0,
+            "profit_units": -1.0
           }
         ]
       },
@@ -23387,6 +23388,14 @@
             "profit_units": 0.0
           }
         ]
+      },
+      {
+        "slate_date": "2026-09-27",
+        "checkpoint": "1717",
+        "mode": "dynamic_daily",
+        "captured_at": "2026-09-27T23:48:44.950092+00:00",
+        "qualified_cells": [],
+        "selections": []
       }
     ]
   },
@@ -23490,9 +23499,9 @@
                 }
               }
             },
-            "result": "PENDING",
-            "home_runs": null,
-            "profit_units": 0.0
+            "result": "LOSS",
+            "home_runs": 0,
+            "profit_units": -1.0
           },
           {
             "slate_date": "2026-09-27",
@@ -23545,9 +23554,9 @@
                 }
               }
             },
-            "result": "PENDING",
-            "home_runs": null,
-            "profit_units": 0.0
+            "result": "LOSS",
+            "home_runs": 0,
+            "profit_units": -1.0
           }
         ]
       },
@@ -23747,6 +23756,11 @@
             "profit_units": 0.0
           }
         ]
+      },
+      {
+        "checkpoint": "1717",
+        "qualified_cells": [],
+        "picks": []
       }
     ],
     "picks": [
@@ -23801,9 +23815,9 @@
             }
           }
         },
-        "result": "PENDING",
-        "home_runs": null,
-        "profit_units": 0.0
+        "result": "LOSS",
+        "home_runs": 0,
+        "profit_units": -1.0
       },
       {
         "slate_date": "2026-09-27",
@@ -23856,9 +23870,9 @@
             }
           }
         },
-        "result": "PENDING",
-        "home_runs": null,
-        "profit_units": 0.0
+        "result": "LOSS",
+        "home_runs": 0,
+        "profit_units": -1.0
       },
       {
         "slate_date": "2026-09-27",
