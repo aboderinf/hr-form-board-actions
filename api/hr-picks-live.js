@@ -5,26 +5,26 @@ const { ensureDiscoveryArchive } = require("../lib/discovery-runtime");
 const CHECKPOINTS = ["0817", "1117", "1717", "2017"];
 const ET = "America/New_York";
 
+const HISTORY_PATH = path.join(process.cwd(), "data", "discovery.json");
+const PRIMARY_PATH = path.join(process.cwd(), "data", "hr-picks.json");
+const COMPANION_PATH = path.join(process.cwd(), "data", "hr-volume-companion.json");
+
 let cachedHistory = null;
 let cachedPrimary = null;
 let cachedCompanion = null;
 
-function loadJson(name) {
-  return JSON.parse(fs.readFileSync(path.join(process.cwd(), "data", name), "utf8"));
-}
-
 function historyData() {
-  if (!cachedHistory) cachedHistory = loadJson("discovery.json");
+  if (!cachedHistory) cachedHistory = JSON.parse(fs.readFileSync(HISTORY_PATH, "utf8"));
   return cachedHistory;
 }
 
 function primaryData() {
-  if (!cachedPrimary) cachedPrimary = loadJson("hr-picks.json");
+  if (!cachedPrimary) cachedPrimary = JSON.parse(fs.readFileSync(PRIMARY_PATH, "utf8"));
   return cachedPrimary;
 }
 
 function companionData() {
-  if (!cachedCompanion) cachedCompanion = loadJson("hr-volume-companion.json");
+  if (!cachedCompanion) cachedCompanion = JSON.parse(fs.readFileSync(COMPANION_PATH, "utf8"));
   return cachedCompanion;
 }
 
