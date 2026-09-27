@@ -216,6 +216,24 @@ async function readLatestRedis() {
   return raw ? JSON.parse(raw) : null;
 }
 
+async function handleHrPicksLive(request, response) {
+  try {
+    const { buildLiveHrPicks } = require("../lib/hr-live-picks");
+    const payload = await buildLiveHrPicks(request.query?.date);
+    response.setHeader("Cache-Control", "no-store");
+    response.setHeader("Access-Control-Allow-Origin", "*");
+    response.setHeader("X-HR-Picks-Source", "canonical-redis-checkpoints");
+    if (request.method === "HEAD") return response.status(200).end();
+    return response.status(200).json(payload);
+  } catch (error) {
+    response.setHeader("Cache-Control", "no-store");
+    return response.status(503).json({
+      status: "live_picks_error",
+      message: error instanceof Error ? error.message : String(error),
+    });
+  }
+}
+
 module.exports = async function handler(request, response) {
   if (request.method !== "GET" && request.method !== "HEAD") {
     response.setHeader("Allow", "GET, HEAD");
@@ -225,6 +243,7 @@ module.exports = async function handler(request, response) {
   const view = String(request.query?.view || "");
   if (view === "top100") return handleTop100View(request, response);
   if (view === "discovery-archive") return handleDiscoveryArchiveView(request, response);
+  if (view === "hr-picks-live") return handleHrPicksLive(request, response);
 
   const summaryRequested = String(request.query?.summary || "") === "1";
   const discoveryRequested = String(request.query?.discovery || "") === "1";
