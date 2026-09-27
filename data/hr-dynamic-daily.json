@@ -2,7 +2,7 @@
   "schema_version": 1,
   "kind": "hr_dynamic_daily_picks",
   "status": "active",
-  "generated_at": "2026-09-26T23:38:22.682935+00:00",
+  "generated_at": "2026-09-27T05:21:06.871976+00:00",
   "rule": {
     "name": "Dynamic Daily ROI",
     "checkpoints": [
@@ -21986,20 +21986,20 @@
     "start": "2026-09-26",
     "summary": {
       "selections": 4,
-      "bets": 0,
-      "wins": 0,
-      "losses": 0,
+      "bets": 4,
+      "wins": 1,
+      "losses": 3,
       "voids": 0,
-      "pending": 4,
-      "slates": 0,
-      "profitable_slates": 0,
+      "pending": 0,
+      "slates": 1,
+      "profitable_slates": 1,
       "losing_slates": 0,
-      "profitable_slate_rate": null,
-      "hit_rate": null,
-      "average_break_even": null,
-      "empirical_probability_edge": null,
-      "net_units": 0,
-      "roi": null
+      "profitable_slate_rate": 1.0,
+      "hit_rate": 0.25,
+      "average_break_even": 0.16295138256464223,
+      "empirical_probability_edge": 0.08704861743535777,
+      "net_units": 1.43,
+      "roi": 0.35749999999999993
     },
     "daily": [
       {
@@ -22061,9 +22061,9 @@
                 }
               }
             },
-            "result": "PENDING",
-            "home_runs": null,
-            "profit_units": 0.0
+            "result": "LOSS",
+            "home_runs": 0,
+            "profit_units": -1.0
           },
           {
             "slate_date": "2026-09-26",
@@ -22116,9 +22116,9 @@
                 }
               }
             },
-            "result": "PENDING",
-            "home_runs": null,
-            "profit_units": 0.0
+            "result": "LOSS",
+            "home_runs": 0,
+            "profit_units": -1.0
           },
           {
             "slate_date": "2026-09-26",
@@ -22171,9 +22171,9 @@
                 }
               }
             },
-            "result": "PENDING",
-            "home_runs": null,
-            "profit_units": 0.0
+            "result": "WIN",
+            "home_runs": 1,
+            "profit_units": 4.43
           },
           {
             "slate_date": "2026-09-26",
@@ -22226,31 +22226,31 @@
                 }
               }
             },
-            "result": "PENDING",
-            "home_runs": null,
-            "profit_units": 0.0
+            "result": "LOSS",
+            "home_runs": 0,
+            "profit_units": -1.0
           }
         ],
-        "bets": 0,
-        "wins": 0,
-        "losses": 0,
+        "bets": 4,
+        "wins": 1,
+        "losses": 3,
         "voids": 0,
-        "pending": 4,
-        "slates": 0,
-        "profitable_slates": 0,
+        "pending": 0,
+        "slates": 1,
+        "profitable_slates": 1,
         "losing_slates": 0,
-        "profitable_slate_rate": null,
-        "hit_rate": null,
-        "average_break_even": null,
-        "empirical_probability_edge": null,
-        "net_units": 0,
-        "roi": null,
+        "profitable_slate_rate": 1.0,
+        "hit_rate": 0.25,
+        "average_break_even": 0.16295138256464223,
+        "empirical_probability_edge": 0.08704861743535777,
+        "net_units": 1.43,
+        "roi": 0.35749999999999993,
         "cumulative": {
-          "bets": 0,
-          "wins": 0,
-          "losses": 0,
-          "net_units": 0.0,
-          "roi": null
+          "bets": 4,
+          "wins": 1,
+          "losses": 3,
+          "net_units": 1.43,
+          "roi": 0.3575
         }
       }
     ],
@@ -22431,9 +22431,9 @@
                 }
               }
             },
-            "result": "PENDING",
-            "home_runs": null,
-            "profit_units": 0.0
+            "result": "LOSS",
+            "home_runs": 0,
+            "profit_units": -1.0
           },
           {
             "slate_date": "2026-09-26",
@@ -22486,9 +22486,9 @@
                 }
               }
             },
-            "result": "PENDING",
-            "home_runs": null,
-            "profit_units": 0.0
+            "result": "LOSS",
+            "home_runs": 0,
+            "profit_units": -1.0
           }
         ]
       },
@@ -22668,9 +22668,9 @@
                 }
               }
             },
-            "result": "PENDING",
-            "home_runs": null,
-            "profit_units": 0.0
+            "result": "WIN",
+            "home_runs": 1,
+            "profit_units": 4.43
           },
           {
             "slate_date": "2026-09-26",
@@ -22723,9 +22723,9 @@
                 }
               }
             },
-            "result": "PENDING",
-            "home_runs": null,
-            "profit_units": 0.0
+            "result": "LOSS",
+            "home_runs": 0,
+            "profit_units": -1.0
           }
         ]
       },
@@ -22781,745 +22781,9 @@
     ]
   },
   "current": {
-    "slate_date": "2026-09-26",
-    "status": "live",
-    "checkpoints": [
-      {
-        "checkpoint": "0817",
-        "qualified_cells": [
-          {
-            "checkpoint": "0817",
-            "book": "FanDuel",
-            "form_id": "400p",
-            "form": "0.400+",
-            "label": "0817 · FanDuel best price · 0.400+",
-            "evidence": {
-              "all_time": {
-                "settled": 64,
-                "wins": 13,
-                "losses": 51,
-                "voids": 3,
-                "slates": 38,
-                "net_units": 11.6,
-                "roi": 0.18125000000000002,
-                "hit_rate": 0.203125
-              },
-              "trailing_30d": {
-                "settled": 37,
-                "wins": 8,
-                "losses": 29,
-                "voids": 3,
-                "slates": 22,
-                "net_units": 6.9,
-                "roi": 0.1864864864864865,
-                "hit_rate": 0.21621621621621623
-              },
-              "trailing_14d": {
-                "settled": 22,
-                "wins": 6,
-                "losses": 16,
-                "voids": 2,
-                "slates": 12,
-                "net_units": 12.1,
-                "roi": 0.55,
-                "hit_rate": 0.2727272727272727
-              }
-            }
-          },
-          {
-            "checkpoint": "0817",
-            "book": "BetMGM",
-            "form_id": "200_299",
-            "form": "0.200–0.299",
-            "label": "0817 · BetMGM best price · 0.200–0.299",
-            "evidence": {
-              "all_time": {
-                "settled": 128,
-                "wins": 25,
-                "losses": 103,
-                "voids": 16,
-                "slates": 45,
-                "net_units": 23.9,
-                "roi": 0.18671875,
-                "hit_rate": 0.1953125
-              },
-              "trailing_30d": {
-                "settled": 85,
-                "wins": 16,
-                "losses": 69,
-                "voids": 10,
-                "slates": 26,
-                "net_units": 17.05,
-                "roi": 0.20058823529411765,
-                "hit_rate": 0.18823529411764706
-              },
-              "trailing_14d": {
-                "settled": 44,
-                "wins": 9,
-                "losses": 35,
-                "voids": 8,
-                "slates": 11,
-                "net_units": 14.35,
-                "roi": 0.32613636363636367,
-                "hit_rate": 0.20454545454545456
-              }
-            }
-          },
-          {
-            "checkpoint": "0817",
-            "book": "FanDuel",
-            "form_id": "100_199",
-            "form": "0.100–0.199",
-            "label": "0817 · FanDuel best price · 0.100–0.199",
-            "evidence": {
-              "all_time": {
-                "settled": 235,
-                "wins": 36,
-                "losses": 199,
-                "voids": 19,
-                "slates": 48,
-                "net_units": 5.36,
-                "roi": 0.022808510638297877,
-                "hit_rate": 0.15319148936170213
-              },
-              "trailing_30d": {
-                "settled": 112,
-                "wins": 17,
-                "losses": 95,
-                "voids": 13,
-                "slates": 28,
-                "net_units": 5.5,
-                "roi": 0.04910714285714286,
-                "hit_rate": 0.15178571428571427
-              },
-              "trailing_14d": {
-                "settled": 48,
-                "wins": 8,
-                "losses": 40,
-                "voids": 10,
-                "slates": 12,
-                "net_units": 11.1,
-                "roi": 0.23125000000000004,
-                "hit_rate": 0.16666666666666666
-              }
-            }
-          }
-        ],
-        "picks": [
-          {
-            "slate_date": "2026-09-26",
-            "checkpoint": "0817",
-            "player": "Nolan Arenado",
-            "mlbam_id": 571448,
-            "team": "Arizona Diamondbacks",
-            "matchup": "ARI @ SD",
-            "rank": 1,
-            "score": 0.6780952380952381,
-            "odds": 600,
-            "book": "FanDuel",
-            "game_start_at": "2026-09-27T00:40:00.000Z",
-            "captured_at": "2026-09-26T16:24:10.577949+00:00",
-            "cell": {
-              "checkpoint": "0817",
-              "book": "FanDuel",
-              "form": "0.400+",
-              "label": "0817 · FanDuel best price · 0.400+",
-              "evidence": {
-                "all_time": {
-                  "settled": 64,
-                  "wins": 13,
-                  "losses": 51,
-                  "voids": 3,
-                  "slates": 38,
-                  "net_units": 11.6,
-                  "roi": 0.18125000000000002,
-                  "hit_rate": 0.203125
-                },
-                "trailing_30d": {
-                  "settled": 37,
-                  "wins": 8,
-                  "losses": 29,
-                  "voids": 3,
-                  "slates": 22,
-                  "net_units": 6.9,
-                  "roi": 0.1864864864864865,
-                  "hit_rate": 0.21621621621621623
-                },
-                "trailing_14d": {
-                  "settled": 22,
-                  "wins": 6,
-                  "losses": 16,
-                  "voids": 2,
-                  "slates": 12,
-                  "net_units": 12.1,
-                  "roi": 0.55,
-                  "hit_rate": 0.2727272727272727
-                }
-              }
-            },
-            "result": "PENDING",
-            "home_runs": null,
-            "profit_units": 0.0
-          },
-          {
-            "slate_date": "2026-09-26",
-            "checkpoint": "0817",
-            "player": "Vaughn Grissom",
-            "mlbam_id": 687093,
-            "team": "Los Angeles Angels",
-            "matchup": "LAA @ SEA",
-            "rank": 54,
-            "score": 0.22571428571428573,
-            "odds": 875,
-            "book": "BetMGM",
-            "game_start_at": "2026-09-27T01:40:00.000Z",
-            "captured_at": "2026-09-26T16:24:10.577949+00:00",
-            "cell": {
-              "checkpoint": "0817",
-              "book": "BetMGM",
-              "form": "0.200–0.299",
-              "label": "0817 · BetMGM best price · 0.200–0.299",
-              "evidence": {
-                "all_time": {
-                  "settled": 128,
-                  "wins": 25,
-                  "losses": 103,
-                  "voids": 16,
-                  "slates": 45,
-                  "net_units": 23.9,
-                  "roi": 0.18671875,
-                  "hit_rate": 0.1953125
-                },
-                "trailing_30d": {
-                  "settled": 85,
-                  "wins": 16,
-                  "losses": 69,
-                  "voids": 10,
-                  "slates": 26,
-                  "net_units": 17.05,
-                  "roi": 0.20058823529411765,
-                  "hit_rate": 0.18823529411764706
-                },
-                "trailing_14d": {
-                  "settled": 44,
-                  "wins": 9,
-                  "losses": 35,
-                  "voids": 8,
-                  "slates": 11,
-                  "net_units": 14.35,
-                  "roi": 0.32613636363636367,
-                  "hit_rate": 0.20454545454545456
-                }
-              }
-            },
-            "result": "PENDING",
-            "home_runs": null,
-            "profit_units": 0.0
-          }
-        ]
-      },
-      {
-        "checkpoint": "1117",
-        "qualified_cells": [
-          {
-            "checkpoint": "1117",
-            "book": "FanDuel",
-            "form_id": "100_199",
-            "form": "0.100–0.199",
-            "label": "1117 · FanDuel best price · 0.100–0.199",
-            "evidence": {
-              "all_time": {
-                "settled": 232,
-                "wins": 37,
-                "losses": 195,
-                "voids": 21,
-                "slates": 49,
-                "net_units": 15.0,
-                "roi": 0.06465517241379311,
-                "hit_rate": 0.15948275862068967
-              },
-              "trailing_30d": {
-                "settled": 107,
-                "wins": 17,
-                "losses": 90,
-                "voids": 13,
-                "slates": 28,
-                "net_units": 7.4,
-                "roi": 0.0691588785046729,
-                "hit_rate": 0.1588785046728972
-              },
-              "trailing_14d": {
-                "settled": 55,
-                "wins": 11,
-                "losses": 44,
-                "voids": 11,
-                "slates": 13,
-                "net_units": 25.8,
-                "roi": 0.4690909090909091,
-                "hit_rate": 0.2
-              }
-            }
-          },
-          {
-            "checkpoint": "1117",
-            "book": "DraftKings",
-            "form_id": "400p",
-            "form": "0.400+",
-            "label": "1117 · DraftKings best price · 0.400+",
-            "evidence": {
-              "all_time": {
-                "settled": 124,
-                "wins": 27,
-                "losses": 97,
-                "voids": 4,
-                "slates": 49,
-                "net_units": 32.76,
-                "roi": 0.26419354838709674,
-                "hit_rate": 0.21774193548387097
-              },
-              "trailing_30d": {
-                "settled": 77,
-                "wins": 16,
-                "losses": 61,
-                "voids": 3,
-                "slates": 29,
-                "net_units": 11.21,
-                "roi": 0.14558441558441557,
-                "hit_rate": 0.2077922077922078
-              },
-              "trailing_14d": {
-                "settled": 42,
-                "wins": 9,
-                "losses": 33,
-                "voids": 3,
-                "slates": 14,
-                "net_units": 11.3,
-                "roi": 0.2690476190476191,
-                "hit_rate": 0.21428571428571427
-              }
-            }
-          },
-          {
-            "checkpoint": "1117",
-            "book": "BetMGM",
-            "form_id": "200_299",
-            "form": "0.200–0.299",
-            "label": "1117 · BetMGM best price · 0.200–0.299",
-            "evidence": {
-              "all_time": {
-                "settled": 129,
-                "wins": 26,
-                "losses": 103,
-                "voids": 14,
-                "slates": 44,
-                "net_units": 27.08,
-                "roi": 0.20992248062015506,
-                "hit_rate": 0.20155038759689922
-              },
-              "trailing_30d": {
-                "settled": 87,
-                "wins": 17,
-                "losses": 70,
-                "voids": 9,
-                "slates": 26,
-                "net_units": 14.68,
-                "roi": 0.16873563218390805,
-                "hit_rate": 0.19540229885057472
-              },
-              "trailing_14d": {
-                "settled": 44,
-                "wins": 9,
-                "losses": 35,
-                "voids": 8,
-                "slates": 12,
-                "net_units": 11.28,
-                "roi": 0.2563636363636364,
-                "hit_rate": 0.20454545454545456
-              }
-            }
-          }
-        ],
-        "picks": [
-          {
-            "slate_date": "2026-09-26",
-            "checkpoint": "1117",
-            "player": "Isaac Paredes",
-            "mlbam_id": 670623,
-            "team": "Houston Astros",
-            "matchup": "HOU @ OAK",
-            "rank": 5,
-            "score": 0.4085714285714286,
-            "odds": 443,
-            "book": "DraftKings",
-            "game_start_at": "2026-09-27T01:40:00.000Z",
-            "captured_at": "2026-09-26T18:37:51.804565+00:00",
-            "cell": {
-              "checkpoint": "1117",
-              "book": "DraftKings",
-              "form": "0.400+",
-              "label": "1117 · DraftKings best price · 0.400+",
-              "evidence": {
-                "all_time": {
-                  "settled": 124,
-                  "wins": 27,
-                  "losses": 97,
-                  "voids": 4,
-                  "slates": 49,
-                  "net_units": 32.76,
-                  "roi": 0.26419354838709674,
-                  "hit_rate": 0.21774193548387097
-                },
-                "trailing_30d": {
-                  "settled": 77,
-                  "wins": 16,
-                  "losses": 61,
-                  "voids": 3,
-                  "slates": 29,
-                  "net_units": 11.21,
-                  "roi": 0.14558441558441557,
-                  "hit_rate": 0.2077922077922078
-                },
-                "trailing_14d": {
-                  "settled": 42,
-                  "wins": 9,
-                  "losses": 33,
-                  "voids": 3,
-                  "slates": 14,
-                  "net_units": 11.3,
-                  "roi": 0.2690476190476191,
-                  "hit_rate": 0.21428571428571427
-                }
-              }
-            },
-            "result": "PENDING",
-            "home_runs": null,
-            "profit_units": 0.0
-          },
-          {
-            "slate_date": "2026-09-26",
-            "checkpoint": "1117",
-            "player": "Fernando Tatis Jr.",
-            "mlbam_id": 665487,
-            "team": "San Diego Padres",
-            "matchup": "ARI @ SD",
-            "rank": 40,
-            "score": 0.2523809523809524,
-            "odds": 350,
-            "book": "BetMGM",
-            "game_start_at": "2026-09-27T00:40:00.000Z",
-            "captured_at": "2026-09-26T18:37:51.804565+00:00",
-            "cell": {
-              "checkpoint": "1117",
-              "book": "BetMGM",
-              "form": "0.200–0.299",
-              "label": "1117 · BetMGM best price · 0.200–0.299",
-              "evidence": {
-                "all_time": {
-                  "settled": 129,
-                  "wins": 26,
-                  "losses": 103,
-                  "voids": 14,
-                  "slates": 44,
-                  "net_units": 27.08,
-                  "roi": 0.20992248062015506,
-                  "hit_rate": 0.20155038759689922
-                },
-                "trailing_30d": {
-                  "settled": 87,
-                  "wins": 17,
-                  "losses": 70,
-                  "voids": 9,
-                  "slates": 26,
-                  "net_units": 14.68,
-                  "roi": 0.16873563218390805,
-                  "hit_rate": 0.19540229885057472
-                },
-                "trailing_14d": {
-                  "settled": 44,
-                  "wins": 9,
-                  "losses": 35,
-                  "voids": 8,
-                  "slates": 12,
-                  "net_units": 11.28,
-                  "roi": 0.2563636363636364,
-                  "hit_rate": 0.20454545454545456
-                }
-              }
-            },
-            "result": "PENDING",
-            "home_runs": null,
-            "profit_units": 0.0
-          }
-        ]
-      },
-      {
-        "checkpoint": "1717",
-        "qualified_cells": [
-          {
-            "checkpoint": "1717",
-            "book": "DraftKings",
-            "form_id": "400p",
-            "form": "0.400+",
-            "label": "1717 · DraftKings best price · 0.400+",
-            "evidence": {
-              "all_time": {
-                "settled": 73,
-                "wins": 15,
-                "losses": 58,
-                "voids": 0,
-                "slates": 36,
-                "net_units": 15.01,
-                "roi": 0.20561643835616442,
-                "hit_rate": 0.2054794520547945
-              },
-              "trailing_30d": {
-                "settled": 45,
-                "wins": 12,
-                "losses": 33,
-                "voids": 0,
-                "slates": 23,
-                "net_units": 23.53,
-                "roi": 0.522888888888889,
-                "hit_rate": 0.26666666666666666
-              },
-              "trailing_14d": {
-                "settled": 23,
-                "wins": 7,
-                "losses": 16,
-                "voids": 0,
-                "slates": 10,
-                "net_units": 19.44,
-                "roi": 0.8452173913043479,
-                "hit_rate": 0.30434782608695654
-              }
-            },
-            "weighted_expected_return": 0.4112056737588653
-          }
-        ],
-        "picks": []
-      }
-    ],
-    "picks": [
-      {
-        "slate_date": "2026-09-26",
-        "checkpoint": "0817",
-        "player": "Nolan Arenado",
-        "mlbam_id": 571448,
-        "team": "Arizona Diamondbacks",
-        "matchup": "ARI @ SD",
-        "rank": 1,
-        "score": 0.6780952380952381,
-        "odds": 600,
-        "book": "FanDuel",
-        "game_start_at": "2026-09-27T00:40:00.000Z",
-        "captured_at": "2026-09-26T16:24:10.577949+00:00",
-        "cell": {
-          "checkpoint": "0817",
-          "book": "FanDuel",
-          "form": "0.400+",
-          "label": "0817 · FanDuel best price · 0.400+",
-          "evidence": {
-            "all_time": {
-              "settled": 64,
-              "wins": 13,
-              "losses": 51,
-              "voids": 3,
-              "slates": 38,
-              "net_units": 11.6,
-              "roi": 0.18125000000000002,
-              "hit_rate": 0.203125
-            },
-            "trailing_30d": {
-              "settled": 37,
-              "wins": 8,
-              "losses": 29,
-              "voids": 3,
-              "slates": 22,
-              "net_units": 6.9,
-              "roi": 0.1864864864864865,
-              "hit_rate": 0.21621621621621623
-            },
-            "trailing_14d": {
-              "settled": 22,
-              "wins": 6,
-              "losses": 16,
-              "voids": 2,
-              "slates": 12,
-              "net_units": 12.1,
-              "roi": 0.55,
-              "hit_rate": 0.2727272727272727
-            }
-          }
-        },
-        "result": "PENDING",
-        "home_runs": null,
-        "profit_units": 0.0
-      },
-      {
-        "slate_date": "2026-09-26",
-        "checkpoint": "0817",
-        "player": "Vaughn Grissom",
-        "mlbam_id": 687093,
-        "team": "Los Angeles Angels",
-        "matchup": "LAA @ SEA",
-        "rank": 54,
-        "score": 0.22571428571428573,
-        "odds": 875,
-        "book": "BetMGM",
-        "game_start_at": "2026-09-27T01:40:00.000Z",
-        "captured_at": "2026-09-26T16:24:10.577949+00:00",
-        "cell": {
-          "checkpoint": "0817",
-          "book": "BetMGM",
-          "form": "0.200–0.299",
-          "label": "0817 · BetMGM best price · 0.200–0.299",
-          "evidence": {
-            "all_time": {
-              "settled": 128,
-              "wins": 25,
-              "losses": 103,
-              "voids": 16,
-              "slates": 45,
-              "net_units": 23.9,
-              "roi": 0.18671875,
-              "hit_rate": 0.1953125
-            },
-            "trailing_30d": {
-              "settled": 85,
-              "wins": 16,
-              "losses": 69,
-              "voids": 10,
-              "slates": 26,
-              "net_units": 17.05,
-              "roi": 0.20058823529411765,
-              "hit_rate": 0.18823529411764706
-            },
-            "trailing_14d": {
-              "settled": 44,
-              "wins": 9,
-              "losses": 35,
-              "voids": 8,
-              "slates": 11,
-              "net_units": 14.35,
-              "roi": 0.32613636363636367,
-              "hit_rate": 0.20454545454545456
-            }
-          }
-        },
-        "result": "PENDING",
-        "home_runs": null,
-        "profit_units": 0.0
-      },
-      {
-        "slate_date": "2026-09-26",
-        "checkpoint": "1117",
-        "player": "Isaac Paredes",
-        "mlbam_id": 670623,
-        "team": "Houston Astros",
-        "matchup": "HOU @ OAK",
-        "rank": 5,
-        "score": 0.4085714285714286,
-        "odds": 443,
-        "book": "DraftKings",
-        "game_start_at": "2026-09-27T01:40:00.000Z",
-        "captured_at": "2026-09-26T18:37:51.804565+00:00",
-        "cell": {
-          "checkpoint": "1117",
-          "book": "DraftKings",
-          "form": "0.400+",
-          "label": "1117 · DraftKings best price · 0.400+",
-          "evidence": {
-            "all_time": {
-              "settled": 124,
-              "wins": 27,
-              "losses": 97,
-              "voids": 4,
-              "slates": 49,
-              "net_units": 32.76,
-              "roi": 0.26419354838709674,
-              "hit_rate": 0.21774193548387097
-            },
-            "trailing_30d": {
-              "settled": 77,
-              "wins": 16,
-              "losses": 61,
-              "voids": 3,
-              "slates": 29,
-              "net_units": 11.21,
-              "roi": 0.14558441558441557,
-              "hit_rate": 0.2077922077922078
-            },
-            "trailing_14d": {
-              "settled": 42,
-              "wins": 9,
-              "losses": 33,
-              "voids": 3,
-              "slates": 14,
-              "net_units": 11.3,
-              "roi": 0.2690476190476191,
-              "hit_rate": 0.21428571428571427
-            }
-          }
-        },
-        "result": "PENDING",
-        "home_runs": null,
-        "profit_units": 0.0
-      },
-      {
-        "slate_date": "2026-09-26",
-        "checkpoint": "1117",
-        "player": "Fernando Tatis Jr.",
-        "mlbam_id": 665487,
-        "team": "San Diego Padres",
-        "matchup": "ARI @ SD",
-        "rank": 40,
-        "score": 0.2523809523809524,
-        "odds": 350,
-        "book": "BetMGM",
-        "game_start_at": "2026-09-27T00:40:00.000Z",
-        "captured_at": "2026-09-26T18:37:51.804565+00:00",
-        "cell": {
-          "checkpoint": "1117",
-          "book": "BetMGM",
-          "form": "0.200–0.299",
-          "label": "1117 · BetMGM best price · 0.200–0.299",
-          "evidence": {
-            "all_time": {
-              "settled": 129,
-              "wins": 26,
-              "losses": 103,
-              "voids": 14,
-              "slates": 44,
-              "net_units": 27.08,
-              "roi": 0.20992248062015506,
-              "hit_rate": 0.20155038759689922
-            },
-            "trailing_30d": {
-              "settled": 87,
-              "wins": 17,
-              "losses": 70,
-              "voids": 9,
-              "slates": 26,
-              "net_units": 14.68,
-              "roi": 0.16873563218390805,
-              "hit_rate": 0.19540229885057472
-            },
-            "trailing_14d": {
-              "settled": 44,
-              "wins": 9,
-              "losses": 35,
-              "voids": 8,
-              "slates": 12,
-              "net_units": 11.28,
-              "roi": 0.2563636363636364,
-              "hit_rate": 0.20454545454545456
-            }
-          }
-        },
-        "result": "PENDING",
-        "home_runs": null,
-        "profit_units": 0.0
-      }
-    ]
+    "slate_date": "2026-09-27",
+    "status": "checkpoint_pending",
+    "checkpoints": [],
+    "picks": []
   }
 }
