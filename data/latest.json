@@ -1,14 +1,14 @@
 {
   "schema_version": 1,
   "kind": "latest_shared_slate",
-  "refreshed_at": "2026-09-27T17:56:58.362045+00:00",
-  "refreshed_at_et": "2026-09-27T13:56:58.362045-04:00",
+  "refreshed_at": "2026-09-27T18:59:55.833695+00:00",
+  "refreshed_at_et": "2026-09-27T14:59:55.833695-04:00",
   "slate_date": "2026-09-27",
   "status": "current",
   "sources": {
     "mlb_hr_edge": {
       "source": "MLB HR Edge",
-      "source_url": "https://mlb-hr-edge.feranmi.chatgpt.site/api/odds?latest=1",
+      "source_url": "/home/runner/work/hr-form-board-actions/hr-form-board-actions/data/shared-odds/latest.json",
       "delivery": "qstash-vercel-redis",
       "source_date": "2026-09-27",
       "date_matches": true,
@@ -28,7 +28,8 @@
         "BetMGM"
       ],
       "row_count": 280,
-      "compatibility_fallback": "odds_api",
+      "compatibility_fallback": "exact_upstash_checkpoint_cache",
+      "checkpoint": "1117",
       "mlbam_ids_hydrated": 272,
       "mlbam_ids_added": 272,
       "unresolved_player_names": [
@@ -78,10 +79,10 @@
               "url": null
             },
             {
-              "book": "DraftKings",
-              "book_id": "draftkings",
-              "odds": 565,
-              "captured_at": "2026-09-27T15:10:55.379Z",
+              "book": "BetMGM",
+              "book_id": "betmgm",
+              "odds": 400,
+              "captured_at": "2026-09-27T15:10:41.821Z",
               "source": "qstash-vercel-sportsgameodds",
               "source_event_id": "j9izFQaLVo693uGW9JsV",
               "source_odd_id": "batting_homeRuns-NOLAN_ARENADO_1_MLB-game-yn-yes",
@@ -90,10 +91,10 @@
               "url": null
             },
             {
-              "book": "BetMGM",
-              "book_id": "betmgm",
-              "odds": 400,
-              "captured_at": "2026-09-27T15:10:41.821Z",
+              "book": "DraftKings",
+              "book_id": "draftkings",
+              "odds": 565,
+              "captured_at": "2026-09-27T15:10:55.379Z",
               "source": "qstash-vercel-sportsgameodds",
               "source_event_id": "j9izFQaLVo693uGW9JsV",
               "source_odd_id": "batting_homeRuns-NOLAN_ARENADO_1_MLB-game-yn-yes",
@@ -504,10 +505,10 @@
           "dk_odds": 690,
           "all_prices": [
             {
-              "book": "FanDuel",
-              "book_id": "fanduel",
-              "odds": 710,
-              "captured_at": "2026-09-27T15:11:05.766Z",
+              "book": "DraftKings",
+              "book_id": "draftkings",
+              "odds": 690,
+              "captured_at": "2026-09-27T15:10:55.379Z",
               "source": "qstash-vercel-sportsgameodds",
               "source_event_id": "yHPWEAlrujEJ2scWlQ17",
               "source_odd_id": "batting_homeRuns-EZEQUIEL_TOVAR_1_MLB-game-yn-yes",
@@ -516,10 +517,10 @@
               "url": null
             },
             {
-              "book": "DraftKings",
-              "book_id": "draftkings",
-              "odds": 690,
-              "captured_at": "2026-09-27T15:10:55.379Z",
+              "book": "FanDuel",
+              "book_id": "fanduel",
+              "odds": 710,
+              "captured_at": "2026-09-27T15:11:05.766Z",
               "source": "qstash-vercel-sportsgameodds",
               "source_event_id": "yHPWEAlrujEJ2scWlQ17",
               "source_odd_id": "batting_homeRuns-EZEQUIEL_TOVAR_1_MLB-game-yn-yes",
@@ -636,10 +637,10 @@
           "dk_odds": 589,
           "all_prices": [
             {
-              "book": "FanDuel",
-              "book_id": "fanduel",
-              "odds": 540,
-              "captured_at": "2026-09-27T15:11:05.766Z",
+              "book": "DraftKings",
+              "book_id": "draftkings",
+              "odds": 589,
+              "captured_at": "2026-09-27T15:10:55.379Z",
               "source": "qstash-vercel-sportsgameodds",
               "source_event_id": "yHPWEAlrujEJ2scWlQ17",
               "source_odd_id": "batting_homeRuns-BRENTON_DOYLE_1_MLB-game-yn-yes",
@@ -648,10 +649,10 @@
               "url": null
             },
             {
-              "book": "DraftKings",
-              "book_id": "draftkings",
-              "odds": 589,
-              "captured_at": "2026-09-27T15:10:55.379Z",
+              "book": "FanDuel",
+              "book_id": "fanduel",
+              "odds": 540,
+              "captured_at": "2026-09-27T15:11:05.766Z",
               "source": "qstash-vercel-sportsgameodds",
               "source_event_id": "yHPWEAlrujEJ2scWlQ17",
               "source_odd_id": "batting_homeRuns-BRENTON_DOYLE_1_MLB-game-yn-yes",
@@ -728,10 +729,10 @@
               "url": null
             },
             {
-              "book": "DraftKings",
-              "book_id": "draftkings",
-              "odds": 565,
-              "captured_at": "2026-09-27T15:10:55.379Z",
+              "book": "BetMGM",
+              "book_id": "betmgm",
+              "odds": 400,
+              "captured_at": "2026-09-27T15:10:41.821Z",
               "source": "qstash-vercel-sportsgameodds",
               "source_event_id": "j9izFQaLVo693uGW9JsV",
               "source_odd_id": "batting_homeRuns-NOLAN_ARENADO_1_MLB-game-yn-yes",
@@ -740,10 +741,10 @@
               "url": null
             },
             {
-              "book": "BetMGM",
-              "book_id": "betmgm",
-              "odds": 400,
-              "captured_at": "2026-09-27T15:10:41.821Z",
+              "book": "DraftKings",
+              "book_id": "draftkings",
+              "odds": 565,
+              "captured_at": "2026-09-27T15:10:55.379Z",
               "source": "qstash-vercel-sportsgameodds",
               "source_event_id": "j9izFQaLVo693uGW9JsV",
               "source_odd_id": "batting_homeRuns-NOLAN_ARENADO_1_MLB-game-yn-yes",
@@ -1154,10 +1155,10 @@
           "dk_odds": 690,
           "all_prices": [
             {
-              "book": "FanDuel",
-              "book_id": "fanduel",
-              "odds": 710,
-              "captured_at": "2026-09-27T15:11:05.766Z",
+              "book": "DraftKings",
+              "book_id": "draftkings",
+              "odds": 690,
+              "captured_at": "2026-09-27T15:10:55.379Z",
               "source": "qstash-vercel-sportsgameodds",
               "source_event_id": "yHPWEAlrujEJ2scWlQ17",
               "source_odd_id": "batting_homeRuns-EZEQUIEL_TOVAR_1_MLB-game-yn-yes",
@@ -1166,10 +1167,10 @@
               "url": null
             },
             {
-              "book": "DraftKings",
-              "book_id": "draftkings",
-              "odds": 690,
-              "captured_at": "2026-09-27T15:10:55.379Z",
+              "book": "FanDuel",
+              "book_id": "fanduel",
+              "odds": 710,
+              "captured_at": "2026-09-27T15:11:05.766Z",
               "source": "qstash-vercel-sportsgameodds",
               "source_event_id": "yHPWEAlrujEJ2scWlQ17",
               "source_odd_id": "batting_homeRuns-EZEQUIEL_TOVAR_1_MLB-game-yn-yes",
@@ -1286,10 +1287,10 @@
           "dk_odds": 589,
           "all_prices": [
             {
-              "book": "FanDuel",
-              "book_id": "fanduel",
-              "odds": 540,
-              "captured_at": "2026-09-27T15:11:05.766Z",
+              "book": "DraftKings",
+              "book_id": "draftkings",
+              "odds": 589,
+              "captured_at": "2026-09-27T15:10:55.379Z",
               "source": "qstash-vercel-sportsgameodds",
               "source_event_id": "yHPWEAlrujEJ2scWlQ17",
               "source_odd_id": "batting_homeRuns-BRENTON_DOYLE_1_MLB-game-yn-yes",
@@ -1298,10 +1299,10 @@
               "url": null
             },
             {
-              "book": "DraftKings",
-              "book_id": "draftkings",
-              "odds": 589,
-              "captured_at": "2026-09-27T15:10:55.379Z",
+              "book": "FanDuel",
+              "book_id": "fanduel",
+              "odds": 540,
+              "captured_at": "2026-09-27T15:11:05.766Z",
               "source": "qstash-vercel-sportsgameodds",
               "source_event_id": "yHPWEAlrujEJ2scWlQ17",
               "source_odd_id": "batting_homeRuns-BRENTON_DOYLE_1_MLB-game-yn-yes",
@@ -1352,10 +1353,10 @@
           "dk_odds": 496,
           "all_prices": [
             {
-              "book": "FanDuel",
-              "book_id": "fanduel",
-              "odds": 470,
-              "captured_at": "2026-09-27T15:11:05.766Z",
+              "book": "DraftKings",
+              "book_id": "draftkings",
+              "odds": 496,
+              "captured_at": "2026-09-27T15:10:55.379Z",
               "source": "qstash-vercel-sportsgameodds",
               "source_event_id": "kUmx6bl7ocgNiScIRjZN",
               "source_odd_id": "batting_homeRuns-SALVADOR_PEREZ_1_MLB-game-yn-yes",
@@ -1364,10 +1365,10 @@
               "url": null
             },
             {
-              "book": "DraftKings",
-              "book_id": "draftkings",
-              "odds": 496,
-              "captured_at": "2026-09-27T15:10:55.379Z",
+              "book": "FanDuel",
+              "book_id": "fanduel",
+              "odds": 470,
+              "captured_at": "2026-09-27T15:11:05.766Z",
               "source": "qstash-vercel-sportsgameodds",
               "source_event_id": "kUmx6bl7ocgNiScIRjZN",
               "source_odd_id": "batting_homeRuns-SALVADOR_PEREZ_1_MLB-game-yn-yes",
@@ -1514,10 +1515,10 @@
           "dk_odds": 1020,
           "all_prices": [
             {
-              "book": "FanDuel",
-              "book_id": "fanduel",
-              "odds": 1040,
-              "captured_at": "2026-09-27T15:11:05.766Z",
+              "book": "DraftKings",
+              "book_id": "draftkings",
+              "odds": 1020,
+              "captured_at": "2026-09-27T15:10:55.379Z",
               "source": "qstash-vercel-sportsgameodds",
               "source_event_id": "K28i5eou5pFbntkCJp0l",
               "source_odd_id": "batting_homeRuns-JP_CRAWFORD_1_MLB-game-yn-yes",
@@ -1526,10 +1527,10 @@
               "url": null
             },
             {
-              "book": "DraftKings",
-              "book_id": "draftkings",
-              "odds": 1020,
-              "captured_at": "2026-09-27T15:10:55.379Z",
+              "book": "FanDuel",
+              "book_id": "fanduel",
+              "odds": 1040,
+              "captured_at": "2026-09-27T15:11:05.766Z",
               "source": "qstash-vercel-sportsgameodds",
               "source_event_id": "K28i5eou5pFbntkCJp0l",
               "source_odd_id": "batting_homeRuns-JP_CRAWFORD_1_MLB-game-yn-yes",
@@ -1580,10 +1581,10 @@
           "dk_odds": 620,
           "all_prices": [
             {
-              "book": "FanDuel",
-              "book_id": "fanduel",
-              "odds": 630,
-              "captured_at": "2026-09-27T15:11:05.766Z",
+              "book": "DraftKings",
+              "book_id": "draftkings",
+              "odds": 620,
+              "captured_at": "2026-09-27T15:10:55.379Z",
               "source": "qstash-vercel-sportsgameodds",
               "source_event_id": "kUmx6bl7ocgNiScIRjZN",
               "source_odd_id": "batting_homeRuns-VINNIE_PASQUANTINO_1_MLB-game-yn-yes",
@@ -1592,10 +1593,10 @@
               "url": null
             },
             {
-              "book": "DraftKings",
-              "book_id": "draftkings",
-              "odds": 620,
-              "captured_at": "2026-09-27T15:10:55.379Z",
+              "book": "FanDuel",
+              "book_id": "fanduel",
+              "odds": 630,
+              "captured_at": "2026-09-27T15:11:05.766Z",
               "source": "qstash-vercel-sportsgameodds",
               "source_event_id": "kUmx6bl7ocgNiScIRjZN",
               "source_odd_id": "batting_homeRuns-VINNIE_PASQUANTINO_1_MLB-game-yn-yes",
@@ -1646,10 +1647,10 @@
           "dk_odds": 518,
           "all_prices": [
             {
-              "book": "FanDuel",
-              "book_id": "fanduel",
-              "odds": 490,
-              "captured_at": "2026-09-27T15:11:05.766Z",
+              "book": "DraftKings",
+              "book_id": "draftkings",
+              "odds": 518,
+              "captured_at": "2026-09-27T15:10:55.379Z",
               "source": "qstash-vercel-sportsgameodds",
               "source_event_id": "kUmx6bl7ocgNiScIRjZN",
               "source_odd_id": "batting_homeRuns-CARTER_JENSEN_1_MLB-game-yn-yes",
@@ -1658,10 +1659,10 @@
               "url": null
             },
             {
-              "book": "DraftKings",
-              "book_id": "draftkings",
-              "odds": 518,
-              "captured_at": "2026-09-27T15:10:55.379Z",
+              "book": "FanDuel",
+              "book_id": "fanduel",
+              "odds": 490,
+              "captured_at": "2026-09-27T15:11:05.766Z",
               "source": "qstash-vercel-sportsgameodds",
               "source_event_id": "kUmx6bl7ocgNiScIRjZN",
               "source_odd_id": "batting_homeRuns-CARTER_JENSEN_1_MLB-game-yn-yes",
@@ -1898,10 +1899,10 @@
           "dk_odds": 770,
           "all_prices": [
             {
-              "book": "FanDuel",
-              "book_id": "fanduel",
-              "odds": 760,
-              "captured_at": "2026-09-27T15:11:05.766Z",
+              "book": "DraftKings",
+              "book_id": "draftkings",
+              "odds": 770,
+              "captured_at": "2026-09-27T15:10:55.379Z",
               "source": "qstash-vercel-sportsgameodds",
               "source_event_id": "kUmx6bl7ocgNiScIRjZN",
               "source_odd_id": "batting_homeRuns-ANGEL_MARTINEZ_1_MLB-game-yn-yes",
@@ -1910,10 +1911,10 @@
               "url": null
             },
             {
-              "book": "DraftKings",
-              "book_id": "draftkings",
-              "odds": 770,
-              "captured_at": "2026-09-27T15:10:55.379Z",
+              "book": "FanDuel",
+              "book_id": "fanduel",
+              "odds": 760,
+              "captured_at": "2026-09-27T15:11:05.766Z",
               "source": "qstash-vercel-sportsgameodds",
               "source_event_id": "kUmx6bl7ocgNiScIRjZN",
               "source_odd_id": "batting_homeRuns-ANGEL_MARTINEZ_1_MLB-game-yn-yes",
