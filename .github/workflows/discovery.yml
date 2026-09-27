@@ -70,6 +70,7 @@ jobs:
           python -m unittest discover -s tests -p 'test_hr_volume_companion.py' -v
           node --check hr-picks.js
           node --check hr-dynamic-daily.js
+          node --check api/hr-picks-live.js
 
   archive:
     if: github.event_name != 'pull_request'
@@ -188,6 +189,7 @@ jobs:
           python -m unittest discover -s tests -p 'test_hr_volume_companion.py' -v
           node --check hr-picks.js
           node --check hr-dynamic-daily.js
+          node --check api/hr-picks-live.js
 
       - name: Commit reconciled Discovery archive
         if: steps.window.outputs.due == 'true' || github.event_name == 'push'
