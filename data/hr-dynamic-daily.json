@@ -2,7 +2,7 @@
   "schema_version": 1,
   "kind": "hr_dynamic_daily_picks",
   "status": "active",
-  "generated_at": "2026-09-27T05:21:06.871976+00:00",
+  "generated_at": "2026-09-27T13:33:21.356459+00:00",
   "rule": {
     "name": "Dynamic Daily ROI",
     "checkpoints": [
@@ -21985,12 +21985,12 @@
   "forward": {
     "start": "2026-09-26",
     "summary": {
-      "selections": 4,
+      "selections": 6,
       "bets": 4,
       "wins": 1,
       "losses": 3,
       "voids": 0,
-      "pending": 0,
+      "pending": 2,
       "slates": 1,
       "profitable_slates": 1,
       "losing_slates": 0,
@@ -22245,6 +22245,145 @@
         "empirical_probability_edge": 0.08704861743535777,
         "net_units": 1.43,
         "roi": 0.35749999999999993,
+        "cumulative": {
+          "bets": 4,
+          "wins": 1,
+          "losses": 3,
+          "net_units": 1.43,
+          "roi": 0.3575
+        }
+      },
+      {
+        "slate_date": "2026-09-27",
+        "checkpoints": [
+          "0817"
+        ],
+        "selections": [
+          {
+            "slate_date": "2026-09-27",
+            "checkpoint": "0817",
+            "player": "Nolan Arenado",
+            "mlbam_id": 571448,
+            "team": "Arizona Diamondbacks",
+            "matchup": "ARI @ SD",
+            "rank": 1,
+            "score": 0.5780952380952381,
+            "odds": 570,
+            "book": "FanDuel",
+            "game_start_at": "2026-09-27T19:10:00.000Z",
+            "captured_at": "2026-09-27T12:17:04.625Z",
+            "cell": {
+              "checkpoint": "0817",
+              "book": "FanDuel",
+              "form": "0.400+",
+              "label": "0817 · FanDuel best price · 0.400+",
+              "evidence": {
+                "all_time": {
+                  "settled": 65,
+                  "wins": 13,
+                  "losses": 52,
+                  "voids": 3,
+                  "slates": 39,
+                  "net_units": 10.6,
+                  "roi": 0.1630769230769231,
+                  "hit_rate": 0.2
+                },
+                "trailing_30d": {
+                  "settled": 37,
+                  "wins": 8,
+                  "losses": 29,
+                  "voids": 3,
+                  "slates": 22,
+                  "net_units": 6.9,
+                  "roi": 0.1864864864864865,
+                  "hit_rate": 0.21621621621621623
+                },
+                "trailing_14d": {
+                  "settled": 21,
+                  "wins": 6,
+                  "losses": 15,
+                  "voids": 2,
+                  "slates": 12,
+                  "net_units": 13.1,
+                  "roi": 0.6238095238095239,
+                  "hit_rate": 0.2857142857142857
+                }
+              }
+            },
+            "result": "PENDING",
+            "home_runs": null,
+            "profit_units": 0.0
+          },
+          {
+            "slate_date": "2026-09-27",
+            "checkpoint": "0817",
+            "player": "Isaac Paredes",
+            "mlbam_id": 670623,
+            "team": "Houston Astros",
+            "matchup": "HOU @ OAK",
+            "rank": 2,
+            "score": 0.5514285714285714,
+            "odds": 470,
+            "book": "FanDuel",
+            "game_start_at": "2026-09-27T19:05:00.000Z",
+            "captured_at": "2026-09-27T12:17:04.625Z",
+            "cell": {
+              "checkpoint": "0817",
+              "book": "FanDuel",
+              "form": "0.400+",
+              "label": "0817 · FanDuel best price · 0.400+",
+              "evidence": {
+                "all_time": {
+                  "settled": 65,
+                  "wins": 13,
+                  "losses": 52,
+                  "voids": 3,
+                  "slates": 39,
+                  "net_units": 10.6,
+                  "roi": 0.1630769230769231,
+                  "hit_rate": 0.2
+                },
+                "trailing_30d": {
+                  "settled": 37,
+                  "wins": 8,
+                  "losses": 29,
+                  "voids": 3,
+                  "slates": 22,
+                  "net_units": 6.9,
+                  "roi": 0.1864864864864865,
+                  "hit_rate": 0.21621621621621623
+                },
+                "trailing_14d": {
+                  "settled": 21,
+                  "wins": 6,
+                  "losses": 15,
+                  "voids": 2,
+                  "slates": 12,
+                  "net_units": 13.1,
+                  "roi": 0.6238095238095239,
+                  "hit_rate": 0.2857142857142857
+                }
+              }
+            },
+            "result": "PENDING",
+            "home_runs": null,
+            "profit_units": 0.0
+          }
+        ],
+        "bets": 0,
+        "wins": 0,
+        "losses": 0,
+        "voids": 0,
+        "pending": 2,
+        "slates": 0,
+        "profitable_slates": 0,
+        "losing_slates": 0,
+        "profitable_slate_rate": null,
+        "hit_rate": null,
+        "average_break_even": null,
+        "empirical_probability_edge": null,
+        "net_units": 0,
+        "roi": null,
         "cumulative": {
           "bets": 4,
           "wins": 1,
@@ -22777,13 +22916,442 @@
           }
         ],
         "selections": []
+      },
+      {
+        "slate_date": "2026-09-27",
+        "checkpoint": "0817",
+        "mode": "dynamic_daily",
+        "captured_at": "2026-09-27T12:17:04.625Z",
+        "qualified_cells": [
+          {
+            "checkpoint": "0817",
+            "book": "FanDuel",
+            "form_id": "400p",
+            "form": "0.400+",
+            "label": "0817 · FanDuel best price · 0.400+",
+            "evidence": {
+              "all_time": {
+                "settled": 65,
+                "wins": 13,
+                "losses": 52,
+                "voids": 3,
+                "slates": 39,
+                "net_units": 10.6,
+                "roi": 0.1630769230769231,
+                "hit_rate": 0.2
+              },
+              "trailing_30d": {
+                "settled": 37,
+                "wins": 8,
+                "losses": 29,
+                "voids": 3,
+                "slates": 22,
+                "net_units": 6.9,
+                "roi": 0.1864864864864865,
+                "hit_rate": 0.21621621621621623
+              },
+              "trailing_14d": {
+                "settled": 21,
+                "wins": 6,
+                "losses": 15,
+                "voids": 2,
+                "slates": 12,
+                "net_units": 13.1,
+                "roi": 0.6238095238095239,
+                "hit_rate": 0.2857142857142857
+              }
+            },
+            "weighted_expected_return": 0.24878048780487805
+          }
+        ],
+        "selections": [
+          {
+            "slate_date": "2026-09-27",
+            "checkpoint": "0817",
+            "player": "Nolan Arenado",
+            "mlbam_id": 571448,
+            "team": "Arizona Diamondbacks",
+            "matchup": "ARI @ SD",
+            "rank": 1,
+            "score": 0.5780952380952381,
+            "odds": 570,
+            "book": "FanDuel",
+            "game_start_at": "2026-09-27T19:10:00.000Z",
+            "captured_at": "2026-09-27T12:17:04.625Z",
+            "cell": {
+              "checkpoint": "0817",
+              "book": "FanDuel",
+              "form": "0.400+",
+              "label": "0817 · FanDuel best price · 0.400+",
+              "evidence": {
+                "all_time": {
+                  "settled": 65,
+                  "wins": 13,
+                  "losses": 52,
+                  "voids": 3,
+                  "slates": 39,
+                  "net_units": 10.6,
+                  "roi": 0.1630769230769231,
+                  "hit_rate": 0.2
+                },
+                "trailing_30d": {
+                  "settled": 37,
+                  "wins": 8,
+                  "losses": 29,
+                  "voids": 3,
+                  "slates": 22,
+                  "net_units": 6.9,
+                  "roi": 0.1864864864864865,
+                  "hit_rate": 0.21621621621621623
+                },
+                "trailing_14d": {
+                  "settled": 21,
+                  "wins": 6,
+                  "losses": 15,
+                  "voids": 2,
+                  "slates": 12,
+                  "net_units": 13.1,
+                  "roi": 0.6238095238095239,
+                  "hit_rate": 0.2857142857142857
+                }
+              }
+            },
+            "result": "PENDING",
+            "home_runs": null,
+            "profit_units": 0.0
+          },
+          {
+            "slate_date": "2026-09-27",
+            "checkpoint": "0817",
+            "player": "Isaac Paredes",
+            "mlbam_id": 670623,
+            "team": "Houston Astros",
+            "matchup": "HOU @ OAK",
+            "rank": 2,
+            "score": 0.5514285714285714,
+            "odds": 470,
+            "book": "FanDuel",
+            "game_start_at": "2026-09-27T19:05:00.000Z",
+            "captured_at": "2026-09-27T12:17:04.625Z",
+            "cell": {
+              "checkpoint": "0817",
+              "book": "FanDuel",
+              "form": "0.400+",
+              "label": "0817 · FanDuel best price · 0.400+",
+              "evidence": {
+                "all_time": {
+                  "settled": 65,
+                  "wins": 13,
+                  "losses": 52,
+                  "voids": 3,
+                  "slates": 39,
+                  "net_units": 10.6,
+                  "roi": 0.1630769230769231,
+                  "hit_rate": 0.2
+                },
+                "trailing_30d": {
+                  "settled": 37,
+                  "wins": 8,
+                  "losses": 29,
+                  "voids": 3,
+                  "slates": 22,
+                  "net_units": 6.9,
+                  "roi": 0.1864864864864865,
+                  "hit_rate": 0.21621621621621623
+                },
+                "trailing_14d": {
+                  "settled": 21,
+                  "wins": 6,
+                  "losses": 15,
+                  "voids": 2,
+                  "slates": 12,
+                  "net_units": 13.1,
+                  "roi": 0.6238095238095239,
+                  "hit_rate": 0.2857142857142857
+                }
+              }
+            },
+            "result": "PENDING",
+            "home_runs": null,
+            "profit_units": 0.0
+          }
+        ]
       }
     ]
   },
   "current": {
     "slate_date": "2026-09-27",
-    "status": "checkpoint_pending",
-    "checkpoints": [],
-    "picks": []
+    "status": "live",
+    "checkpoints": [
+      {
+        "checkpoint": "0817",
+        "qualified_cells": [
+          {
+            "checkpoint": "0817",
+            "book": "FanDuel",
+            "form_id": "400p",
+            "form": "0.400+",
+            "label": "0817 · FanDuel best price · 0.400+",
+            "evidence": {
+              "all_time": {
+                "settled": 65,
+                "wins": 13,
+                "losses": 52,
+                "voids": 3,
+                "slates": 39,
+                "net_units": 10.6,
+                "roi": 0.1630769230769231,
+                "hit_rate": 0.2
+              },
+              "trailing_30d": {
+                "settled": 37,
+                "wins": 8,
+                "losses": 29,
+                "voids": 3,
+                "slates": 22,
+                "net_units": 6.9,
+                "roi": 0.1864864864864865,
+                "hit_rate": 0.21621621621621623
+              },
+              "trailing_14d": {
+                "settled": 21,
+                "wins": 6,
+                "losses": 15,
+                "voids": 2,
+                "slates": 12,
+                "net_units": 13.1,
+                "roi": 0.6238095238095239,
+                "hit_rate": 0.2857142857142857
+              }
+            },
+            "weighted_expected_return": 0.24878048780487805
+          }
+        ],
+        "picks": [
+          {
+            "slate_date": "2026-09-27",
+            "checkpoint": "0817",
+            "player": "Nolan Arenado",
+            "mlbam_id": 571448,
+            "team": "Arizona Diamondbacks",
+            "matchup": "ARI @ SD",
+            "rank": 1,
+            "score": 0.5780952380952381,
+            "odds": 570,
+            "book": "FanDuel",
+            "game_start_at": "2026-09-27T19:10:00.000Z",
+            "captured_at": "2026-09-27T12:17:04.625Z",
+            "cell": {
+              "checkpoint": "0817",
+              "book": "FanDuel",
+              "form": "0.400+",
+              "label": "0817 · FanDuel best price · 0.400+",
+              "evidence": {
+                "all_time": {
+                  "settled": 65,
+                  "wins": 13,
+                  "losses": 52,
+                  "voids": 3,
+                  "slates": 39,
+                  "net_units": 10.6,
+                  "roi": 0.1630769230769231,
+                  "hit_rate": 0.2
+                },
+                "trailing_30d": {
+                  "settled": 37,
+                  "wins": 8,
+                  "losses": 29,
+                  "voids": 3,
+                  "slates": 22,
+                  "net_units": 6.9,
+                  "roi": 0.1864864864864865,
+                  "hit_rate": 0.21621621621621623
+                },
+                "trailing_14d": {
+                  "settled": 21,
+                  "wins": 6,
+                  "losses": 15,
+                  "voids": 2,
+                  "slates": 12,
+                  "net_units": 13.1,
+                  "roi": 0.6238095238095239,
+                  "hit_rate": 0.2857142857142857
+                }
+              }
+            },
+            "result": "PENDING",
+            "home_runs": null,
+            "profit_units": 0.0
+          },
+          {
+            "slate_date": "2026-09-27",
+            "checkpoint": "0817",
+            "player": "Isaac Paredes",
+            "mlbam_id": 670623,
+            "team": "Houston Astros",
+            "matchup": "HOU @ OAK",
+            "rank": 2,
+            "score": 0.5514285714285714,
+            "odds": 470,
+            "book": "FanDuel",
+            "game_start_at": "2026-09-27T19:05:00.000Z",
+            "captured_at": "2026-09-27T12:17:04.625Z",
+            "cell": {
+              "checkpoint": "0817",
+              "book": "FanDuel",
+              "form": "0.400+",
+              "label": "0817 · FanDuel best price · 0.400+",
+              "evidence": {
+                "all_time": {
+                  "settled": 65,
+                  "wins": 13,
+                  "losses": 52,
+                  "voids": 3,
+                  "slates": 39,
+                  "net_units": 10.6,
+                  "roi": 0.1630769230769231,
+                  "hit_rate": 0.2
+                },
+                "trailing_30d": {
+                  "settled": 37,
+                  "wins": 8,
+                  "losses": 29,
+                  "voids": 3,
+                  "slates": 22,
+                  "net_units": 6.9,
+                  "roi": 0.1864864864864865,
+                  "hit_rate": 0.21621621621621623
+                },
+                "trailing_14d": {
+                  "settled": 21,
+                  "wins": 6,
+                  "losses": 15,
+                  "voids": 2,
+                  "slates": 12,
+                  "net_units": 13.1,
+                  "roi": 0.6238095238095239,
+                  "hit_rate": 0.2857142857142857
+                }
+              }
+            },
+            "result": "PENDING",
+            "home_runs": null,
+            "profit_units": 0.0
+          }
+        ]
+      }
+    ],
+    "picks": [
+      {
+        "slate_date": "2026-09-27",
+        "checkpoint": "0817",
+        "player": "Nolan Arenado",
+        "mlbam_id": 571448,
+        "team": "Arizona Diamondbacks",
+        "matchup": "ARI @ SD",
+        "rank": 1,
+        "score": 0.5780952380952381,
+        "odds": 570,
+        "book": "FanDuel",
+        "game_start_at": "2026-09-27T19:10:00.000Z",
+        "captured_at": "2026-09-27T12:17:04.625Z",
+        "cell": {
+          "checkpoint": "0817",
+          "book": "FanDuel",
+          "form": "0.400+",
+          "label": "0817 · FanDuel best price · 0.400+",
+          "evidence": {
+            "all_time": {
+              "settled": 65,
+              "wins": 13,
+              "losses": 52,
+              "voids": 3,
+              "slates": 39,
+              "net_units": 10.6,
+              "roi": 0.1630769230769231,
+              "hit_rate": 0.2
+            },
+            "trailing_30d": {
+              "settled": 37,
+              "wins": 8,
+              "losses": 29,
+              "voids": 3,
+              "slates": 22,
+              "net_units": 6.9,
+              "roi": 0.1864864864864865,
+              "hit_rate": 0.21621621621621623
+            },
+            "trailing_14d": {
+              "settled": 21,
+              "wins": 6,
+              "losses": 15,
+              "voids": 2,
+              "slates": 12,
+              "net_units": 13.1,
+              "roi": 0.6238095238095239,
+              "hit_rate": 0.2857142857142857
+            }
+          }
+        },
+        "result": "PENDING",
+        "home_runs": null,
+        "profit_units": 0.0
+      },
+      {
+        "slate_date": "2026-09-27",
+        "checkpoint": "0817",
+        "player": "Isaac Paredes",
+        "mlbam_id": 670623,
+        "team": "Houston Astros",
+        "matchup": "HOU @ OAK",
+        "rank": 2,
+        "score": 0.5514285714285714,
+        "odds": 470,
+        "book": "FanDuel",
+        "game_start_at": "2026-09-27T19:05:00.000Z",
+        "captured_at": "2026-09-27T12:17:04.625Z",
+        "cell": {
+          "checkpoint": "0817",
+          "book": "FanDuel",
+          "form": "0.400+",
+          "label": "0817 · FanDuel best price · 0.400+",
+          "evidence": {
+            "all_time": {
+              "settled": 65,
+              "wins": 13,
+              "losses": 52,
+              "voids": 3,
+              "slates": 39,
+              "net_units": 10.6,
+              "roi": 0.1630769230769231,
+              "hit_rate": 0.2
+            },
+            "trailing_30d": {
+              "settled": 37,
+              "wins": 8,
+              "losses": 29,
+              "voids": 3,
+              "slates": 22,
+              "net_units": 6.9,
+              "roi": 0.1864864864864865,
+              "hit_rate": 0.21621621621621623
+            },
+            "trailing_14d": {
+              "settled": 21,
+              "wins": 6,
+              "losses": 15,
+              "voids": 2,
+              "slates": 12,
+              "net_units": 13.1,
+              "roi": 0.6238095238095239,
+              "hit_rate": 0.2857142857142857
+            }
+          }
+        },
+        "result": "PENDING",
+        "home_runs": null,
+        "profit_units": 0.0
+      }
+    ]
   }
 }
