@@ -3,7 +3,7 @@ const COMPANION_URL = "/data/hr-volume-companion.json";
 const PORTFOLIO_URL = "/data/hr-portfolio.json";
 const EXPERIMENTAL_URL = "/data/hr-companion.json";
 const DYNAMIC_URL = "/data/hr-dynamic-daily.json";
-const LIVE_URL = "/api/hr-picks-live";
+const LIVE_URL = "/api/central-odds?action=hr-picks-live";
 
 const esc = (value) => String(value == null ? "" : value).replace(/[&<>"']/g, (c) => ({
   "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;",
