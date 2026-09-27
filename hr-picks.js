@@ -3,6 +3,7 @@ const COMPANION_URL = "/data/hr-volume-companion.json";
 const PORTFOLIO_URL = "/data/hr-portfolio.json";
 const EXPERIMENTAL_URL = "/data/hr-companion.json";
 const DYNAMIC_URL = "/data/hr-dynamic-daily.json";
+const LIVE_URL = "/api/hr-picks-live";
 
 const esc = (value) => String(value == null ? "" : value).replace(/[&<>"']/g, (c) => ({
   "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;",
@@ -66,8 +67,9 @@ async function load() {
       fetchJson(PORTFOLIO_URL, false),
       fetchJson(EXPERIMENTAL_URL, false),
       fetchJson(DYNAMIC_URL, false),
-    ]).then(([primary, companion, portfolio, experimental, dynamic]) => {
-      bundle = { primary, companion, portfolio, experimental, dynamic };
+      fetchJson(LIVE_URL, false),
+    ]).then(([primary, companion, portfolio, experimental, dynamic, live]) => {
+      bundle = { primary, companion, portfolio, experimental, dynamic, live };
       return bundle;
     }).finally(() => { loading = null; });
   }
@@ -107,7 +109,11 @@ function picksTable(rows, options) {
   if (!rows.length) return '<div class="empty">No selections are frozen yet.</div>';
   const showStrategy = !!options.showStrategy;
   const showCell = !!options.showCell;
-  const showRoi = options.showRoi == null ? showCell : !!options.showRoi;
+  const fixedRoi = options.fixedRoi;
+  const fixedRoiByStrategy = options.fixedRoiByStrategy || null;
+  const showRoi = options.showRoi == null
+    ? (showCell || fixedRoi != null || !!fixedRoiByStrategy)
+    : !!options.showRoi;
   let head = '<thead><tr><th>#</th><th>Player</th>';
   if (showStrategy) head += '<th>Strategy</th>';
   head += '<th>Score</th><th>Price</th><th>Book</th>';
@@ -122,9 +128,14 @@ function picksTable(rows, options) {
       '<td class="plus"><b>' + odds(row.odds) + '</b></td><td>' + esc(row.book || "-") + '</td>';
     if (showCell) html += '<td>' + esc((row.cell || {}).label || "-") + '</td>';
     if (showRoi) {
-      const weighted = cellWeightedRoi(row);
+      const strategy = String(row.strategy || row.mode || "").toLowerCase();
+      const mapped = fixedRoiByStrategy ? fixedRoiByStrategy[strategy] : null;
+      const weighted = row.cell ? cellWeightedRoi(row) : (mapped?.roi ?? fixedRoi ?? null);
+      const detail = row.cell
+        ? cellRoiDetail(row)
+        : (mapped?.detail || options.fixedRoiDetail || "Historical rule evidence");
       html += '<td><b class="' + (Number(weighted || 0) >= 0 ? "plus" : "loss") + '">' +
-        pct(weighted) + '</b><div class="muted">' + esc(cellRoiDetail(row)) + '</div></td>';
+        pct(weighted) + '</b><div class="muted">' + esc(detail) + '</div></td>';
     }
     html += '<td>' + esc(gameTimeEt(row.game_start_at)) + '</td><td><span class="pill">' +
       esc(row.result || "PENDING") + '</span></td></tr>';
@@ -162,14 +173,20 @@ function ledgerTable(daily, mode) {
     body + '</tbody></table></div>';
 }
 
+function checkpointLabel(value) {
+  const cp = String(value || "");
+  return /^\\d{4}$/.test(cp) ? cp.slice(0, 2) + ":" + cp.slice(2) + " ET" : cp;
+}
+
 function experimentalCheckpointCards(current) {
   current = current || {};
   const rows = current.checkpoints || [];
-  if (!rows.length) return '<div class="empty">No experimental checkpoint has been frozen for this slate yet.</div>';
+  if (!rows.length) return '<div class="empty">No checkpoint has been frozen for this slate yet.</div>';
   return '<div class="hrp-checkpoint-grid">' + rows.map((row) =>
-    '<article class="hrp-stat"><span>' + esc(row.checkpoint) + ' ET</span><strong>' +
+    '<article class="hrp-stat"><span>' + esc(checkpointLabel(row.checkpoint)) + '</span><strong>' +
     Number((row.picks || []).length) + '</strong><small>' +
-    Number((row.qualified_cells || []).length) + ' qualifying evidence-gated cells</small></article>'
+    Number((row.qualified_cells || []).length) + ' qualifying cell' +
+    (Number((row.qualified_cells || []).length) === 1 ? '' : 's') + '</small></article>'
   ).join("") + '</div>';
 }
 
@@ -205,7 +222,7 @@ function currentPicksTable(current, daily, options) {
   return picksTable([], options);
 }
 
-function renderBody(primary, companion, portfolio, experimental, dynamic) {
+function renderBody(primary, companion, portfolio, experimental, dynamic, live) {
   const shell = document.querySelector("#app .shell");
   if (!shell) return;
   ensureNav();
@@ -219,122 +236,129 @@ function renderBody(primary, companion, portfolio, experimental, dynamic) {
 
   const pRule = primary.rule || {};
   const pForward = (primary.forward || {}).summary || {};
-  const pCurrent = primary.current || {};
   const pGate = primary.promotion_gate || {};
+  const pCal = ((primary.calibration || {}).winner || {}).full || {};
+  const pRetro = (primary.retrospective || {}).summary || {};
 
   const cRule = (companion || {}).rule || {};
   const cForward = ((companion || {}).forward || {}).summary || {};
-  const cCurrent = (companion || {}).current || {};
   const cGate = (companion || {}).promotion_gate || {};
+  const cCal = (companion || {}).calibration || {};
+  const cRetro = ((companion || {}).retrospective || {}).summary || {};
 
   const portForward = ((portfolio || {}).forward || {}).summary || {};
-  const portCurrent = (portfolio || {}).current || {};
-
   const expForward = ((experimental || {}).forward || {}).summary || {};
-  const expCurrent = (experimental || {}).current || {};
-
   const dynForward = ((dynamic || {}).forward || {}).summary || {};
-  const dynCurrent = (dynamic || {}).current || {};
   const dynValidation = ((dynamic || {}).research || {}).validation || {};
   const dynValidationSummary = dynValidation.summary || {};
   const dynRule = (dynamic || {}).rule || {};
 
-  const pCal = ((primary.calibration || {}).winner || {}).full || {};
-  const pRetro = (primary.retrospective || {}).summary || {};
-  const cCal = ((companion || {}).calibration || {});
-  const cRetro = (((companion || {}).retrospective || {}).summary || {});
+  const pCurrent = (live || {}).primary || primary.current || {};
+  const cCurrent = (live || {}).companion || (companion || {}).current || {};
+  const portCurrent = (live || {}).portfolio || (portfolio || {}).current || {};
+  const dynCurrent = (live || {}).dynamic || (dynamic || {}).current || {};
+  const expCurrent = (experimental || {}).current || {};
+  const slateDate = (live || {}).slate_date || dynCurrent.slate_date || pCurrent.slate_date || "Today";
 
-  let html = '';
+  const fixedRois = {
+    primary: {
+      roi: pCal.roi,
+      detail: "Calibration · " + Number(pCal.bets || 0) + " bets · " + units(pCal.net_units),
+    },
+    companion: {
+      roi: (cCal.full || {}).roi,
+      detail: "Calibration · " + Number((cCal.full || {}).bets || 0) + " bets · " + units((cCal.full || {}).net_units),
+    },
+  };
 
-  html += '<section class="hero hrp-hero"><div class="card"><div class="eyebrow">HR PICKS | FIXED TWO-RULE PORTFOLIO</div>' +
-    '<h1>Primary + volume companion.</h1><p class="muted">Both official strategies are fixed, independently frozen at 17:17 ET, and tracked prospectively from September 21. The adaptive four-checkpoint system remains visible only as an experimental track.</p>' +
-    '<div class="hrp-stats">' + metricCard("Primary forward", pForward) + metricCard("Companion forward", cForward) +
-    metricCard("Combined portfolio", portForward) + metricCard("Experimental", expForward, "not in combined") + '</div></div>' +
-    '<div class="card"><div class="eyebrow">COMBINED PORTFOLIO</div><h2>Selective + volume, one ledger.</h2>' +
-    '<p class="muted">The combined record is the union of the separately frozen Primary and Companion selections. Same-player overlap is defensively counted once; with the current disjoint score bands it should normally be zero.</p>' +
-    '<div class="notice"><b>Forward only:</b> calibration and Sep. 6–20 diagnostics stay evidence panels, not ledger entries.</div></div></section>';
+  let html = "";
 
-  html += '<section class="hero hrp-hero"><div class="card"><div class="eyebrow">PRIMARY / SELECTIVE | ACTIVE</div>' +
-    '<h2>' + esc(pRule.label || "1717 · 0.100–0.199 · +400–499 · any best book · top 3/slate") + '</h2>' +
-    '<div class="hrp-rule-grid"><div><span>Checkpoint</span><b>17:17 ET</b></div><div><span>Form</span><b>0.100–0.199</b></div>' +
-    '<div><span>Odds</span><b>+400–499</b></div><div><span>Cap</span><b>Top 3</b></div></div>' +
-    '<p class="muted">Best archived book is allowed. Qualifiers rank by HR Form score, then archived price.</p></div>' +
-    '<div class="card"><div class="eyebrow">COMPANION / VOLUME | ACTIVE</div>' +
-    '<h2>' + esc(cRule.label || "1717 · 0.200+ · below +400 · DraftKings best price · top 10/slate") + '</h2>' +
-    '<div class="hrp-rule-grid"><div><span>Checkpoint</span><b>17:17 ET</b></div><div><span>Form</span><b>≥0.200</b></div>' +
-    '<div><span>Odds</span><b>Below +400</b></div><div><span>Book / cap</span><b>DK best · Top 10</b></div></div>' +
-    '<p class="muted">DraftKings must be the archived best-price book. The exact 17:17 DK price is frozen and never replaced.</p></div></section>';
+  html += '<section class="hero hrp-hero"><div class="card"><div class="eyebrow">HR PICKS · ' + esc(slateDate) + '</div>' +
+    '<h1>Today first. History underneath.</h1><p class="muted">Current picks now read directly from the canonical checkpoint store. GitHub remains the permanent archive and ledger, but it is no longer required for today\'s picks to appear.</p>' +
+    '<div class="hrp-stats">' + metricCard("Dynamic forward", dynForward) + metricCard("Primary forward", pForward) +
+    metricCard("Companion forward", cForward) + metricCard("Combined", portForward) + '</div></div>' +
+    '<div class="card"><div class="eyebrow">LIVE DATA PATH</div><h2>' +
+    ((live || {}).status === "ok" ? "Canonical checkpoints connected" : "Static fallback active") + '</h2>' +
+    '<p class="muted">' + ((live || {}).status === "ok"
+      ? "Current-day selections are computed from exact Redis-backed checkpoint snapshots, including frozen book and price."
+      : "Live checkpoint API is unavailable; the page is showing the most recent generated Git snapshot.") + '</p>' +
+    '<div class="notice"><b>Freeze policy:</b> once a checkpoint pick exists, later odds never replace its original book or price.</div></div></section>';
 
-  html += '<section class="card section"><div class="eyebrow">PRIMARY | TODAY</div><h2>' + esc(pCurrent.slate_date || "Today") +
-    ' · 17:17 ET</h2><p class="muted">' + currentStatusMessage(pCurrent, "Primary selections are frozen for forward tracking.") +
-    '</p>' + currentPicksTable(pCurrent, (primary.forward || {}).daily || []) + '</section>';
+  html += '<section class="card section hrp-today"><div class="eyebrow">TODAY · DYNAMIC DAILY</div>' +
+    '<h2>' + esc(dynRule.name || "Dynamic Daily ROI") + '</h2>' +
+    '<p class="muted">08:17 · 11:17 · 17:17 · 20:17 ET. New qualifying picks appear as each exact checkpoint becomes available.</p>' +
+    experimentalCheckpointCards(dynCurrent) +
+    currentPicksTable(dynCurrent, ((dynamic || {}).forward || {}).daily || [], { showCell: true }) + '</section>';
 
-  html += '<section class="card section"><div class="eyebrow">COMPANION | TODAY</div><h2>' + esc(cCurrent.slate_date || pCurrent.slate_date || "Today") +
-    ' · 17:17 ET</h2><p class="muted">' + (!companion ? "Fixed companion data will appear after the next Discovery rebuild." :
-    currentStatusMessage(cCurrent, "Volume selections are independently frozen for forward tracking.")) +
-    '</p>' + (companion ? currentPicksTable(cCurrent, ((companion.forward || {}).daily || [])) : '<div class="empty">Awaiting fixed companion build.</div>') + '</section>';
+  html += '<section class="hrp-today-grid">' +
+    '<article class="card section"><div class="eyebrow">PRIMARY · 17:17 ET</div><h2>Selective</h2>' +
+    '<p class="muted">' + esc(pRule.label || "0.100–0.199 · +400–499 · any best-price book · top 3") + '</p>' +
+    '<div class="hrp-rule-strip"><span>Underlying calibration ROI <b class="plus">' + pct(pCal.roi) + '</b></span>' +
+    '<span>' + Number(pCal.bets || 0) + ' calibration bets</span></div>' +
+    '<p class="muted">' + currentStatusMessage(pCurrent, "Primary selections are frozen.") + '</p>' +
+    currentPicksTable(pCurrent, (primary.forward || {}).daily || [], {
+      fixedRoi: pCal.roi,
+      fixedRoiDetail: "Calibration · " + Number(pCal.bets || 0) + " bets · " + units(pCal.net_units),
+    }) + '</article>' +
+    '<article class="card section"><div class="eyebrow">COMPANION · 17:17 ET</div><h2>Higher volume</h2>' +
+    '<p class="muted">' + esc(cRule.label || "0.200+ · below +400 · DraftKings best · top 10") + '</p>' +
+    '<div class="hrp-rule-strip"><span>Underlying calibration ROI <b class="plus">' + pct((cCal.full || {}).roi) + '</b></span>' +
+    '<span>' + Number((cCal.full || {}).bets || 0) + ' calibration bets</span></div>' +
+    '<p class="muted">' + currentStatusMessage(cCurrent, "Companion selections are frozen.") + '</p>' +
+    (companion ? currentPicksTable(cCurrent, ((companion.forward || {}).daily || []), {
+      fixedRoi: (cCal.full || {}).roi,
+      fixedRoiDetail: "Calibration · " + Number((cCal.full || {}).bets || 0) + " bets · " + units((cCal.full || {}).net_units),
+    }) : '<div class="empty">Companion data unavailable.</div>') + '</article></section>';
 
-  html += '<section class="card section"><div class="eyebrow">PRIMARY | DAILY LEDGER</div><h2>Selective rule record</h2>' +
-    '<div class="hrp-stats">' + metricCard("Forward ROI", pForward) +
-    '<article class="hrp-stat"><span>Settled bets</span><strong>' + Number(pForward.bets || 0) + '</strong><small>' + esc(record(pForward)) + '</small></article>' +
-    '<article class="hrp-stat"><span>Betting slates</span><strong>' + Number(pForward.slates || 0) + '</strong><small>Forward only</small></article>' +
-    '<article class="hrp-stat"><span>Promotion gate</span><strong>' + (pGate.passed ? "PASS" : "TRACKING") + '</strong><small>Independent primary gate</small></article></div>' +
-    ledgerTable((primary.forward || {}).daily || [], "primary") + '</section>';
-
-  html += '<section class="card section"><div class="eyebrow">COMPANION | DAILY LEDGER</div><h2>Higher-volume rule record</h2>' +
-    '<div class="hrp-stats">' + metricCard("Forward ROI", cForward) +
-    '<article class="hrp-stat"><span>Settled bets</span><strong>' + Number(cForward.bets || 0) + '</strong><small>' + esc(record(cForward)) + '</small></article>' +
-    '<article class="hrp-stat"><span>Betting slates</span><strong>' + Number(cForward.slates || 0) + '</strong><small>Forward only</small></article>' +
-    '<article class="hrp-stat"><span>Promotion gate</span><strong>' + (cGate.passed ? "PASS" : "TRACKING") + '</strong><small>Independent companion gate</small></article></div>' +
-    (companion ? ledgerTable(((companion.forward || {}).daily || []), "companion") : '<div class="empty">Awaiting fixed companion build.</div>') + '</section>';
-
-  html += '<section class="card section hrp-combined"><div class="eyebrow">COMBINED PORTFOLIO | DAILY LEDGER</div><h2>Two-rule portfolio record</h2>' +
+  html += '<details class="card section hrp-panel"><summary>Forward ledgers & portfolio</summary>' +
+    '<div class="hrp-panel-body"><h2>Combined portfolio</h2>' +
     '<div class="hrp-stats">' + metricCard("Combined ROI", portForward) +
     '<article class="hrp-stat"><span>Settled bets</span><strong>' + Number(portForward.bets || 0) + '</strong><small>' + esc(record(portForward)) + '</small></article>' +
     '<article class="hrp-stat"><span>Profitable slates</span><strong>' + Number(portForward.profitable_slates || 0) + '</strong><small>Forward only</small></article>' +
-    '<article class="hrp-stat"><span>Overlap deduped</span><strong>' + Number((portfolio || {}).overlap_deduped || 0) + '</strong><small>Same player / slate</small></article></div>' +
-    (portfolio ? ledgerTable(((portfolio.forward || {}).daily || []), "combined") : '<div class="empty">Combined ledger will appear after the next Discovery rebuild.</div>') +
-    '<details><summary>Current combined selections</summary>' + (portfolio ? currentPicksTable(portCurrent, ((portfolio.forward || {}).daily || []), { showStrategy: true }) : '<div class="empty">Awaiting portfolio build.</div>') + '</details></section>';
+    '<article class="hrp-stat"><span>Current picks</span><strong>' + Number((portCurrent.picks || []).length) + '</strong><small>Primary + Companion</small></article></div>' +
+    (portfolio ? ledgerTable(((portfolio.forward || {}).daily || []), "combined") : '') +
+    '<h3>Primary ledger</h3><div class="hrp-stats">' + metricCard("Forward ROI", pForward) +
+    '<article class="hrp-stat"><span>Promotion gate</span><strong>' + (pGate.passed ? "PASS" : "TRACKING") + '</strong><small>Independent gate</small></article></div>' +
+    ledgerTable((primary.forward || {}).daily || [], "primary") +
+    '<h3>Companion ledger</h3><div class="hrp-stats">' + metricCard("Forward ROI", cForward) +
+    '<article class="hrp-stat"><span>Promotion gate</span><strong>' + (cGate.passed ? "PASS" : "TRACKING") + '</strong><small>Independent gate</small></article></div>' +
+    (companion ? ledgerTable(((companion.forward || {}).daily || []), "companion") : '') + '</div></details>';
 
-  html += '<section class="card section"><div class="eyebrow">FIXED-RULE EVIDENCE</div><h2>Calibration and diagnostic context</h2>' +
-    '<p class="muted">These historical panels describe why the rules were chosen. They do not alter the rules or enter the prospective ledgers.</p>' +
+  html += '<details class="card section hrp-panel"><summary>Rule evidence</summary><div class="hrp-panel-body">' +
+    '<p class="muted">Historical evidence explains why the fixed rules were selected; it does not change today\'s criteria.</p>' +
     '<div class="hrp-evidence-grid"><article><h3>Primary / Selective</h3><div class="hrp-stats">' +
-    metricCard("Calibration", pCal) + metricCard("Sep. 6–20", pRetro) + '</div></article><article><h3>Companion / Volume</h3><div class="hrp-stats">' +
-    metricCard("Calibration", cCal.full || {}) + metricCard("Early half", cCal.early || {}) + metricCard("Late half", cCal.late || {}) + metricCard("Sep. 6–20", cRetro) +
-    '</div></article></div></section>';
+    metricCard("Calibration", pCal) + metricCard("Sep. 6–20", pRetro) + '</div></article>' +
+    '<article><h3>Companion / Volume</h3><div class="hrp-stats">' +
+    metricCard("Calibration", cCal.full || {}) + metricCard("Early half", cCal.early || {}) +
+    metricCard("Late half", cCal.late || {}) + metricCard("Sep. 6–20", cRetro) +
+    '</div></article></div></div></details>';
 
-  html += '<section class="card section hrp-dynamic"><div class="eyebrow">DYNAMIC DAILY PICKS | VALIDATED WALK-FORWARD</div>' +
-    '<h2>' + esc(dynRule.name || "Dynamic Daily ROI") + '</h2>' +
-    '<p class="muted">Re-evaluates all four checkpoints daily. Trigger cells are checkpoint × best-price sportsbook × form band; the current slate never contributes to its own evidence.</p>' +
+  html += '<details class="card section hrp-panel"><summary>Dynamic validation & prospective ledger</summary><div class="hrp-panel-body">' +
     '<div class="hrp-stats">' + metricCard("Sep 12–25 validation", dynValidationSummary) +
     metricCard("Forward", dynForward) +
-    '<article class="hrp-stat"><span>Validation profitable slates</span><strong>' + Number(dynValidationSummary.profitable_slates || 0) + '/' + Number(dynValidationSummary.slates || 0) + '</strong><small>Untouched after development ranking</small></article>' +
+    '<article class="hrp-stat"><span>Validation profitable slates</span><strong>' + Number(dynValidationSummary.profitable_slates || 0) + '/' + Number(dynValidationSummary.slates || 0) + '</strong><small>Untouched holdout</small></article>' +
     '<article class="hrp-stat"><span>Selection</span><strong>Top 3 × 2</strong><small>3 cells / checkpoint · 2 players max</small></article></div>' +
-    '<div class="notice"><b>Evidence:</b> all-time gate ≥40 settled / 4 wins / 5 slates / positive net; trailing 14d ≥20 bets and ≥10% ROI; trailing 30d positive. Cells are ranked by weighted ROI across all three horizons.</div>' +
-    '<h3>Today</h3>' +
-    (dynamic ? experimentalCheckpointCards(dynCurrent) : '<div class="empty">Dynamic daily data unavailable.</div>') +
-    (dynamic ? currentPicksTable(dynCurrent, ((dynamic.forward || {}).daily || []), { showCell: true }) : '') +
-    '<details open><summary>14-day validation ledger</summary>' +
-    (dynamic ? ledgerTable((dynValidation.daily || []), "dynamic-validation") : '') + '</details>' +
-    '<details><summary>Prospective ledger · starts Sep. 26</summary>' +
-    (dynamic ? ledgerTable(((dynamic.forward || {}).daily || []), "dynamic") : '') + '</details></section>';
+    '<div class="notice"><b>Evidence gate:</b> all-time ≥40 settled / 4 wins / 5 slates / positive net; trailing 14d ≥20 bets and ≥10% ROI; trailing 30d positive.</div>' +
+    '<h3>Prospective ledger</h3>' + (dynamic ? ledgerTable(((dynamic.forward || {}).daily || []), "dynamic") : '') +
+    '<h3>Validation ledger</h3>' + (dynamic ? ledgerTable((dynValidation.daily || []), "dynamic-validation") : '') +
+    '</div></details>';
 
-  html += '<section class="card section hrp-experimental"><div class="eyebrow">EXPERIMENTAL | DYNAMIC DISCOVERY</div>' +
-    '<h2>Adaptive evidence-gated track</h2><p class="muted">This is the previously deployed all-checkpoint dynamic system. It remains prospectively tracked for research, but it is not the official Companion and is excluded from the Combined Portfolio ledger.</p>' +
+  html += '<details class="card section hrp-panel hrp-experimental"><summary>Experimental adaptive track</summary><div class="hrp-panel-body">' +
+    '<p class="muted">Separately tracked research system. It does not enter the official Primary + Companion portfolio.</p>' +
     '<div class="hrp-stats">' + metricCard("Experimental forward", expForward) +
     '<article class="hrp-stat"><span>Checkpoints</span><strong>4</strong><small>08:17 · 11:17 · 17:17 · 20:17</small></article>' +
-    '<article class="hrp-stat"><span>Selection cap</span><strong>NONE</strong><small>Evidence-gated qualifiers</small></article>' +
     '<article class="hrp-stat"><span>Portfolio impact</span><strong>NONE</strong><small>Tracked separately</small></article></div>' +
-    (experimental ? experimentalCheckpointCards(expCurrent) : '<div class="empty">Experimental data unavailable.</div>') +
+    (experimental ? experimentalCheckpointCards(expCurrent) : '') +
     (experimental ? currentPicksTable(expCurrent, ((experimental.forward || {}).daily || []), { showCell: true }) : '') +
-    '<details><summary>Experimental daily ledger</summary>' + (experimental ? ledgerTable(((experimental.forward || {}).daily || []), "experimental") : '') + '</details></section>';
+    (experimental ? ledgerTable(((experimental.forward || {}).daily || []), "experimental") : '') +
+    '</div></details>';
 
-  html += '<section class="card section"><div class="eyebrow">EXECUTION GUARDRAILS</div><h2>What is frozen</h2><table><tbody>' +
+  html += '<details class="card section hrp-panel"><summary>Execution guardrails</summary><div class="hrp-panel-body"><table><tbody>' +
     '<tr><td>Primary</td><td>17:17 ET · score 0.100–0.199 · +400–499 · any archived best-price book · top 3.</td></tr>' +
     '<tr><td>Companion</td><td>17:17 ET · score ≥0.200 · DraftKings is archived best price · odds below +400 · top 10.</td></tr>' +
-    '<tr><td>Price handling</td><td>Each strategy keeps its original checkpoint book and price permanently; settlement only updates result and profit.</td></tr>' +
-    '<tr><td>Combined</td><td>Union of Primary + Companion only. Dynamic Experimental selections never enter the official portfolio ledger.</td></tr>' +
-    '<tr><td>Stake</td><td>1 flat unit per unique HR prop. No plate appearance is void.</td></tr></tbody></table></section>';
+    '<tr><td>Dynamic</td><td>Four checkpoints; evidence is prior-only; top 3 qualifying cells and top 2 players per checkpoint; first qualifying checkpoint per player wins.</td></tr>' +
+    '<tr><td>Price handling</td><td>Original checkpoint book and price are permanent. Settlement only changes result and profit.</td></tr>' +
+    '<tr><td>Stake</td><td>1 flat unit per unique HR prop. No plate appearance is void.</td></tr></tbody></table></div></details>';
 
   const wrap = document.createElement("div");
   wrap.className = "hrp-root";
@@ -353,7 +377,7 @@ async function renderIfNeeded() {
   try {
     const data = await load();
     if ((location.hash.slice(1) || "today") !== "picks") return;
-    renderBody(data.primary, data.companion, data.portfolio, data.experimental, data.dynamic);
+    renderBody(data.primary, data.companion, data.portfolio, data.experimental, data.dynamic, data.live);
   } catch (error) {
     const header = shell.querySelector("header.top");
     const footer = shell.querySelector("footer.footer");
@@ -372,6 +396,12 @@ const style = document.createElement("style");
 style.textContent = [
   ".hrp-root{display:contents}",
   ".hrp-hero{margin-top:0}",
+  ".hrp-today{border-width:2px}",
+  ".hrp-today-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}",
+  ".hrp-today-grid>.section{margin-top:0}",
+  ".hrp-rule-strip{display:flex;flex-wrap:wrap;gap:8px 16px;margin:12px 0;font-size:.86rem;color:var(--muted,#8492a6)}",
+  ".hrp-panel>summary{font-size:1.05rem;font-weight:800;cursor:pointer;padding:2px 0}",
+  ".hrp-panel-body{margin-top:18px}",
   ".hrp-rule-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:16px}",
   ".hrp-rule-grid>div{border:1px solid var(--line,#e5e7eb);border-radius:10px;padding:12px}",
   ".hrp-rule-grid span,.hrp-stat span{display:block;font-size:.76rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted,#8492a6)}",
@@ -392,8 +422,8 @@ style.textContent = [
   ".hrp-experimental{opacity:.94}",
   ".hrp-evidence-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}",
   ".hrp-evidence-grid .hrp-stats{grid-template-columns:repeat(2,minmax(0,1fr))}",
-  "@media(max-width:800px){.hrp-stats,.hrp-checkpoint-grid,.hrp-rule-grid,.hrp-evidence-grid{grid-template-columns:1fr 1fr}}",
-  "@media(max-width:520px){.hrp-stats,.hrp-checkpoint-grid,.hrp-rule-grid,.hrp-evidence-grid{grid-template-columns:1fr}}"
+  "@media(max-width:800px){.hrp-stats,.hrp-checkpoint-grid,.hrp-rule-grid,.hrp-evidence-grid,.hrp-today-grid{grid-template-columns:1fr 1fr}}",
+  "@media(max-width:520px){.hrp-stats,.hrp-checkpoint-grid,.hrp-rule-grid,.hrp-evidence-grid,.hrp-today-grid{grid-template-columns:1fr}}"
 ].join("");
 
 document.head.appendChild(style);
