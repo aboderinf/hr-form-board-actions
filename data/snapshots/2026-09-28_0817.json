@@ -1,14 +1,16 @@
 {
-  "schema_version": 1,
-  "kind": "latest_shared_slate",
-  "refreshed_at": "2026-09-28T19:41:29.017760+00:00",
-  "refreshed_at_et": "2026-09-28T15:41:29.017760-04:00",
+  "schema_version": 2,
+  "snapshot_id": "2026-09-28_0817",
   "slate_date": "2026-09-28",
-  "status": "shared_odds_slate_empty",
+  "checkpoint_et": "08:17",
+  "scheduled_at_et": "2026-09-28T08:17:00-04:00",
+  "observed_at": "2026-09-28T19:40:55.896029+00:00",
+  "observed_at_et": "2026-09-28T15:40:55.896029-04:00",
+  "status": "shared_odds_not_available_at_checkpoint",
   "sources": {
     "mlb_hr_edge": {
       "source": "MLB HR Edge",
-      "source_url": "/home/runner/work/hr-form-board-actions/hr-form-board-actions/data/shared-odds/latest.json",
+      "source_url": "data/shared-odds/latest.json",
       "delivery": "qstash-vercel-redis",
       "source_date": "2026-09-28",
       "date_matches": true,
@@ -28,14 +30,13 @@
         "BetMGM"
       ],
       "row_count": 0,
-      "compatibility_fallback": "exact_upstash_checkpoint_cache",
-      "checkpoint": "0817",
       "mlbam_ids_hydrated": 0,
       "mlbam_ids_added": 0,
-      "unresolved_player_names": []
+      "unresolved_player_names": [],
+      "compatibility_fallback": "exact_upstash_checkpoint_cache",
+      "checkpoint_at": "2026-09-28T08:17:00-04:00"
     }
   },
   "diagnostics": [],
-  "portfolios": {},
-  "source_generated_at": "2026-09-28T12:17:01.559Z"
+  "portfolios": {}
 }
