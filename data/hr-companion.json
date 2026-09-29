@@ -2,7 +2,7 @@
   "schema_version": 1,
   "kind": "hr_form_companion",
   "status": "active",
-  "generated_at": "2026-09-29T05:46:38.270622+00:00",
+  "generated_at": "2026-09-29T18:05:37.640777+00:00",
   "rule": {
     "name": "Dynamic evidence-gated companion",
     "checkpoints": [
@@ -244,6 +244,30 @@
           "net_units": 0.0,
           "roi": null
         }
+      },
+      {
+        "slate_date": "2026-09-29",
+        "checkpoints": [
+          "0817"
+        ],
+        "selections": [],
+        "bets": 0,
+        "wins": 0,
+        "losses": 0,
+        "voids": 0,
+        "pending": 0,
+        "slates": 0,
+        "profitable_slates": 0,
+        "hit_rate": null,
+        "net_units": 0,
+        "roi": null,
+        "cumulative": {
+          "bets": 0,
+          "wins": 0,
+          "losses": 0,
+          "net_units": 0.0,
+          "roi": null
+        }
       }
     ],
     "snapshots": [
@@ -422,13 +446,27 @@
         "captured_at": "2026-09-29T01:00:06.178950+00:00",
         "qualified_cells": [],
         "selections": []
+      },
+      {
+        "slate_date": "2026-09-29",
+        "checkpoint": "0817",
+        "mode": "companion",
+        "captured_at": "2026-09-29T18:05:36.352650+00:00",
+        "qualified_cells": [],
+        "selections": []
       }
     ]
   },
   "current": {
     "slate_date": "2026-09-29",
-    "status": "checkpoint_pending",
-    "checkpoints": [],
+    "status": "live",
+    "checkpoints": [
+      {
+        "checkpoint": "0817",
+        "qualified_cells": [],
+        "picks": []
+      }
+    ],
     "picks": []
   }
 }
