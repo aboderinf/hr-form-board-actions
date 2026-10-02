@@ -1,8 +1,8 @@
 {
   "schema_version": 3,
   "kind": "top_100_profit_discovery",
-  "generated_at": "2026-10-01T20:22:14.328641+00:00",
-  "generated_at_et": "2026-10-01T16:22:14.328641-04:00",
+  "generated_at": "2026-10-02T00:48:17.106664+00:00",
+  "generated_at_et": "2026-10-01T20:48:17.106664-04:00",
   "status": "ready",
   "methodology": {
     "capture": "All Top 100 form-score rows are archived at each discovery checkpoint, including rows without an available price.",
@@ -12,15 +12,15 @@
     "warning": "Results are exploratory and sample sizes must be considered before treating any segment as a repeatable edge."
   },
   "archive_started": "2026-08-02T23:21:58.928645-04:00",
-  "capture_count": 233,
-  "raw_top100_rows": 23300,
-  "raw_priced_rows": 8542,
+  "capture_count": 234,
+  "raw_top100_rows": 23400,
+  "raw_priced_rows": 8545,
   "unique_priced_player_games": 3230,
   "reports": {
     "rolling_14d": {
       "start": "2026-09-18",
       "end": "2026-10-01",
-      "raw_checkpoint_captures": 1622,
+      "raw_checkpoint_captures": 1625,
       "analyzed_checkpoint_rows": 1616,
       "complete_slates": 12,
       "latest_complete_slate": "2026-09-30",
@@ -13619,7 +13619,7 @@
     "calendar_month": {
       "start": "2026-10-01",
       "end": "2026-10-01",
-      "raw_checkpoint_captures": 6,
+      "raw_checkpoint_captures": 9,
       "analyzed_checkpoint_rows": 0,
       "complete_slates": 0,
       "latest_complete_slate": null,
@@ -13842,7 +13842,7 @@
     "all_time": {
       "start": "2026-08-02",
       "end": "2026-10-01",
-      "raw_checkpoint_captures": 8542,
+      "raw_checkpoint_captures": 8545,
       "analyzed_checkpoint_rows": 8536,
       "complete_slates": 57,
       "latest_complete_slate": "2026-09-30",
@@ -122923,6 +122923,39 @@
       "game_start_at": "2026-10-01T18:00:00.000Z",
       "result": "PENDING",
       "profit_units": null
+    },
+    {
+      "slate_date": "2026-10-01",
+      "checkpoint": "1717",
+      "mlbam_id": 663586,
+      "score": 0.32571428571428573,
+      "best_book": "FanDuel",
+      "best_odds": 610,
+      "game_start_at": "2026-10-02T00:00:00.000Z",
+      "result": "PENDING",
+      "profit_units": null
+    },
+    {
+      "slate_date": "2026-10-01",
+      "checkpoint": "1717",
+      "mlbam_id": 624641,
+      "score": 0.32571428571428573,
+      "best_book": "DraftKings",
+      "best_odds": 740,
+      "game_start_at": "2026-10-02T00:00:00.000Z",
+      "result": "PENDING",
+      "profit_units": null
+    },
+    {
+      "slate_date": "2026-10-01",
+      "checkpoint": "1717",
+      "mlbam_id": 621566,
+      "score": 0.1961904761904762,
+      "best_book": "FanDuel",
+      "best_odds": 390,
+      "game_start_at": "2026-10-02T00:00:00.000Z",
+      "result": "PENDING",
+      "profit_units": null
     }
   ],
   "rule_tracking": {
@@ -124313,6 +124346,16 @@
   "recent_captures": [
     {
       "slate_date": "2026-10-01",
+      "checkpoint": "1717",
+      "captured_at_et": "2026-10-01T20:48:16.941961-04:00",
+      "top100_rows": 100,
+      "priced_rows": 3,
+      "odds_coverage": 0.03,
+      "source_status": "ready",
+      "source_generated_at": "2026-10-01T21:17:01.783Z"
+    },
+    {
+      "slate_date": "2026-10-01",
       "checkpoint": "1117",
       "captured_at_et": "2026-10-01T16:22:14.166794-04:00",
       "top100_rows": 100,
@@ -124500,16 +124543,6 @@
       "odds_coverage": 0.14,
       "source_status": "ready",
       "source_generated_at": "2026-09-27T00:17:04.359Z"
-    },
-    {
-      "slate_date": "2026-09-26",
-      "checkpoint": "1717",
-      "captured_at_et": "2026-09-26T19:38:20.872631-04:00",
-      "top100_rows": 100,
-      "priced_rows": 31,
-      "odds_coverage": 0.31,
-      "source_status": "ready",
-      "source_generated_at": "2026-09-26T21:17:03.756Z"
     }
   ],
   "recent_results": [
@@ -124583,9 +124616,9 @@
     },
     {
       "slate_date": "2026-10-01",
-      "checkpoint": "0817",
-      "captured_at": "2026-10-01T18:26:17.164364+00:00",
-      "captured_at_et": "2026-10-01T14:26:17.164364-04:00",
+      "checkpoint": "1717",
+      "captured_at": "2026-10-02T00:48:16.941961+00:00",
+      "captured_at_et": "2026-10-01T20:48:16.941961-04:00",
       "rank": 28,
       "player": "Edmundo Sosa",
       "mlbam_id": 624641,
@@ -124599,26 +124632,50 @@
       "games_available": 15,
       "sample_status": "Established",
       "game_pk": null,
-      "game_start_at": "2026-10-01T18:00:00.000Z",
+      "game_start_at": "2026-10-02T00:00:00.000Z",
       "matchup": "PHI @ ATL",
       "all_prices": [
         {
           "book": "BetMGM",
           "book_id": "betmgm",
-          "odds": 725,
-          "captured_at": "2026-10-01T12:09:52.443Z",
+          "odds": 575,
+          "captured_at": "2026-10-01T21:11:44.021Z",
           "source": "qstash-vercel-sportsgameodds",
           "source_event_id": "3d4YiIMiQVrDEqxPHgB7",
           "source_odd_id": "batting_homeRuns-EDMUNDO_SOSA_1_MLB-game-yn-yes",
-          "provider_call_id": "2026-10-01:0817:2026-10-01T12:17:02.096Z:c4682ba0b47a",
+          "provider_call_id": "2026-10-01:1717:2026-10-01T21:17:01.783Z:3eac98401061",
+          "verified": true,
+          "url": null
+        },
+        {
+          "book": "FanDuel",
+          "book_id": "fanduel",
+          "odds": 660,
+          "captured_at": "2026-10-01T21:11:40.770Z",
+          "source": "qstash-vercel-sportsgameodds",
+          "source_event_id": "3d4YiIMiQVrDEqxPHgB7",
+          "source_odd_id": "batting_homeRuns-EDMUNDO_SOSA_1_MLB-game-yn-yes",
+          "provider_call_id": "2026-10-01:1717:2026-10-01T21:17:01.783Z:3eac98401061",
+          "verified": true,
+          "url": null
+        },
+        {
+          "book": "DraftKings",
+          "book_id": "draftkings",
+          "odds": 740,
+          "captured_at": "2026-10-01T21:11:46.210Z",
+          "source": "qstash-vercel-sportsgameodds",
+          "source_event_id": "3d4YiIMiQVrDEqxPHgB7",
+          "source_odd_id": "batting_homeRuns-EDMUNDO_SOSA_1_MLB-game-yn-yes",
+          "provider_call_id": "2026-10-01:1717:2026-10-01T21:17:01.783Z:3eac98401061",
           "verified": true,
           "url": null
         }
       ],
-      "best_book": "BetMGM",
-      "best_odds": 725,
-      "best_odds_text": "+725",
-      "best_price_captured_at": "2026-10-01T12:09:52.443Z",
+      "best_book": "DraftKings",
+      "best_odds": 740,
+      "best_odds_text": "+740",
+      "best_price_captured_at": "2026-10-01T21:11:46.210Z",
       "source_event_id": "3d4YiIMiQVrDEqxPHgB7",
       "source_odd_id": "batting_homeRuns-EDMUNDO_SOSA_1_MLB-game-yn-yes",
       "result": "PENDING",
