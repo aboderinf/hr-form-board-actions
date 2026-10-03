@@ -2,7 +2,7 @@
   "schema_version": 1,
   "kind": "hr_dynamic_daily_picks",
   "status": "active",
-  "generated_at": "2026-10-03T05:21:42.546532+00:00",
+  "generated_at": "2026-10-03T16:18:33.663109+00:00",
   "rule": {
     "name": "Dynamic Daily ROI",
     "checkpoints": [
@@ -21985,12 +21985,12 @@
   "forward": {
     "start": "2026-09-26",
     "summary": {
-      "selections": 13,
+      "selections": 14,
       "bets": 6,
       "wins": 1,
       "losses": 5,
       "voids": 7,
-      "pending": 0,
+      "pending": 1,
       "slates": 2,
       "profitable_slates": 1,
       "losing_slates": 1,
@@ -22914,6 +22914,90 @@
         "losses": 0,
         "voids": 0,
         "pending": 0,
+        "slates": 0,
+        "profitable_slates": 0,
+        "losing_slates": 0,
+        "profitable_slate_rate": null,
+        "hit_rate": null,
+        "average_break_even": null,
+        "empirical_probability_edge": null,
+        "net_units": 0,
+        "roi": null,
+        "cumulative": {
+          "bets": 6,
+          "wins": 1,
+          "losses": 5,
+          "net_units": -0.57,
+          "roi": -0.09500000000000001
+        }
+      },
+      {
+        "slate_date": "2026-10-03",
+        "checkpoints": [
+          "0817"
+        ],
+        "selections": [
+          {
+            "slate_date": "2026-10-03",
+            "checkpoint": "0817",
+            "player": "Munetaka Murakami",
+            "mlbam_id": 808959,
+            "team": "Chicago White Sox",
+            "matchup": "CWS @ CLE",
+            "rank": 52,
+            "score": 0.22571428571428573,
+            "odds": 500,
+            "book": "BetMGM",
+            "game_start_at": "2026-10-03T17:00:00.000Z",
+            "captured_at": "2026-10-03T16:18:31.525604+00:00",
+            "cell": {
+              "checkpoint": "0817",
+              "book": "BetMGM",
+              "form": "0.200–0.299",
+              "label": "0817 · BetMGM best price · 0.200–0.299",
+              "evidence": {
+                "all_time": {
+                  "settled": 130,
+                  "wins": 25,
+                  "losses": 105,
+                  "voids": 19,
+                  "slates": 46,
+                  "net_units": 21.9,
+                  "roi": 0.16846153846153844,
+                  "hit_rate": 0.19230769230769232
+                },
+                "trailing_30d": {
+                  "settled": 74,
+                  "wins": 13,
+                  "losses": 61,
+                  "voids": 12,
+                  "slates": 20,
+                  "net_units": 6.55,
+                  "roi": 0.08851351351351353,
+                  "hit_rate": 0.17567567567567569
+                },
+                "trailing_14d": {
+                  "settled": 26,
+                  "wins": 5,
+                  "losses": 21,
+                  "voids": 9,
+                  "slates": 6,
+                  "net_units": 4.4,
+                  "roi": 0.16923076923076924,
+                  "hit_rate": 0.19230769230769232
+                }
+              }
+            },
+            "result": "PENDING",
+            "home_runs": null,
+            "profit_units": 0.0
+          }
+        ],
+        "bets": 0,
+        "wins": 0,
+        "losses": 0,
+        "voids": 0,
+        "pending": 1,
         "slates": 0,
         "profitable_slates": 0,
         "losing_slates": 0,
@@ -24545,13 +24629,277 @@
         "captured_at": "2026-10-03T00:30:52.274673+00:00",
         "qualified_cells": [],
         "selections": []
+      },
+      {
+        "slate_date": "2026-10-03",
+        "checkpoint": "0817",
+        "mode": "dynamic_daily",
+        "captured_at": "2026-10-03T16:18:31.525604+00:00",
+        "qualified_cells": [
+          {
+            "checkpoint": "0817",
+            "book": "BetMGM",
+            "form_id": "200_299",
+            "form": "0.200–0.299",
+            "label": "0817 · BetMGM best price · 0.200–0.299",
+            "evidence": {
+              "all_time": {
+                "settled": 130,
+                "wins": 25,
+                "losses": 105,
+                "voids": 19,
+                "slates": 46,
+                "net_units": 21.9,
+                "roi": 0.16846153846153844,
+                "hit_rate": 0.19230769230769232
+              },
+              "trailing_30d": {
+                "settled": 74,
+                "wins": 13,
+                "losses": 61,
+                "voids": 12,
+                "slates": 20,
+                "net_units": 6.55,
+                "roi": 0.08851351351351353,
+                "hit_rate": 0.17567567567567569
+              },
+              "trailing_14d": {
+                "settled": 26,
+                "wins": 5,
+                "losses": 21,
+                "voids": 9,
+                "slates": 6,
+                "net_units": 4.4,
+                "roi": 0.16923076923076924,
+                "hit_rate": 0.19230769230769232
+              }
+            },
+            "weighted_expected_return": 0.14282608695652174
+          }
+        ],
+        "selections": [
+          {
+            "slate_date": "2026-10-03",
+            "checkpoint": "0817",
+            "player": "Munetaka Murakami",
+            "mlbam_id": 808959,
+            "team": "Chicago White Sox",
+            "matchup": "CWS @ CLE",
+            "rank": 52,
+            "score": 0.22571428571428573,
+            "odds": 500,
+            "book": "BetMGM",
+            "game_start_at": "2026-10-03T17:00:00.000Z",
+            "captured_at": "2026-10-03T16:18:31.525604+00:00",
+            "cell": {
+              "checkpoint": "0817",
+              "book": "BetMGM",
+              "form": "0.200–0.299",
+              "label": "0817 · BetMGM best price · 0.200–0.299",
+              "evidence": {
+                "all_time": {
+                  "settled": 130,
+                  "wins": 25,
+                  "losses": 105,
+                  "voids": 19,
+                  "slates": 46,
+                  "net_units": 21.9,
+                  "roi": 0.16846153846153844,
+                  "hit_rate": 0.19230769230769232
+                },
+                "trailing_30d": {
+                  "settled": 74,
+                  "wins": 13,
+                  "losses": 61,
+                  "voids": 12,
+                  "slates": 20,
+                  "net_units": 6.55,
+                  "roi": 0.08851351351351353,
+                  "hit_rate": 0.17567567567567569
+                },
+                "trailing_14d": {
+                  "settled": 26,
+                  "wins": 5,
+                  "losses": 21,
+                  "voids": 9,
+                  "slates": 6,
+                  "net_units": 4.4,
+                  "roi": 0.16923076923076924,
+                  "hit_rate": 0.19230769230769232
+                }
+              }
+            },
+            "result": "PENDING",
+            "home_runs": null,
+            "profit_units": 0.0
+          }
+        ]
       }
     ]
   },
   "current": {
     "slate_date": "2026-10-03",
-    "status": "checkpoint_pending",
-    "checkpoints": [],
-    "picks": []
+    "status": "live",
+    "checkpoints": [
+      {
+        "checkpoint": "0817",
+        "qualified_cells": [
+          {
+            "checkpoint": "0817",
+            "book": "BetMGM",
+            "form_id": "200_299",
+            "form": "0.200–0.299",
+            "label": "0817 · BetMGM best price · 0.200–0.299",
+            "evidence": {
+              "all_time": {
+                "settled": 130,
+                "wins": 25,
+                "losses": 105,
+                "voids": 19,
+                "slates": 46,
+                "net_units": 21.9,
+                "roi": 0.16846153846153844,
+                "hit_rate": 0.19230769230769232
+              },
+              "trailing_30d": {
+                "settled": 74,
+                "wins": 13,
+                "losses": 61,
+                "voids": 12,
+                "slates": 20,
+                "net_units": 6.55,
+                "roi": 0.08851351351351353,
+                "hit_rate": 0.17567567567567569
+              },
+              "trailing_14d": {
+                "settled": 26,
+                "wins": 5,
+                "losses": 21,
+                "voids": 9,
+                "slates": 6,
+                "net_units": 4.4,
+                "roi": 0.16923076923076924,
+                "hit_rate": 0.19230769230769232
+              }
+            },
+            "weighted_expected_return": 0.14282608695652174
+          }
+        ],
+        "picks": [
+          {
+            "slate_date": "2026-10-03",
+            "checkpoint": "0817",
+            "player": "Munetaka Murakami",
+            "mlbam_id": 808959,
+            "team": "Chicago White Sox",
+            "matchup": "CWS @ CLE",
+            "rank": 52,
+            "score": 0.22571428571428573,
+            "odds": 500,
+            "book": "BetMGM",
+            "game_start_at": "2026-10-03T17:00:00.000Z",
+            "captured_at": "2026-10-03T16:18:31.525604+00:00",
+            "cell": {
+              "checkpoint": "0817",
+              "book": "BetMGM",
+              "form": "0.200–0.299",
+              "label": "0817 · BetMGM best price · 0.200–0.299",
+              "evidence": {
+                "all_time": {
+                  "settled": 130,
+                  "wins": 25,
+                  "losses": 105,
+                  "voids": 19,
+                  "slates": 46,
+                  "net_units": 21.9,
+                  "roi": 0.16846153846153844,
+                  "hit_rate": 0.19230769230769232
+                },
+                "trailing_30d": {
+                  "settled": 74,
+                  "wins": 13,
+                  "losses": 61,
+                  "voids": 12,
+                  "slates": 20,
+                  "net_units": 6.55,
+                  "roi": 0.08851351351351353,
+                  "hit_rate": 0.17567567567567569
+                },
+                "trailing_14d": {
+                  "settled": 26,
+                  "wins": 5,
+                  "losses": 21,
+                  "voids": 9,
+                  "slates": 6,
+                  "net_units": 4.4,
+                  "roi": 0.16923076923076924,
+                  "hit_rate": 0.19230769230769232
+                }
+              }
+            },
+            "result": "PENDING",
+            "home_runs": null,
+            "profit_units": 0.0
+          }
+        ]
+      }
+    ],
+    "picks": [
+      {
+        "slate_date": "2026-10-03",
+        "checkpoint": "0817",
+        "player": "Munetaka Murakami",
+        "mlbam_id": 808959,
+        "team": "Chicago White Sox",
+        "matchup": "CWS @ CLE",
+        "rank": 52,
+        "score": 0.22571428571428573,
+        "odds": 500,
+        "book": "BetMGM",
+        "game_start_at": "2026-10-03T17:00:00.000Z",
+        "captured_at": "2026-10-03T16:18:31.525604+00:00",
+        "cell": {
+          "checkpoint": "0817",
+          "book": "BetMGM",
+          "form": "0.200–0.299",
+          "label": "0817 · BetMGM best price · 0.200–0.299",
+          "evidence": {
+            "all_time": {
+              "settled": 130,
+              "wins": 25,
+              "losses": 105,
+              "voids": 19,
+              "slates": 46,
+              "net_units": 21.9,
+              "roi": 0.16846153846153844,
+              "hit_rate": 0.19230769230769232
+            },
+            "trailing_30d": {
+              "settled": 74,
+              "wins": 13,
+              "losses": 61,
+              "voids": 12,
+              "slates": 20,
+              "net_units": 6.55,
+              "roi": 0.08851351351351353,
+              "hit_rate": 0.17567567567567569
+            },
+            "trailing_14d": {
+              "settled": 26,
+              "wins": 5,
+              "losses": 21,
+              "voids": 9,
+              "slates": 6,
+              "net_units": 4.4,
+              "roi": 0.16923076923076924,
+              "hit_rate": 0.19230769230769232
+            }
+          }
+        },
+        "result": "PENDING",
+        "home_runs": null,
+        "profit_units": 0.0
+      }
+    ]
   }
 }
