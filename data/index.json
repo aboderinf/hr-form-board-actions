@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-03T23:47:20.543009+00:00",
+  "generated_at": "2026-10-04T00:02:58.083339+00:00",
   "method": "0.50*L5 + 0.30*L7 + 0.20*L15 cumulative HR-game rates",
   "checkpoints_et": [
     "08:17",
@@ -32,14 +32,14 @@
   "latest": {
     "schema_version": 1,
     "kind": "latest_shared_slate",
-    "refreshed_at": "2026-10-03T23:47:20.217718+00:00",
-    "refreshed_at_et": "2026-10-03T19:47:20.217718-04:00",
+    "refreshed_at": "2026-10-04T00:02:55.691690+00:00",
+    "refreshed_at_et": "2026-10-03T20:02:55.691690-04:00",
     "slate_date": "2026-10-03",
     "status": "current",
     "sources": {
       "mlb_hr_edge": {
         "source": "MLB HR Edge",
-        "source_url": "/home/runner/work/hr-form-board-actions/hr-form-board-actions/data/shared-odds/latest.json",
+        "source_url": "https://mlb-hr-edge.feranmi.chatgpt.site/api/odds?latest=1",
         "delivery": "qstash-vercel-redis",
         "source_date": "2026-10-03",
         "date_matches": true,
@@ -59,8 +59,7 @@
           "BetMGM"
         ],
         "row_count": 35,
-        "compatibility_fallback": "exact_upstash_checkpoint_cache",
-        "checkpoint": "1717",
+        "compatibility_fallback": "odds_api",
         "mlbam_ids_hydrated": 33,
         "mlbam_ids_added": 33,
         "unresolved_player_names": [
@@ -92,10 +91,10 @@
             "dk_odds": 790,
             "all_prices": [
               {
-                "book": "DraftKings",
-                "book_id": "draftkings",
-                "odds": 790,
-                "captured_at": "2026-10-03T21:09:22.588Z",
+                "book": "FanDuel",
+                "book_id": "fanduel",
+                "odds": 830,
+                "captured_at": "2026-10-03T21:11:59.462Z",
                 "source": "qstash-vercel-sportsgameodds",
                 "source_event_id": "tYKu3KEImFMpz6AvKSp5",
                 "source_odd_id": "batting_homeRuns-BRICE_TURANG_1_MLB-game-ou-over",
@@ -104,10 +103,10 @@
                 "url": null
               },
               {
-                "book": "FanDuel",
-                "book_id": "fanduel",
-                "odds": 830,
-                "captured_at": "2026-10-03T21:11:59.462Z",
+                "book": "DraftKings",
+                "book_id": "draftkings",
+                "odds": 790,
+                "captured_at": "2026-10-03T21:09:22.588Z",
                 "source": "qstash-vercel-sportsgameodds",
                 "source_event_id": "tYKu3KEImFMpz6AvKSp5",
                 "source_odd_id": "batting_homeRuns-BRICE_TURANG_1_MLB-game-ou-over",
@@ -158,10 +157,10 @@
             "dk_odds": 586,
             "all_prices": [
               {
-                "book": "DraftKings",
-                "book_id": "draftkings",
-                "odds": 586,
-                "captured_at": "2026-10-03T21:09:22.588Z",
+                "book": "FanDuel",
+                "book_id": "fanduel",
+                "odds": 570,
+                "captured_at": "2026-10-03T21:11:59.462Z",
                 "source": "qstash-vercel-sportsgameodds",
                 "source_event_id": "tYKu3KEImFMpz6AvKSp5",
                 "source_odd_id": "batting_homeRuns-MANNY_MACHADO_1_MLB-game-ou-over",
@@ -170,10 +169,10 @@
                 "url": null
               },
               {
-                "book": "FanDuel",
-                "book_id": "fanduel",
-                "odds": 570,
-                "captured_at": "2026-10-03T21:11:59.462Z",
+                "book": "DraftKings",
+                "book_id": "draftkings",
+                "odds": 586,
+                "captured_at": "2026-10-03T21:09:22.588Z",
                 "source": "qstash-vercel-sportsgameodds",
                 "source_event_id": "tYKu3KEImFMpz6AvKSp5",
                 "source_odd_id": "batting_homeRuns-MANNY_MACHADO_1_MLB-game-ou-over",
@@ -224,10 +223,10 @@
             "dk_odds": 870,
             "all_prices": [
               {
-                "book": "DraftKings",
-                "book_id": "draftkings",
-                "odds": 870,
-                "captured_at": "2026-10-03T21:09:22.588Z",
+                "book": "FanDuel",
+                "book_id": "fanduel",
+                "odds": 980,
+                "captured_at": "2026-10-03T21:11:59.462Z",
                 "source": "qstash-vercel-sportsgameodds",
                 "source_event_id": "tYKu3KEImFMpz6AvKSp5",
                 "source_odd_id": "batting_homeRuns-CHRISTIAN_YELICH_1_MLB-game-ou-over",
@@ -236,10 +235,10 @@
                 "url": null
               },
               {
-                "book": "FanDuel",
-                "book_id": "fanduel",
-                "odds": 980,
-                "captured_at": "2026-10-03T21:11:59.462Z",
+                "book": "DraftKings",
+                "book_id": "draftkings",
+                "odds": 870,
+                "captured_at": "2026-10-03T21:09:22.588Z",
                 "source": "qstash-vercel-sportsgameodds",
                 "source_event_id": "tYKu3KEImFMpz6AvKSp5",
                 "source_odd_id": "batting_homeRuns-CHRISTIAN_YELICH_1_MLB-game-ou-over",
@@ -290,10 +289,10 @@
             "dk_odds": 900,
             "all_prices": [
               {
-                "book": "DraftKings",
-                "book_id": "draftkings",
-                "odds": 900,
-                "captured_at": "2026-10-03T21:09:22.588Z",
+                "book": "FanDuel",
+                "book_id": "fanduel",
+                "odds": 870,
+                "captured_at": "2026-10-03T21:11:59.462Z",
                 "source": "qstash-vercel-sportsgameodds",
                 "source_event_id": "tYKu3KEImFMpz6AvKSp5",
                 "source_odd_id": "batting_homeRuns-XANDER_BOGAERTS_1_MLB-game-ou-over",
@@ -302,10 +301,10 @@
                 "url": null
               },
               {
-                "book": "FanDuel",
-                "book_id": "fanduel",
-                "odds": 870,
-                "captured_at": "2026-10-03T21:11:59.462Z",
+                "book": "DraftKings",
+                "book_id": "draftkings",
+                "odds": 900,
+                "captured_at": "2026-10-03T21:09:22.588Z",
                 "source": "qstash-vercel-sportsgameodds",
                 "source_event_id": "tYKu3KEImFMpz6AvKSp5",
                 "source_odd_id": "batting_homeRuns-XANDER_BOGAERTS_1_MLB-game-ou-over",
@@ -356,10 +355,10 @@
             "dk_odds": 510,
             "all_prices": [
               {
-                "book": "DraftKings",
-                "book_id": "draftkings",
-                "odds": 510,
-                "captured_at": "2026-10-03T21:09:22.588Z",
+                "book": "FanDuel",
+                "book_id": "fanduel",
+                "odds": 480,
+                "captured_at": "2026-10-03T21:11:59.462Z",
                 "source": "qstash-vercel-sportsgameodds",
                 "source_event_id": "tYKu3KEImFMpz6AvKSp5",
                 "source_odd_id": "batting_homeRuns-FERNANDO_TATIS_JR_1_MLB-game-ou-over",
@@ -368,10 +367,10 @@
                 "url": null
               },
               {
-                "book": "FanDuel",
-                "book_id": "fanduel",
-                "odds": 480,
-                "captured_at": "2026-10-03T21:11:59.462Z",
+                "book": "DraftKings",
+                "book_id": "draftkings",
+                "odds": 510,
+                "captured_at": "2026-10-03T21:09:22.588Z",
                 "source": "qstash-vercel-sportsgameodds",
                 "source_event_id": "tYKu3KEImFMpz6AvKSp5",
                 "source_odd_id": "batting_homeRuns-FERNANDO_TATIS_JR_1_MLB-game-ou-over",
@@ -422,10 +421,10 @@
             "dk_odds": 544,
             "all_prices": [
               {
-                "book": "DraftKings",
-                "book_id": "draftkings",
-                "odds": 544,
-                "captured_at": "2026-10-03T21:09:22.588Z",
+                "book": "FanDuel",
+                "book_id": "fanduel",
+                "odds": 530,
+                "captured_at": "2026-10-03T21:11:59.462Z",
                 "source": "qstash-vercel-sportsgameodds",
                 "source_event_id": "tYKu3KEImFMpz6AvKSp5",
                 "source_odd_id": "batting_homeRuns-WILLIAM_CONTRERAS_1_MLB-game-ou-over",
@@ -434,10 +433,10 @@
                 "url": null
               },
               {
-                "book": "FanDuel",
-                "book_id": "fanduel",
-                "odds": 530,
-                "captured_at": "2026-10-03T21:11:59.462Z",
+                "book": "DraftKings",
+                "book_id": "draftkings",
+                "odds": 544,
+                "captured_at": "2026-10-03T21:09:22.588Z",
                 "source": "qstash-vercel-sportsgameodds",
                 "source_event_id": "tYKu3KEImFMpz6AvKSp5",
                 "source_odd_id": "batting_homeRuns-WILLIAM_CONTRERAS_1_MLB-game-ou-over",
@@ -530,10 +529,10 @@
             "dk_odds": 1380,
             "all_prices": [
               {
-                "book": "DraftKings",
-                "book_id": "draftkings",
-                "odds": 1380,
-                "captured_at": "2026-10-03T21:09:22.588Z",
+                "book": "FanDuel",
+                "book_id": "fanduel",
+                "odds": 1300,
+                "captured_at": "2026-10-03T21:11:59.462Z",
                 "source": "qstash-vercel-sportsgameodds",
                 "source_event_id": "tYKu3KEImFMpz6AvKSp5",
                 "source_odd_id": "batting_homeRuns-JAKE_CRONENWORTH_1_MLB-game-ou-over",
@@ -542,10 +541,10 @@
                 "url": null
               },
               {
-                "book": "FanDuel",
-                "book_id": "fanduel",
-                "odds": 1300,
-                "captured_at": "2026-10-03T21:11:59.462Z",
+                "book": "DraftKings",
+                "book_id": "draftkings",
+                "odds": 1380,
+                "captured_at": "2026-10-03T21:09:22.588Z",
                 "source": "qstash-vercel-sportsgameodds",
                 "source_event_id": "tYKu3KEImFMpz6AvKSp5",
                 "source_odd_id": "batting_homeRuns-JAKE_CRONENWORTH_1_MLB-game-ou-over",
@@ -638,10 +637,10 @@
             "dk_odds": 820,
             "all_prices": [
               {
-                "book": "DraftKings",
-                "book_id": "draftkings",
-                "odds": 820,
-                "captured_at": "2026-10-03T21:09:22.588Z",
+                "book": "FanDuel",
+                "book_id": "fanduel",
+                "odds": 830,
+                "captured_at": "2026-10-03T21:11:59.462Z",
                 "source": "qstash-vercel-sportsgameodds",
                 "source_event_id": "tYKu3KEImFMpz6AvKSp5",
                 "source_odd_id": "batting_homeRuns-GARRETT_MITCHELL_1_MLB-game-ou-over",
@@ -650,10 +649,10 @@
                 "url": null
               },
               {
-                "book": "FanDuel",
-                "book_id": "fanduel",
-                "odds": 830,
-                "captured_at": "2026-10-03T21:11:59.462Z",
+                "book": "DraftKings",
+                "book_id": "draftkings",
+                "odds": 820,
+                "captured_at": "2026-10-03T21:09:22.588Z",
                 "source": "qstash-vercel-sportsgameodds",
                 "source_event_id": "tYKu3KEImFMpz6AvKSp5",
                 "source_odd_id": "batting_homeRuns-GARRETT_MITCHELL_1_MLB-game-ou-over",
@@ -718,10 +717,10 @@
             "dk_odds": 790,
             "all_prices": [
               {
-                "book": "DraftKings",
-                "book_id": "draftkings",
-                "odds": 790,
-                "captured_at": "2026-10-03T21:09:22.588Z",
+                "book": "FanDuel",
+                "book_id": "fanduel",
+                "odds": 830,
+                "captured_at": "2026-10-03T21:11:59.462Z",
                 "source": "qstash-vercel-sportsgameodds",
                 "source_event_id": "tYKu3KEImFMpz6AvKSp5",
                 "source_odd_id": "batting_homeRuns-BRICE_TURANG_1_MLB-game-ou-over",
@@ -730,10 +729,10 @@
                 "url": null
               },
               {
-                "book": "FanDuel",
-                "book_id": "fanduel",
-                "odds": 830,
-                "captured_at": "2026-10-03T21:11:59.462Z",
+                "book": "DraftKings",
+                "book_id": "draftkings",
+                "odds": 790,
+                "captured_at": "2026-10-03T21:09:22.588Z",
                 "source": "qstash-vercel-sportsgameodds",
                 "source_event_id": "tYKu3KEImFMpz6AvKSp5",
                 "source_odd_id": "batting_homeRuns-BRICE_TURANG_1_MLB-game-ou-over",
@@ -784,10 +783,10 @@
             "dk_odds": 586,
             "all_prices": [
               {
-                "book": "DraftKings",
-                "book_id": "draftkings",
-                "odds": 586,
-                "captured_at": "2026-10-03T21:09:22.588Z",
+                "book": "FanDuel",
+                "book_id": "fanduel",
+                "odds": 570,
+                "captured_at": "2026-10-03T21:11:59.462Z",
                 "source": "qstash-vercel-sportsgameodds",
                 "source_event_id": "tYKu3KEImFMpz6AvKSp5",
                 "source_odd_id": "batting_homeRuns-MANNY_MACHADO_1_MLB-game-ou-over",
@@ -796,10 +795,10 @@
                 "url": null
               },
               {
-                "book": "FanDuel",
-                "book_id": "fanduel",
-                "odds": 570,
-                "captured_at": "2026-10-03T21:11:59.462Z",
+                "book": "DraftKings",
+                "book_id": "draftkings",
+                "odds": 586,
+                "captured_at": "2026-10-03T21:09:22.588Z",
                 "source": "qstash-vercel-sportsgameodds",
                 "source_event_id": "tYKu3KEImFMpz6AvKSp5",
                 "source_odd_id": "batting_homeRuns-MANNY_MACHADO_1_MLB-game-ou-over",
@@ -850,10 +849,10 @@
             "dk_odds": 870,
             "all_prices": [
               {
-                "book": "DraftKings",
-                "book_id": "draftkings",
-                "odds": 870,
-                "captured_at": "2026-10-03T21:09:22.588Z",
+                "book": "FanDuel",
+                "book_id": "fanduel",
+                "odds": 980,
+                "captured_at": "2026-10-03T21:11:59.462Z",
                 "source": "qstash-vercel-sportsgameodds",
                 "source_event_id": "tYKu3KEImFMpz6AvKSp5",
                 "source_odd_id": "batting_homeRuns-CHRISTIAN_YELICH_1_MLB-game-ou-over",
@@ -862,10 +861,10 @@
                 "url": null
               },
               {
-                "book": "FanDuel",
-                "book_id": "fanduel",
-                "odds": 980,
-                "captured_at": "2026-10-03T21:11:59.462Z",
+                "book": "DraftKings",
+                "book_id": "draftkings",
+                "odds": 870,
+                "captured_at": "2026-10-03T21:09:22.588Z",
                 "source": "qstash-vercel-sportsgameodds",
                 "source_event_id": "tYKu3KEImFMpz6AvKSp5",
                 "source_odd_id": "batting_homeRuns-CHRISTIAN_YELICH_1_MLB-game-ou-over",
@@ -916,10 +915,10 @@
             "dk_odds": 900,
             "all_prices": [
               {
-                "book": "DraftKings",
-                "book_id": "draftkings",
-                "odds": 900,
-                "captured_at": "2026-10-03T21:09:22.588Z",
+                "book": "FanDuel",
+                "book_id": "fanduel",
+                "odds": 870,
+                "captured_at": "2026-10-03T21:11:59.462Z",
                 "source": "qstash-vercel-sportsgameodds",
                 "source_event_id": "tYKu3KEImFMpz6AvKSp5",
                 "source_odd_id": "batting_homeRuns-XANDER_BOGAERTS_1_MLB-game-ou-over",
@@ -928,10 +927,10 @@
                 "url": null
               },
               {
-                "book": "FanDuel",
-                "book_id": "fanduel",
-                "odds": 870,
-                "captured_at": "2026-10-03T21:11:59.462Z",
+                "book": "DraftKings",
+                "book_id": "draftkings",
+                "odds": 900,
+                "captured_at": "2026-10-03T21:09:22.588Z",
                 "source": "qstash-vercel-sportsgameodds",
                 "source_event_id": "tYKu3KEImFMpz6AvKSp5",
                 "source_odd_id": "batting_homeRuns-XANDER_BOGAERTS_1_MLB-game-ou-over",
@@ -982,10 +981,10 @@
             "dk_odds": 510,
             "all_prices": [
               {
-                "book": "DraftKings",
-                "book_id": "draftkings",
-                "odds": 510,
-                "captured_at": "2026-10-03T21:09:22.588Z",
+                "book": "FanDuel",
+                "book_id": "fanduel",
+                "odds": 480,
+                "captured_at": "2026-10-03T21:11:59.462Z",
                 "source": "qstash-vercel-sportsgameodds",
                 "source_event_id": "tYKu3KEImFMpz6AvKSp5",
                 "source_odd_id": "batting_homeRuns-FERNANDO_TATIS_JR_1_MLB-game-ou-over",
@@ -994,10 +993,10 @@
                 "url": null
               },
               {
-                "book": "FanDuel",
-                "book_id": "fanduel",
-                "odds": 480,
-                "captured_at": "2026-10-03T21:11:59.462Z",
+                "book": "DraftKings",
+                "book_id": "draftkings",
+                "odds": 510,
+                "captured_at": "2026-10-03T21:09:22.588Z",
                 "source": "qstash-vercel-sportsgameodds",
                 "source_event_id": "tYKu3KEImFMpz6AvKSp5",
                 "source_odd_id": "batting_homeRuns-FERNANDO_TATIS_JR_1_MLB-game-ou-over",
@@ -1048,10 +1047,10 @@
             "dk_odds": 544,
             "all_prices": [
               {
-                "book": "DraftKings",
-                "book_id": "draftkings",
-                "odds": 544,
-                "captured_at": "2026-10-03T21:09:22.588Z",
+                "book": "FanDuel",
+                "book_id": "fanduel",
+                "odds": 530,
+                "captured_at": "2026-10-03T21:11:59.462Z",
                 "source": "qstash-vercel-sportsgameodds",
                 "source_event_id": "tYKu3KEImFMpz6AvKSp5",
                 "source_odd_id": "batting_homeRuns-WILLIAM_CONTRERAS_1_MLB-game-ou-over",
@@ -1060,10 +1059,10 @@
                 "url": null
               },
               {
-                "book": "FanDuel",
-                "book_id": "fanduel",
-                "odds": 530,
-                "captured_at": "2026-10-03T21:11:59.462Z",
+                "book": "DraftKings",
+                "book_id": "draftkings",
+                "odds": 544,
+                "captured_at": "2026-10-03T21:09:22.588Z",
                 "source": "qstash-vercel-sportsgameodds",
                 "source_event_id": "tYKu3KEImFMpz6AvKSp5",
                 "source_odd_id": "batting_homeRuns-WILLIAM_CONTRERAS_1_MLB-game-ou-over",
@@ -1156,10 +1155,10 @@
             "dk_odds": 1380,
             "all_prices": [
               {
-                "book": "DraftKings",
-                "book_id": "draftkings",
-                "odds": 1380,
-                "captured_at": "2026-10-03T21:09:22.588Z",
+                "book": "FanDuel",
+                "book_id": "fanduel",
+                "odds": 1300,
+                "captured_at": "2026-10-03T21:11:59.462Z",
                 "source": "qstash-vercel-sportsgameodds",
                 "source_event_id": "tYKu3KEImFMpz6AvKSp5",
                 "source_odd_id": "batting_homeRuns-JAKE_CRONENWORTH_1_MLB-game-ou-over",
@@ -1168,10 +1167,10 @@
                 "url": null
               },
               {
-                "book": "FanDuel",
-                "book_id": "fanduel",
-                "odds": 1300,
-                "captured_at": "2026-10-03T21:11:59.462Z",
+                "book": "DraftKings",
+                "book_id": "draftkings",
+                "odds": 1380,
+                "captured_at": "2026-10-03T21:09:22.588Z",
                 "source": "qstash-vercel-sportsgameodds",
                 "source_event_id": "tYKu3KEImFMpz6AvKSp5",
                 "source_odd_id": "batting_homeRuns-JAKE_CRONENWORTH_1_MLB-game-ou-over",
@@ -1264,10 +1263,10 @@
             "dk_odds": 820,
             "all_prices": [
               {
-                "book": "DraftKings",
-                "book_id": "draftkings",
-                "odds": 820,
-                "captured_at": "2026-10-03T21:09:22.588Z",
+                "book": "FanDuel",
+                "book_id": "fanduel",
+                "odds": 830,
+                "captured_at": "2026-10-03T21:11:59.462Z",
                 "source": "qstash-vercel-sportsgameodds",
                 "source_event_id": "tYKu3KEImFMpz6AvKSp5",
                 "source_odd_id": "batting_homeRuns-GARRETT_MITCHELL_1_MLB-game-ou-over",
@@ -1276,10 +1275,10 @@
                 "url": null
               },
               {
-                "book": "FanDuel",
-                "book_id": "fanduel",
-                "odds": 830,
-                "captured_at": "2026-10-03T21:11:59.462Z",
+                "book": "DraftKings",
+                "book_id": "draftkings",
+                "odds": 820,
+                "captured_at": "2026-10-03T21:09:22.588Z",
                 "source": "qstash-vercel-sportsgameodds",
                 "source_event_id": "tYKu3KEImFMpz6AvKSp5",
                 "source_odd_id": "batting_homeRuns-GARRETT_MITCHELL_1_MLB-game-ou-over",
@@ -1330,10 +1329,10 @@
             "dk_odds": 650,
             "all_prices": [
               {
-                "book": "DraftKings",
-                "book_id": "draftkings",
-                "odds": 650,
-                "captured_at": "2026-10-03T21:09:22.588Z",
+                "book": "FanDuel",
+                "book_id": "fanduel",
+                "odds": 660,
+                "captured_at": "2026-10-03T21:11:59.462Z",
                 "source": "qstash-vercel-sportsgameodds",
                 "source_event_id": "tYKu3KEImFMpz6AvKSp5",
                 "source_odd_id": "batting_homeRuns-JACKSON_MERRILL_1_MLB-game-ou-over",
@@ -1342,10 +1341,10 @@
                 "url": null
               },
               {
-                "book": "FanDuel",
-                "book_id": "fanduel",
-                "odds": 660,
-                "captured_at": "2026-10-03T21:11:59.462Z",
+                "book": "DraftKings",
+                "book_id": "draftkings",
+                "odds": 650,
+                "captured_at": "2026-10-03T21:09:22.588Z",
                 "source": "qstash-vercel-sportsgameodds",
                 "source_event_id": "tYKu3KEImFMpz6AvKSp5",
                 "source_odd_id": "batting_homeRuns-JACKSON_MERRILL_1_MLB-game-ou-over",
@@ -1396,10 +1395,10 @@
             "dk_odds": 940,
             "all_prices": [
               {
-                "book": "DraftKings",
-                "book_id": "draftkings",
-                "odds": 940,
-                "captured_at": "2026-10-03T21:09:22.588Z",
+                "book": "FanDuel",
+                "book_id": "fanduel",
+                "odds": 1100,
+                "captured_at": "2026-10-03T21:11:59.462Z",
                 "source": "qstash-vercel-sportsgameodds",
                 "source_event_id": "tYKu3KEImFMpz6AvKSp5",
                 "source_odd_id": "batting_homeRuns-JOEY_ORTIZ_1_MLB-game-ou-over",
@@ -1408,10 +1407,10 @@
                 "url": null
               },
               {
-                "book": "FanDuel",
-                "book_id": "fanduel",
-                "odds": 1100,
-                "captured_at": "2026-10-03T21:11:59.462Z",
+                "book": "DraftKings",
+                "book_id": "draftkings",
+                "odds": 940,
+                "captured_at": "2026-10-03T21:09:22.588Z",
                 "source": "qstash-vercel-sportsgameodds",
                 "source_event_id": "tYKu3KEImFMpz6AvKSp5",
                 "source_odd_id": "batting_homeRuns-JOEY_ORTIZ_1_MLB-game-ou-over",
@@ -1462,10 +1461,10 @@
             "dk_odds": 1220,
             "all_prices": [
               {
-                "book": "DraftKings",
-                "book_id": "draftkings",
-                "odds": 1220,
-                "captured_at": "2026-10-03T21:09:22.588Z",
+                "book": "FanDuel",
+                "book_id": "fanduel",
+                "odds": 1100,
+                "captured_at": "2026-10-03T21:11:59.462Z",
                 "source": "qstash-vercel-sportsgameodds",
                 "source_event_id": "tYKu3KEImFMpz6AvKSp5",
                 "source_odd_id": "batting_homeRuns-DUSTIN_HARRIS_1_MLB-game-ou-over",
@@ -1474,10 +1473,10 @@
                 "url": null
               },
               {
-                "book": "FanDuel",
-                "book_id": "fanduel",
-                "odds": 1100,
-                "captured_at": "2026-10-03T21:11:59.462Z",
+                "book": "DraftKings",
+                "book_id": "draftkings",
+                "odds": 1220,
+                "captured_at": "2026-10-03T21:09:22.588Z",
                 "source": "qstash-vercel-sportsgameodds",
                 "source_event_id": "tYKu3KEImFMpz6AvKSp5",
                 "source_odd_id": "batting_homeRuns-DUSTIN_HARRIS_1_MLB-game-ou-over",
@@ -1528,10 +1527,10 @@
             "dk_odds": 1040,
             "all_prices": [
               {
-                "book": "DraftKings",
-                "book_id": "draftkings",
-                "odds": 1040,
-                "captured_at": "2026-10-03T21:09:22.588Z",
+                "book": "FanDuel",
+                "book_id": "fanduel",
+                "odds": 1100,
+                "captured_at": "2026-10-03T21:11:59.462Z",
                 "source": "qstash-vercel-sportsgameodds",
                 "source_event_id": "tYKu3KEImFMpz6AvKSp5",
                 "source_odd_id": "batting_homeRuns-LUIS_LARA_1_MLB-game-ou-over",
@@ -1540,10 +1539,10 @@
                 "url": null
               },
               {
-                "book": "FanDuel",
-                "book_id": "fanduel",
-                "odds": 1100,
-                "captured_at": "2026-10-03T21:11:59.462Z",
+                "book": "DraftKings",
+                "book_id": "draftkings",
+                "odds": 1040,
+                "captured_at": "2026-10-03T21:09:22.588Z",
                 "source": "qstash-vercel-sportsgameodds",
                 "source_event_id": "tYKu3KEImFMpz6AvKSp5",
                 "source_odd_id": "batting_homeRuns-LUIS_LARA_1_MLB-game-ou-over",
@@ -1594,10 +1593,10 @@
             "dk_odds": 1060,
             "all_prices": [
               {
-                "book": "DraftKings",
-                "book_id": "draftkings",
-                "odds": 1060,
-                "captured_at": "2026-10-03T21:09:22.588Z",
+                "book": "FanDuel",
+                "book_id": "fanduel",
+                "odds": 1100,
+                "captured_at": "2026-10-03T21:11:59.462Z",
                 "source": "qstash-vercel-sportsgameodds",
                 "source_event_id": "tYKu3KEImFMpz6AvKSp5",
                 "source_odd_id": "batting_homeRuns-COOPER_PRATT_1_MLB-game-ou-over",
@@ -1606,10 +1605,10 @@
                 "url": null
               },
               {
-                "book": "FanDuel",
-                "book_id": "fanduel",
-                "odds": 1100,
-                "captured_at": "2026-10-03T21:11:59.462Z",
+                "book": "DraftKings",
+                "book_id": "draftkings",
+                "odds": 1060,
+                "captured_at": "2026-10-03T21:09:22.588Z",
                 "source": "qstash-vercel-sportsgameodds",
                 "source_event_id": "tYKu3KEImFMpz6AvKSp5",
                 "source_odd_id": "batting_homeRuns-COOPER_PRATT_1_MLB-game-ou-over",
