@@ -2,7 +2,7 @@
   "schema_version": 1,
   "kind": "hr_form_volume_companion",
   "status": "active",
-  "generated_at": "2026-10-04T23:58:11.469601+00:00",
+  "generated_at": "2026-10-05T05:44:36.886127+00:00",
   "rule": {
     "checkpoint": "1717",
     "form_id": "200p",
@@ -131,8 +131,8 @@
       "bets": 4,
       "wins": 1,
       "losses": 3,
-      "voids": 0,
-      "pending": 1,
+      "voids": 1,
+      "pending": 0,
       "slates": 3,
       "profitable_slates": 1,
       "losing_slates": 2,
@@ -614,16 +614,16 @@
             "book": "DraftKings",
             "game_start_at": "2026-10-05T00:00:00.000Z",
             "captured_at": "2026-10-04T21:17:02.280Z",
-            "result": "PENDING",
-            "home_runs": null,
+            "result": "VOID",
+            "home_runs": 0,
             "profit_units": 0.0
           }
         ],
         "bets": 0,
         "wins": 0,
         "losses": 0,
-        "voids": 0,
-        "pending": 1,
+        "voids": 1,
+        "pending": 0,
         "slates": 0,
         "profitable_slates": 0,
         "losing_slates": 0,
@@ -838,8 +838,8 @@
             "book": "DraftKings",
             "game_start_at": "2026-10-05T00:00:00.000Z",
             "captured_at": "2026-10-04T21:17:02.280Z",
-            "result": "PENDING",
-            "home_runs": null,
+            "result": "VOID",
+            "home_runs": 0,
             "profit_units": 0.0
           }
         ]
@@ -847,28 +847,9 @@
     ]
   },
   "current": {
-    "slate_date": "2026-10-04",
+    "slate_date": "2026-10-05",
     "checkpoint": "1717",
-    "status": "active",
-    "picks": [
-      {
-        "slate_date": "2026-10-04",
-        "checkpoint": "1717",
-        "mode": "companion",
-        "player": "Will Smith",
-        "mlbam_id": 669257,
-        "team": "Los Angeles Dodgers",
-        "matchup": "ATL @ LAD",
-        "rank": 42,
-        "score": 0.2819047619047619,
-        "odds": 377,
-        "book": "DraftKings",
-        "game_start_at": "2026-10-05T00:00:00.000Z",
-        "captured_at": "2026-10-04T21:17:02.280Z",
-        "result": "PENDING",
-        "home_runs": null,
-        "profit_units": 0.0
-      }
-    ]
+    "status": "checkpoint_pending",
+    "picks": []
   }
 }

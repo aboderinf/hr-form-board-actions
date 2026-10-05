@@ -2,7 +2,7 @@
   "schema_version": 1,
   "kind": "hr_form_picks_research",
   "status": "active",
-  "generated_at": "2026-10-04T23:58:11.406765+00:00",
+  "generated_at": "2026-10-05T05:44:36.828138+00:00",
   "promoted": false,
   "methodology": {
     "discovery": "Candidate execution rules span checkpoint, form band, odds band, best-price book, and a per-slate top-N cap. Candidate ranking never uses the retrospective or forward periods.",
@@ -712,8 +712,8 @@
       "bets": 8,
       "wins": 2,
       "losses": 6,
-      "voids": 1,
-      "pending": 2,
+      "voids": 3,
+      "pending": 0,
       "slates": 4,
       "profitable_slates": 2,
       "losing_slates": 2,
@@ -1286,8 +1286,8 @@
             "book": "DraftKings",
             "game_start_at": "2026-10-05T00:00:00.000Z",
             "captured_at": "2026-10-04T21:17:02.280Z",
-            "result": "PENDING",
-            "home_runs": null,
+            "result": "VOID",
+            "home_runs": 0,
             "profit_units": 0.0
           },
           {
@@ -1304,16 +1304,16 @@
             "book": "FanDuel",
             "game_start_at": "2026-10-05T00:00:00.000Z",
             "captured_at": "2026-10-04T21:17:02.280Z",
-            "result": "PENDING",
-            "home_runs": null,
+            "result": "VOID",
+            "home_runs": 0,
             "profit_units": 0.0
           }
         ],
         "bets": 0,
         "wins": 0,
         "losses": 0,
-        "voids": 0,
-        "pending": 2,
+        "voids": 2,
+        "pending": 0,
         "slates": 0,
         "profitable_slates": 0,
         "losing_slates": 0,
@@ -1619,8 +1619,8 @@
             "book": "DraftKings",
             "game_start_at": "2026-10-05T00:00:00.000Z",
             "captured_at": "2026-10-04T21:17:02.280Z",
-            "result": "PENDING",
-            "home_runs": null,
+            "result": "VOID",
+            "home_runs": 0,
             "profit_units": 0.0
           },
           {
@@ -1637,8 +1637,8 @@
             "book": "FanDuel",
             "game_start_at": "2026-10-05T00:00:00.000Z",
             "captured_at": "2026-10-04T21:17:02.280Z",
-            "result": "PENDING",
-            "home_runs": null,
+            "result": "VOID",
+            "home_runs": 0,
             "profit_units": 0.0
           }
         ]
@@ -1646,46 +1646,9 @@
     ]
   },
   "current": {
-    "slate_date": "2026-10-04",
+    "slate_date": "2026-10-05",
     "checkpoint": "1717",
-    "status": "active",
-    "picks": [
-      {
-        "slate_date": "2026-10-04",
-        "checkpoint": "1717",
-        "mode": "primary",
-        "player": "Matt Olson",
-        "mlbam_id": 621566,
-        "team": "Atlanta Braves",
-        "matchup": "ATL @ LAD",
-        "rank": 80,
-        "score": 0.1961904761904762,
-        "odds": 475,
-        "book": "DraftKings",
-        "game_start_at": "2026-10-05T00:00:00.000Z",
-        "captured_at": "2026-10-04T21:17:02.280Z",
-        "result": "PENDING",
-        "home_runs": null,
-        "profit_units": 0.0
-      },
-      {
-        "slate_date": "2026-10-04",
-        "checkpoint": "1717",
-        "mode": "primary",
-        "player": "Mookie Betts",
-        "mlbam_id": 605141,
-        "team": "Los Angeles Dodgers",
-        "matchup": "ATL @ LAD",
-        "rank": 84,
-        "score": 0.18285714285714286,
-        "odds": 460,
-        "book": "FanDuel",
-        "game_start_at": "2026-10-05T00:00:00.000Z",
-        "captured_at": "2026-10-04T21:17:02.280Z",
-        "result": "PENDING",
-        "home_runs": null,
-        "profit_units": 0.0
-      }
-    ]
+    "status": "checkpoint_pending",
+    "picks": []
   }
 }
