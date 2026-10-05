@@ -1,8 +1,8 @@
 {
   "schema_version": 3,
   "kind": "top_100_profit_discovery",
-  "generated_at": "2026-10-05T22:02:33.719441+00:00",
-  "generated_at_et": "2026-10-05T18:02:33.719441-04:00",
+  "generated_at": "2026-10-05T22:04:44.958417+00:00",
+  "generated_at_et": "2026-10-05T18:04:44.958417-04:00",
   "status": "ready",
   "methodology": {
     "capture": "All Top 100 form-score rows are archived at each discovery checkpoint, including rows without an available price.",
@@ -12,15 +12,15 @@
     "warning": "Results are exploratory and sample sizes must be considered before treating any segment as a repeatable edge."
   },
   "archive_started": "2026-08-02T23:21:58.928645-04:00",
-  "capture_count": 249,
-  "raw_top100_rows": 24900,
-  "raw_priced_rows": 8623,
+  "capture_count": 250,
+  "raw_top100_rows": 25000,
+  "raw_priced_rows": 8625,
   "unique_priced_player_games": 3263,
   "reports": {
     "rolling_14d": {
       "start": "2026-09-22",
       "end": "2026-10-05",
-      "raw_checkpoint_captures": 1148,
+      "raw_checkpoint_captures": 1150,
       "analyzed_checkpoint_rows": 1134,
       "complete_slates": 11,
       "latest_complete_slate": "2026-10-04",
@@ -12977,7 +12977,7 @@
     "calendar_month": {
       "start": "2026-10-01",
       "end": "2026-10-05",
-      "raw_checkpoint_captures": 87,
+      "raw_checkpoint_captures": 89,
       "analyzed_checkpoint_rows": 73,
       "complete_slates": 3,
       "latest_complete_slate": "2026-10-04",
@@ -18664,7 +18664,7 @@
     "all_time": {
       "start": "2026-08-02",
       "end": "2026-10-05",
-      "raw_checkpoint_captures": 8623,
+      "raw_checkpoint_captures": 8625,
       "analyzed_checkpoint_rows": 8609,
       "complete_slates": 60,
       "latest_complete_slate": "2026-10-04",
@@ -128654,6 +128654,28 @@
       "game_start_at": "2026-10-05T21:00:00.000Z",
       "result": "PENDING",
       "profit_units": null
+    },
+    {
+      "slate_date": "2026-10-05",
+      "checkpoint": "1717",
+      "mlbam_id": 669224,
+      "score": 0.33904761904761904,
+      "best_book": "DraftKings",
+      "best_odds": 770,
+      "game_start_at": "2026-10-06T00:00:00.000Z",
+      "result": "PENDING",
+      "profit_units": null
+    },
+    {
+      "slate_date": "2026-10-05",
+      "checkpoint": "1717",
+      "mlbam_id": 641355,
+      "score": 0.2095238095238095,
+      "best_book": "DraftKings",
+      "best_odds": 556,
+      "game_start_at": "2026-10-06T00:00:00.000Z",
+      "result": "PENDING",
+      "profit_units": null
     }
   ],
   "rule_tracking": {
@@ -130044,6 +130066,16 @@
   "recent_captures": [
     {
       "slate_date": "2026-10-05",
+      "checkpoint": "1717",
+      "captured_at_et": null,
+      "top100_rows": 100,
+      "priced_rows": 2,
+      "odds_coverage": 0.02,
+      "source_status": "ready",
+      "source_generated_at": "2026-10-05T21:17:04.680Z"
+    },
+    {
+      "slate_date": "2026-10-05",
       "checkpoint": "1117",
       "captured_at_et": "2026-10-05T18:02:33.592590-04:00",
       "top100_rows": 100,
@@ -130231,16 +130263,6 @@
       "odds_coverage": 0.03,
       "source_status": "ready",
       "source_generated_at": "2026-10-01T00:17:07.584Z"
-    },
-    {
-      "slate_date": "2026-09-30",
-      "checkpoint": "1717",
-      "captured_at_et": "2026-09-30T20:33:51.441782-04:00",
-      "top100_rows": 100,
-      "priced_rows": 5,
-      "odds_coverage": 0.05,
-      "source_status": "ready",
-      "source_generated_at": "2026-09-30T21:17:02.126Z"
     }
   ],
   "recent_results": [
@@ -130382,8 +130404,8 @@
     },
     {
       "slate_date": "2026-10-05",
-      "checkpoint": "0817",
-      "captured_at": "2026-10-05T12:17:02.586Z",
+      "checkpoint": "1717",
+      "captured_at": "2026-10-05T21:17:04.680Z",
       "captured_at_et": null,
       "rank": 73,
       "player": "Cody Bellinger",
@@ -130405,24 +130427,24 @@
         {
           "book": "DraftKings",
           "book_id": "draftkings",
-          "odds": 542,
-          "captured_at": "2026-10-05T12:13:23.423Z",
+          "odds": 556,
+          "captured_at": "2026-10-05T21:11:08.608Z",
           "source": "qstash-vercel-sportsgameodds",
           "source_event_id": "yxORrGVgClVsWV4Kb1n4",
           "source_odd_id": "batting_homeRuns-CODY_BELLINGER_1_MLB-game-yn-yes",
-          "provider_call_id": "2026-10-05:0817:2026-10-05T12:17:02.586Z:f5d5a8272923",
+          "provider_call_id": "2026-10-05:1717:2026-10-05T21:17:04.680Z:5f074dd3800d",
           "verified": true,
           "url": null
         },
         {
           "book": "FanDuel",
           "book_id": "fanduel",
-          "odds": 520,
-          "captured_at": "2026-10-05T12:13:34.186Z",
+          "odds": 540,
+          "captured_at": "2026-10-05T21:11:20.310Z",
           "source": "qstash-vercel-sportsgameodds",
           "source_event_id": "yxORrGVgClVsWV4Kb1n4",
           "source_odd_id": "batting_homeRuns-CODY_BELLINGER_1_MLB-game-yn-yes",
-          "provider_call_id": "2026-10-05:0817:2026-10-05T12:17:02.586Z:f5d5a8272923",
+          "provider_call_id": "2026-10-05:1717:2026-10-05T21:17:04.680Z:5f074dd3800d",
           "verified": true,
           "url": null
         },
@@ -130430,11 +130452,11 @@
           "book": "BetMGM",
           "book_id": "betmgm",
           "odds": 500,
-          "captured_at": "2026-10-05T12:13:38.447Z",
+          "captured_at": "2026-10-05T21:10:58.395Z",
           "source": "qstash-vercel-sportsgameodds",
           "source_event_id": "yxORrGVgClVsWV4Kb1n4",
           "source_odd_id": "batting_homeRuns-CODY_BELLINGER_1_MLB-game-yn-yes",
-          "provider_call_id": "2026-10-05:0817:2026-10-05T12:17:02.586Z:f5d5a8272923",
+          "provider_call_id": "2026-10-05:1717:2026-10-05T21:17:04.680Z:5f074dd3800d",
           "verified": true,
           "url": null
         }
@@ -130443,9 +130465,9 @@
       "best_books": [
         "DraftKings"
       ],
-      "best_odds": 542,
-      "best_odds_text": "+542",
-      "best_price_captured_at": "2026-10-05T12:13:23.423Z",
+      "best_odds": 556,
+      "best_odds_text": "+556",
+      "best_price_captured_at": "2026-10-05T21:11:08.608Z",
       "source_event_id": "yxORrGVgClVsWV4Kb1n4",
       "source_odd_id": "batting_homeRuns-CODY_BELLINGER_1_MLB-game-yn-yes",
       "result": "PENDING",
@@ -130662,8 +130684,8 @@
     },
     {
       "slate_date": "2026-10-05",
-      "checkpoint": "0817",
-      "captured_at": "2026-10-05T12:17:02.586Z",
+      "checkpoint": "1717",
+      "captured_at": "2026-10-05T21:17:04.680Z",
       "captured_at_et": null,
       "rank": 13,
       "player": "Austin Wells",
@@ -130685,36 +130707,36 @@
         {
           "book": "DraftKings",
           "book_id": "draftkings",
-          "odds": 740,
-          "captured_at": "2026-10-05T12:13:23.423Z",
+          "odds": 770,
+          "captured_at": "2026-10-05T21:11:08.608Z",
           "source": "qstash-vercel-sportsgameodds",
           "source_event_id": "yxORrGVgClVsWV4Kb1n4",
           "source_odd_id": "batting_homeRuns-AUSTIN_WELLS_1_MLB-game-yn-yes",
-          "provider_call_id": "2026-10-05:0817:2026-10-05T12:17:02.586Z:f5d5a8272923",
+          "provider_call_id": "2026-10-05:1717:2026-10-05T21:17:04.680Z:5f074dd3800d",
           "verified": true,
           "url": null
         },
         {
           "book": "FanDuel",
           "book_id": "fanduel",
-          "odds": 680,
-          "captured_at": "2026-10-05T12:13:34.186Z",
+          "odds": 730,
+          "captured_at": "2026-10-05T21:11:20.310Z",
           "source": "qstash-vercel-sportsgameodds",
           "source_event_id": "yxORrGVgClVsWV4Kb1n4",
           "source_odd_id": "batting_homeRuns-AUSTIN_WELLS_1_MLB-game-yn-yes",
-          "provider_call_id": "2026-10-05:0817:2026-10-05T12:17:02.586Z:f5d5a8272923",
+          "provider_call_id": "2026-10-05:1717:2026-10-05T21:17:04.680Z:5f074dd3800d",
           "verified": true,
           "url": null
         },
         {
           "book": "BetMGM",
           "book_id": "betmgm",
-          "odds": 550,
-          "captured_at": "2026-10-05T12:13:38.447Z",
+          "odds": 600,
+          "captured_at": "2026-10-05T21:10:58.395Z",
           "source": "qstash-vercel-sportsgameodds",
           "source_event_id": "yxORrGVgClVsWV4Kb1n4",
           "source_odd_id": "batting_homeRuns-AUSTIN_WELLS_1_MLB-game-yn-yes",
-          "provider_call_id": "2026-10-05:0817:2026-10-05T12:17:02.586Z:f5d5a8272923",
+          "provider_call_id": "2026-10-05:1717:2026-10-05T21:17:04.680Z:5f074dd3800d",
           "verified": true,
           "url": null
         }
@@ -130723,9 +130745,9 @@
       "best_books": [
         "DraftKings"
       ],
-      "best_odds": 740,
-      "best_odds_text": "+740",
-      "best_price_captured_at": "2026-10-05T12:13:23.423Z",
+      "best_odds": 770,
+      "best_odds_text": "+770",
+      "best_price_captured_at": "2026-10-05T21:11:08.608Z",
       "source_event_id": "yxORrGVgClVsWV4Kb1n4",
       "source_odd_id": "batting_homeRuns-AUSTIN_WELLS_1_MLB-game-yn-yes",
       "result": "PENDING",
