@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-06T02:32:06.996691+00:00",
+  "generated_at": "2026-10-06T06:24:37.546936+00:00",
   "method": "0.50*L5 + 0.30*L7 + 0.20*L15 cumulative HR-game rates",
   "checkpoints_et": [
     "08:17",
@@ -32,72 +32,43 @@
   "latest": {
     "schema_version": 1,
     "kind": "latest_shared_slate",
-    "refreshed_at": "2026-10-06T02:32:03.601518+00:00",
-    "refreshed_at_et": "2026-10-05T22:32:03.601518-04:00",
+    "refreshed_at": "2026-10-06T06:24:37.469589+00:00",
+    "refreshed_at_et": "2026-10-06T02:24:37.469589-04:00",
     "slate_date": "2026-10-05",
-    "status": "no_current_eligible_players",
+    "status": "shared_odds_slate_empty",
     "sources": {
       "mlb_hr_edge": {
         "source": "MLB HR Edge",
-        "source_url": "https://mlb-hr-edge.feranmi.chatgpt.site/api/odds?latest=1",
+        "source_url": "/home/runner/work/hr-form-board-actions/hr-form-board-actions/data/shared-odds/latest.json",
         "delivery": "qstash-vercel-redis",
         "source_date": "2026-10-05",
         "date_matches": true,
-        "as_of": "2026-10-05T21:17:00.000Z",
-        "status": "ready",
-        "generated_at": "2026-10-05T21:17:04.680Z",
-        "latest_ingest_at": "2026-10-05T21:17:04.680Z",
-        "provider_call_id": "2026-10-05:1717:2026-10-05T21:17:04.680Z:5f074dd3800d",
-        "provider_response_sha256": "5f074dd3800d15ff03ac4806dd8aa7cfa6e53f9ca5c7ad2467a0f23b9faf7e29",
+        "as_of": "2026-10-06T00:17:00.000Z",
+        "status": "pending",
+        "generated_at": "2026-10-06T00:17:02.286Z",
+        "latest_ingest_at": "2026-10-06T00:17:02.286Z",
+        "provider_call_id": "2026-10-05:2017:2026-10-06T00:17:02.286Z:279f9d2b831b",
+        "provider_response_sha256": "279f9d2b831bc5da2f0187260d6f41e0f02082e5ffc23413c48f0244203d4c29",
         "archived_call_count": 1,
-        "quote_count": 51,
-        "all_available_quote_count": 198,
-        "excluded_live_or_post_start_quote_count": 96,
+        "quote_count": 0,
+        "all_available_quote_count": 86,
+        "excluded_live_or_post_start_quote_count": 86,
         "books": [
           "FanDuel",
           "DraftKings",
           "BetMGM"
         ],
-        "row_count": 17,
-        "compatibility_fallback": "odds_api",
-        "mlbam_ids_hydrated": 16,
-        "mlbam_ids_added": 16,
-        "unresolved_player_names": [
-          "Richard Palacios"
-        ]
+        "row_count": 0,
+        "compatibility_fallback": "exact_upstash_checkpoint_cache",
+        "checkpoint": "2017",
+        "mlbam_ids_hydrated": 0,
+        "mlbam_ids_added": 0,
+        "unresolved_player_names": []
       }
     },
     "diagnostics": [],
-    "portfolios": {
-      "top10": {
-        "picks": [],
-        "summary": {
-          "selections": 0,
-          "settled": 0,
-          "wins": 0,
-          "losses": 0,
-          "pushes": 0,
-          "hit_rate": null,
-          "net_units": 0,
-          "roi": null
-        }
-      },
-      "top20": {
-        "picks": [],
-        "summary": {
-          "selections": 0,
-          "settled": 0,
-          "wins": 0,
-          "losses": 0,
-          "pushes": 0,
-          "hit_rate": null,
-          "net_units": 0,
-          "roi": null
-        }
-      }
-    },
-    "source_generated_at": "2026-10-05T21:17:04.680Z",
-    "eligible_candidates": 0
+    "portfolios": {},
+    "source_generated_at": "2026-10-06T00:17:02.286Z"
   },
   "snapshots": [
     {
@@ -437917,35 +437888,37 @@
       "slate_date": "2026-10-05",
       "checkpoint_et": "20:17",
       "scheduled_at_et": "2026-10-05T20:17:00-04:00",
-      "observed_at": "2026-10-06T01:56:04.203503+00:00",
-      "observed_at_et": "2026-10-05T21:56:04.203503-04:00",
+      "observed_at": "2026-10-06T06:23:53.262648+00:00",
+      "observed_at_et": "2026-10-06T02:23:53.262648-04:00",
       "status": "shared_odds_not_available_at_checkpoint",
       "sources": {
         "mlb_hr_edge": {
           "source": "MLB HR Edge",
-          "source_url": "https://mlb-hr-edge.feranmi.chatgpt.site/api/odds?date=2026-10-05&asOf=2026-10-05T20%3A32%3A00-04%3A00",
+          "source_url": "data/shared-odds/latest.json",
           "delivery": "qstash-vercel-redis",
           "source_date": "2026-10-05",
           "date_matches": true,
-          "as_of": "2026-10-06T00:32:00.000Z",
-          "status": "ready",
-          "generated_at": "2026-10-05T21:17:04.680Z",
-          "latest_ingest_at": "2026-10-05T21:17:04.680Z",
-          "provider_call_id": "2026-10-05:1717:2026-10-05T21:17:04.680Z:5f074dd3800d",
-          "provider_response_sha256": "5f074dd3800d15ff03ac4806dd8aa7cfa6e53f9ca5c7ad2467a0f23b9faf7e29",
+          "as_of": "2026-10-06T00:17:00.000Z",
+          "status": "pending",
+          "generated_at": "2026-10-06T00:17:02.286Z",
+          "latest_ingest_at": "2026-10-06T00:17:02.286Z",
+          "provider_call_id": "2026-10-05:2017:2026-10-06T00:17:02.286Z:279f9d2b831b",
+          "provider_response_sha256": "279f9d2b831bc5da2f0187260d6f41e0f02082e5ffc23413c48f0244203d4c29",
           "archived_call_count": 1,
-          "quote_count": 51,
-          "all_available_quote_count": 198,
-          "excluded_live_or_post_start_quote_count": 96,
+          "quote_count": 0,
+          "all_available_quote_count": 86,
+          "excluded_live_or_post_start_quote_count": 86,
           "books": [
             "FanDuel",
             "DraftKings",
             "BetMGM"
           ],
-          "row_count": 17,
-          "compatibility_fallback": "odds_api",
-          "checkpoint_at": "2026-10-05T20:17:00-04:00",
-          "capture_cutoff": "2026-10-05T20:32:00-04:00"
+          "row_count": 0,
+          "mlbam_ids_hydrated": 0,
+          "mlbam_ids_added": 0,
+          "unresolved_player_names": [],
+          "compatibility_fallback": "exact_upstash_checkpoint_cache",
+          "checkpoint_at": "2026-10-05T20:17:00-04:00"
         }
       },
       "diagnostics": [],
