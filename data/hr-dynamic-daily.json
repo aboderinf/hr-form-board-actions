@@ -2,7 +2,7 @@
   "schema_version": 1,
   "kind": "hr_dynamic_daily_picks",
   "status": "active",
-  "generated_at": "2026-10-06T06:24:23.910036+00:00",
+  "generated_at": "2026-10-06T18:22:44.840484+00:00",
   "rule": {
     "name": "Dynamic Daily ROI",
     "checkpoints": [
@@ -21985,12 +21985,12 @@
   "forward": {
     "start": "2026-09-26",
     "summary": {
-      "selections": 18,
+      "selections": 19,
       "bets": 6,
       "wins": 1,
       "losses": 5,
       "voids": 12,
-      "pending": 0,
+      "pending": 1,
       "slates": 2,
       "profitable_slates": 1,
       "losing_slates": 1,
@@ -23282,6 +23282,90 @@
         "losses": 0,
         "voids": 1,
         "pending": 0,
+        "slates": 0,
+        "profitable_slates": 0,
+        "losing_slates": 0,
+        "profitable_slate_rate": null,
+        "hit_rate": null,
+        "average_break_even": null,
+        "empirical_probability_edge": null,
+        "net_units": 0,
+        "roi": null,
+        "cumulative": {
+          "bets": 6,
+          "wins": 1,
+          "losses": 5,
+          "net_units": -0.57,
+          "roi": -0.09500000000000001
+        }
+      },
+      {
+        "slate_date": "2026-10-06",
+        "checkpoints": [
+          "0817"
+        ],
+        "selections": [
+          {
+            "slate_date": "2026-10-06",
+            "checkpoint": "0817",
+            "player": "Mookie Betts",
+            "mlbam_id": 605141,
+            "team": "Los Angeles Dodgers",
+            "matchup": "LAD @ ATL",
+            "rank": 84,
+            "score": 0.18285714285714286,
+            "odds": 630,
+            "book": "FanDuel",
+            "game_start_at": "2026-10-06T22:00:00.000Z",
+            "captured_at": "2026-10-06T18:22:42.732193+00:00",
+            "cell": {
+              "checkpoint": "0817",
+              "book": "FanDuel",
+              "form": "0.100–0.199",
+              "label": "0817 · FanDuel best price · 0.100–0.199",
+              "evidence": {
+                "all_time": {
+                  "settled": 248,
+                  "wins": 39,
+                  "losses": 209,
+                  "voids": 28,
+                  "slates": 50,
+                  "net_units": 13.26,
+                  "roi": 0.05346774193548388,
+                  "hit_rate": 0.15725806451612903
+                },
+                "trailing_30d": {
+                  "settled": 85,
+                  "wins": 13,
+                  "losses": 72,
+                  "voids": 20,
+                  "slates": 20,
+                  "net_units": 8.0,
+                  "roi": 0.09411764705882353,
+                  "hit_rate": 0.15294117647058825
+                },
+                "trailing_14d": {
+                  "settled": 27,
+                  "wins": 6,
+                  "losses": 21,
+                  "voids": 11,
+                  "slates": 5,
+                  "net_units": 15.8,
+                  "roi": 0.5851851851851853,
+                  "hit_rate": 0.2222222222222222
+                }
+              }
+            },
+            "result": "PENDING",
+            "home_runs": null,
+            "profit_units": 0.0
+          }
+        ],
+        "bets": 0,
+        "wins": 0,
+        "losses": 0,
+        "voids": 0,
+        "pending": 1,
         "slates": 0,
         "profitable_slates": 0,
         "losing_slates": 0,
@@ -25469,13 +25553,277 @@
         "captured_at": "2026-10-05T21:17:04.680Z",
         "qualified_cells": [],
         "selections": []
+      },
+      {
+        "slate_date": "2026-10-06",
+        "checkpoint": "0817",
+        "mode": "dynamic_daily",
+        "captured_at": "2026-10-06T18:22:42.732193+00:00",
+        "qualified_cells": [
+          {
+            "checkpoint": "0817",
+            "book": "FanDuel",
+            "form_id": "100_199",
+            "form": "0.100–0.199",
+            "label": "0817 · FanDuel best price · 0.100–0.199",
+            "evidence": {
+              "all_time": {
+                "settled": 248,
+                "wins": 39,
+                "losses": 209,
+                "voids": 28,
+                "slates": 50,
+                "net_units": 13.26,
+                "roi": 0.05346774193548388,
+                "hit_rate": 0.15725806451612903
+              },
+              "trailing_30d": {
+                "settled": 85,
+                "wins": 13,
+                "losses": 72,
+                "voids": 20,
+                "slates": 20,
+                "net_units": 8.0,
+                "roi": 0.09411764705882353,
+                "hit_rate": 0.15294117647058825
+              },
+              "trailing_14d": {
+                "settled": 27,
+                "wins": 6,
+                "losses": 21,
+                "voids": 11,
+                "slates": 5,
+                "net_units": 15.8,
+                "roi": 0.5851851851851853,
+                "hit_rate": 0.2222222222222222
+              }
+            },
+            "weighted_expected_return": 0.10294444444444445
+          }
+        ],
+        "selections": [
+          {
+            "slate_date": "2026-10-06",
+            "checkpoint": "0817",
+            "player": "Mookie Betts",
+            "mlbam_id": 605141,
+            "team": "Los Angeles Dodgers",
+            "matchup": "LAD @ ATL",
+            "rank": 84,
+            "score": 0.18285714285714286,
+            "odds": 630,
+            "book": "FanDuel",
+            "game_start_at": "2026-10-06T22:00:00.000Z",
+            "captured_at": "2026-10-06T18:22:42.732193+00:00",
+            "cell": {
+              "checkpoint": "0817",
+              "book": "FanDuel",
+              "form": "0.100–0.199",
+              "label": "0817 · FanDuel best price · 0.100–0.199",
+              "evidence": {
+                "all_time": {
+                  "settled": 248,
+                  "wins": 39,
+                  "losses": 209,
+                  "voids": 28,
+                  "slates": 50,
+                  "net_units": 13.26,
+                  "roi": 0.05346774193548388,
+                  "hit_rate": 0.15725806451612903
+                },
+                "trailing_30d": {
+                  "settled": 85,
+                  "wins": 13,
+                  "losses": 72,
+                  "voids": 20,
+                  "slates": 20,
+                  "net_units": 8.0,
+                  "roi": 0.09411764705882353,
+                  "hit_rate": 0.15294117647058825
+                },
+                "trailing_14d": {
+                  "settled": 27,
+                  "wins": 6,
+                  "losses": 21,
+                  "voids": 11,
+                  "slates": 5,
+                  "net_units": 15.8,
+                  "roi": 0.5851851851851853,
+                  "hit_rate": 0.2222222222222222
+                }
+              }
+            },
+            "result": "PENDING",
+            "home_runs": null,
+            "profit_units": 0.0
+          }
+        ]
       }
     ]
   },
   "current": {
     "slate_date": "2026-10-06",
-    "status": "checkpoint_pending",
-    "checkpoints": [],
-    "picks": []
+    "status": "live",
+    "checkpoints": [
+      {
+        "checkpoint": "0817",
+        "qualified_cells": [
+          {
+            "checkpoint": "0817",
+            "book": "FanDuel",
+            "form_id": "100_199",
+            "form": "0.100–0.199",
+            "label": "0817 · FanDuel best price · 0.100–0.199",
+            "evidence": {
+              "all_time": {
+                "settled": 248,
+                "wins": 39,
+                "losses": 209,
+                "voids": 28,
+                "slates": 50,
+                "net_units": 13.26,
+                "roi": 0.05346774193548388,
+                "hit_rate": 0.15725806451612903
+              },
+              "trailing_30d": {
+                "settled": 85,
+                "wins": 13,
+                "losses": 72,
+                "voids": 20,
+                "slates": 20,
+                "net_units": 8.0,
+                "roi": 0.09411764705882353,
+                "hit_rate": 0.15294117647058825
+              },
+              "trailing_14d": {
+                "settled": 27,
+                "wins": 6,
+                "losses": 21,
+                "voids": 11,
+                "slates": 5,
+                "net_units": 15.8,
+                "roi": 0.5851851851851853,
+                "hit_rate": 0.2222222222222222
+              }
+            },
+            "weighted_expected_return": 0.10294444444444445
+          }
+        ],
+        "picks": [
+          {
+            "slate_date": "2026-10-06",
+            "checkpoint": "0817",
+            "player": "Mookie Betts",
+            "mlbam_id": 605141,
+            "team": "Los Angeles Dodgers",
+            "matchup": "LAD @ ATL",
+            "rank": 84,
+            "score": 0.18285714285714286,
+            "odds": 630,
+            "book": "FanDuel",
+            "game_start_at": "2026-10-06T22:00:00.000Z",
+            "captured_at": "2026-10-06T18:22:42.732193+00:00",
+            "cell": {
+              "checkpoint": "0817",
+              "book": "FanDuel",
+              "form": "0.100–0.199",
+              "label": "0817 · FanDuel best price · 0.100–0.199",
+              "evidence": {
+                "all_time": {
+                  "settled": 248,
+                  "wins": 39,
+                  "losses": 209,
+                  "voids": 28,
+                  "slates": 50,
+                  "net_units": 13.26,
+                  "roi": 0.05346774193548388,
+                  "hit_rate": 0.15725806451612903
+                },
+                "trailing_30d": {
+                  "settled": 85,
+                  "wins": 13,
+                  "losses": 72,
+                  "voids": 20,
+                  "slates": 20,
+                  "net_units": 8.0,
+                  "roi": 0.09411764705882353,
+                  "hit_rate": 0.15294117647058825
+                },
+                "trailing_14d": {
+                  "settled": 27,
+                  "wins": 6,
+                  "losses": 21,
+                  "voids": 11,
+                  "slates": 5,
+                  "net_units": 15.8,
+                  "roi": 0.5851851851851853,
+                  "hit_rate": 0.2222222222222222
+                }
+              }
+            },
+            "result": "PENDING",
+            "home_runs": null,
+            "profit_units": 0.0
+          }
+        ]
+      }
+    ],
+    "picks": [
+      {
+        "slate_date": "2026-10-06",
+        "checkpoint": "0817",
+        "player": "Mookie Betts",
+        "mlbam_id": 605141,
+        "team": "Los Angeles Dodgers",
+        "matchup": "LAD @ ATL",
+        "rank": 84,
+        "score": 0.18285714285714286,
+        "odds": 630,
+        "book": "FanDuel",
+        "game_start_at": "2026-10-06T22:00:00.000Z",
+        "captured_at": "2026-10-06T18:22:42.732193+00:00",
+        "cell": {
+          "checkpoint": "0817",
+          "book": "FanDuel",
+          "form": "0.100–0.199",
+          "label": "0817 · FanDuel best price · 0.100–0.199",
+          "evidence": {
+            "all_time": {
+              "settled": 248,
+              "wins": 39,
+              "losses": 209,
+              "voids": 28,
+              "slates": 50,
+              "net_units": 13.26,
+              "roi": 0.05346774193548388,
+              "hit_rate": 0.15725806451612903
+            },
+            "trailing_30d": {
+              "settled": 85,
+              "wins": 13,
+              "losses": 72,
+              "voids": 20,
+              "slates": 20,
+              "net_units": 8.0,
+              "roi": 0.09411764705882353,
+              "hit_rate": 0.15294117647058825
+            },
+            "trailing_14d": {
+              "settled": 27,
+              "wins": 6,
+              "losses": 21,
+              "voids": 11,
+              "slates": 5,
+              "net_units": 15.8,
+              "roi": 0.5851851851851853,
+              "hit_rate": 0.2222222222222222
+            }
+          }
+        },
+        "result": "PENDING",
+        "home_runs": null,
+        "profit_units": 0.0
+      }
+    ]
   }
 }
