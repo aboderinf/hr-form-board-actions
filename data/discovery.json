@@ -1,8 +1,8 @@
 {
   "schema_version": 3,
   "kind": "top_100_profit_discovery",
-  "generated_at": "2026-10-10T17:23:33.615335+00:00",
-  "generated_at_et": "2026-10-10T13:23:33.615335-04:00",
+  "generated_at": "2026-10-10T19:17:53.695471+00:00",
+  "generated_at_et": "2026-10-10T15:17:53.695471-04:00",
   "status": "ready",
   "methodology": {
     "capture": "All Top 100 form-score rows are archived at each discovery checkpoint, including rows without an available price.",
@@ -128373,7 +128373,7 @@
       "checkpoint": "1117",
       "mlbam_id": 805367,
       "score": 0.32571428571428573,
-      "best_book": "DraftKings",
+      "best_book": "FanDuel",
       "best_odds": 1300,
       "game_start_at": "2026-10-11T00:00:00.000Z",
       "result": "PENDING",
@@ -128384,7 +128384,7 @@
       "checkpoint": "1117",
       "mlbam_id": 808959,
       "score": 0.22571428571428573,
-      "best_book": "BetMGM",
+      "best_book": "FanDuel",
       "best_odds": 390,
       "game_start_at": "2026-10-11T00:00:00.000Z",
       "result": "PENDING",
@@ -129873,7 +129873,7 @@
     {
       "slate_date": "2026-10-10",
       "checkpoint": "1117",
-      "captured_at_et": null,
+      "captured_at_et": "2026-10-10T15:17:53.537375-04:00",
       "top100_rows": 100,
       "priced_rows": 5,
       "odds_coverage": 0.05,
@@ -130279,8 +130279,8 @@
     {
       "slate_date": "2026-10-10",
       "checkpoint": "1117",
-      "captured_at": "2026-10-10T15:17:01.126Z",
-      "captured_at_et": null,
+      "captured_at": "2026-10-10T19:17:53.537375+00:00",
+      "captured_at_et": "2026-10-10T15:17:53.537375-04:00",
       "rank": 52,
       "player": "Munetaka Murakami",
       "mlbam_id": 808959,
@@ -130296,25 +130296,12 @@
       "game_pk": null,
       "game_start_at": "2026-10-11T00:00:00.000Z",
       "matchup": "CWS @ CLE",
-      "game_started_at_checkpoint": false,
       "all_prices": [
         {
           "book": "BetMGM",
           "book_id": "betmgm",
           "odds": 390,
           "captured_at": "2026-10-10T15:09:15.949Z",
-          "source": "qstash-vercel-sportsgameodds",
-          "source_event_id": "ooVzttiF2DwPUkI8G1vB",
-          "source_odd_id": "batting_homeRuns-MUNETAKA_MURAKAMI_1_MLB-game-yn-yes",
-          "provider_call_id": "2026-10-10:1117:2026-10-10T15:17:01.126Z:4ecf2f447e2d",
-          "verified": true,
-          "url": null
-        },
-        {
-          "book": "FanDuel",
-          "book_id": "fanduel",
-          "odds": 390,
-          "captured_at": "2026-10-10T15:09:30.289Z",
           "source": "qstash-vercel-sportsgameodds",
           "source_event_id": "ooVzttiF2DwPUkI8G1vB",
           "source_odd_id": "batting_homeRuns-MUNETAKA_MURAKAMI_1_MLB-game-yn-yes",
@@ -130333,16 +130320,24 @@
           "provider_call_id": "2026-10-10:1117:2026-10-10T15:17:01.126Z:4ecf2f447e2d",
           "verified": true,
           "url": null
+        },
+        {
+          "book": "FanDuel",
+          "book_id": "fanduel",
+          "odds": 390,
+          "captured_at": "2026-10-10T15:09:30.289Z",
+          "source": "qstash-vercel-sportsgameodds",
+          "source_event_id": "ooVzttiF2DwPUkI8G1vB",
+          "source_odd_id": "batting_homeRuns-MUNETAKA_MURAKAMI_1_MLB-game-yn-yes",
+          "provider_call_id": "2026-10-10:1117:2026-10-10T15:17:01.126Z:4ecf2f447e2d",
+          "verified": true,
+          "url": null
         }
       ],
-      "best_book": "BetMGM",
-      "best_books": [
-        "BetMGM",
-        "FanDuel"
-      ],
+      "best_book": "FanDuel",
       "best_odds": 390,
       "best_odds_text": "+390",
-      "best_price_captured_at": "2026-10-10T15:09:15.949Z",
+      "best_price_captured_at": "2026-10-10T15:09:30.289Z",
       "source_event_id": "ooVzttiF2DwPUkI8G1vB",
       "source_odd_id": "batting_homeRuns-MUNETAKA_MURAKAMI_1_MLB-game-yn-yes",
       "result": "PENDING",
