@@ -1,14 +1,14 @@
 {
   "schema_version": 1,
   "kind": "latest_shared_slate",
-  "refreshed_at": "2026-10-11T18:29:10.964896+00:00",
-  "refreshed_at_et": "2026-10-11T14:29:10.964896-04:00",
+  "refreshed_at": "2026-10-11T19:35:07.502691+00:00",
+  "refreshed_at_et": "2026-10-11T15:35:07.502691-04:00",
   "slate_date": "2026-10-11",
   "status": "current",
   "sources": {
     "mlb_hr_edge": {
       "source": "MLB HR Edge",
-      "source_url": "https://mlb-hr-edge.feranmi.chatgpt.site/api/odds?latest=1",
+      "source_url": "/home/runner/work/hr-form-board-actions/hr-form-board-actions/data/shared-odds/latest.json",
       "delivery": "qstash-vercel-redis",
       "source_date": "2026-10-11",
       "date_matches": true,
@@ -28,7 +28,8 @@
         "BetMGM"
       ],
       "row_count": 18,
-      "compatibility_fallback": "odds_api",
+      "compatibility_fallback": "exact_upstash_checkpoint_cache",
+      "checkpoint": "1117",
       "mlbam_ids_hydrated": 17,
       "mlbam_ids_added": 17,
       "unresolved_player_names": [
@@ -59,18 +60,6 @@
           "dk_odds": 1360,
           "all_prices": [
             {
-              "book": "FanDuel",
-              "book_id": "fanduel",
-              "odds": 1300,
-              "captured_at": "2026-10-11T15:12:40.429Z",
-              "source": "qstash-vercel-sportsgameodds",
-              "source_event_id": "WnJeoWWXS7hZfVqKdCPH",
-              "source_odd_id": "batting_homeRuns-BRICE_TURANG_1_MLB-game-yn-yes",
-              "provider_call_id": "2026-10-11:1117:2026-10-11T15:17:02.491Z:7750df640d59",
-              "verified": true,
-              "url": null
-            },
-            {
               "book": "DraftKings",
               "book_id": "draftkings",
               "odds": 1360,
@@ -87,6 +76,18 @@
               "book_id": "betmgm",
               "odds": 725,
               "captured_at": "2026-10-11T15:13:14.008Z",
+              "source": "qstash-vercel-sportsgameodds",
+              "source_event_id": "WnJeoWWXS7hZfVqKdCPH",
+              "source_odd_id": "batting_homeRuns-BRICE_TURANG_1_MLB-game-yn-yes",
+              "provider_call_id": "2026-10-11:1117:2026-10-11T15:17:02.491Z:7750df640d59",
+              "verified": true,
+              "url": null
+            },
+            {
+              "book": "FanDuel",
+              "book_id": "fanduel",
+              "odds": 1300,
+              "captured_at": "2026-10-11T15:12:40.429Z",
               "source": "qstash-vercel-sportsgameodds",
               "source_event_id": "WnJeoWWXS7hZfVqKdCPH",
               "source_odd_id": "batting_homeRuns-BRICE_TURANG_1_MLB-game-yn-yes",
@@ -125,18 +126,6 @@
           "dk_odds": 1020,
           "all_prices": [
             {
-              "book": "FanDuel",
-              "book_id": "fanduel",
-              "odds": 980,
-              "captured_at": "2026-10-11T15:12:40.429Z",
-              "source": "qstash-vercel-sportsgameodds",
-              "source_event_id": "WnJeoWWXS7hZfVqKdCPH",
-              "source_odd_id": "batting_homeRuns-ANDY_PAGES_1_MLB-game-yn-yes",
-              "provider_call_id": "2026-10-11:1117:2026-10-11T15:17:02.491Z:7750df640d59",
-              "verified": true,
-              "url": null
-            },
-            {
               "book": "DraftKings",
               "book_id": "draftkings",
               "odds": 1020,
@@ -153,6 +142,18 @@
               "book_id": "betmgm",
               "odds": 575,
               "captured_at": "2026-10-11T15:13:14.008Z",
+              "source": "qstash-vercel-sportsgameodds",
+              "source_event_id": "WnJeoWWXS7hZfVqKdCPH",
+              "source_odd_id": "batting_homeRuns-ANDY_PAGES_1_MLB-game-yn-yes",
+              "provider_call_id": "2026-10-11:1117:2026-10-11T15:17:02.491Z:7750df640d59",
+              "verified": true,
+              "url": null
+            },
+            {
+              "book": "FanDuel",
+              "book_id": "fanduel",
+              "odds": 980,
+              "captured_at": "2026-10-11T15:12:40.429Z",
               "source": "qstash-vercel-sportsgameodds",
               "source_event_id": "WnJeoWWXS7hZfVqKdCPH",
               "source_odd_id": "batting_homeRuns-ANDY_PAGES_1_MLB-game-yn-yes",
@@ -191,18 +192,6 @@
           "dk_odds": 750,
           "all_prices": [
             {
-              "book": "FanDuel",
-              "book_id": "fanduel",
-              "odds": 730,
-              "captured_at": "2026-10-11T15:12:40.429Z",
-              "source": "qstash-vercel-sportsgameodds",
-              "source_event_id": "WnJeoWWXS7hZfVqKdCPH",
-              "source_odd_id": "batting_homeRuns-WILL_SMITH_2_MLB-game-yn-yes",
-              "provider_call_id": "2026-10-11:1117:2026-10-11T15:17:02.491Z:7750df640d59",
-              "verified": true,
-              "url": null
-            },
-            {
               "book": "DraftKings",
               "book_id": "draftkings",
               "odds": 750,
@@ -219,6 +208,18 @@
               "book_id": "betmgm",
               "odds": 550,
               "captured_at": "2026-10-11T15:13:14.008Z",
+              "source": "qstash-vercel-sportsgameodds",
+              "source_event_id": "WnJeoWWXS7hZfVqKdCPH",
+              "source_odd_id": "batting_homeRuns-WILL_SMITH_2_MLB-game-yn-yes",
+              "provider_call_id": "2026-10-11:1117:2026-10-11T15:17:02.491Z:7750df640d59",
+              "verified": true,
+              "url": null
+            },
+            {
+              "book": "FanDuel",
+              "book_id": "fanduel",
+              "odds": 730,
+              "captured_at": "2026-10-11T15:12:40.429Z",
               "source": "qstash-vercel-sportsgameodds",
               "source_event_id": "WnJeoWWXS7hZfVqKdCPH",
               "source_odd_id": "batting_homeRuns-WILL_SMITH_2_MLB-game-yn-yes",
@@ -257,18 +258,6 @@
           "dk_odds": 820,
           "all_prices": [
             {
-              "book": "FanDuel",
-              "book_id": "fanduel",
-              "odds": 790,
-              "captured_at": "2026-10-11T15:12:40.429Z",
-              "source": "qstash-vercel-sportsgameodds",
-              "source_event_id": "WnJeoWWXS7hZfVqKdCPH",
-              "source_odd_id": "batting_homeRuns-MOOKIE_BETTS_1_MLB-game-yn-yes",
-              "provider_call_id": "2026-10-11:1117:2026-10-11T15:17:02.491Z:7750df640d59",
-              "verified": true,
-              "url": null
-            },
-            {
               "book": "DraftKings",
               "book_id": "draftkings",
               "odds": 820,
@@ -285,6 +274,18 @@
               "book_id": "betmgm",
               "odds": 475,
               "captured_at": "2026-10-11T15:13:14.008Z",
+              "source": "qstash-vercel-sportsgameodds",
+              "source_event_id": "WnJeoWWXS7hZfVqKdCPH",
+              "source_odd_id": "batting_homeRuns-MOOKIE_BETTS_1_MLB-game-yn-yes",
+              "provider_call_id": "2026-10-11:1117:2026-10-11T15:17:02.491Z:7750df640d59",
+              "verified": true,
+              "url": null
+            },
+            {
+              "book": "FanDuel",
+              "book_id": "fanduel",
+              "odds": 790,
+              "captured_at": "2026-10-11T15:12:40.429Z",
               "source": "qstash-vercel-sportsgameodds",
               "source_event_id": "WnJeoWWXS7hZfVqKdCPH",
               "source_odd_id": "batting_homeRuns-MOOKIE_BETTS_1_MLB-game-yn-yes",
@@ -323,18 +324,6 @@
           "dk_odds": 680,
           "all_prices": [
             {
-              "book": "FanDuel",
-              "book_id": "fanduel",
-              "odds": 680,
-              "captured_at": "2026-10-11T15:12:40.429Z",
-              "source": "qstash-vercel-sportsgameodds",
-              "source_event_id": "WnJeoWWXS7hZfVqKdCPH",
-              "source_odd_id": "batting_homeRuns-TEOSCAR_HERNANDEZ_1_MLB-game-yn-yes",
-              "provider_call_id": "2026-10-11:1117:2026-10-11T15:17:02.491Z:7750df640d59",
-              "verified": true,
-              "url": null
-            },
-            {
               "book": "DraftKings",
               "book_id": "draftkings",
               "odds": 680,
@@ -351,6 +340,18 @@
               "book_id": "betmgm",
               "odds": 575,
               "captured_at": "2026-10-11T15:13:14.008Z",
+              "source": "qstash-vercel-sportsgameodds",
+              "source_event_id": "WnJeoWWXS7hZfVqKdCPH",
+              "source_odd_id": "batting_homeRuns-TEOSCAR_HERNANDEZ_1_MLB-game-yn-yes",
+              "provider_call_id": "2026-10-11:1117:2026-10-11T15:17:02.491Z:7750df640d59",
+              "verified": true,
+              "url": null
+            },
+            {
+              "book": "FanDuel",
+              "book_id": "fanduel",
+              "odds": 680,
+              "captured_at": "2026-10-11T15:12:40.429Z",
               "source": "qstash-vercel-sportsgameodds",
               "source_event_id": "WnJeoWWXS7hZfVqKdCPH",
               "source_odd_id": "batting_homeRuns-TEOSCAR_HERNANDEZ_1_MLB-game-yn-yes",
@@ -389,18 +390,6 @@
           "dk_odds": 1200,
           "all_prices": [
             {
-              "book": "FanDuel",
-              "book_id": "fanduel",
-              "odds": 1200,
-              "captured_at": "2026-10-11T15:12:40.429Z",
-              "source": "qstash-vercel-sportsgameodds",
-              "source_event_id": "WnJeoWWXS7hZfVqKdCPH",
-              "source_odd_id": "batting_homeRuns-CHRISTIAN_YELICH_1_MLB-game-yn-yes",
-              "provider_call_id": "2026-10-11:1117:2026-10-11T15:17:02.491Z:7750df640d59",
-              "verified": true,
-              "url": null
-            },
-            {
               "book": "DraftKings",
               "book_id": "draftkings",
               "odds": 1200,
@@ -417,6 +406,18 @@
               "book_id": "betmgm",
               "odds": 800,
               "captured_at": "2026-10-11T15:13:14.008Z",
+              "source": "qstash-vercel-sportsgameodds",
+              "source_event_id": "WnJeoWWXS7hZfVqKdCPH",
+              "source_odd_id": "batting_homeRuns-CHRISTIAN_YELICH_1_MLB-game-yn-yes",
+              "provider_call_id": "2026-10-11:1117:2026-10-11T15:17:02.491Z:7750df640d59",
+              "verified": true,
+              "url": null
+            },
+            {
+              "book": "FanDuel",
+              "book_id": "fanduel",
+              "odds": 1200,
+              "captured_at": "2026-10-11T15:12:40.429Z",
               "source": "qstash-vercel-sportsgameodds",
               "source_event_id": "WnJeoWWXS7hZfVqKdCPH",
               "source_odd_id": "batting_homeRuns-CHRISTIAN_YELICH_1_MLB-game-yn-yes",
@@ -455,10 +456,10 @@
           "dk_odds": 1020,
           "all_prices": [
             {
-              "book": "FanDuel",
-              "book_id": "fanduel",
-              "odds": 980,
-              "captured_at": "2026-10-11T15:12:40.429Z",
+              "book": "DraftKings",
+              "book_id": "draftkings",
+              "odds": 1020,
+              "captured_at": "2026-10-11T15:13:19.508Z",
               "source": "qstash-vercel-sportsgameodds",
               "source_event_id": "WnJeoWWXS7hZfVqKdCPH",
               "source_odd_id": "batting_homeRuns-ENRIQUE_HERNANDEZ_1_MLB-game-yn-yes",
@@ -467,10 +468,10 @@
               "url": null
             },
             {
-              "book": "DraftKings",
-              "book_id": "draftkings",
-              "odds": 1020,
-              "captured_at": "2026-10-11T15:13:19.508Z",
+              "book": "FanDuel",
+              "book_id": "fanduel",
+              "odds": 980,
+              "captured_at": "2026-10-11T15:12:40.429Z",
               "source": "qstash-vercel-sportsgameodds",
               "source_event_id": "WnJeoWWXS7hZfVqKdCPH",
               "source_odd_id": "batting_homeRuns-ENRIQUE_HERNANDEZ_1_MLB-game-yn-yes",
@@ -521,18 +522,6 @@
           "dk_odds": 564,
           "all_prices": [
             {
-              "book": "FanDuel",
-              "book_id": "fanduel",
-              "odds": 590,
-              "captured_at": "2026-10-11T15:12:40.429Z",
-              "source": "qstash-vercel-sportsgameodds",
-              "source_event_id": "WnJeoWWXS7hZfVqKdCPH",
-              "source_odd_id": "batting_homeRuns-JACKSON_CHOURIO_1_MLB-game-yn-yes",
-              "provider_call_id": "2026-10-11:1117:2026-10-11T15:17:02.491Z:7750df640d59",
-              "verified": true,
-              "url": null
-            },
-            {
               "book": "DraftKings",
               "book_id": "draftkings",
               "odds": 564,
@@ -549,6 +538,18 @@
               "book_id": "betmgm",
               "odds": 390,
               "captured_at": "2026-10-11T15:13:14.008Z",
+              "source": "qstash-vercel-sportsgameodds",
+              "source_event_id": "WnJeoWWXS7hZfVqKdCPH",
+              "source_odd_id": "batting_homeRuns-JACKSON_CHOURIO_1_MLB-game-yn-yes",
+              "provider_call_id": "2026-10-11:1117:2026-10-11T15:17:02.491Z:7750df640d59",
+              "verified": true,
+              "url": null
+            },
+            {
+              "book": "FanDuel",
+              "book_id": "fanduel",
+              "odds": 590,
+              "captured_at": "2026-10-11T15:12:40.429Z",
               "source": "qstash-vercel-sportsgameodds",
               "source_event_id": "WnJeoWWXS7hZfVqKdCPH",
               "source_odd_id": "batting_homeRuns-JACKSON_CHOURIO_1_MLB-game-yn-yes",
@@ -587,18 +588,6 @@
           "dk_odds": 620,
           "all_prices": [
             {
-              "book": "FanDuel",
-              "book_id": "fanduel",
-              "odds": 630,
-              "captured_at": "2026-10-11T15:12:40.429Z",
-              "source": "qstash-vercel-sportsgameodds",
-              "source_event_id": "WnJeoWWXS7hZfVqKdCPH",
-              "source_odd_id": "batting_homeRuns-WILLIAM_CONTRERAS_1_MLB-game-yn-yes",
-              "provider_call_id": "2026-10-11:1117:2026-10-11T15:17:02.491Z:7750df640d59",
-              "verified": true,
-              "url": null
-            },
-            {
               "book": "DraftKings",
               "book_id": "draftkings",
               "odds": 620,
@@ -615,6 +604,18 @@
               "book_id": "betmgm",
               "odds": 425,
               "captured_at": "2026-10-11T15:13:14.008Z",
+              "source": "qstash-vercel-sportsgameodds",
+              "source_event_id": "WnJeoWWXS7hZfVqKdCPH",
+              "source_odd_id": "batting_homeRuns-WILLIAM_CONTRERAS_1_MLB-game-yn-yes",
+              "provider_call_id": "2026-10-11:1117:2026-10-11T15:17:02.491Z:7750df640d59",
+              "verified": true,
+              "url": null
+            },
+            {
+              "book": "FanDuel",
+              "book_id": "fanduel",
+              "odds": 630,
+              "captured_at": "2026-10-11T15:12:40.429Z",
               "source": "qstash-vercel-sportsgameodds",
               "source_event_id": "WnJeoWWXS7hZfVqKdCPH",
               "source_odd_id": "batting_homeRuns-WILLIAM_CONTRERAS_1_MLB-game-yn-yes",
@@ -653,18 +654,6 @@
           "dk_odds": 860,
           "all_prices": [
             {
-              "book": "FanDuel",
-              "book_id": "fanduel",
-              "odds": 880,
-              "captured_at": "2026-10-11T15:12:40.429Z",
-              "source": "qstash-vercel-sportsgameodds",
-              "source_event_id": "WnJeoWWXS7hZfVqKdCPH",
-              "source_odd_id": "batting_homeRuns-KYLE_TUCKER_1_MLB-game-yn-yes",
-              "provider_call_id": "2026-10-11:1117:2026-10-11T15:17:02.491Z:7750df640d59",
-              "verified": true,
-              "url": null
-            },
-            {
               "book": "DraftKings",
               "book_id": "draftkings",
               "odds": 860,
@@ -681,6 +670,18 @@
               "book_id": "betmgm",
               "odds": 650,
               "captured_at": "2026-10-11T15:13:14.008Z",
+              "source": "qstash-vercel-sportsgameodds",
+              "source_event_id": "WnJeoWWXS7hZfVqKdCPH",
+              "source_odd_id": "batting_homeRuns-KYLE_TUCKER_1_MLB-game-yn-yes",
+              "provider_call_id": "2026-10-11:1117:2026-10-11T15:17:02.491Z:7750df640d59",
+              "verified": true,
+              "url": null
+            },
+            {
+              "book": "FanDuel",
+              "book_id": "fanduel",
+              "odds": 880,
+              "captured_at": "2026-10-11T15:12:40.429Z",
               "source": "qstash-vercel-sportsgameodds",
               "source_event_id": "WnJeoWWXS7hZfVqKdCPH",
               "source_odd_id": "batting_homeRuns-KYLE_TUCKER_1_MLB-game-yn-yes",
@@ -733,18 +734,6 @@
           "dk_odds": 1360,
           "all_prices": [
             {
-              "book": "FanDuel",
-              "book_id": "fanduel",
-              "odds": 1300,
-              "captured_at": "2026-10-11T15:12:40.429Z",
-              "source": "qstash-vercel-sportsgameodds",
-              "source_event_id": "WnJeoWWXS7hZfVqKdCPH",
-              "source_odd_id": "batting_homeRuns-BRICE_TURANG_1_MLB-game-yn-yes",
-              "provider_call_id": "2026-10-11:1117:2026-10-11T15:17:02.491Z:7750df640d59",
-              "verified": true,
-              "url": null
-            },
-            {
               "book": "DraftKings",
               "book_id": "draftkings",
               "odds": 1360,
@@ -761,6 +750,18 @@
               "book_id": "betmgm",
               "odds": 725,
               "captured_at": "2026-10-11T15:13:14.008Z",
+              "source": "qstash-vercel-sportsgameodds",
+              "source_event_id": "WnJeoWWXS7hZfVqKdCPH",
+              "source_odd_id": "batting_homeRuns-BRICE_TURANG_1_MLB-game-yn-yes",
+              "provider_call_id": "2026-10-11:1117:2026-10-11T15:17:02.491Z:7750df640d59",
+              "verified": true,
+              "url": null
+            },
+            {
+              "book": "FanDuel",
+              "book_id": "fanduel",
+              "odds": 1300,
+              "captured_at": "2026-10-11T15:12:40.429Z",
               "source": "qstash-vercel-sportsgameodds",
               "source_event_id": "WnJeoWWXS7hZfVqKdCPH",
               "source_odd_id": "batting_homeRuns-BRICE_TURANG_1_MLB-game-yn-yes",
@@ -799,18 +800,6 @@
           "dk_odds": 1020,
           "all_prices": [
             {
-              "book": "FanDuel",
-              "book_id": "fanduel",
-              "odds": 980,
-              "captured_at": "2026-10-11T15:12:40.429Z",
-              "source": "qstash-vercel-sportsgameodds",
-              "source_event_id": "WnJeoWWXS7hZfVqKdCPH",
-              "source_odd_id": "batting_homeRuns-ANDY_PAGES_1_MLB-game-yn-yes",
-              "provider_call_id": "2026-10-11:1117:2026-10-11T15:17:02.491Z:7750df640d59",
-              "verified": true,
-              "url": null
-            },
-            {
               "book": "DraftKings",
               "book_id": "draftkings",
               "odds": 1020,
@@ -827,6 +816,18 @@
               "book_id": "betmgm",
               "odds": 575,
               "captured_at": "2026-10-11T15:13:14.008Z",
+              "source": "qstash-vercel-sportsgameodds",
+              "source_event_id": "WnJeoWWXS7hZfVqKdCPH",
+              "source_odd_id": "batting_homeRuns-ANDY_PAGES_1_MLB-game-yn-yes",
+              "provider_call_id": "2026-10-11:1117:2026-10-11T15:17:02.491Z:7750df640d59",
+              "verified": true,
+              "url": null
+            },
+            {
+              "book": "FanDuel",
+              "book_id": "fanduel",
+              "odds": 980,
+              "captured_at": "2026-10-11T15:12:40.429Z",
               "source": "qstash-vercel-sportsgameodds",
               "source_event_id": "WnJeoWWXS7hZfVqKdCPH",
               "source_odd_id": "batting_homeRuns-ANDY_PAGES_1_MLB-game-yn-yes",
@@ -865,18 +866,6 @@
           "dk_odds": 750,
           "all_prices": [
             {
-              "book": "FanDuel",
-              "book_id": "fanduel",
-              "odds": 730,
-              "captured_at": "2026-10-11T15:12:40.429Z",
-              "source": "qstash-vercel-sportsgameodds",
-              "source_event_id": "WnJeoWWXS7hZfVqKdCPH",
-              "source_odd_id": "batting_homeRuns-WILL_SMITH_2_MLB-game-yn-yes",
-              "provider_call_id": "2026-10-11:1117:2026-10-11T15:17:02.491Z:7750df640d59",
-              "verified": true,
-              "url": null
-            },
-            {
               "book": "DraftKings",
               "book_id": "draftkings",
               "odds": 750,
@@ -893,6 +882,18 @@
               "book_id": "betmgm",
               "odds": 550,
               "captured_at": "2026-10-11T15:13:14.008Z",
+              "source": "qstash-vercel-sportsgameodds",
+              "source_event_id": "WnJeoWWXS7hZfVqKdCPH",
+              "source_odd_id": "batting_homeRuns-WILL_SMITH_2_MLB-game-yn-yes",
+              "provider_call_id": "2026-10-11:1117:2026-10-11T15:17:02.491Z:7750df640d59",
+              "verified": true,
+              "url": null
+            },
+            {
+              "book": "FanDuel",
+              "book_id": "fanduel",
+              "odds": 730,
+              "captured_at": "2026-10-11T15:12:40.429Z",
               "source": "qstash-vercel-sportsgameodds",
               "source_event_id": "WnJeoWWXS7hZfVqKdCPH",
               "source_odd_id": "batting_homeRuns-WILL_SMITH_2_MLB-game-yn-yes",
@@ -931,18 +932,6 @@
           "dk_odds": 820,
           "all_prices": [
             {
-              "book": "FanDuel",
-              "book_id": "fanduel",
-              "odds": 790,
-              "captured_at": "2026-10-11T15:12:40.429Z",
-              "source": "qstash-vercel-sportsgameodds",
-              "source_event_id": "WnJeoWWXS7hZfVqKdCPH",
-              "source_odd_id": "batting_homeRuns-MOOKIE_BETTS_1_MLB-game-yn-yes",
-              "provider_call_id": "2026-10-11:1117:2026-10-11T15:17:02.491Z:7750df640d59",
-              "verified": true,
-              "url": null
-            },
-            {
               "book": "DraftKings",
               "book_id": "draftkings",
               "odds": 820,
@@ -959,6 +948,18 @@
               "book_id": "betmgm",
               "odds": 475,
               "captured_at": "2026-10-11T15:13:14.008Z",
+              "source": "qstash-vercel-sportsgameodds",
+              "source_event_id": "WnJeoWWXS7hZfVqKdCPH",
+              "source_odd_id": "batting_homeRuns-MOOKIE_BETTS_1_MLB-game-yn-yes",
+              "provider_call_id": "2026-10-11:1117:2026-10-11T15:17:02.491Z:7750df640d59",
+              "verified": true,
+              "url": null
+            },
+            {
+              "book": "FanDuel",
+              "book_id": "fanduel",
+              "odds": 790,
+              "captured_at": "2026-10-11T15:12:40.429Z",
               "source": "qstash-vercel-sportsgameodds",
               "source_event_id": "WnJeoWWXS7hZfVqKdCPH",
               "source_odd_id": "batting_homeRuns-MOOKIE_BETTS_1_MLB-game-yn-yes",
@@ -997,18 +998,6 @@
           "dk_odds": 680,
           "all_prices": [
             {
-              "book": "FanDuel",
-              "book_id": "fanduel",
-              "odds": 680,
-              "captured_at": "2026-10-11T15:12:40.429Z",
-              "source": "qstash-vercel-sportsgameodds",
-              "source_event_id": "WnJeoWWXS7hZfVqKdCPH",
-              "source_odd_id": "batting_homeRuns-TEOSCAR_HERNANDEZ_1_MLB-game-yn-yes",
-              "provider_call_id": "2026-10-11:1117:2026-10-11T15:17:02.491Z:7750df640d59",
-              "verified": true,
-              "url": null
-            },
-            {
               "book": "DraftKings",
               "book_id": "draftkings",
               "odds": 680,
@@ -1025,6 +1014,18 @@
               "book_id": "betmgm",
               "odds": 575,
               "captured_at": "2026-10-11T15:13:14.008Z",
+              "source": "qstash-vercel-sportsgameodds",
+              "source_event_id": "WnJeoWWXS7hZfVqKdCPH",
+              "source_odd_id": "batting_homeRuns-TEOSCAR_HERNANDEZ_1_MLB-game-yn-yes",
+              "provider_call_id": "2026-10-11:1117:2026-10-11T15:17:02.491Z:7750df640d59",
+              "verified": true,
+              "url": null
+            },
+            {
+              "book": "FanDuel",
+              "book_id": "fanduel",
+              "odds": 680,
+              "captured_at": "2026-10-11T15:12:40.429Z",
               "source": "qstash-vercel-sportsgameodds",
               "source_event_id": "WnJeoWWXS7hZfVqKdCPH",
               "source_odd_id": "batting_homeRuns-TEOSCAR_HERNANDEZ_1_MLB-game-yn-yes",
@@ -1063,18 +1064,6 @@
           "dk_odds": 1200,
           "all_prices": [
             {
-              "book": "FanDuel",
-              "book_id": "fanduel",
-              "odds": 1200,
-              "captured_at": "2026-10-11T15:12:40.429Z",
-              "source": "qstash-vercel-sportsgameodds",
-              "source_event_id": "WnJeoWWXS7hZfVqKdCPH",
-              "source_odd_id": "batting_homeRuns-CHRISTIAN_YELICH_1_MLB-game-yn-yes",
-              "provider_call_id": "2026-10-11:1117:2026-10-11T15:17:02.491Z:7750df640d59",
-              "verified": true,
-              "url": null
-            },
-            {
               "book": "DraftKings",
               "book_id": "draftkings",
               "odds": 1200,
@@ -1091,6 +1080,18 @@
               "book_id": "betmgm",
               "odds": 800,
               "captured_at": "2026-10-11T15:13:14.008Z",
+              "source": "qstash-vercel-sportsgameodds",
+              "source_event_id": "WnJeoWWXS7hZfVqKdCPH",
+              "source_odd_id": "batting_homeRuns-CHRISTIAN_YELICH_1_MLB-game-yn-yes",
+              "provider_call_id": "2026-10-11:1117:2026-10-11T15:17:02.491Z:7750df640d59",
+              "verified": true,
+              "url": null
+            },
+            {
+              "book": "FanDuel",
+              "book_id": "fanduel",
+              "odds": 1200,
+              "captured_at": "2026-10-11T15:12:40.429Z",
               "source": "qstash-vercel-sportsgameodds",
               "source_event_id": "WnJeoWWXS7hZfVqKdCPH",
               "source_odd_id": "batting_homeRuns-CHRISTIAN_YELICH_1_MLB-game-yn-yes",
@@ -1129,10 +1130,10 @@
           "dk_odds": 1020,
           "all_prices": [
             {
-              "book": "FanDuel",
-              "book_id": "fanduel",
-              "odds": 980,
-              "captured_at": "2026-10-11T15:12:40.429Z",
+              "book": "DraftKings",
+              "book_id": "draftkings",
+              "odds": 1020,
+              "captured_at": "2026-10-11T15:13:19.508Z",
               "source": "qstash-vercel-sportsgameodds",
               "source_event_id": "WnJeoWWXS7hZfVqKdCPH",
               "source_odd_id": "batting_homeRuns-ENRIQUE_HERNANDEZ_1_MLB-game-yn-yes",
@@ -1141,10 +1142,10 @@
               "url": null
             },
             {
-              "book": "DraftKings",
-              "book_id": "draftkings",
-              "odds": 1020,
-              "captured_at": "2026-10-11T15:13:19.508Z",
+              "book": "FanDuel",
+              "book_id": "fanduel",
+              "odds": 980,
+              "captured_at": "2026-10-11T15:12:40.429Z",
               "source": "qstash-vercel-sportsgameodds",
               "source_event_id": "WnJeoWWXS7hZfVqKdCPH",
               "source_odd_id": "batting_homeRuns-ENRIQUE_HERNANDEZ_1_MLB-game-yn-yes",
@@ -1195,18 +1196,6 @@
           "dk_odds": 564,
           "all_prices": [
             {
-              "book": "FanDuel",
-              "book_id": "fanduel",
-              "odds": 590,
-              "captured_at": "2026-10-11T15:12:40.429Z",
-              "source": "qstash-vercel-sportsgameodds",
-              "source_event_id": "WnJeoWWXS7hZfVqKdCPH",
-              "source_odd_id": "batting_homeRuns-JACKSON_CHOURIO_1_MLB-game-yn-yes",
-              "provider_call_id": "2026-10-11:1117:2026-10-11T15:17:02.491Z:7750df640d59",
-              "verified": true,
-              "url": null
-            },
-            {
               "book": "DraftKings",
               "book_id": "draftkings",
               "odds": 564,
@@ -1223,6 +1212,18 @@
               "book_id": "betmgm",
               "odds": 390,
               "captured_at": "2026-10-11T15:13:14.008Z",
+              "source": "qstash-vercel-sportsgameodds",
+              "source_event_id": "WnJeoWWXS7hZfVqKdCPH",
+              "source_odd_id": "batting_homeRuns-JACKSON_CHOURIO_1_MLB-game-yn-yes",
+              "provider_call_id": "2026-10-11:1117:2026-10-11T15:17:02.491Z:7750df640d59",
+              "verified": true,
+              "url": null
+            },
+            {
+              "book": "FanDuel",
+              "book_id": "fanduel",
+              "odds": 590,
+              "captured_at": "2026-10-11T15:12:40.429Z",
               "source": "qstash-vercel-sportsgameodds",
               "source_event_id": "WnJeoWWXS7hZfVqKdCPH",
               "source_odd_id": "batting_homeRuns-JACKSON_CHOURIO_1_MLB-game-yn-yes",
@@ -1261,18 +1262,6 @@
           "dk_odds": 620,
           "all_prices": [
             {
-              "book": "FanDuel",
-              "book_id": "fanduel",
-              "odds": 630,
-              "captured_at": "2026-10-11T15:12:40.429Z",
-              "source": "qstash-vercel-sportsgameodds",
-              "source_event_id": "WnJeoWWXS7hZfVqKdCPH",
-              "source_odd_id": "batting_homeRuns-WILLIAM_CONTRERAS_1_MLB-game-yn-yes",
-              "provider_call_id": "2026-10-11:1117:2026-10-11T15:17:02.491Z:7750df640d59",
-              "verified": true,
-              "url": null
-            },
-            {
               "book": "DraftKings",
               "book_id": "draftkings",
               "odds": 620,
@@ -1289,6 +1278,18 @@
               "book_id": "betmgm",
               "odds": 425,
               "captured_at": "2026-10-11T15:13:14.008Z",
+              "source": "qstash-vercel-sportsgameodds",
+              "source_event_id": "WnJeoWWXS7hZfVqKdCPH",
+              "source_odd_id": "batting_homeRuns-WILLIAM_CONTRERAS_1_MLB-game-yn-yes",
+              "provider_call_id": "2026-10-11:1117:2026-10-11T15:17:02.491Z:7750df640d59",
+              "verified": true,
+              "url": null
+            },
+            {
+              "book": "FanDuel",
+              "book_id": "fanduel",
+              "odds": 630,
+              "captured_at": "2026-10-11T15:12:40.429Z",
               "source": "qstash-vercel-sportsgameodds",
               "source_event_id": "WnJeoWWXS7hZfVqKdCPH",
               "source_odd_id": "batting_homeRuns-WILLIAM_CONTRERAS_1_MLB-game-yn-yes",
@@ -1327,18 +1328,6 @@
           "dk_odds": 860,
           "all_prices": [
             {
-              "book": "FanDuel",
-              "book_id": "fanduel",
-              "odds": 880,
-              "captured_at": "2026-10-11T15:12:40.429Z",
-              "source": "qstash-vercel-sportsgameodds",
-              "source_event_id": "WnJeoWWXS7hZfVqKdCPH",
-              "source_odd_id": "batting_homeRuns-KYLE_TUCKER_1_MLB-game-yn-yes",
-              "provider_call_id": "2026-10-11:1117:2026-10-11T15:17:02.491Z:7750df640d59",
-              "verified": true,
-              "url": null
-            },
-            {
               "book": "DraftKings",
               "book_id": "draftkings",
               "odds": 860,
@@ -1355,6 +1344,18 @@
               "book_id": "betmgm",
               "odds": 650,
               "captured_at": "2026-10-11T15:13:14.008Z",
+              "source": "qstash-vercel-sportsgameodds",
+              "source_event_id": "WnJeoWWXS7hZfVqKdCPH",
+              "source_odd_id": "batting_homeRuns-KYLE_TUCKER_1_MLB-game-yn-yes",
+              "provider_call_id": "2026-10-11:1117:2026-10-11T15:17:02.491Z:7750df640d59",
+              "verified": true,
+              "url": null
+            },
+            {
+              "book": "FanDuel",
+              "book_id": "fanduel",
+              "odds": 880,
+              "captured_at": "2026-10-11T15:12:40.429Z",
               "source": "qstash-vercel-sportsgameodds",
               "source_event_id": "WnJeoWWXS7hZfVqKdCPH",
               "source_odd_id": "batting_homeRuns-KYLE_TUCKER_1_MLB-game-yn-yes",
@@ -1393,10 +1394,10 @@
           "dk_odds": 1080,
           "all_prices": [
             {
-              "book": "FanDuel",
-              "book_id": "fanduel",
-              "odds": 1120,
-              "captured_at": "2026-10-11T15:12:40.429Z",
+              "book": "DraftKings",
+              "book_id": "draftkings",
+              "odds": 1080,
+              "captured_at": "2026-10-11T15:13:19.508Z",
               "source": "qstash-vercel-sportsgameodds",
               "source_event_id": "WnJeoWWXS7hZfVqKdCPH",
               "source_odd_id": "batting_homeRuns-GARRETT_MITCHELL_1_MLB-game-yn-yes",
@@ -1405,10 +1406,10 @@
               "url": null
             },
             {
-              "book": "DraftKings",
-              "book_id": "draftkings",
-              "odds": 1080,
-              "captured_at": "2026-10-11T15:13:19.508Z",
+              "book": "FanDuel",
+              "book_id": "fanduel",
+              "odds": 1120,
+              "captured_at": "2026-10-11T15:12:40.429Z",
               "source": "qstash-vercel-sportsgameodds",
               "source_event_id": "WnJeoWWXS7hZfVqKdCPH",
               "source_odd_id": "batting_homeRuns-GARRETT_MITCHELL_1_MLB-game-yn-yes",
@@ -1447,18 +1448,6 @@
           "dk_odds": 670,
           "all_prices": [
             {
-              "book": "FanDuel",
-              "book_id": "fanduel",
-              "odds": 680,
-              "captured_at": "2026-10-11T15:12:40.429Z",
-              "source": "qstash-vercel-sportsgameodds",
-              "source_event_id": "WnJeoWWXS7hZfVqKdCPH",
-              "source_odd_id": "batting_homeRuns-JAKE_BAUERS_1_MLB-game-yn-yes",
-              "provider_call_id": "2026-10-11:1117:2026-10-11T15:17:02.491Z:7750df640d59",
-              "verified": true,
-              "url": null
-            },
-            {
               "book": "DraftKings",
               "book_id": "draftkings",
               "odds": 670,
@@ -1475,6 +1464,18 @@
               "book_id": "betmgm",
               "odds": 525,
               "captured_at": "2026-10-11T15:13:14.008Z",
+              "source": "qstash-vercel-sportsgameodds",
+              "source_event_id": "WnJeoWWXS7hZfVqKdCPH",
+              "source_odd_id": "batting_homeRuns-JAKE_BAUERS_1_MLB-game-yn-yes",
+              "provider_call_id": "2026-10-11:1117:2026-10-11T15:17:02.491Z:7750df640d59",
+              "verified": true,
+              "url": null
+            },
+            {
+              "book": "FanDuel",
+              "book_id": "fanduel",
+              "odds": 680,
+              "captured_at": "2026-10-11T15:12:40.429Z",
               "source": "qstash-vercel-sportsgameodds",
               "source_event_id": "WnJeoWWXS7hZfVqKdCPH",
               "source_odd_id": "batting_homeRuns-JAKE_BAUERS_1_MLB-game-yn-yes",
@@ -1513,18 +1514,6 @@
           "dk_odds": 1160,
           "all_prices": [
             {
-              "book": "FanDuel",
-              "book_id": "fanduel",
-              "odds": 1120,
-              "captured_at": "2026-10-11T15:12:40.429Z",
-              "source": "qstash-vercel-sportsgameodds",
-              "source_event_id": "WnJeoWWXS7hZfVqKdCPH",
-              "source_odd_id": "batting_homeRuns-JOEY_ORTIZ_1_MLB-game-yn-yes",
-              "provider_call_id": "2026-10-11:1117:2026-10-11T15:17:02.491Z:7750df640d59",
-              "verified": true,
-              "url": null
-            },
-            {
               "book": "DraftKings",
               "book_id": "draftkings",
               "odds": 1160,
@@ -1541,6 +1530,18 @@
               "book_id": "betmgm",
               "odds": 825,
               "captured_at": "2026-10-11T15:13:14.008Z",
+              "source": "qstash-vercel-sportsgameodds",
+              "source_event_id": "WnJeoWWXS7hZfVqKdCPH",
+              "source_odd_id": "batting_homeRuns-JOEY_ORTIZ_1_MLB-game-yn-yes",
+              "provider_call_id": "2026-10-11:1117:2026-10-11T15:17:02.491Z:7750df640d59",
+              "verified": true,
+              "url": null
+            },
+            {
+              "book": "FanDuel",
+              "book_id": "fanduel",
+              "odds": 1120,
+              "captured_at": "2026-10-11T15:12:40.429Z",
               "source": "qstash-vercel-sportsgameodds",
               "source_event_id": "WnJeoWWXS7hZfVqKdCPH",
               "source_odd_id": "batting_homeRuns-JOEY_ORTIZ_1_MLB-game-yn-yes",
@@ -1579,18 +1580,6 @@
           "dk_odds": 1160,
           "all_prices": [
             {
-              "book": "FanDuel",
-              "book_id": "fanduel",
-              "odds": 1200,
-              "captured_at": "2026-10-11T15:12:40.429Z",
-              "source": "qstash-vercel-sportsgameodds",
-              "source_event_id": "WnJeoWWXS7hZfVqKdCPH",
-              "source_odd_id": "batting_homeRuns-LUIS_LARA_1_MLB-game-yn-yes",
-              "provider_call_id": "2026-10-11:1117:2026-10-11T15:17:02.491Z:7750df640d59",
-              "verified": true,
-              "url": null
-            },
-            {
               "book": "DraftKings",
               "book_id": "draftkings",
               "odds": 1160,
@@ -1607,6 +1596,18 @@
               "book_id": "betmgm",
               "odds": 1400,
               "captured_at": "2026-10-11T15:13:14.008Z",
+              "source": "qstash-vercel-sportsgameodds",
+              "source_event_id": "WnJeoWWXS7hZfVqKdCPH",
+              "source_odd_id": "batting_homeRuns-LUIS_LARA_1_MLB-game-yn-yes",
+              "provider_call_id": "2026-10-11:1117:2026-10-11T15:17:02.491Z:7750df640d59",
+              "verified": true,
+              "url": null
+            },
+            {
+              "book": "FanDuel",
+              "book_id": "fanduel",
+              "odds": 1200,
+              "captured_at": "2026-10-11T15:12:40.429Z",
               "source": "qstash-vercel-sportsgameodds",
               "source_event_id": "WnJeoWWXS7hZfVqKdCPH",
               "source_odd_id": "batting_homeRuns-LUIS_LARA_1_MLB-game-yn-yes",
@@ -1645,18 +1646,6 @@
           "dk_odds": 1280,
           "all_prices": [
             {
-              "book": "FanDuel",
-              "book_id": "fanduel",
-              "odds": 1300,
-              "captured_at": "2026-10-11T15:12:40.429Z",
-              "source": "qstash-vercel-sportsgameodds",
-              "source_event_id": "WnJeoWWXS7hZfVqKdCPH",
-              "source_odd_id": "batting_homeRuns-COOPER_PRATT_1_MLB-game-yn-yes",
-              "provider_call_id": "2026-10-11:1117:2026-10-11T15:17:02.491Z:7750df640d59",
-              "verified": true,
-              "url": null
-            },
-            {
               "book": "DraftKings",
               "book_id": "draftkings",
               "odds": 1280,
@@ -1673,6 +1662,18 @@
               "book_id": "betmgm",
               "odds": 1200,
               "captured_at": "2026-10-11T15:13:14.008Z",
+              "source": "qstash-vercel-sportsgameodds",
+              "source_event_id": "WnJeoWWXS7hZfVqKdCPH",
+              "source_odd_id": "batting_homeRuns-COOPER_PRATT_1_MLB-game-yn-yes",
+              "provider_call_id": "2026-10-11:1117:2026-10-11T15:17:02.491Z:7750df640d59",
+              "verified": true,
+              "url": null
+            },
+            {
+              "book": "FanDuel",
+              "book_id": "fanduel",
+              "odds": 1300,
+              "captured_at": "2026-10-11T15:12:40.429Z",
               "source": "qstash-vercel-sportsgameodds",
               "source_event_id": "WnJeoWWXS7hZfVqKdCPH",
               "source_odd_id": "batting_homeRuns-COOPER_PRATT_1_MLB-game-yn-yes",
@@ -1711,18 +1712,6 @@
           "dk_odds": 950,
           "all_prices": [
             {
-              "book": "FanDuel",
-              "book_id": "fanduel",
-              "odds": 920,
-              "captured_at": "2026-10-11T15:12:40.429Z",
-              "source": "qstash-vercel-sportsgameodds",
-              "source_event_id": "WnJeoWWXS7hZfVqKdCPH",
-              "source_odd_id": "batting_homeRuns-FREDDIE_FREEMAN_1_MLB-game-yn-yes",
-              "provider_call_id": "2026-10-11:1117:2026-10-11T15:17:02.491Z:7750df640d59",
-              "verified": true,
-              "url": null
-            },
-            {
               "book": "DraftKings",
               "book_id": "draftkings",
               "odds": 950,
@@ -1739,6 +1728,18 @@
               "book_id": "betmgm",
               "odds": 650,
               "captured_at": "2026-10-11T15:13:14.008Z",
+              "source": "qstash-vercel-sportsgameodds",
+              "source_event_id": "WnJeoWWXS7hZfVqKdCPH",
+              "source_odd_id": "batting_homeRuns-FREDDIE_FREEMAN_1_MLB-game-yn-yes",
+              "provider_call_id": "2026-10-11:1117:2026-10-11T15:17:02.491Z:7750df640d59",
+              "verified": true,
+              "url": null
+            },
+            {
+              "book": "FanDuel",
+              "book_id": "fanduel",
+              "odds": 920,
+              "captured_at": "2026-10-11T15:12:40.429Z",
               "source": "qstash-vercel-sportsgameodds",
               "source_event_id": "WnJeoWWXS7hZfVqKdCPH",
               "source_odd_id": "batting_homeRuns-FREDDIE_FREEMAN_1_MLB-game-yn-yes",
@@ -1777,18 +1778,6 @@
           "dk_odds": 530,
           "all_prices": [
             {
-              "book": "FanDuel",
-              "book_id": "fanduel",
-              "odds": 540,
-              "captured_at": "2026-10-11T15:12:40.429Z",
-              "source": "qstash-vercel-sportsgameodds",
-              "source_event_id": "WnJeoWWXS7hZfVqKdCPH",
-              "source_odd_id": "batting_homeRuns-SHOHEI_OHTANI_1_MLB-game-yn-yes",
-              "provider_call_id": "2026-10-11:1117:2026-10-11T15:17:02.491Z:7750df640d59",
-              "verified": true,
-              "url": null
-            },
-            {
               "book": "DraftKings",
               "book_id": "draftkings",
               "odds": 530,
@@ -1805,6 +1794,18 @@
               "book_id": "betmgm",
               "odds": 425,
               "captured_at": "2026-10-11T15:13:14.008Z",
+              "source": "qstash-vercel-sportsgameodds",
+              "source_event_id": "WnJeoWWXS7hZfVqKdCPH",
+              "source_odd_id": "batting_homeRuns-SHOHEI_OHTANI_1_MLB-game-yn-yes",
+              "provider_call_id": "2026-10-11:1117:2026-10-11T15:17:02.491Z:7750df640d59",
+              "verified": true,
+              "url": null
+            },
+            {
+              "book": "FanDuel",
+              "book_id": "fanduel",
+              "odds": 540,
+              "captured_at": "2026-10-11T15:12:40.429Z",
               "source": "qstash-vercel-sportsgameodds",
               "source_event_id": "WnJeoWWXS7hZfVqKdCPH",
               "source_odd_id": "batting_homeRuns-SHOHEI_OHTANI_1_MLB-game-yn-yes",
