@@ -2,7 +2,7 @@
   "schema_version": 1,
   "kind": "hr_dynamic_daily_picks",
   "status": "active",
-  "generated_at": "2026-10-11T05:50:21.770311+00:00",
+  "generated_at": "2026-10-11T17:41:43.896796+00:00",
   "rule": {
     "name": "Dynamic Daily ROI",
     "checkpoints": [
@@ -23670,6 +23670,34 @@
           "net_units": -0.57,
           "roi": -0.09500000000000001
         }
+      },
+      {
+        "slate_date": "2026-10-11",
+        "checkpoints": [
+          "0817"
+        ],
+        "selections": [],
+        "bets": 0,
+        "wins": 0,
+        "losses": 0,
+        "voids": 0,
+        "pending": 0,
+        "slates": 0,
+        "profitable_slates": 0,
+        "losing_slates": 0,
+        "profitable_slate_rate": null,
+        "hit_rate": null,
+        "average_break_even": null,
+        "empirical_probability_edge": null,
+        "net_units": 0,
+        "roi": null,
+        "cumulative": {
+          "bets": 6,
+          "wins": 1,
+          "losses": 5,
+          "net_units": -0.57,
+          "roi": -0.09500000000000001
+        }
       }
     ],
     "snapshots": [
@@ -26307,13 +26335,27 @@
         "captured_at": "2026-10-10T21:17:01.865Z",
         "qualified_cells": [],
         "selections": []
+      },
+      {
+        "slate_date": "2026-10-11",
+        "checkpoint": "0817",
+        "mode": "dynamic_daily",
+        "captured_at": "2026-10-11T17:41:42.292991+00:00",
+        "qualified_cells": [],
+        "selections": []
       }
     ]
   },
   "current": {
     "slate_date": "2026-10-11",
-    "status": "checkpoint_pending",
-    "checkpoints": [],
+    "status": "live",
+    "checkpoints": [
+      {
+        "checkpoint": "0817",
+        "qualified_cells": [],
+        "picks": []
+      }
+    ],
     "picks": []
   }
 }
