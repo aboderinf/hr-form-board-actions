@@ -1,0 +1,42 @@
+{
+  "schema_version": 2,
+  "snapshot_id": "2026-10-12_2017",
+  "slate_date": "2026-10-12",
+  "checkpoint_et": "20:17",
+  "scheduled_at_et": "2026-10-12T20:17:00-04:00",
+  "observed_at": "2026-10-13T06:48:53.046370+00:00",
+  "observed_at_et": "2026-10-13T02:48:53.046370-04:00",
+  "status": "shared_odds_not_available_at_checkpoint",
+  "sources": {
+    "mlb_hr_edge": {
+      "source": "MLB HR Edge",
+      "source_url": "data/shared-odds/latest.json",
+      "delivery": "qstash-vercel-redis",
+      "source_date": "2026-10-12",
+      "date_matches": true,
+      "as_of": "2026-10-13T00:17:00.000Z",
+      "status": "pending",
+      "generated_at": "2026-10-13T00:17:01.916Z",
+      "latest_ingest_at": "2026-10-13T00:17:01.916Z",
+      "provider_call_id": "2026-10-12:2017:2026-10-13T00:17:01.916Z:fa7d3e9fa5d2",
+      "provider_response_sha256": "fa7d3e9fa5d26dd4b60f12fda1f2d355bd95651d74512535d3651cf4442ec338",
+      "archived_call_count": 1,
+      "quote_count": 0,
+      "all_available_quote_count": 133,
+      "excluded_live_or_post_start_quote_count": 133,
+      "books": [
+        "FanDuel",
+        "DraftKings",
+        "BetMGM"
+      ],
+      "row_count": 0,
+      "mlbam_ids_hydrated": 0,
+      "mlbam_ids_added": 0,
+      "unresolved_player_names": [],
+      "compatibility_fallback": "exact_upstash_checkpoint_cache",
+      "checkpoint_at": "2026-10-12T20:17:00-04:00"
+    }
+  },
+  "diagnostics": [],
+  "portfolios": {}
+}
