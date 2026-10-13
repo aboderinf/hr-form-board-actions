@@ -1,8 +1,8 @@
 {
   "schema_version": 3,
   "kind": "top_100_profit_discovery",
-  "generated_at": "2026-10-13T19:22:10.616164+00:00",
-  "generated_at_et": "2026-10-13T15:22:10.616164-04:00",
+  "generated_at": "2026-10-13T20:42:22.548516+00:00",
+  "generated_at_et": "2026-10-13T16:42:22.548516-04:00",
   "status": "ready",
   "methodology": {
     "capture": "All Top 100 form-score rows are archived at each discovery checkpoint, including rows without an available price.",
@@ -129826,7 +129826,7 @@
     {
       "slate_date": "2026-10-13",
       "checkpoint": "1117",
-      "captured_at_et": null,
+      "captured_at_et": "2026-10-13T16:42:22.395011-04:00",
       "top100_rows": 100,
       "priced_rows": 3,
       "odds_coverage": 0.03,
@@ -130028,8 +130028,8 @@
     {
       "slate_date": "2026-10-13",
       "checkpoint": "1117",
-      "captured_at": "2026-10-13T15:17:01.853Z",
-      "captured_at_et": null,
+      "captured_at": "2026-10-13T20:42:22.395011+00:00",
+      "captured_at_et": "2026-10-13T16:42:22.395011-04:00",
       "rank": 89,
       "player": "Jo Adell",
       "mlbam_id": 666176,
@@ -130045,20 +130045,7 @@
       "game_pk": null,
       "game_start_at": "2026-10-14T00:00:00.000Z",
       "matchup": "CLE @ TB",
-      "game_started_at_checkpoint": false,
       "all_prices": [
-        {
-          "book": "BetMGM",
-          "book_id": "betmgm",
-          "odds": 500,
-          "captured_at": "2026-10-13T15:11:51.889Z",
-          "source": "qstash-vercel-sportsgameodds",
-          "source_event_id": "PDl6n4bFNrceA8qE3cIZ",
-          "source_odd_id": "batting_homeRuns-JO_ADELL_1_MLB-game-yn-yes",
-          "provider_call_id": "2026-10-13:1117:2026-10-13T15:17:01.853Z:33b29beafba4",
-          "verified": true,
-          "url": null
-        },
         {
           "book": "DraftKings",
           "book_id": "draftkings",
@@ -130082,12 +130069,21 @@
           "provider_call_id": "2026-10-13:1117:2026-10-13T15:17:01.853Z:33b29beafba4",
           "verified": true,
           "url": null
+        },
+        {
+          "book": "BetMGM",
+          "book_id": "betmgm",
+          "odds": 500,
+          "captured_at": "2026-10-13T15:11:51.889Z",
+          "source": "qstash-vercel-sportsgameodds",
+          "source_event_id": "PDl6n4bFNrceA8qE3cIZ",
+          "source_odd_id": "batting_homeRuns-JO_ADELL_1_MLB-game-yn-yes",
+          "provider_call_id": "2026-10-13:1117:2026-10-13T15:17:01.853Z:33b29beafba4",
+          "verified": true,
+          "url": null
         }
       ],
       "best_book": "BetMGM",
-      "best_books": [
-        "BetMGM"
-      ],
       "best_odds": 500,
       "best_odds_text": "+500",
       "best_price_captured_at": "2026-10-13T15:11:51.889Z",
