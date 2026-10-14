@@ -2,19 +2,6 @@ name: Train Total Bases V2
 
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
-    paths:
-      - ".github/workflows/train-total-bases-v2.yml"
-      - "src/total_bases_model.py"
-      - "scripts/train_total_bases_v2.py"
-      - "tests/test_total_bases_model_v2.py"
-      - "data/triggers/train-total-bases-v2.txt"
-  schedule:
-    # Refresh rolling state after the prior MLB slate. The model parameters are
-    # selected from frozen historical years; August remains out-of-sample.
-    - cron: "20 10 * * *"
-
 permissions:
   contents: write
 
