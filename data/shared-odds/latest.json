@@ -1,10 +1,10 @@
 {
   "schemaVersion": 5,
   "date": "2026-10-13",
-  "checkpoint": "1117",
-  "asOf": "2026-10-13T15:17:00.000Z",
-  "generatedAt": "2026-10-13T15:17:01.853Z",
-  "latestIngestAt": "2026-10-13T15:17:01.853Z",
+  "checkpoint": "1717",
+  "asOf": "2026-10-13T21:17:00.000Z",
+  "generatedAt": "2026-10-13T21:17:01.979Z",
+  "latestIngestAt": "2026-10-13T21:17:01.979Z",
   "status": "ready",
   "source": "mlb-hr-edge-database",
   "delivery": "qstash-vercel-redis",
@@ -14,15 +14,15 @@
     "draftkings",
     "betmgm"
   ],
-  "rowCount": 21,
-  "quoteCount": 54,
-  "allAvailableQuoteCount": 108,
+  "rowCount": 19,
+  "quoteCount": 53,
+  "allAvailableQuoteCount": 106,
   "excludedLiveOrPostStartQuoteCount": 0,
   "archivedCallCount": 1,
-  "providerCallId": "2026-10-13:1117:2026-10-13T15:17:01.853Z:33b29beafba4",
-  "providerResponseSha256": "33b29beafba444b198dc73e706bf2e885db31f4cfa57bcb80cbff71d7907bd27",
-  "providerRequestedAt": "2026-10-13T15:17:01.475Z",
-  "providerCompletedAt": "2026-10-13T15:17:01.853Z",
+  "providerCallId": "2026-10-13:1717:2026-10-13T21:17:01.979Z:dfbf63937cf2",
+  "providerResponseSha256": "dfbf63937cf2db39d310999463f508c01645f24b55d7c539b06ad947aa8504aa",
+  "providerRequestedAt": "2026-10-13T21:17:01.584Z",
+  "providerCompletedAt": "2026-10-13T21:17:01.979Z",
   "rows": [
     {
       "predictionId": null,
@@ -40,20 +40,28 @@
       "sourceEventId": "PDl6n4bFNrceA8qE3cIZ",
       "odds": {
         "draftkings": {
-          "americanOdds": 1020,
-          "capturedAt": "2026-10-13T15:11:09.122Z",
+          "americanOdds": 1540,
+          "capturedAt": "2026-10-13T21:09:47.585Z",
           "source": "qstash-vercel-sportsgameodds",
           "sourceEventId": "PDl6n4bFNrceA8qE3cIZ",
           "sourceOddId": "batting_homeRuns-BEN_WILLIAMSON_1_MLB-game-yn-yes",
-          "callId": "2026-10-13:1117:2026-10-13T15:17:01.853Z:33b29beafba4"
+          "callId": "2026-10-13:1717:2026-10-13T21:17:01.979Z:dfbf63937cf2"
         },
         "betmgm": {
-          "americanOdds": 1350,
-          "capturedAt": "2026-10-13T15:11:51.889Z",
+          "americanOdds": 1250,
+          "capturedAt": "2026-10-13T21:11:35.231Z",
           "source": "qstash-vercel-sportsgameodds",
           "sourceEventId": "PDl6n4bFNrceA8qE3cIZ",
           "sourceOddId": "batting_homeRuns-BEN_WILLIAMSON_1_MLB-game-yn-yes",
-          "callId": "2026-10-13:1117:2026-10-13T15:17:01.853Z:33b29beafba4"
+          "callId": "2026-10-13:1717:2026-10-13T21:17:01.979Z:dfbf63937cf2"
+        },
+        "fanduel": {
+          "americanOdds": 1600,
+          "capturedAt": "2026-10-13T21:10:10.745Z",
+          "source": "qstash-vercel-sportsgameodds",
+          "sourceEventId": "PDl6n4bFNrceA8qE3cIZ",
+          "sourceOddId": "batting_homeRuns-BEN_WILLIAMSON_1_MLB-game-yn-yes",
+          "callId": "2026-10-13:1717:2026-10-13T21:17:01.979Z:dfbf63937cf2"
         }
       }
     },
@@ -73,28 +81,28 @@
       "sourceEventId": "PDl6n4bFNrceA8qE3cIZ",
       "odds": {
         "draftkings": {
-          "americanOdds": 1200,
-          "capturedAt": "2026-10-13T15:11:09.122Z",
+          "americanOdds": 1220,
+          "capturedAt": "2026-10-13T21:09:47.585Z",
           "source": "qstash-vercel-sportsgameodds",
           "sourceEventId": "PDl6n4bFNrceA8qE3cIZ",
           "sourceOddId": "batting_homeRuns-BRAYAN_ROCCHIO_1_MLB-game-yn-yes",
-          "callId": "2026-10-13:1117:2026-10-13T15:17:01.853Z:33b29beafba4"
+          "callId": "2026-10-13:1717:2026-10-13T21:17:01.979Z:dfbf63937cf2"
         },
         "fanduel": {
           "americanOdds": 1200,
-          "capturedAt": "2026-10-13T15:11:23.272Z",
+          "capturedAt": "2026-10-13T21:10:10.745Z",
           "source": "qstash-vercel-sportsgameodds",
           "sourceEventId": "PDl6n4bFNrceA8qE3cIZ",
           "sourceOddId": "batting_homeRuns-BRAYAN_ROCCHIO_1_MLB-game-yn-yes",
-          "callId": "2026-10-13:1117:2026-10-13T15:17:01.853Z:33b29beafba4"
+          "callId": "2026-10-13:1717:2026-10-13T21:17:01.979Z:dfbf63937cf2"
         },
         "betmgm": {
           "americanOdds": 850,
-          "capturedAt": "2026-10-13T15:11:51.889Z",
+          "capturedAt": "2026-10-13T21:11:35.231Z",
           "source": "qstash-vercel-sportsgameodds",
           "sourceEventId": "PDl6n4bFNrceA8qE3cIZ",
           "sourceOddId": "batting_homeRuns-BRAYAN_ROCCHIO_1_MLB-game-yn-yes",
-          "callId": "2026-10-13:1117:2026-10-13T15:17:01.853Z:33b29beafba4"
+          "callId": "2026-10-13:1717:2026-10-13T21:17:01.979Z:dfbf63937cf2"
         }
       }
     },
@@ -114,28 +122,28 @@
       "sourceEventId": "PDl6n4bFNrceA8qE3cIZ",
       "odds": {
         "draftkings": {
-          "americanOdds": 670,
-          "capturedAt": "2026-10-13T15:11:09.122Z",
+          "americanOdds": 660,
+          "capturedAt": "2026-10-13T21:09:47.585Z",
           "source": "qstash-vercel-sportsgameodds",
           "sourceEventId": "PDl6n4bFNrceA8qE3cIZ",
           "sourceOddId": "batting_homeRuns-CHASE_DELAUTER_1_MLB-game-yn-yes",
-          "callId": "2026-10-13:1117:2026-10-13T15:17:01.853Z:33b29beafba4"
+          "callId": "2026-10-13:1717:2026-10-13T21:17:01.979Z:dfbf63937cf2"
         },
         "fanduel": {
-          "americanOdds": 680,
-          "capturedAt": "2026-10-13T15:11:23.272Z",
+          "americanOdds": 660,
+          "capturedAt": "2026-10-13T21:10:10.745Z",
           "source": "qstash-vercel-sportsgameodds",
           "sourceEventId": "PDl6n4bFNrceA8qE3cIZ",
           "sourceOddId": "batting_homeRuns-CHASE_DELAUTER_1_MLB-game-yn-yes",
-          "callId": "2026-10-13:1117:2026-10-13T15:17:01.853Z:33b29beafba4"
+          "callId": "2026-10-13:1717:2026-10-13T21:17:01.979Z:dfbf63937cf2"
         },
         "betmgm": {
           "americanOdds": 550,
-          "capturedAt": "2026-10-13T15:11:51.889Z",
+          "capturedAt": "2026-10-13T21:11:35.231Z",
           "source": "qstash-vercel-sportsgameodds",
           "sourceEventId": "PDl6n4bFNrceA8qE3cIZ",
           "sourceOddId": "batting_homeRuns-CHASE_DELAUTER_1_MLB-game-yn-yes",
-          "callId": "2026-10-13:1117:2026-10-13T15:17:01.853Z:33b29beafba4"
+          "callId": "2026-10-13:1717:2026-10-13T21:17:01.979Z:dfbf63937cf2"
         }
       }
     },
@@ -155,28 +163,28 @@
       "sourceEventId": "PDl6n4bFNrceA8qE3cIZ",
       "odds": {
         "draftkings": {
-          "americanOdds": 870,
-          "capturedAt": "2026-10-13T15:11:09.122Z",
+          "americanOdds": 880,
+          "capturedAt": "2026-10-13T21:09:47.585Z",
           "source": "qstash-vercel-sportsgameodds",
           "sourceEventId": "PDl6n4bFNrceA8qE3cIZ",
           "sourceOddId": "batting_homeRuns-JONATHAN_ARANDA_1_MLB-game-yn-yes",
-          "callId": "2026-10-13:1117:2026-10-13T15:17:01.853Z:33b29beafba4"
+          "callId": "2026-10-13:1717:2026-10-13T21:17:01.979Z:dfbf63937cf2"
         },
         "fanduel": {
-          "americanOdds": 880,
-          "capturedAt": "2026-10-13T15:11:23.272Z",
+          "americanOdds": 900,
+          "capturedAt": "2026-10-13T21:10:10.745Z",
           "source": "qstash-vercel-sportsgameodds",
           "sourceEventId": "PDl6n4bFNrceA8qE3cIZ",
           "sourceOddId": "batting_homeRuns-JONATHAN_ARANDA_1_MLB-game-yn-yes",
-          "callId": "2026-10-13:1117:2026-10-13T15:17:01.853Z:33b29beafba4"
+          "callId": "2026-10-13:1717:2026-10-13T21:17:01.979Z:dfbf63937cf2"
         },
         "betmgm": {
           "americanOdds": 525,
-          "capturedAt": "2026-10-13T15:11:51.889Z",
+          "capturedAt": "2026-10-13T21:11:35.231Z",
           "source": "qstash-vercel-sportsgameodds",
           "sourceEventId": "PDl6n4bFNrceA8qE3cIZ",
           "sourceOddId": "batting_homeRuns-JONATHAN_ARANDA_1_MLB-game-yn-yes",
-          "callId": "2026-10-13:1117:2026-10-13T15:17:01.853Z:33b29beafba4"
+          "callId": "2026-10-13:1717:2026-10-13T21:17:01.979Z:dfbf63937cf2"
         }
       }
     },
@@ -196,28 +204,28 @@
       "sourceEventId": "PDl6n4bFNrceA8qE3cIZ",
       "odds": {
         "draftkings": {
-          "americanOdds": 940,
-          "capturedAt": "2026-10-13T15:11:09.122Z",
+          "americanOdds": 990,
+          "capturedAt": "2026-10-13T21:09:47.585Z",
           "source": "qstash-vercel-sportsgameodds",
           "sourceEventId": "PDl6n4bFNrceA8qE3cIZ",
           "sourceOddId": "batting_homeRuns-JONNY_DELUCA_1_MLB-game-yn-yes",
-          "callId": "2026-10-13:1117:2026-10-13T15:17:01.853Z:33b29beafba4"
+          "callId": "2026-10-13:1717:2026-10-13T21:17:01.979Z:dfbf63937cf2"
         },
         "fanduel": {
-          "americanOdds": 920,
-          "capturedAt": "2026-10-13T15:11:23.272Z",
+          "americanOdds": 980,
+          "capturedAt": "2026-10-13T21:10:10.745Z",
           "source": "qstash-vercel-sportsgameodds",
           "sourceEventId": "PDl6n4bFNrceA8qE3cIZ",
           "sourceOddId": "batting_homeRuns-JONNY_DELUCA_1_MLB-game-yn-yes",
-          "callId": "2026-10-13:1117:2026-10-13T15:17:01.853Z:33b29beafba4"
+          "callId": "2026-10-13:1717:2026-10-13T21:17:01.979Z:dfbf63937cf2"
         },
         "betmgm": {
           "americanOdds": 725,
-          "capturedAt": "2026-10-13T15:11:51.889Z",
+          "capturedAt": "2026-10-13T21:11:35.231Z",
           "source": "qstash-vercel-sportsgameodds",
           "sourceEventId": "PDl6n4bFNrceA8qE3cIZ",
           "sourceOddId": "batting_homeRuns-JONNY_DELUCA_1_MLB-game-yn-yes",
-          "callId": "2026-10-13:1117:2026-10-13T15:17:01.853Z:33b29beafba4"
+          "callId": "2026-10-13:1717:2026-10-13T21:17:01.979Z:dfbf63937cf2"
         }
       }
     },
@@ -237,28 +245,28 @@
       "sourceEventId": "PDl6n4bFNrceA8qE3cIZ",
       "odds": {
         "draftkings": {
-          "americanOdds": 557,
-          "capturedAt": "2026-10-13T15:11:09.122Z",
+          "americanOdds": 544,
+          "capturedAt": "2026-10-13T21:09:47.585Z",
           "source": "qstash-vercel-sportsgameodds",
           "sourceEventId": "PDl6n4bFNrceA8qE3cIZ",
           "sourceOddId": "batting_homeRuns-JOSE_RAMIREZ_1_MLB-game-yn-yes",
-          "callId": "2026-10-13:1117:2026-10-13T15:17:01.853Z:33b29beafba4"
+          "callId": "2026-10-13:1717:2026-10-13T21:17:01.979Z:dfbf63937cf2"
         },
         "fanduel": {
-          "americanOdds": 520,
-          "capturedAt": "2026-10-13T15:11:23.272Z",
+          "americanOdds": 530,
+          "capturedAt": "2026-10-13T21:10:10.745Z",
           "source": "qstash-vercel-sportsgameodds",
           "sourceEventId": "PDl6n4bFNrceA8qE3cIZ",
           "sourceOddId": "batting_homeRuns-JOSE_RAMIREZ_1_MLB-game-yn-yes",
-          "callId": "2026-10-13:1117:2026-10-13T15:17:01.853Z:33b29beafba4"
+          "callId": "2026-10-13:1717:2026-10-13T21:17:01.979Z:dfbf63937cf2"
         },
         "betmgm": {
-          "americanOdds": 575,
-          "capturedAt": "2026-10-13T15:11:51.889Z",
+          "americanOdds": 550,
+          "capturedAt": "2026-10-13T21:11:35.231Z",
           "source": "qstash-vercel-sportsgameodds",
           "sourceEventId": "PDl6n4bFNrceA8qE3cIZ",
           "sourceOddId": "batting_homeRuns-JOSE_RAMIREZ_1_MLB-game-yn-yes",
-          "callId": "2026-10-13:1117:2026-10-13T15:17:01.853Z:33b29beafba4"
+          "callId": "2026-10-13:1717:2026-10-13T21:17:01.979Z:dfbf63937cf2"
         }
       }
     },
@@ -278,28 +286,28 @@
       "sourceEventId": "PDl6n4bFNrceA8qE3cIZ",
       "odds": {
         "draftkings": {
-          "americanOdds": 468,
-          "capturedAt": "2026-10-13T15:11:09.122Z",
+          "americanOdds": 453,
+          "capturedAt": "2026-10-13T21:09:47.585Z",
           "source": "qstash-vercel-sportsgameodds",
           "sourceEventId": "PDl6n4bFNrceA8qE3cIZ",
           "sourceOddId": "batting_homeRuns-JO_ADELL_1_MLB-game-yn-yes",
-          "callId": "2026-10-13:1117:2026-10-13T15:17:01.853Z:33b29beafba4"
+          "callId": "2026-10-13:1717:2026-10-13T21:17:01.979Z:dfbf63937cf2"
         },
         "fanduel": {
           "americanOdds": 440,
-          "capturedAt": "2026-10-13T15:11:23.272Z",
+          "capturedAt": "2026-10-13T21:10:10.745Z",
           "source": "qstash-vercel-sportsgameodds",
           "sourceEventId": "PDl6n4bFNrceA8qE3cIZ",
           "sourceOddId": "batting_homeRuns-JO_ADELL_1_MLB-game-yn-yes",
-          "callId": "2026-10-13:1117:2026-10-13T15:17:01.853Z:33b29beafba4"
+          "callId": "2026-10-13:1717:2026-10-13T21:17:01.979Z:dfbf63937cf2"
         },
         "betmgm": {
-          "americanOdds": 500,
-          "capturedAt": "2026-10-13T15:11:51.889Z",
+          "americanOdds": 475,
+          "capturedAt": "2026-10-13T21:11:35.231Z",
           "source": "qstash-vercel-sportsgameodds",
           "sourceEventId": "PDl6n4bFNrceA8qE3cIZ",
           "sourceOddId": "batting_homeRuns-JO_ADELL_1_MLB-game-yn-yes",
-          "callId": "2026-10-13:1117:2026-10-13T15:17:01.853Z:33b29beafba4"
+          "callId": "2026-10-13:1717:2026-10-13T21:17:01.979Z:dfbf63937cf2"
         }
       }
     },
@@ -319,28 +327,28 @@
       "sourceEventId": "PDl6n4bFNrceA8qE3cIZ",
       "odds": {
         "draftkings": {
-          "americanOdds": 332,
-          "capturedAt": "2026-10-13T15:11:09.122Z",
+          "americanOdds": 350,
+          "capturedAt": "2026-10-13T21:09:47.585Z",
           "source": "qstash-vercel-sportsgameodds",
           "sourceEventId": "PDl6n4bFNrceA8qE3cIZ",
           "sourceOddId": "batting_homeRuns-JUNIOR_CAMINERO_1_MLB-game-yn-yes",
-          "callId": "2026-10-13:1117:2026-10-13T15:17:01.853Z:33b29beafba4"
+          "callId": "2026-10-13:1717:2026-10-13T21:17:01.979Z:dfbf63937cf2"
         },
         "fanduel": {
-          "americanOdds": 320,
-          "capturedAt": "2026-10-13T15:11:23.272Z",
+          "americanOdds": 360,
+          "capturedAt": "2026-10-13T21:10:10.745Z",
           "source": "qstash-vercel-sportsgameodds",
           "sourceEventId": "PDl6n4bFNrceA8qE3cIZ",
           "sourceOddId": "batting_homeRuns-JUNIOR_CAMINERO_1_MLB-game-yn-yes",
-          "callId": "2026-10-13:1117:2026-10-13T15:17:01.853Z:33b29beafba4"
+          "callId": "2026-10-13:1717:2026-10-13T21:17:01.979Z:dfbf63937cf2"
         },
         "betmgm": {
-          "americanOdds": 310,
-          "capturedAt": "2026-10-13T15:11:51.889Z",
+          "americanOdds": 300,
+          "capturedAt": "2026-10-13T21:11:35.231Z",
           "source": "qstash-vercel-sportsgameodds",
           "sourceEventId": "PDl6n4bFNrceA8qE3cIZ",
           "sourceOddId": "batting_homeRuns-JUNIOR_CAMINERO_1_MLB-game-yn-yes",
-          "callId": "2026-10-13:1117:2026-10-13T15:17:01.853Z:33b29beafba4"
+          "callId": "2026-10-13:1717:2026-10-13T21:17:01.979Z:dfbf63937cf2"
         }
       }
     },
@@ -360,53 +368,28 @@
       "sourceEventId": "PDl6n4bFNrceA8qE3cIZ",
       "odds": {
         "draftkings": {
-          "americanOdds": 770,
-          "capturedAt": "2026-10-13T15:11:09.122Z",
+          "americanOdds": 710,
+          "capturedAt": "2026-10-13T21:09:47.585Z",
           "source": "qstash-vercel-sportsgameodds",
           "sourceEventId": "PDl6n4bFNrceA8qE3cIZ",
           "sourceOddId": "batting_homeRuns-NATHANIEL_LOWE_1_MLB-game-yn-yes",
-          "callId": "2026-10-13:1117:2026-10-13T15:17:01.853Z:33b29beafba4"
+          "callId": "2026-10-13:1717:2026-10-13T21:17:01.979Z:dfbf63937cf2"
         },
         "fanduel": {
-          "americanOdds": 710,
-          "capturedAt": "2026-10-13T15:11:23.272Z",
+          "americanOdds": 660,
+          "capturedAt": "2026-10-13T21:10:10.745Z",
           "source": "qstash-vercel-sportsgameodds",
           "sourceEventId": "PDl6n4bFNrceA8qE3cIZ",
           "sourceOddId": "batting_homeRuns-NATHANIEL_LOWE_1_MLB-game-yn-yes",
-          "callId": "2026-10-13:1117:2026-10-13T15:17:01.853Z:33b29beafba4"
+          "callId": "2026-10-13:1717:2026-10-13T21:17:01.979Z:dfbf63937cf2"
         },
         "betmgm": {
           "americanOdds": 550,
-          "capturedAt": "2026-10-13T15:11:51.889Z",
+          "capturedAt": "2026-10-13T21:11:35.231Z",
           "source": "qstash-vercel-sportsgameodds",
           "sourceEventId": "PDl6n4bFNrceA8qE3cIZ",
           "sourceOddId": "batting_homeRuns-NATHANIEL_LOWE_1_MLB-game-yn-yes",
-          "callId": "2026-10-13:1117:2026-10-13T15:17:01.853Z:33b29beafba4"
-        }
-      }
-    },
-    {
-      "predictionId": null,
-      "gameDate": "2026-10-13",
-      "gamePk": null,
-      "gameStartAt": "2026-10-14T00:00:00.000Z",
-      "batterId": null,
-      "batterName": "Nick Fortes",
-      "batterTeam": null,
-      "matchup": "CLE @ TB",
-      "lineupPosition": null,
-      "lineupConfirmed": false,
-      "playerKey": "nick fortes",
-      "providerEntityId": "NICK_FORTES_1_MLB",
-      "sourceEventId": "PDl6n4bFNrceA8qE3cIZ",
-      "odds": {
-        "draftkings": {
-          "americanOdds": 1140,
-          "capturedAt": "2026-10-13T15:11:09.122Z",
-          "source": "qstash-vercel-sportsgameodds",
-          "sourceEventId": "PDl6n4bFNrceA8qE3cIZ",
-          "sourceOddId": "batting_homeRuns-NICK_FORTES_1_MLB-game-yn-yes",
-          "callId": "2026-10-13:1117:2026-10-13T15:17:01.853Z:33b29beafba4"
+          "callId": "2026-10-13:1717:2026-10-13T21:17:01.979Z:dfbf63937cf2"
         }
       }
     },
@@ -426,28 +409,12 @@
       "sourceEventId": "PDl6n4bFNrceA8qE3cIZ",
       "odds": {
         "draftkings": {
-          "americanOdds": 860,
-          "capturedAt": "2026-10-13T15:11:09.122Z",
+          "americanOdds": 870,
+          "capturedAt": "2026-10-13T21:10:47.554Z",
           "source": "qstash-vercel-sportsgameodds",
           "sourceEventId": "PDl6n4bFNrceA8qE3cIZ",
           "sourceOddId": "batting_homeRuns-PATRICK_BAILEY_1_MLB-game-yn-yes",
-          "callId": "2026-10-13:1117:2026-10-13T15:17:01.853Z:33b29beafba4"
-        },
-        "fanduel": {
-          "americanOdds": 880,
-          "capturedAt": "2026-10-13T15:11:23.272Z",
-          "source": "qstash-vercel-sportsgameodds",
-          "sourceEventId": "PDl6n4bFNrceA8qE3cIZ",
-          "sourceOddId": "batting_homeRuns-PATRICK_BAILEY_1_MLB-game-yn-yes",
-          "callId": "2026-10-13:1117:2026-10-13T15:17:01.853Z:33b29beafba4"
-        },
-        "betmgm": {
-          "americanOdds": 800,
-          "capturedAt": "2026-10-13T15:11:51.889Z",
-          "source": "qstash-vercel-sportsgameodds",
-          "sourceEventId": "PDl6n4bFNrceA8qE3cIZ",
-          "sourceOddId": "batting_homeRuns-PATRICK_BAILEY_1_MLB-game-yn-yes",
-          "callId": "2026-10-13:1117:2026-10-13T15:17:01.853Z:33b29beafba4"
+          "callId": "2026-10-13:1717:2026-10-13T21:17:01.979Z:dfbf63937cf2"
         }
       }
     },
@@ -467,61 +434,28 @@
       "sourceEventId": "PDl6n4bFNrceA8qE3cIZ",
       "odds": {
         "draftkings": {
-          "americanOdds": 950,
-          "capturedAt": "2026-10-13T15:11:09.122Z",
+          "americanOdds": 1100,
+          "capturedAt": "2026-10-13T21:09:47.585Z",
           "source": "qstash-vercel-sportsgameodds",
           "sourceEventId": "PDl6n4bFNrceA8qE3cIZ",
           "sourceOddId": "batting_homeRuns-PETEY_HALPIN_1_MLB-game-yn-yes",
-          "callId": "2026-10-13:1117:2026-10-13T15:17:01.853Z:33b29beafba4"
+          "callId": "2026-10-13:1717:2026-10-13T21:17:01.979Z:dfbf63937cf2"
         },
         "betmgm": {
-          "americanOdds": 850,
-          "capturedAt": "2026-10-13T15:11:51.889Z",
+          "americanOdds": 800,
+          "capturedAt": "2026-10-13T21:11:35.231Z",
           "source": "qstash-vercel-sportsgameodds",
           "sourceEventId": "PDl6n4bFNrceA8qE3cIZ",
           "sourceOddId": "batting_homeRuns-PETEY_HALPIN_1_MLB-game-yn-yes",
-          "callId": "2026-10-13:1117:2026-10-13T15:17:01.853Z:33b29beafba4"
-        }
-      }
-    },
-    {
-      "predictionId": null,
-      "gameDate": "2026-10-13",
-      "gamePk": null,
-      "gameStartAt": "2026-10-14T00:00:00.000Z",
-      "batterId": null,
-      "batterName": "Ryan Vilade",
-      "batterTeam": null,
-      "matchup": "CLE @ TB",
-      "lineupPosition": null,
-      "lineupConfirmed": false,
-      "playerKey": "ryan vilade",
-      "providerEntityId": "RYAN_VILADE_1_MLB",
-      "sourceEventId": "PDl6n4bFNrceA8qE3cIZ",
-      "odds": {
-        "draftkings": {
-          "americanOdds": 730,
-          "capturedAt": "2026-10-13T15:11:09.122Z",
-          "source": "qstash-vercel-sportsgameodds",
-          "sourceEventId": "PDl6n4bFNrceA8qE3cIZ",
-          "sourceOddId": "batting_homeRuns-RYAN_VILADE_1_MLB-game-yn-yes",
-          "callId": "2026-10-13:1117:2026-10-13T15:17:01.853Z:33b29beafba4"
+          "callId": "2026-10-13:1717:2026-10-13T21:17:01.979Z:dfbf63937cf2"
         },
         "fanduel": {
-          "americanOdds": 760,
-          "capturedAt": "2026-10-13T15:11:23.272Z",
+          "americanOdds": 1200,
+          "capturedAt": "2026-10-13T21:10:10.745Z",
           "source": "qstash-vercel-sportsgameodds",
           "sourceEventId": "PDl6n4bFNrceA8qE3cIZ",
-          "sourceOddId": "batting_homeRuns-RYAN_VILADE_1_MLB-game-yn-yes",
-          "callId": "2026-10-13:1117:2026-10-13T15:17:01.853Z:33b29beafba4"
-        },
-        "betmgm": {
-          "americanOdds": 725,
-          "capturedAt": "2026-10-13T15:11:51.889Z",
-          "source": "qstash-vercel-sportsgameodds",
-          "sourceEventId": "PDl6n4bFNrceA8qE3cIZ",
-          "sourceOddId": "batting_homeRuns-RYAN_VILADE_1_MLB-game-yn-yes",
-          "callId": "2026-10-13:1117:2026-10-13T15:17:01.853Z:33b29beafba4"
+          "sourceOddId": "batting_homeRuns-PETEY_HALPIN_1_MLB-game-yn-yes",
+          "callId": "2026-10-13:1717:2026-10-13T21:17:01.979Z:dfbf63937cf2"
         }
       }
     },
@@ -542,27 +476,27 @@
       "odds": {
         "draftkings": {
           "americanOdds": 2400,
-          "capturedAt": "2026-10-13T15:11:09.122Z",
+          "capturedAt": "2026-10-13T21:09:47.585Z",
           "source": "qstash-vercel-sportsgameodds",
           "sourceEventId": "PDl6n4bFNrceA8qE3cIZ",
           "sourceOddId": "batting_homeRuns-STEVEN_KWAN_1_MLB-game-yn-yes",
-          "callId": "2026-10-13:1117:2026-10-13T15:17:01.853Z:33b29beafba4"
+          "callId": "2026-10-13:1717:2026-10-13T21:17:01.979Z:dfbf63937cf2"
         },
         "fanduel": {
-          "americanOdds": 2500,
-          "capturedAt": "2026-10-13T15:11:23.272Z",
+          "americanOdds": 3000,
+          "capturedAt": "2026-10-13T21:10:10.745Z",
           "source": "qstash-vercel-sportsgameodds",
           "sourceEventId": "PDl6n4bFNrceA8qE3cIZ",
           "sourceOddId": "batting_homeRuns-STEVEN_KWAN_1_MLB-game-yn-yes",
-          "callId": "2026-10-13:1117:2026-10-13T15:17:01.853Z:33b29beafba4"
+          "callId": "2026-10-13:1717:2026-10-13T21:17:01.979Z:dfbf63937cf2"
         },
         "betmgm": {
-          "americanOdds": 1150,
-          "capturedAt": "2026-10-13T15:11:51.889Z",
+          "americanOdds": 1200,
+          "capturedAt": "2026-10-13T21:11:35.231Z",
           "source": "qstash-vercel-sportsgameodds",
           "sourceEventId": "PDl6n4bFNrceA8qE3cIZ",
           "sourceOddId": "batting_homeRuns-STEVEN_KWAN_1_MLB-game-yn-yes",
-          "callId": "2026-10-13:1117:2026-10-13T15:17:01.853Z:33b29beafba4"
+          "callId": "2026-10-13:1717:2026-10-13T21:17:01.979Z:dfbf63937cf2"
         }
       }
     },
@@ -582,28 +516,28 @@
       "sourceEventId": "PDl6n4bFNrceA8qE3cIZ",
       "odds": {
         "draftkings": {
-          "americanOdds": 1320,
-          "capturedAt": "2026-10-13T15:11:09.122Z",
+          "americanOdds": 1420,
+          "capturedAt": "2026-10-13T21:09:47.585Z",
           "source": "qstash-vercel-sportsgameodds",
           "sourceEventId": "PDl6n4bFNrceA8qE3cIZ",
           "sourceOddId": "batting_homeRuns-TAYLOR_WALLS_1_MLB-game-yn-yes",
-          "callId": "2026-10-13:1117:2026-10-13T15:17:01.853Z:33b29beafba4"
+          "callId": "2026-10-13:1717:2026-10-13T21:17:01.979Z:dfbf63937cf2"
         },
         "fanduel": {
-          "americanOdds": 1260,
-          "capturedAt": "2026-10-13T15:11:23.272Z",
+          "americanOdds": 1400,
+          "capturedAt": "2026-10-13T21:10:10.745Z",
           "source": "qstash-vercel-sportsgameodds",
           "sourceEventId": "PDl6n4bFNrceA8qE3cIZ",
           "sourceOddId": "batting_homeRuns-TAYLOR_WALLS_1_MLB-game-yn-yes",
-          "callId": "2026-10-13:1117:2026-10-13T15:17:01.853Z:33b29beafba4"
+          "callId": "2026-10-13:1717:2026-10-13T21:17:01.979Z:dfbf63937cf2"
         },
         "betmgm": {
           "americanOdds": 1200,
-          "capturedAt": "2026-10-13T15:11:51.889Z",
+          "capturedAt": "2026-10-13T21:11:35.231Z",
           "source": "qstash-vercel-sportsgameodds",
           "sourceEventId": "PDl6n4bFNrceA8qE3cIZ",
           "sourceOddId": "batting_homeRuns-TAYLOR_WALLS_1_MLB-game-yn-yes",
-          "callId": "2026-10-13:1117:2026-10-13T15:17:01.853Z:33b29beafba4"
+          "callId": "2026-10-13:1717:2026-10-13T21:17:01.979Z:dfbf63937cf2"
         }
       }
     },
@@ -623,28 +557,28 @@
       "sourceEventId": "PDl6n4bFNrceA8qE3cIZ",
       "odds": {
         "draftkings": {
-          "americanOdds": 800,
-          "capturedAt": "2026-10-13T15:11:09.122Z",
+          "americanOdds": 820,
+          "capturedAt": "2026-10-13T21:09:47.585Z",
           "source": "qstash-vercel-sportsgameodds",
           "sourceEventId": "PDl6n4bFNrceA8qE3cIZ",
           "sourceOddId": "batting_homeRuns-TRAVIS_BAZZANA_1_MLB-game-yn-yes",
-          "callId": "2026-10-13:1117:2026-10-13T15:17:01.853Z:33b29beafba4"
+          "callId": "2026-10-13:1717:2026-10-13T21:17:01.979Z:dfbf63937cf2"
         },
         "fanduel": {
-          "americanOdds": 790,
-          "capturedAt": "2026-10-13T15:11:23.272Z",
+          "americanOdds": 750,
+          "capturedAt": "2026-10-13T21:10:10.745Z",
           "source": "qstash-vercel-sportsgameodds",
           "sourceEventId": "PDl6n4bFNrceA8qE3cIZ",
           "sourceOddId": "batting_homeRuns-TRAVIS_BAZZANA_1_MLB-game-yn-yes",
-          "callId": "2026-10-13:1117:2026-10-13T15:17:01.853Z:33b29beafba4"
+          "callId": "2026-10-13:1717:2026-10-13T21:17:01.979Z:dfbf63937cf2"
         },
         "betmgm": {
           "americanOdds": 650,
-          "capturedAt": "2026-10-13T15:11:51.889Z",
+          "capturedAt": "2026-10-13T21:11:35.231Z",
           "source": "qstash-vercel-sportsgameodds",
           "sourceEventId": "PDl6n4bFNrceA8qE3cIZ",
           "sourceOddId": "batting_homeRuns-TRAVIS_BAZZANA_1_MLB-game-yn-yes",
-          "callId": "2026-10-13:1117:2026-10-13T15:17:01.853Z:33b29beafba4"
+          "callId": "2026-10-13:1717:2026-10-13T21:17:01.979Z:dfbf63937cf2"
         }
       }
     },
@@ -664,28 +598,28 @@
       "sourceEventId": "PDl6n4bFNrceA8qE3cIZ",
       "odds": {
         "draftkings": {
-          "americanOdds": 710,
-          "capturedAt": "2026-10-13T15:11:09.122Z",
+          "americanOdds": 740,
+          "capturedAt": "2026-10-13T21:09:47.585Z",
           "source": "qstash-vercel-sportsgameodds",
           "sourceEventId": "PDl6n4bFNrceA8qE3cIZ",
           "sourceOddId": "batting_homeRuns-VICTOR_MESA_1_MLB-game-yn-yes",
-          "callId": "2026-10-13:1117:2026-10-13T15:17:01.853Z:33b29beafba4"
+          "callId": "2026-10-13:1717:2026-10-13T21:17:01.979Z:dfbf63937cf2"
         },
         "fanduel": {
-          "americanOdds": 680,
-          "capturedAt": "2026-10-13T15:11:23.272Z",
+          "americanOdds": 660,
+          "capturedAt": "2026-10-13T21:10:10.745Z",
           "source": "qstash-vercel-sportsgameodds",
           "sourceEventId": "PDl6n4bFNrceA8qE3cIZ",
           "sourceOddId": "batting_homeRuns-VICTOR_MESA_1_MLB-game-yn-yes",
-          "callId": "2026-10-13:1117:2026-10-13T15:17:01.853Z:33b29beafba4"
+          "callId": "2026-10-13:1717:2026-10-13T21:17:01.979Z:dfbf63937cf2"
         },
         "betmgm": {
           "americanOdds": 475,
-          "capturedAt": "2026-10-13T15:11:51.889Z",
+          "capturedAt": "2026-10-13T21:11:35.231Z",
           "source": "qstash-vercel-sportsgameodds",
           "sourceEventId": "PDl6n4bFNrceA8qE3cIZ",
           "sourceOddId": "batting_homeRuns-VICTOR_MESA_1_MLB-game-yn-yes",
-          "callId": "2026-10-13:1117:2026-10-13T15:17:01.853Z:33b29beafba4"
+          "callId": "2026-10-13:1717:2026-10-13T21:17:01.979Z:dfbf63937cf2"
         }
       }
     },
@@ -705,53 +639,28 @@
       "sourceEventId": "PDl6n4bFNrceA8qE3cIZ",
       "odds": {
         "draftkings": {
-          "americanOdds": 482,
-          "capturedAt": "2026-10-13T15:11:09.122Z",
+          "americanOdds": 470,
+          "capturedAt": "2026-10-13T21:09:47.585Z",
           "source": "qstash-vercel-sportsgameodds",
           "sourceEventId": "PDl6n4bFNrceA8qE3cIZ",
           "sourceOddId": "batting_homeRuns-YANDY_DIAZ_1_MLB-game-yn-yes",
-          "callId": "2026-10-13:1117:2026-10-13T15:17:01.853Z:33b29beafba4"
+          "callId": "2026-10-13:1717:2026-10-13T21:17:01.979Z:dfbf63937cf2"
         },
         "fanduel": {
-          "americanOdds": 470,
-          "capturedAt": "2026-10-13T15:11:23.272Z",
+          "americanOdds": 500,
+          "capturedAt": "2026-10-13T21:10:10.745Z",
           "source": "qstash-vercel-sportsgameodds",
           "sourceEventId": "PDl6n4bFNrceA8qE3cIZ",
           "sourceOddId": "batting_homeRuns-YANDY_DIAZ_1_MLB-game-yn-yes",
-          "callId": "2026-10-13:1117:2026-10-13T15:17:01.853Z:33b29beafba4"
+          "callId": "2026-10-13:1717:2026-10-13T21:17:01.979Z:dfbf63937cf2"
         },
         "betmgm": {
           "americanOdds": 475,
-          "capturedAt": "2026-10-13T15:11:51.889Z",
+          "capturedAt": "2026-10-13T21:11:35.231Z",
           "source": "qstash-vercel-sportsgameodds",
           "sourceEventId": "PDl6n4bFNrceA8qE3cIZ",
           "sourceOddId": "batting_homeRuns-YANDY_DIAZ_1_MLB-game-yn-yes",
-          "callId": "2026-10-13:1117:2026-10-13T15:17:01.853Z:33b29beafba4"
-        }
-      }
-    },
-    {
-      "predictionId": null,
-      "gameDate": "2026-10-13",
-      "gamePk": null,
-      "gameStartAt": "2026-10-14T00:00:00.000Z",
-      "batterId": null,
-      "batterName": "Angel Martinez",
-      "batterTeam": null,
-      "matchup": "CLE @ TB",
-      "lineupPosition": null,
-      "lineupConfirmed": false,
-      "playerKey": "angel martinez",
-      "providerEntityId": "ANGEL_MARTINEZ_1_MLB",
-      "sourceEventId": "PDl6n4bFNrceA8qE3cIZ",
-      "odds": {
-        "fanduel": {
-          "americanOdds": 820,
-          "capturedAt": "2026-10-13T15:11:23.272Z",
-          "source": "qstash-vercel-sportsgameodds",
-          "sourceEventId": "PDl6n4bFNrceA8qE3cIZ",
-          "sourceOddId": "batting_homeRuns-ANGEL_MARTINEZ_1_MLB-game-yn-yes",
-          "callId": "2026-10-13:1117:2026-10-13T15:17:01.853Z:33b29beafba4"
+          "callId": "2026-10-13:1717:2026-10-13T21:17:01.979Z:dfbf63937cf2"
         }
       }
     },
@@ -771,20 +680,28 @@
       "sourceEventId": "PDl6n4bFNrceA8qE3cIZ",
       "odds": {
         "fanduel": {
-          "americanOdds": 1300,
-          "capturedAt": "2026-10-13T15:11:23.272Z",
+          "americanOdds": 1400,
+          "capturedAt": "2026-10-13T21:10:10.745Z",
           "source": "qstash-vercel-sportsgameodds",
           "sourceEventId": "PDl6n4bFNrceA8qE3cIZ",
           "sourceOddId": "batting_homeRuns-LIAM_HICKS_1_MLB-game-yn-yes",
-          "callId": "2026-10-13:1117:2026-10-13T15:17:01.853Z:33b29beafba4"
+          "callId": "2026-10-13:1717:2026-10-13T21:17:01.979Z:dfbf63937cf2"
         },
         "betmgm": {
-          "americanOdds": 900,
-          "capturedAt": "2026-10-13T15:11:51.889Z",
+          "americanOdds": 1000,
+          "capturedAt": "2026-10-13T21:11:35.231Z",
           "source": "qstash-vercel-sportsgameodds",
           "sourceEventId": "PDl6n4bFNrceA8qE3cIZ",
           "sourceOddId": "batting_homeRuns-LIAM_HICKS_1_MLB-game-yn-yes",
-          "callId": "2026-10-13:1117:2026-10-13T15:17:01.853Z:33b29beafba4"
+          "callId": "2026-10-13:1717:2026-10-13T21:17:01.979Z:dfbf63937cf2"
+        },
+        "draftkings": {
+          "americanOdds": 1500,
+          "capturedAt": "2026-10-13T21:09:47.585Z",
+          "source": "qstash-vercel-sportsgameodds",
+          "sourceEventId": "PDl6n4bFNrceA8qE3cIZ",
+          "sourceOddId": "batting_homeRuns-LIAM_HICKS_1_MLB-game-yn-yes",
+          "callId": "2026-10-13:1717:2026-10-13T21:17:01.979Z:dfbf63937cf2"
         }
       }
     },
@@ -794,26 +711,67 @@
       "gamePk": null,
       "gameStartAt": "2026-10-14T00:00:00.000Z",
       "batterId": null,
-      "batterName": "Richard Palacios",
+      "batterName": "Chandler Simpson",
       "batterTeam": null,
       "matchup": "CLE @ TB",
       "lineupPosition": null,
       "lineupConfirmed": false,
-      "playerKey": "richard palacios",
-      "providerEntityId": "RICHARD_PALACIOS_1_MLB",
+      "playerKey": "chandler simpson",
+      "providerEntityId": "CHANDLER_SIMPSON_1_MLB",
+      "sourceEventId": "PDl6n4bFNrceA8qE3cIZ",
+      "odds": {
+        "betmgm": {
+          "americanOdds": 2500,
+          "capturedAt": "2026-10-13T21:11:35.231Z",
+          "source": "qstash-vercel-sportsgameodds",
+          "sourceEventId": "PDl6n4bFNrceA8qE3cIZ",
+          "sourceOddId": "batting_homeRuns-CHANDLER_SIMPSON_1_MLB-game-yn-yes",
+          "callId": "2026-10-13:1717:2026-10-13T21:17:01.979Z:dfbf63937cf2"
+        },
+        "draftkings": {
+          "americanOdds": 3600,
+          "capturedAt": "2026-10-13T21:09:47.585Z",
+          "source": "qstash-vercel-sportsgameodds",
+          "sourceEventId": "PDl6n4bFNrceA8qE3cIZ",
+          "sourceOddId": "batting_homeRuns-CHANDLER_SIMPSON_1_MLB-game-yn-yes",
+          "callId": "2026-10-13:1717:2026-10-13T21:17:01.979Z:dfbf63937cf2"
+        },
+        "fanduel": {
+          "americanOdds": 4000,
+          "capturedAt": "2026-10-13T21:10:10.745Z",
+          "source": "qstash-vercel-sportsgameodds",
+          "sourceEventId": "PDl6n4bFNrceA8qE3cIZ",
+          "sourceOddId": "batting_homeRuns-CHANDLER_SIMPSON_1_MLB-game-yn-yes",
+          "callId": "2026-10-13:1717:2026-10-13T21:17:01.979Z:dfbf63937cf2"
+        }
+      }
+    },
+    {
+      "predictionId": null,
+      "gameDate": "2026-10-13",
+      "gamePk": null,
+      "gameStartAt": "2026-10-14T00:00:00.000Z",
+      "batterId": null,
+      "batterName": "Austin Hedges",
+      "batterTeam": null,
+      "matchup": "CLE @ TB",
+      "lineupPosition": null,
+      "lineupConfirmed": false,
+      "playerKey": "austin hedges",
+      "providerEntityId": "AUSTIN_HEDGES_1_MLB",
       "sourceEventId": "PDl6n4bFNrceA8qE3cIZ",
       "odds": {
         "fanduel": {
           "americanOdds": 1500,
-          "capturedAt": "2026-10-13T15:11:23.272Z",
+          "capturedAt": "2026-10-13T21:10:10.745Z",
           "source": "qstash-vercel-sportsgameodds",
           "sourceEventId": "PDl6n4bFNrceA8qE3cIZ",
-          "sourceOddId": "batting_homeRuns-RICHARD_PALACIOS_1_MLB-game-yn-yes",
-          "callId": "2026-10-13:1117:2026-10-13T15:17:01.853Z:33b29beafba4"
+          "sourceOddId": "batting_homeRuns-AUSTIN_HEDGES_1_MLB-game-yn-yes",
+          "callId": "2026-10-13:1717:2026-10-13T21:17:01.979Z:dfbf63937cf2"
         }
       }
     }
   ],
-  "databaseUrl": "https://hr-form-board-actions.vercel.app/api/central-odds?date=2026-10-13&checkpoint=1117",
-  "materializedAt": "2026-10-13T20:42:00.122040+00:00"
+  "databaseUrl": "https://hr-form-board-actions.vercel.app/api/central-odds?date=2026-10-13&checkpoint=1717",
+  "materializedAt": "2026-10-14T00:18:35.230127+00:00"
 }

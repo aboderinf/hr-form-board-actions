@@ -1,8 +1,8 @@
 {
   "schema_version": 3,
   "kind": "top_100_profit_discovery",
-  "generated_at": "2026-10-13T20:42:22.548516+00:00",
-  "generated_at_et": "2026-10-13T16:42:22.548516-04:00",
+  "generated_at": "2026-10-14T00:19:53.761284+00:00",
+  "generated_at_et": "2026-10-13T20:19:53.761284-04:00",
   "status": "ready",
   "methodology": {
     "capture": "All Top 100 form-score rows are archived at each discovery checkpoint, including rows without an available price.",
@@ -12,15 +12,15 @@
     "warning": "Results are exploratory and sample sizes must be considered before treating any segment as a repeatable edge."
   },
   "archive_started": "2026-08-02T23:21:58.928645-04:00",
-  "capture_count": 281,
-  "raw_top100_rows": 28100,
-  "raw_priced_rows": 8770,
+  "capture_count": 282,
+  "raw_top100_rows": 28200,
+  "raw_priced_rows": 8772,
   "unique_priced_player_games": 3316,
   "reports": {
     "rolling_14d": {
       "start": "2026-09-30",
       "end": "2026-10-13",
-      "raw_checkpoint_captures": 274,
+      "raw_checkpoint_captures": 276,
       "analyzed_checkpoint_rows": 268,
       "complete_slates": 11,
       "latest_complete_slate": "2026-10-12",
@@ -8753,7 +8753,7 @@
     "calendar_month": {
       "start": "2026-10-01",
       "end": "2026-10-13",
-      "raw_checkpoint_captures": 234,
+      "raw_checkpoint_captures": 236,
       "analyzed_checkpoint_rows": 228,
       "complete_slates": 10,
       "latest_complete_slate": "2026-10-12",
@@ -16708,7 +16708,7 @@
     "all_time": {
       "start": "2026-08-02",
       "end": "2026-10-13",
-      "raw_checkpoint_captures": 8770,
+      "raw_checkpoint_captures": 8772,
       "analyzed_checkpoint_rows": 8764,
       "complete_slates": 67,
       "latest_complete_slate": "2026-10-12",
@@ -128315,6 +128315,28 @@
       "game_start_at": "2026-10-14T00:00:00.000Z",
       "result": "PENDING",
       "profit_units": null
+    },
+    {
+      "slate_date": "2026-10-13",
+      "checkpoint": "1717",
+      "mlbam_id": 800050,
+      "score": 0.22571428571428573,
+      "best_book": "FanDuel",
+      "best_odds": 660,
+      "game_start_at": "2026-10-14T00:00:00.000Z",
+      "result": "PENDING",
+      "profit_units": null
+    },
+    {
+      "slate_date": "2026-10-13",
+      "checkpoint": "1717",
+      "mlbam_id": 666176,
+      "score": 0.18285714285714286,
+      "best_book": "BetMGM",
+      "best_odds": 475,
+      "game_start_at": "2026-10-14T00:00:00.000Z",
+      "result": "PENDING",
+      "profit_units": null
     }
   ],
   "rule_tracking": {
@@ -129825,6 +129847,16 @@
   "recent_captures": [
     {
       "slate_date": "2026-10-13",
+      "checkpoint": "1717",
+      "captured_at_et": "2026-10-13T20:19:53.637706-04:00",
+      "top100_rows": 100,
+      "priced_rows": 2,
+      "odds_coverage": 0.02,
+      "source_status": "ready",
+      "source_generated_at": "2026-10-13T21:17:01.979Z"
+    },
+    {
+      "slate_date": "2026-10-13",
       "checkpoint": "1117",
       "captured_at_et": "2026-10-13T16:42:22.395011-04:00",
       "top100_rows": 100,
@@ -130012,16 +130044,6 @@
       "odds_coverage": 0.0,
       "source_status": "pending",
       "source_generated_at": "2026-10-09T00:17:01.435Z"
-    },
-    {
-      "slate_date": "2026-10-08",
-      "checkpoint": "1717",
-      "captured_at_et": "2026-10-08T21:14:10.337768-04:00",
-      "top100_rows": 100,
-      "priced_rows": 7,
-      "odds_coverage": 0.07,
-      "source_status": "ready",
-      "source_generated_at": "2026-10-08T21:17:03.608Z"
     }
   ],
   "recent_results": [
