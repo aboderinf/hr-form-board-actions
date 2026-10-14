@@ -9,20 +9,6 @@ on:
       checkpoint:
         description: Optional ET checkpoint (08:17, 11:17, 17:17, 20:17)
         required: false
-  push:
-    branches: [main]
-    paths:
-      - "data/triggers/run-source-driven-refresh-now.txt"
-  schedule:
-    - cron: "20 8 * * *"
-      timezone: "America/New_York"
-    - cron: "20 11 * * *"
-      timezone: "America/New_York"
-    - cron: "20 17 * * *"
-      timezone: "America/New_York"
-    - cron: "20 20 * * *"
-      timezone: "America/New_York"
-
 permissions:
   contents: write
 
