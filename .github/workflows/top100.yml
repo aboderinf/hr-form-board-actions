@@ -2,28 +2,6 @@ name: Refresh Top 100 Scores
 
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
-    paths:
-      - ".github/workflows/top100.yml"
-      - "scripts/build_hr_top100.py"
-      - "scripts/build_top100.py"
-      - "scripts/build_triples_model.py"
-      - "src/model.py"
-      - "src/sources.py"
-      - "src/edge_source.py"
-      - "src/durable_source.py"
-      - "src/top100_view.py"
-      - "src/triples.py"
-      - "src/triples_model.py"
-      - "tests/test_open_pool.py"
-      - "tests/test_top100_view.py"
-      - "tests/test_triples.py"
-      - "tests/test_triples_model.py"
-  schedule:
-    - cron: "5 8,10 * 3-11 *"
-    - cron: "5 9,11 * 3-11 *"
-
 permissions:
   contents: write
 
